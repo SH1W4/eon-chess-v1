@@ -1,0 +1,307 @@
+chess_cultures:
+  renaissance:
+    themes:
+      - name: "artistry"
+        weight: 0.9
+        keywords:
+          - "beleza"
+          - "harmonia"
+          - "equilíbrio"
+          - "perfeição"
+      
+      - name: "innovation"
+        weight: 0.8
+        keywords:
+          - "descoberta"
+          - "invenção"
+          - "progresso"
+          - "revolução"
+      
+      - name: "humanism"
+        weight: 0.7
+        keywords:
+          - "razão"
+          - "conhecimento"
+          - "sabedoria"
+          - "virtude"
+    
+    piece_metaphors:
+      pawn:
+        name: "Artesão"
+        roles:
+          - "criador habilidoso"
+          - "artífice dedicado"
+          - "mestre do ofício"
+      
+      knight:
+        name: "Condottiero"
+        roles:
+          - "capitão mercenário"
+          - "líder audacioso"
+          - "estrategista astuto"
+      
+      bishop:
+        name: "Humanista"
+        roles:
+          - "sábio estudioso"
+          - "filósofo natural"
+          - "mentor iluminado"
+      
+      rook:
+        name: "Fortaleza"
+        roles:
+          - "bastião da civilização"
+          - "símbolo de poder"
+          - "defesa da cultura"
+      
+      queen:
+        name: "Patrona"
+        roles:
+          - "mecenas das artes"
+          - "protetora do saber"
+          - "senhora da corte"
+      
+      king:
+        name: "Príncipe"
+        roles:
+          - "governante iluminado"
+          - "patrono das artes"
+          - "líder virtuoso"
+  
+  eastern:
+    themes:
+      - name: "harmony"
+        weight: 0.9
+        keywords:
+          - "equilíbrio"
+          - "ordem"
+          - "unidade"
+          - "fluidez"
+      
+      - name: "wisdom"
+        weight: 0.8
+        keywords:
+          - "prudência"
+          - "paciência"
+          - "compreensão"
+          - "insight"
+      
+      - name: "discipline"
+        weight: 0.7
+        keywords:
+          - "dedicação"
+          - "perseverança"
+          - "prática"
+          - "maestria"
+    
+    piece_metaphors:
+      pawn:
+        name: "Discípulo"
+        roles:
+          - "estudante dedicado"
+          - "praticante diligente"
+          - "seguidor do caminho"
+      
+      knight:
+        name: "Samurai"
+        roles:
+          - "guerreiro honrado"
+          - "mestre da espada"
+          - "servidor leal"
+      
+      bishop:
+        name: "Monge"
+        roles:
+          - "mestre zen"
+          - "guia espiritual"
+          - "sábio ancião"
+      
+      rook:
+        name: "Pagode"
+        roles:
+          - "torre sagrada"
+          - "pilar da tradição"
+          - "guardião do templo"
+      
+      queen:
+        name: "Imperatriz"
+        roles:
+          - "senhora celestial"
+          - "protetora do reino"
+          - "fonte de sabedoria"
+      
+      king:
+        name: "Imperador"
+        roles:
+          - "filho do céu"
+          - "governante supremo"
+          - "mantenedor da harmonia"
+  
+  nordic:
+    themes:
+      - name: "valor"
+        weight: 0.9
+        keywords:
+          - "coragem"
+          - "força"
+          - "honra"
+          - "bravura"
+      
+      - name: "destino"
+        weight: 0.8
+        keywords:
+          - "wyrd"
+          - "fado"
+          - "saga"
+          - "lenda"
+      
+      - name: "sabedoria"
+        weight: 0.7
+        keywords:
+          - "conhecimento"
+          - "runas"
+          - "mistérios"
+          - "tradição"
+    
+    piece_metaphors:
+      pawn:
+        name: "Guerreiro"
+        roles:
+          - "viking valente"
+          - "defensor do clã"
+          - "filho do norte"
+      
+      knight:
+        name: "Berserker"
+        roles:
+          - "guerreiro furioso"
+          - "campeão selvagem"
+          - "lutador destemido"
+      
+      bishop:
+        name: "Skald"
+        roles:
+          - "poeta guerreiro"
+          - "contador de sagas"
+          - "guardião das tradições"
+      
+      rook:
+        name: "Fortaleza"
+        roles:
+          - "salão do rei"
+          - "bastião do norte"
+          - "abrigo sagrado"
+      
+      queen:
+        name: "Valquíria"
+        roles:
+          - "escolhedora dos mortos"
+          - "guerreira divina"
+          - "protetora dos heróis"
+      
+      king:
+        name: "Jarl"
+        roles:
+          - "líder do clã"
+          - "senhor da guerra"
+          - "protetor do povo"
+
+narrative_patterns:
+  renaissance:
+    moves:
+      advance:
+        - "Com graça artística, {piece} move-se para {square}"
+        - "{piece} executa um movimento harmonioso até {square}"
+        - "Em um gesto calculado, {piece} avança para {square}"
+      
+      capture:
+        - "{attacker} demonstra supremacia sobre {defender}"
+        - "Em um confronto de virtudes, {attacker} supera {defender}"
+        - "{attacker} prova seu valor contra {defender}"
+      
+      check:
+        - "O Príncipe encontra-se em perigo! A corte deve agir!"
+        - "Uma ameaça à autoridade do governante!"
+        - "O equilíbrio do poder está ameaçado!"
+    
+    phases:
+      opening:
+        - "O grande jogo começa, como uma tela em branco"
+        - "As peças tomam suas posições com elegância estudada"
+        - "O primeiro ato desta obra-prima se inicia"
+      
+      middlegame:
+        - "A batalha atinge seu ápice artístico"
+        - "Cada movimento é uma pincelada na tela do jogo"
+        - "A complexidade da posição revela sua beleza"
+      
+      endgame:
+        - "O final se aproxima como o último movimento de uma sinfonia"
+        - "A conclusão desta obra-prima está próxima"
+        - "O desenlace desta história se aproxima"
+  
+  eastern:
+    moves:
+      advance:
+        - "{piece} flui como água para {square}"
+        - "Com movimento preciso, {piece} alcança {square}"
+        - "{piece} segue o caminho até {square}"
+      
+      capture:
+        - "{attacker} transcende {defender} em combate harmonioso"
+        - "O destino de {defender} é selado por {attacker}"
+        - "{attacker} demonstra supremacia sobre {defender}"
+      
+      check:
+        - "A harmonia do Imperador está ameaçada!"
+        - "O equilíbrio celestial deve ser restaurado!"
+        - "Uma perturbação na ordem natural!"
+    
+    phases:
+      opening:
+        - "O jogo começa como o nascer do sol"
+        - "As peças fluem como água para suas posições"
+        - "O primeiro movimento na dança do destino"
+      
+      middlegame:
+        - "A batalha flui como um rio poderoso"
+        - "Cada movimento é parte da harmonia universal"
+        - "O equilíbrio do combate se revela"
+      
+      endgame:
+        - "O final se aproxima como o pôr do sol"
+        - "O destino do império será decidido"
+        - "A harmonia final será alcançada"
+  
+  nordic:
+    moves:
+      advance:
+        - "{piece} avança como trovão para {square}"
+        - "Com força do norte, {piece} conquista {square}"
+        - "{piece} marcha pela glória até {square}"
+      
+      capture:
+        - "{attacker} envia {defender} para Valhalla!"
+        - "Em combate glorioso, {attacker} derrota {defender}"
+        - "{attacker} prova seu valor contra {defender}"
+      
+      check:
+        - "O Jarl está sob ataque! Às armas!"
+        - "Defendam o líder do clã!"
+        - "Os deuses observam este momento crucial!"
+    
+    phases:
+      opening:
+        - "A saga começa como tempestade no horizonte"
+        - "Os guerreiros se preparam para o grande combate"
+        - "As Nornas tecem o destino desta batalha"
+      
+      middlegame:
+        - "A batalha ruge como mar tempestuoso"
+        - "O fragor do combate ecoa em Midgard"
+        - "As valquírias observam os valorosos"
+      
+      endgame:
+        - "O Ragnarök desta batalha se aproxima"
+        - "O destino dos guerreiros será decidido"
+        - "A saga chega a seu momento final"

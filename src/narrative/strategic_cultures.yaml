@@ -1,0 +1,208 @@
+chinese_strategic:
+  core_principles:
+    - name: "shi"  # Poder posicional
+      weight: 0.9
+      concepts:
+        - "potencial estratégico"
+        - "vantagem posicional"
+        - "momentum tático"
+        - "força situacional"
+    
+    - name: "wu wei"  # Ação sem esforço
+      weight: 0.8
+      concepts:
+        - "eficiência natural"
+        - "timing perfeito"
+        - "economia de força"
+        - "ação espontânea"
+    
+    - name: "yin yang"  # Equilíbrio dinâmico
+      weight: 0.7
+      concepts:
+        - "harmonia de forças"
+        - "compensação tática"
+        - "equilíbrio dinâmico"
+        - "transformação mútua"
+
+  strategic_patterns:
+    positioning:
+      - name: "controle central"
+        description: "Ocupação e influência do centro"
+        principles:
+          - "estabelecer base forte"
+          - "controlar casas chave"
+          - "projetar influência"
+      
+      - name: "formação flexível"
+        description: "Estrutura adaptável de peças"
+        principles:
+          - "manter opções abertas"
+          - "preservar mobilidade"
+          - "adaptar à situação"
+    
+    timing:
+      - name: "momento crítico"
+        description: "Identificação do timing ideal"
+        principles:
+          - "aguardar oportunidade"
+          - "preparar condições"
+          - "agir decisivamente"
+      
+      - name: "iniciativa dinâmica"
+        description: "Manutenção da iniciativa"
+        principles:
+          - "pressão constante"
+          - "ameaças múltiplas"
+          - "forçar reações"
+    
+    transformation:
+      - name: "mudança estrutural"
+        description: "Alteração da estrutura posicional"
+        principles:
+          - "sacrifício por posição"
+          - "transformação de estrutura"
+          - "criação de desequilíbrios"
+      
+      - name: "conversão de vantagem"
+        description: "Transformação de um tipo de vantagem em outro"
+        principles:
+          - "converter espaço em material"
+          - "trocar tempo por qualidade"
+          - "transformar pressão em ganho"
+
+  piece_concepts:
+    pawn:
+      name: "Soldado"
+      attributes:
+        - "base da estratégia"
+        - "potencial de transformação"
+        - "força coletiva"
+      principles:
+        - "avanço calculado"
+        - "sacrifício posicional"
+        - "transformação gradual"
+    
+    knight:
+      name: "General Móvel"
+      attributes:
+        - "mobilidade não-linear"
+        - "tática surpreendente"
+        - "força de ataque"
+      principles:
+        - "posicionamento avançado"
+        - "ataques coordenados"
+        - "controle de pontos-chave"
+    
+    bishop:
+      name: "Conselheiro"
+      attributes:
+        - "influência diagonal"
+        - "controle de território"
+        - "apoio estratégico"
+      principles:
+        - "controle de diagonais"
+        - "suporte à distância"
+        - "pressão posicional"
+    
+    rook:
+      name: "Fortaleza Móvel"
+      attributes:
+        - "poder linear"
+        - "controle de linhas"
+        - "força direta"
+      principles:
+        - "domínio de colunas"
+        - "penetração de linhas"
+        - "coordenação de torres"
+    
+    queen:
+      name: "Ministro Supremo"
+      attributes:
+        - "poder combinado"
+        - "força flexível"
+        - "presença dominante"
+      principles:
+        - "economia de força"
+        - "timing de ativação"
+        - "coordenação central"
+    
+    king:
+      name: "Imperador"
+      attributes:
+        - "centro vital"
+        - "força limitada"
+        - "valor supremo"
+      principles:
+        - "segurança dinâmica"
+        - "ativação oportuna"
+        - "economia de movimento"
+
+  narrative_patterns:
+    positional:
+      advantage:
+        - "A posição flui como água, encontrando pontos fracos"
+        - "O potencial estratégico se acumula silenciosamente"
+        - "A vantagem cresce como bambu após a chuva"
+      
+      disadvantage:
+        - "A posição requer paciência e adaptação"
+        - "O caminho para o equilíbrio permanece oculto"
+        - "A situação demanda transformação interior"
+    
+    tactical:
+      opportunity:
+        - "O momento decisivo surge como relâmpago"
+        - "A oportunidade se revela nos detalhes"
+        - "O timing perfeito se apresenta"
+      
+      threat:
+        - "A ameaça cresce como nuvem de tempestade"
+        - "O perigo se aproxima como vento gelado"
+        - "A pressão aumenta como maré crescente"
+    
+    strategic:
+      initiative:
+        - "A iniciativa flui como rio poderoso"
+        - "O controle se estabelece naturalmente"
+        - "A pressão cresce sem esforço aparente"
+      
+      defense:
+        - "A defesa se adapta como junco ao vento"
+        - "A resistência emana da harmonia interna"
+        - "A proteção surge da compreensão profunda"
+
+  evaluation_factors:
+    material:
+      weight: 0.7
+      concepts:
+        - "força tangível"
+        - "recursos disponíveis"
+        - "potencial material"
+    
+    position:
+      weight: 0.9
+      concepts:
+        - "harmonia estrutural"
+        - "controle espacial"
+        - "potencial latente"
+    
+    initiative:
+      weight: 0.8
+      concepts:
+        - "momentum tático"
+        - "pressão ativa"
+        - "energia dinâmica"
+    
+    king_safety:
+      weight: 0.85
+      concepts:
+        - "harmonia defensiva"
+        - "equilíbrio protetor"
+        - "estabilidade vital"
+    
+    piece_coordination:
+      weight: 0.9
+      concepts:
+        - "sinergia tática"
+        - "harmonia funcional"
+        - "ressonância estratégica"

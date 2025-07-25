@@ -1,0 +1,205 @@
+narrative_system:
+  engine: "ink"
+  version: "1.0.0"
+  integration:
+    arquimax:
+      enabled: true
+      hooks:
+        - phase_change
+        - cultural_shift
+        - system_event
+    
+    nexus:
+      enabled: true
+      hooks:
+        - adaptive_response
+        - sync_event
+        - state_change
+
+cultural_profiles:
+  medieval:
+    story_elements:
+      - type: "opening"
+        themes:
+          - "honor"
+          - "tradition"
+          - "bravery"
+        variations: 10
+      
+      - type: "middlegame"
+        themes:
+          - "strategy"
+          - "valor"
+          - "sacrifice"
+        variations: 15
+      
+      - type: "endgame"
+        themes:
+          - "glory"
+          - "destiny"
+          - "legacy"
+        variations: 8
+    
+    language:
+      style: "archaic"
+      formality: "high"
+      metaphors:
+        - "battle"
+        - "nobility"
+        - "chivalry"
+    
+    values:
+      honor: 0.9
+      tradition: 0.8
+      bravery: 0.85
+      loyalty: 0.9
+  
+  futuristic:
+    story_elements:
+      - type: "opening"
+        themes:
+          - "efficiency"
+          - "optimization"
+          - "analysis"
+        variations: 10
+      
+      - type: "middlegame"
+        themes:
+          - "adaptation"
+          - "calculation"
+          - "probability"
+        variations: 15
+      
+      - type: "endgame"
+        themes:
+          - "convergence"
+          - "optimization"
+          - "resolution"
+        variations: 8
+    
+    language:
+      style: "technical"
+      formality: "precise"
+      metaphors:
+        - "computation"
+        - "system"
+        - "protocol"
+    
+    values:
+      efficiency: 0.9
+      innovation: 0.85
+      adaptation: 0.9
+      precision: 0.95
+
+narrative_generation:
+  templates:
+    medieval:
+      move:
+        - pattern: "{piece} move-se com honra para {square}"
+        - pattern: "O nobre {piece} avança para {square}"
+        - pattern: "Com bravura, {piece} marcha para {square}"
+      
+      capture:
+        - pattern: "{attacker} conquista {defender} em glorioso combate"
+        - pattern: "Em embate heroico, {attacker} derrota {defender}"
+        - pattern: "{attacker} triunfa sobre {defender} com honra"
+      
+      check:
+        - pattern: "O Rei encontra-se sob ameaça! A honra do reino está em jogo!"
+        - pattern: "Defendei o Rei! A coroa está em perigo!"
+        - pattern: "O trono está ameaçado! Às armas!"
+    
+    futuristic:
+      move:
+        - pattern: "Unidade {piece} realocada para {square}"
+        - pattern: "Executando movimento: {piece} -> {square}"
+        - pattern: "Reposicionando {piece} para coordenadas {square}"
+      
+      capture:
+        - pattern: "Unidade {defender} neutralizada por {attacker}"
+        - pattern: "{attacker} executa eliminação tática de {defender}"
+        - pattern: "Remoção estratégica: {defender} por {attacker}"
+      
+      check:
+        - pattern: "Alerta: núcleo central sob ameaça"
+        - pattern: "Violação de perímetro detectada"
+        - pattern: "Integridade do sistema comprometida"
+
+integration_hooks:
+  arquimax:
+    on_phase_change:
+      method: "update_narrative_context"
+      params:
+        - "phase"
+        - "cultural_context"
+        - "system_state"
+    
+    on_cultural_shift:
+      method: "adapt_narrative_style"
+      params:
+        - "culture_type"
+        - "resonance_level"
+    
+    on_system_event:
+      method: "generate_system_narrative"
+      params:
+        - "event_type"
+        - "context"
+  
+  nexus:
+    on_adaptive_response:
+      method: "update_narrative_flow"
+      params:
+        - "adaptation_type"
+        - "response_data"
+    
+    on_sync_event:
+      method: "sync_narrative_state"
+      params:
+        - "sync_type"
+        - "state_data"
+    
+    on_state_change:
+      method: "adapt_narrative"
+      params:
+        - "state_type"
+        - "change_data"
+
+performance:
+  caching:
+    enabled: true
+    templates_ttl: "1h"
+    context_ttl: "5m"
+  
+  optimization:
+    batch_generation: true
+    async_processing: true
+    template_preload: true
+  
+  limits:
+    max_variations: 100
+    max_context_size: 1000
+    generation_timeout: "500ms"
+
+monitoring:
+  metrics:
+    - name: "narrative_generation_time"
+      type: "histogram"
+      description: "Tempo de geração de narrativas"
+    
+    - name: "cultural_accuracy"
+      type: "gauge"
+      description: "Precisão cultural das narrativas"
+    
+    - name: "template_hit_rate"
+      type: "counter"
+      description: "Taxa de acerto do cache de templates"
+  
+  alerts:
+    - name: "high_latency"
+      condition: "narrative_generation_time > 1s"
+      severity: "warning"
+    
+    - name: "low_cultural_accuracy"
+      condition: "cultural_accuracy < 0.8"
+      severity: "critical"

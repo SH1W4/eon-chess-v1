@@ -1,0 +1,44 @@
+{
+  "project": "XadrezMaster",
+  "version_control": {
+    "strategy": "semantic",
+    "current_version": "0.1.0",
+    "branches": {
+      "stable": {
+        "path": ".versions/stable",
+        "last_version": "0.1.0",
+        "backup_frequency": "weekly"
+      },
+      "dev": {
+        "path": ".versions/dev",
+        "last_version": "0.1.0-dev",
+        "backup_frequency": "daily"
+      }
+    }
+  },
+  "backup": {
+    "system": {
+      "path": ".backup/system",
+      "retention": "30 days",
+      "frequency": "daily"
+    },
+    "cloud": {
+      "path": ".backup/cloud",
+      "retention": "90 days",
+      "frequency": "on_change"
+    }
+  },
+  "cloud_sync": {
+    "enabled": true,
+    "service": "iCloud",
+    "sync_paths": {
+      "assets": ".cloud/assets",
+      "documents": ".cloud/sync"
+    },
+    "ignore_patterns": [
+      "*.tmp",
+      "*.log",
+      "node_modules"
+    ]
+  }
+}
