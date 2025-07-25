@@ -87,3 +87,4 @@ mobile/ios/build/
 mobile/android/build/
 mobile/android/.gradle/
 mobile/android/local.properties
+docs/backup/MVP*.zip
