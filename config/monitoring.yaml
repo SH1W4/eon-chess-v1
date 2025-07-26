@@ -1,0 +1,45 @@
+monitoring:
+  metrics:
+    - module: core
+      metrics: 
+        - name: performance
+          type: gauge
+          description: "Core system performance metrics"
+        - name: usage
+          type: counter
+          description: "System usage statistics"
+    
+    - module: ai
+      metrics:
+        - name: accuracy
+          type: gauge
+          description: "AI model accuracy"
+        - name: response_time
+          type: histogram
+          description: "AI response time measurements"
+        
+    - module: integrations
+      metrics:
+        - name: availability
+          type: gauge
+          description: "Integration endpoints availability"
+        - name: latency
+          type: histogram
+          description: "Integration response times"
+
+  alerts:
+    - name: high_latency
+      condition: "response_time > 1000ms"
+      severity: warning
+    
+    - name: low_accuracy
+      condition: "accuracy < 0.8"
+      severity: critical
+
+  logging:
+    level: info
+    format: json
+    outputs:
+      - type: file
+        path: /var/log/chess/metrics.log
+      - type: stdout

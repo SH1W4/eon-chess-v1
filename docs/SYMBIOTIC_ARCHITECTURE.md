@@ -2,6 +2,42 @@
 
 ## Visão Geral
 
+### Detalhamento Técnico
+O projeto incorpora uma arquitetura simbiótica que integra componentes do sistema por meio de capacidades evolutivas e processos automatizados.
+
+#### Componentes
+1. **Núcleo Simbiótico**
+   - Automatização dos processos principais
+   - Inicialização de capacidade dinâmica
+
+2. **Análise de Compatibilidade**
+   - Geração de matriz de compatibilidade
+   - Potenciais de adaptação e emergência
+
+3. **Pontes de Integração**
+   - Sistemas de gerência de recurso
+   - Monitoramento e propagação de eventos
+
+4. **Sistema Evolutivo**
+   - Métricas de emergência e coesão
+   - Eficiência de adaptação
+
+#### Fases
+- **Nucleação:** Configurações iniciais e análise.
+- **Symbiogenesis:** Integração com sistemas existentes.
+- **Emergência:** Aparição de novos comportamentos.
+- **Homeostase:** Manutenção e equilíbrio simbiótico.
+
+#### Capacidades
+- Gerenciamento de recursos
+- Monitoramento do estado
+- Propagação de eventos
+
+### Documentação de Uso
+- Inicialização: `symbiotic init --mode=<mode>`
+- Monitoramento: `symbiotic vitals`
+- Evolução: `symbiotic evolve`
+
 O sistema de xadrez foi reorganizado para seguir uma arquitetura simbiótica, que permite uma integração mais profunda entre seus diferentes componentes e oferece capacidades evolutivas e adaptativas.
 
 ## Componentes Principais

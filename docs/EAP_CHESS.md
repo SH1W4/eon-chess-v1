@@ -1,5 +1,24 @@
 # Estrutura Analítica do Projeto - Chess System
 
+## Visão Geral do Escopo
+Implementação de um sistema de xadrez com capacidades simbióticas, adaptativas e culturais, incluindo IA avançada e monitoramento em tempo real.
+
+## 0. Gestão do Projeto
+### 0.1 Iniciação
+- 0.1.1 Análise de requisitos
+- 0.1.2 Definição de escopo
+- 0.1.3 Plano de projeto
+
+### 0.2 Planejamento
+- 0.2.1 Cronograma
+- 0.2.2 Recursos
+- 0.2.3 Riscos
+
+### 0.3 Monitoramento
+- 0.3.1 Métricas de progresso
+- 0.3.2 Qualidade
+- 0.3.3 Performance
+
 ## 1. Correção de Bugs Críticos
 ### 1.1 Sistema de Detecção de Xeque
 - 1.1.1 Análise do algoritmo atual de detecção
