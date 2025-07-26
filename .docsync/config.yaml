@@ -1,0 +1,80 @@
+sync_config:
+  version: "1.0.0"
+  project_name: "XadrezMaster"
+  
+  directories:
+    source:
+      - path: "src/"
+        patterns: ["*.py", "*.json", "*.yaml"]
+        ignore: ["__pycache__", "*.pyc"]
+    
+    documentation:
+      - path: "docs/"
+        patterns: ["*.md", "*.txt"]
+        ignore: ["*.tmp"]
+    
+    templates:
+      - path: ".docsync/templates/"
+        patterns: ["*.md", "*.yaml"]
+    
+    backup:
+      - path: ".backup/"
+        retention: "7d"
+    
+    cloud:
+      - path: ".cloud/sync/"
+        sync_interval: "1h"
+    
+    versions:
+      - path: ".versions/"
+        format: "v{major}.{minor}.{patch}"
+
+  sync_rules:
+    - name: "documentation_sync"
+      source: "docs/"
+      target: ".cloud/sync/docs/"
+      interval: "15m"
+      validate: true
+    
+    - name: "source_sync"
+      source: "src/"
+      target: ".cloud/sync/src/"
+      interval: "5m"
+      validate: true
+    
+    - name: "template_sync"
+      source: ".docsync/templates/"
+      target: ".cloud/sync/templates/"
+      interval: "1h"
+      validate: true
+
+  validation:
+    integrity:
+      - check_links: true
+      - verify_format: true
+      - validate_syntax: true
+    
+    performance:
+      - max_file_size: "10MB"
+      - max_sync_time: "5m"
+      - max_resource_usage: "30%"
+
+  integrations:
+    symbiotic_framework:
+      - sync_points: ["core", "evolution", "learning"]
+      - validation: ["integrity", "compatibility", "resources"]
+    
+    arquimax:
+      - sync_targets: ["tasks", "resources", "metrics"]
+      - validation: ["performance", "efficiency", "health"]
+
+  maintenance:
+    automated:
+      - task: "backup_verification"
+        schedule: "daily"
+      - task: "integrity_check"
+        schedule: "daily"
+      - task: "deep_validation"
+        schedule: "weekly"
+      - task: "resource_cleanup"
+        schedule: "weekly"

@@ -1,0 +1,60 @@
+---
+narrative_templates:
+  advance:
+    - "{piece} avança para {square}"
+    - "Move {piece} para {square}"
+    - "Desenvolve {piece} para {square}"
+  
+  capture:
+    - "{piece} captura {captured_piece} em {square}"
+    - "Elimina {captured_piece} com {piece}"
+    - "Toma {captured_piece} com {piece}"
+  
+  check:
+    - "Xeque com {piece}"
+    - "{piece} ameaça o rei"
+    - "Ataque direto ao rei com {piece}"
+  
+  checkmate:
+    - "Xeque-mate! Vitória com {piece}"
+    - "O rei cai! {piece} dá mate"
+    - "Fim de jogo com {piece} mate"
+
+tactical_templates:
+  fork:
+    - "Ataque duplo ameaçando {targets}"
+    - "Garfo tático contra {targets}"
+  
+  pin:
+    - "Cravada impede movimento de {piece}"
+    - "{piece} está cravado contra {target}"
+  
+  skewer:
+    - "Espeto através de {pieces}"
+    - "Alinhamento forçado de {pieces}"
+
+game_states:
+  opening:
+    - "Fase de abertura: desenvolvimento de peças"
+    - "Início de jogo: controle do centro"
+  
+  middlegame:
+    - "Meio-jogo: batalha tática"
+    - "Fase intermediária: manobras estratégicas"
+  
+  endgame:
+    - "Final: simplificação da posição"
+    - "Endgame: corrida pela promoção"
+
+phases:
+  opening:
+    - "Abertura clássica em desenvolvimento"
+    - "Estrutura de peões em formação"
+  
+  middlegame:
+    - "Posição complexa com múltiplas ameaças"
+    - "Tensão táctica no centro"
+  
+  endgame:
+    - "Final técnico com vantagem material"
+    - "Peões passados decidindo a partida"

@@ -1,7 +1,61 @@
 import pytest
 import numpy as np
+from typing import List, Optional
 from src.core.engine import ChessEngine, Position, Piece, Move
 from src.ai.adaptive_ai import AdaptiveAI, PlayerProfile, EvaluationWeights
+
+# Mock para ChessEngine nos testes
+class MockPiece:
+    def __init__(self, type_: str, color: str):
+        self.type = type_
+        self.color = color
+        self.has_moved = False
+        self.position = Position(0, 0)
+
+class MockMove:
+    def __init__(self, from_pos: Position, to_pos: Position, piece: MockPiece):
+        self.from_pos = from_pos
+        self.to_pos = to_pos
+        self.piece = piece
+        self.captured_piece = None
+        self.is_castling = False
+        self.is_en_passant = False
+        self.promotion_piece = None
+
+class MockChessEngine:
+    def __init__(self):
+        self.current_player = 'white'
+        self.board = [[None for _ in range(8)] for _ in range(8)]
+        self.move_history = []
+        self._setup_board()
+    
+    def _setup_board(self):
+        # Setup peões
+        for col in range(8):
+            self.board[1][col] = MockPiece('pawn', 'black')
+            self.board[6][col] = MockPiece('pawn', 'white')
+        
+        # Setup outras peças
+        pieces = ['rook', 'knight', 'bishop', 'queen', 'king', 'bishop', 'knight', 'rook']
+        for col, piece_type in enumerate(pieces):
+            self.board[0][col] = MockPiece(piece_type, 'black')
+            self.board[7][col] = MockPiece(piece_type, 'white')
+    
+    def get_piece(self, pos: Position) -> Optional[MockPiece]:
+        return self.board[pos.row][pos.col]
+    
+    def make_move(self, move: MockMove) -> bool:
+        self.move_history.append(move)
+        return True
+    
+    def get_legal_moves(self, pos: Position) -> List[Position]:
+        # Retorna alguns movimentos válidos para teste
+        if pos.row == 6 and pos.col == 4:  # e2
+            return [Position(4, 4)]  # e4
+        return []
+    
+    def _is_legal_move(self, move: MockMove) -> bool:
+        return True
 
 def test_player_profile_initialization():
     profile = PlayerProfile()
@@ -46,14 +100,18 @@ def test_evaluate_position():
     ai = AdaptiveAI()
     
     # Avaliação da posição inicial
-    score = ai.evaluate_position(engine, 'white')
+    score = ai.evaluate_position(engine)
     assert isinstance(score, float)
     
     # Fazer um movimento e avaliar nova posição
-    move = Move(Position(6, 4), Position(4, 4), engine.get_piece(Position(6, 4)))  # e4
+    move = Move(
+        Position(6, 4),  # e2
+        Position(4, 4),  # e4
+        engine.get_piece(Position(6, 4))
+    )
     engine.make_move(move)
     
-    new_score = ai.evaluate_position(engine, 'white')
+    new_score = ai.evaluate_position(engine)
     assert isinstance(new_score, float)
     assert new_score != score  # A avaliação deve mudar após um movimento
 
@@ -79,7 +137,7 @@ def test_evaluate_components():
     assert mobility > 0  # Na posição inicial, deve haver movimentos disponíveis
     
     # Testar avaliação de segurança do rei
-    king_safety = ai._evaluate_king_safety(engine, 'white')
+    king_safety = ai._evaluate_king_safety(engine)
     assert isinstance(king_safety, float)
     assert king_safety > 0  # Na posição inicial, o rei deve estar relativamente seguro
     
@@ -137,9 +195,6 @@ def test_adaptive_behavior():
     
     # Obter movimento com perfil agressivo
     aggressive_move = ai.get_best_move(engine)
-    
-    # Resetar engine
-    engine = ChessEngine()
     
     # Configurar perfil mais defensivo
     ai.profile.aggression = 0.2
