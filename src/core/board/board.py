@@ -1,74 +1,7 @@
 """Chess board implementation"""
-from enum import Enum
-import copy
 from typing import Dict, List, Optional, Tuple
-from dataclasses import dataclass
-
-
-class PieceType(Enum):
-    """Chess piece types"""
-    KING = "K"
-    QUEEN = "Q"
-    ROOK = "R"
-    BISHOP = "B"
-    KNIGHT = "N"
-    PAWN = "P"
-
-
-class Color(Enum):
-    """Chess piece colors"""
-    WHITE = "white"
-    BLACK = "black"
-
-
-@dataclass(frozen=True)
-class Position:
-    """Board position"""
-    rank: int  # 1-8
-    file: int  # 1-8 (a-h)
-    
-    def __hash__(self):
-        return hash((self.rank, self.file))
-
-    @classmethod
-    def from_algebraic(cls, notation: str) -> 'Position':
-        """Create position from algebraic notation (e.g., 'e4')"""
-        file = ord(notation[0].lower()) - ord('a') + 1
-        rank = int(notation[1])
-        return cls(rank=rank, file=file)
-    
-    def to_algebraic(self) -> str:
-        """Convert to algebraic notation"""
-        file = chr(self.file + ord('a') - 1)
-        return f"{file}{self.rank}"
-
-
-@dataclass
-class Piece:
-    """Chess piece"""
-    type: PieceType
-    color: Color
-    position: Position
-    has_moved: bool = False
-
-    def symbol(self) -> str:
-        """Return ASCII symbol for the piece"""
-        symbols = {
-            (PieceType.KING, Color.WHITE): "K",
-            (PieceType.QUEEN, Color.WHITE): "Q",
-            (PieceType.ROOK, Color.WHITE): "R",
-            (PieceType.BISHOP, Color.WHITE): "B",
-            (PieceType.KNIGHT, Color.WHITE): "N",
-            (PieceType.PAWN, Color.WHITE): "P",
-            (PieceType.KING, Color.BLACK): "k",
-            (PieceType.QUEEN, Color.BLACK): "q",
-            (PieceType.ROOK, Color.BLACK): "r",
-            (PieceType.BISHOP, Color.BLACK): "b",
-            (PieceType.KNIGHT, Color.BLACK): "n",
-            (PieceType.PAWN, Color.BLACK): "p"
-        }
-        return symbols[(self.type, self.color)]
-
+from ..quantum.quantum_field import QuantumField
+from ..models import Position, Color, PieceType, Piece
 
 class Board:
     """Chess board implementation"""
@@ -78,7 +11,9 @@ class Board:
         self.captured_pieces: List[Piece] = []
         self.move_history: List[Tuple[Position, Position]] = []
         self.current_turn = Color.WHITE
+        self.quantum_field = QuantumField()
         self._setup_initial_position()
+        self.quantum_field.update_field(self.pieces)
     
     def _setup_initial_position(self):
         """Setup initial piece positions"""
@@ -119,143 +54,27 @@ class Board:
         """Check if the king is in check"""
         # Find king position
         king_pos = None
-        for piece in self.pieces.values():
+        for pos, piece in self.pieces.items():
             if piece.type == PieceType.KING and piece.color == color:
-                king_pos = piece.position
+                king_pos = pos
                 break
 
         if not king_pos:
             print(f"King not found for {color}")
             return False
-        
-        print(f"Checking if {color} king at {king_pos.to_algebraic()} is in check")
-        
-        # Determine attacking color
-        opponent_color = Color.BLACK if color == Color.WHITE else Color.WHITE
-        
-        # Check if any opponent piece can attack the king
-        for piece in self.pieces.values():
-            if piece.color != color:  # Any opponent piece
-                # Check based on piece type
-                print(f"Checking piece {piece.type} at {piece.position.to_algebraic()}")
-                if piece.type == PieceType.PAWN:
-                    # Pawns only attack diagonally forward
-                    attack_direction = 1 if piece.color == Color.WHITE else -1
-                    for file_offset in [-1, 1]:
-                        attack_pos = Position(
-                            piece.position.rank + attack_direction,
-                            piece.position.file + file_offset
-                        )
-                        if (1 <= attack_pos.rank <= 8 and 
-                            1 <= attack_pos.file <= 8 and
-                            attack_pos == king_pos):
-                            print(f"FOUND CHECK: King at {king_pos.to_algebraic()} is in check by pawn at {piece.position.to_algebraic()}")
-                            return True
-                            
-                elif piece.type == PieceType.KNIGHT:
-                    # Knights have fixed attack pattern
-                    for dr, df in [(2, 1), (2, -1), (-2, 1), (-2, -1),
-                                  (1, 2), (1, -2), (-1, 2), (-1, -2)]:
-                        attack_pos = Position(
-                            piece.position.rank + dr,
-                            piece.position.file + df
-                        )
-                        if (1 <= attack_pos.rank <= 8 and 
-                            1 <= attack_pos.file <= 8 and
-                            attack_pos == king_pos):
-                            print(f"FOUND CHECK: King at {king_pos.to_algebraic()} is in check by knight at {piece.position.to_algebraic()}")
-                            return True
-                            
-                elif piece.type in [PieceType.BISHOP, PieceType.ROOK, PieceType.QUEEN]:
-                    # These pieces attack along lines
-                    directions = []
-                    if piece.type in [PieceType.BISHOP, PieceType.QUEEN]:
-                        directions.extend([(1, 1), (1, -1), (-1, 1), (-1, -1)])
-                    if piece.type in [PieceType.ROOK, PieceType.QUEEN]:
-                        directions.extend([(0, 1), (0, -1), (1, 0), (-1, 0)])
-                    
-                    for dr, df in directions:
-                        for distance in range(1, 8):
-                            attack_pos = Position(
-                                piece.position.rank + dr * distance,
-                                piece.position.file + df * distance
-                            )
-                            # Stop at board edge
-                            if not (1 <= attack_pos.rank <= 8 and 1 <= attack_pos.file <= 8):
-                                break
-                                
-                            # Found the king in this direction
-                            if attack_pos == king_pos:
-                                print(f"FOUND CHECK: King at {king_pos.to_algebraic()} is in check by {piece.type} at {piece.position.to_algebraic()}")
-                                return True
-                                
-                            # Stop scanning if we hit any piece that isn't the target
-                            target = self.get_piece(attack_pos)
-                            if target and target.position != king_pos:
-                                break
 
+        # Check for attacks from enemy pieces
+        enemy_color = Color.BLACK if color == Color.WHITE else Color.WHITE
+        for pos, piece in self.pieces.items():
+            if piece.color == enemy_color:
+                moves = self._get_piece_moves_no_check(piece, include_castling=False)
+                if king_pos in moves:
+                    return True
         return False
     
     def _is_square_attacked_no_castling(self, pos: Position, color: Color) -> bool:
         """Check if a square is attacked by the opposite color (without considering castling)"""
-        opponent_color = Color.BLACK if color == Color.WHITE else Color.WHITE
-        for piece in self.pieces.values():
-            if piece.color == opponent_color:  # Any opponent piece
-                # Check based on piece type
-                if piece.type == PieceType.PAWN:
-                    # Pawns only attack diagonally forward
-                    attack_direction = 1 if piece.color == Color.WHITE else -1
-                    for file_offset in [-1, 1]:
-                        attack_pos = Position(
-                            piece.position.rank + attack_direction,
-                            piece.position.file + file_offset
-                        )
-                        if (1 <= attack_pos.rank <= 8 and 
-                            1 <= attack_pos.file <= 8 and
-                            attack_pos == pos):
-                            return True
-                            
-                elif piece.type == PieceType.KNIGHT:
-                    # Knights have fixed attack pattern
-                    for dr, df in [(2, 1), (2, -1), (-2, 1), (-2, -1),
-                                  (1, 2), (1, -2), (-1, 2), (-1, -2)]:
-                        attack_pos = Position(
-                            piece.position.rank + dr,
-                            piece.position.file + df
-                        )
-                        if (1 <= attack_pos.rank <= 8 and 
-                            1 <= attack_pos.file <= 8 and
-                            attack_pos == pos):
-                            return True
-                            
-                elif piece.type in [PieceType.BISHOP, PieceType.ROOK, PieceType.QUEEN]:
-                    # These pieces attack along lines
-                    directions = []
-                    if piece.type in [PieceType.BISHOP, PieceType.QUEEN]:
-                        directions.extend([(1, 1), (1, -1), (-1, 1), (-1, -1)])
-                    if piece.type in [PieceType.ROOK, PieceType.QUEEN]:
-                        directions.extend([(0, 1), (0, -1), (1, 0), (-1, 0)])
-                    
-                    for dr, df in directions:
-                        for distance in range(1, 8):
-                            attack_pos = Position(
-                                piece.position.rank + dr * distance,
-                                piece.position.file + df * distance
-                            )
-                            # Stop at board edge
-                            if not (1 <= attack_pos.rank <= 8 and 1 <= attack_pos.file <= 8):
-                                break
-                                
-                            # Found the target square in this direction
-                            if attack_pos == pos:
-                                return True
-                                
-                            # Stop scanning if we hit any piece that isn't the target
-                            target = self.get_piece(attack_pos)
-                            if target and target.position != pos:
-                                break
-
-        return False
+        return self.quantum_field.is_square_attacked(pos, color)
 
     def is_square_attacked(self, pos: Position, color: Color) -> bool:
         """Check if a square is attacked by the opposite color"""
@@ -270,38 +89,47 @@ class Board:
 
         if piece.type == PieceType.PAWN:
             direction = 1 if piece.color == Color.WHITE else -1
+            start_rank = 2 if piece.color == Color.WHITE else 7
             
             # Forward move
-            forward = Position(piece.position.rank + direction, piece.position.file)
-            if 1 <= forward.rank <= 8 and not self.get_piece(forward):
-                moves.append(forward)
-                # Initial double move
-                if not piece.has_moved:
-                    double_forward = Position(piece.position.rank + 2 * direction, piece.position.file)
-                    if 1 <= double_forward.rank <= 8 and not self.get_piece(double_forward):
-                        middle_pos = Position(piece.position.rank + direction, piece.position.file)
-                        if not self.get_piece(middle_pos):
+            try:
+                forward = Position(piece.position.rank + direction, piece.position.file)
+                if forward.is_valid() and not self.get_piece(forward):
+                    moves.append(forward)
+                    # Initial double move
+                    if piece.position.rank == start_rank:
+                        double_forward = Position(piece.position.rank + 2 * direction, piece.position.file)
+                        if double_forward.is_valid() and not self.get_piece(double_forward):
                             moves.append(double_forward)
+            except ValueError:
+                pass
             
             # Diagonal captures
             for file_offset in [-1, 1]:
-                capture = Position(piece.position.rank + direction, piece.position.file + file_offset)
-                if 1 <= capture.rank <= 8 and 1 <= capture.file <= 8:
-                    target = self.get_piece(capture)
-                    if target and target.color != piece.color:
-                        moves.append(capture)
+                try:
+                    capture = Position(piece.position.rank + direction, piece.position.file + file_offset)
+                    if capture.is_valid():
+                        target = self.get_piece(capture)
+                        # Adiciona o movimento se houver uma peça inimiga para capturar
+                        if target is not None and target.color != piece.color:
+                            moves.append(capture)
+                            print(f"Valid pawn capture found at {capture.to_algebraic()}")
+                except ValueError:
+                    continue
 
         elif piece.type == PieceType.KNIGHT:
             for dr, df in [(2, 1), (2, -1), (-2, 1), (-2, -1),
                           (1, 2), (1, -2), (-1, 2), (-1, -2)]:
-                new_pos = Position(
-                    piece.position.rank + dr,
-                    piece.position.file + df
-                )
-                if 1 <= new_pos.rank <= 8 and 1 <= new_pos.file <= 8:
+                try:
+                    new_pos = Position(
+                        piece.position.rank + dr,
+                        piece.position.file + df
+                    )
                     target = self.get_piece(new_pos)
                     if not target or target.color != piece.color:
                         moves.append(new_pos)
+                except ValueError:
+                    continue
 
         elif piece.type in [PieceType.BISHOP, PieceType.ROOK, PieceType.QUEEN]:
             directions = []
@@ -313,64 +141,72 @@ class Board:
             for dr, df in directions:
                 # Keep moving in the direction until we hit a piece or the edge of the board
                 for distance in range(1, 9):
-                    new_pos = Position(
-                        piece.position.rank + dr * distance,
-                        piece.position.file + df * distance
-                    )
-                    # Stop if we hit the edge of the board
-                    if not (1 <= new_pos.rank <= 8 and 1 <= new_pos.file <= 8):
+                    try:
+                        new_pos = Position(
+                            piece.position.rank + dr * distance,
+                            piece.position.file + df * distance
+                        )
+                        # Check if there's a piece on this square
+                        target = self.get_piece(new_pos)
+                        # If we hit a piece:
+                        # - Add the square if it's an enemy piece
+                        # - Stop searching this direction
+                        if target:
+                            if target.color != piece.color:
+                                moves.append(new_pos)
+                            break
+                        # No piece on this square, keep searching this direction
+                        moves.append(new_pos)
+                    except ValueError:
                         break
-                    # Check if there's a piece on this square
-                    target = self.get_piece(new_pos)
-                    # If we hit a piece:
-                    # - Add the square if it's an enemy piece
-                    # - Stop searching this direction
-                    if target:
-                        if target.color != piece.color:
-                            moves.append(new_pos)
-                        break
-                    # No piece on this square, keep searching this direction
-                    moves.append(new_pos)
 
         elif piece.type == PieceType.KING:
             # Normal moves
             for dr, df in [(1, 0), (1, 1), (0, 1), (-1, 1),
                           (-1, 0), (-1, -1), (0, -1), (1, -1)]:
-                new_pos = Position(
-                    piece.position.rank + dr,
-                    piece.position.file + df
-                )
-                if 1 <= new_pos.rank <= 8 and 1 <= new_pos.file <= 8:
+                try:
+                    new_pos = Position(
+                        piece.position.rank + dr,
+                        piece.position.file + df
+                    )
                     target = self.get_piece(new_pos)
                     if not target or target.color != piece.color:
                         moves.append(new_pos)
+                except ValueError:
+                    continue
 
             # Castling
             if include_castling and not piece.has_moved:
                 rank = piece.position.rank
                 # Kingside castling
-                rook_pos = Position(rank, 8)
-                rook = self.get_piece(rook_pos)
-                if rook and rook.type == PieceType.ROOK and not rook.has_moved:
-                    if not self.get_piece(Position(rank, 6)) and not self.get_piece(Position(rank, 7)):
-                        # Verificar xeque e ataques sem recursão
-                        if not self._is_square_attacked_no_castling(Position(rank, 5), piece.color) and \
-                           not self._is_square_attacked_no_castling(Position(rank, 6), piece.color) and \
-                           not self._is_square_attacked_no_castling(Position(rank, 7), piece.color):
-                            moves.append(Position(rank, 7))
+                try:
+                    rook_pos = Position(rank, 8)
+                    rook = self.get_piece(rook_pos)
+                    if rook and rook.type == PieceType.ROOK and not rook.has_moved:
+                        if not self.get_piece(Position(rank, 6)) and not self.get_piece(Position(rank, 7)):
+                            # Check for check and attacks without recursion
+                            if not self._is_square_attacked_no_castling(Position(rank, 5), piece.color) and \
+                               not self._is_square_attacked_no_castling(Position(rank, 6), piece.color) and \
+                               not self._is_square_attacked_no_castling(Position(rank, 7), piece.color):
+                                moves.append(Position(rank, 7))
+                except ValueError:
+                    pass
                 
                 # Queenside castling
-                rook_pos = Position(rank, 1)
-                rook = self.get_piece(rook_pos)
-                if rook and rook.type == PieceType.ROOK and not rook.has_moved:
-                    if not self.get_piece(Position(rank, 2)) and \
-                       not self.get_piece(Position(rank, 3)) and \
-                       not self.get_piece(Position(rank, 4)):
-                        # Verificar xeque e ataques sem recursão
-                        if not self._is_square_attacked_no_castling(Position(rank, 5), piece.color) and \
-                           not self._is_square_attacked_no_castling(Position(rank, 3), piece.color) and \
-                           not self._is_square_attacked_no_castling(Position(rank, 4), piece.color):
-                            moves.append(Position(rank, 3))
+                try:
+                    rook_pos = Position(rank, 1)
+                    rook = self.get_piece(rook_pos)
+                    if rook and rook.type == PieceType.ROOK and not rook.has_moved:
+                        if not self.get_piece(Position(rank, 2)) and \
+                           not self.get_piece(Position(rank, 3)) and \
+                           not self.get_piece(Position(rank, 4)):
+                            # Check for check and attacks without recursion
+                            if not self._is_square_attacked_no_castling(Position(rank, 5), piece.color) and \
+                               not self._is_square_attacked_no_castling(Position(rank, 3), piece.color) and \
+                               not self._is_square_attacked_no_castling(Position(rank, 4), piece.color):
+                                moves.append(Position(rank, 3))
+                except ValueError:
+                    pass
 
         return moves
 
@@ -381,7 +217,13 @@ class Board:
             return False
         if target.color == piece.color:
             return False
-        return True
+            
+        # Verify diagonal capture
+        file_diff = abs(piece.position.file - to_pos.file)
+        rank_diff = to_pos.rank - piece.position.rank
+        direction = 1 if piece.color == Color.WHITE else -1
+        
+        return file_diff == 1 and rank_diff == direction
     
     def get_valid_moves(self, position: Position) -> List[Position]:
         """Get all valid moves for a piece at the given position."""
@@ -394,25 +236,27 @@ class Board:
             # Try move
             old_pos = piece.position
             captured = self.get_piece(move)
+            original_pieces = self.pieces.copy()
             
             # Make temporary move
             piece.position = move
+            self.pieces = original_pieces.copy()
             if captured:
                 del self.pieces[move]
             del self.pieces[old_pos]
             self.pieces[move] = piece
             
+            # Update quantum field with temporary move
+            self.quantum_field.update_field(self.pieces)
+            
             # Check if king would be in check
             puts_king_in_check = self.is_in_check(piece.color)
             
-            # Revert move
+            # Revert move and field
             piece.position = old_pos
-            self.pieces[old_pos] = piece
-            if captured:
-                self.pieces[move] = captured
-            else:
-                del self.pieces[move]
-                
+            self.pieces = original_pieces
+            self.quantum_field.update_field(self.pieces)
+            
             if not puts_king_in_check:
                 moves.append(move)
                 
@@ -420,30 +264,33 @@ class Board:
 
     def move_piece(self, from_pos: Position, to_pos: Position) -> bool:
         """Move a piece on the board"""
+        # Get the piece at the source position
         piece = self.get_piece(from_pos)
-        if not piece or piece.color != self.current_turn:
+        if not piece:
             return False
         
-        # Check if move is in valid moves list
+        # Verify it's the correct turn
+        if piece.color != self.current_turn:
+            return False
+        
+        # Get valid moves for the piece
         valid_moves = self.get_valid_moves(from_pos)
         if to_pos not in valid_moves:
             return False
         
-        # Get captured piece if any
-        captured = self.get_piece(to_pos)
+        # Execute the move
+        captured_piece = self.get_piece(to_pos)
+        if captured_piece:
+            self.captured_pieces.append(captured_piece)
         
-        # Update piece position
-        old_pos = piece.position
+        # Update piece position and status
         piece.position = to_pos
-        if captured:
-            del self.pieces[to_pos]
+        piece.has_moved = True
+        
+        # Update board state
         del self.pieces[from_pos]
         self.pieces[to_pos] = piece
         
-        if piece.type == PieceType.KING:
-            self.current_turn = Color.BLACK if piece.color == Color.WHITE else Color.WHITE
-            return not self.is_in_check(piece.color)
-
         # Handle castling
         if piece.type == PieceType.KING and abs(from_pos.file - to_pos.file) == 2:
             rank = piece.position.rank
@@ -454,7 +301,7 @@ class Board:
                     rook.position = Position(rank, 6)
                     rook.has_moved = True
                     self.pieces[Position(rank, 6)] = rook
-            elif to_pos.file == 3:  # Queenside
+            else:  # Queenside
                 rook = self.get_piece(Position(rank, 1))
                 if rook:
                     del self.pieces[Position(rank, 1)]
@@ -462,49 +309,99 @@ class Board:
                     rook.has_moved = True
                     self.pieces[Position(rank, 4)] = rook
 
-        # Move is valid, make it permanent
-        if captured:
-            self.captured_pieces.append(captured)
-        piece.has_moved = True
+        # Record move and switch turns
         self.move_history.append((from_pos, to_pos))
         self.current_turn = Color.BLACK if self.current_turn == Color.WHITE else Color.WHITE
         
+        # Update quantum field
+        self.quantum_field.update_field(self.pieces)
+        
+        return True
+
+    def _can_castle_kingside(self, king: Piece, to_pos: Position) -> bool:
+        """Check if kingside castling is valid."""
+        if king.has_moved or self.is_in_check(king.color):
+            return False
+            
+        rank = king.position.rank
+        rook_pos = Position(rank, 8)
+        rook = self.get_piece(rook_pos)
+        if not rook or rook.type != PieceType.ROOK or rook.has_moved:
+            return False
+            
+        # Path must be clear
+        if self.get_piece(Position(rank, 6)) or self.get_piece(Position(rank, 7)):
+            return False
+            
+        # Path must not be under attack
+        enemy_color = Color.BLACK if king.color == Color.WHITE else Color.WHITE
+        if (self.is_square_attacked(Position(rank, 5), enemy_color) or
+            self.is_square_attacked(Position(rank, 6), enemy_color) or
+            self.is_square_attacked(Position(rank, 7), enemy_color)):
+            return False
+            
+        return True
+
+    def _can_castle_queenside(self, king: Piece, to_pos: Position) -> bool:
+        """Check if queenside castling is valid."""
+        if king.has_moved or self.is_in_check(king.color):
+            return False
+            
+        rank = king.position.rank
+        rook_pos = Position(rank, 1)
+        rook = self.get_piece(rook_pos)
+        if not rook or rook.type != PieceType.ROOK or rook.has_moved:
+            return False
+            
+        # Path must be clear
+        if (self.get_piece(Position(rank, 2)) or
+            self.get_piece(Position(rank, 3)) or
+            self.get_piece(Position(rank, 4))):
+            return False
+            
+        # Path must not be under attack
+        enemy_color = Color.BLACK if king.color == Color.WHITE else Color.WHITE
+        if (self.is_square_attacked(Position(rank, 3), enemy_color) or
+            self.is_square_attacked(Position(rank, 4), enemy_color)):
+            return False
+            
         return True
     
     def is_checkmate(self) -> bool:
         """Check if it's checkmate"""
-        if not self.is_in_check(self.current_turn):
+        color = self.current_turn
+
+        # Must be in check first
+        if not self.is_in_check(color):
             return False
 
-        # Test all possible moves to escape check
-        for piece in self.pieces.values():
-            if piece.color == self.current_turn:
+        # Try every possible move to get out of check
+        for pos, piece in self.pieces.items():
+            if piece.color == color:
                 for move_pos in self._get_piece_moves_no_check(piece):
-                    # Try move
+                    # Try the move
                     old_pos = piece.position
                     captured = self.get_piece(move_pos)
+                    original_pieces = self.pieces.copy()
                     
                     # Make temporary move
                     piece.position = move_pos
+                    self.pieces = original_pieces.copy()
                     if captured:
                         del self.pieces[move_pos]
                     del self.pieces[old_pos]
                     self.pieces[move_pos] = piece
                     
-                    # Check if king is still in check
-                    still_in_check = self.is_in_check(self.current_turn)
+                    # Check if still in check
+                    still_in_check = self.is_in_check(color)
                     
                     # Revert move
                     piece.position = old_pos
-                    self.pieces[old_pos] = piece
-                    if captured:
-                        self.pieces[move_pos] = captured
-                    else:
-                        del self.pieces[move_pos]
+                    self.pieces = original_pieces
                     
                     if not still_in_check:
                         return False
-
+        
         return True
 
     def is_stalemate(self) -> bool:
@@ -513,33 +410,10 @@ class Board:
             return False
 
         # Check if any piece has valid moves
-        for piece in self.pieces.values():
+        for pos, piece in list(self.pieces.items()):
             if piece.color == self.current_turn:
-                for move_pos in self._get_piece_moves_no_check(piece):
-                    # Try move
-                    old_pos = piece.position
-                    captured = self.get_piece(move_pos)
-                    
-                    # Make temporary move
-                    piece.position = move_pos
-                    if captured:
-                        del self.pieces[move_pos]
-                    del self.pieces[old_pos]
-                    self.pieces[move_pos] = piece
-                    
-                    # Check if king would be in check
-                    valid_move = not self.is_in_check(self.current_turn)
-                    
-                    # Revert move
-                    piece.position = old_pos
-                    self.pieces[old_pos] = piece
-                    if captured:
-                        self.pieces[move_pos] = captured
-                    else:
-                        del self.pieces[move_pos]
-                    
-                    if valid_move:
-                        return False
+                if self.get_valid_moves(pos):
+                    return False
 
         return True
     
