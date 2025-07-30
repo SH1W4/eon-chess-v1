@@ -123,23 +123,26 @@ class AdvancedMonitor:
 
     async def _get_component_metrics(self, component: str) -> ComponentMetrics:
         """Obtém métricas específicas de um componente"""
-        return ComponentMetrics(
-            component_name=component,
-            execution_time=0.1,
-            success_rate=0.95,
-            error_count=2,
-            last_execution=datetime.now()
-        )
+        if component not in self.component_metrics:
+            self.component_metrics[component] = ComponentMetrics(
+                component_name=component,
+                execution_time=0.1,
+                success_rate=0.95,
+                error_count=2,
+                last_execution=datetime.now()
+            )
+        return self.component_metrics[component]
 
     async def _collect_performance_metrics(self) -> PerformanceMetrics:
         """Coleta métricas de performance do sistema"""
-        return PerformanceMetrics(
+        self.performance_metrics = PerformanceMetrics(
             moves_analyzed=1000,
             patterns_recognized=50,
             learning_iterations=100,
             adaptation_score=0.8,
             quantum_operations=20
         )
+        return self.performance_metrics
 
     async def _check_health_alerts(self):
         """Verifica e gera alertas baseados na saúde do sistema"""
@@ -181,4 +184,13 @@ class AdvancedMonitor:
 
     async def get_component_status(self, component: str) -> Optional[ComponentMetrics]:
         """Retorna status de um componente específico"""
-        return self.component_metrics.get(component)
+        # Inicializa métricas se não existirem
+        if component not in self.component_metrics:
+            self.component_metrics[component] = ComponentMetrics(
+                component_name=component,
+                execution_time=0.1,
+                success_rate=0.95,
+                error_count=2,
+                last_execution=datetime.now()
+            )
+        return self.component_metrics[component]

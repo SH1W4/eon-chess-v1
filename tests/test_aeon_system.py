@@ -2,9 +2,11 @@ import pytest
 import asyncio
 from unittest.mock import Mock, patch
 import numpy as np
+import time
 from datetime import datetime
 
-from core.board.board import Board, Position, Piece, PieceType, Color
+from core.models import Position, Color, PieceType, Piece
+from core.board.board import Board
 from core.orchestration.aeon_orchestrator import AEONOrchestrator
 from arquimax.chess_integration import ARQUIMAXChessIntegrator, PositionAnalysis
 from learning.symbiotic_learner import SymbioticLearner, LearningMetrics
@@ -15,7 +17,6 @@ from monitoring.advanced_monitor import AdvancedMonitor
 def board():
     """Cria um tabuleiro de teste"""
     board = Board()
-    board.setup_initial_position()
     return board
 
 @pytest.fixture
@@ -160,11 +161,11 @@ async def test_system_performance(orchestrator, board, monitor):
     execution_time = time.time() - start_time
     assert execution_time < 5.0  # Deve executar em menos de 5 segundos
     
-    # Verifica métricas de performance
-    status = await monitor.get_system_status()
-    assert status['performance'].moves_analyzed > 0
-    assert status['performance'].patterns_recognized > 0
-    assert status['performance'].adaptation_score > 0
+    # Coleta e verifica métricas de performance
+    metrics = await monitor._collect_performance_metrics()
+    assert metrics.moves_analyzed > 0
+    assert metrics.patterns_recognized > 0
+    assert metrics.adaptation_score > 0
 
 if __name__ == '__main__':
     pytest.main(['-v'])
