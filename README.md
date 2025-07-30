@@ -1,10 +1,10 @@
-# AEON CHESS
+# AEON Chess: Advanced Adaptive Chess AI
 
-> Um ecossistema transcendente que une a sabedoria milenar do xadrez com IA adaptativa e aprendizado simbiótico.
+> An intelligent chess ecosystem that combines traditional chess strategy with adaptive AI and machine learning.
 
-## 🚀 Visão Geral
+## 🚀 Project Overview
 
-O AEON Chess é uma reinvenção moderna do xadrez tradicional, combinando estratégia milenar com inteligência artificial adaptativa e elementos culturais profundos. Nossa missão é criar uma experiência de jogo única que não apenas desafia os jogadores, mas também promove crescimento pessoal e aprendizado contínuo.
+AEON Chess is a sophisticated chess AI system that adapts to players' styles and strategies. It features an advanced evaluation engine with position analysis, learning capabilities, and dynamic gameplay adjustments. The system integrates cultural elements and adaptive learning to create a unique and challenging chess experience.
 
 ## 📚 Documentação
 
