@@ -1,5 +1,6 @@
 """Core module for chess game"""
 
-from .board import Board, Position, Color, PieceType, Piece
+from .models import Position, Color, PieceType, Piece
+from .board import Board
 
 __all__ = ["Board", "Position", "Color", "PieceType", "Piece"]

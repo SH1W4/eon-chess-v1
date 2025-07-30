@@ -1,2 +1,3 @@
 """Chess board implementation"""
-from .board import Board, Position, Color, PieceType, Piece
+from ..models import Position, Color, PieceType, Piece
+from .board import Board
