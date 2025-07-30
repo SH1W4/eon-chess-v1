@@ -1,0 +1,62 @@
+@startuml Integration Flow
+
+' Estilos
+!define ARQUIMAX_COLOR #8B0000
+!define NEXUS_COLOR #006400
+!define SYSTEM_COLOR #1B1B1B
+
+skinparam sequence {
+    ParticipantBackgroundColor SYSTEM_COLOR
+    ParticipantBorderColor White
+    ParticipantFontColor White
+    ArrowColor White
+}
+
+' Título
+title AEON Chess - Integração ARQUIMAX-NEXUS
+
+' Participantes
+participant "AEON Chess" as aeon
+participant "ARQUIMAX" as arquimax #ARQUIMAX_COLOR
+participant "NEXUS" as nexus #NEXUS_COLOR
+participant "Symbiotic Core" as symbiotic
+
+' Sequência de Integração
+== Inicialização ==
+aeon -> arquimax: Iniciar capacidades
+arquimax -> aeon: Capacidades ativas
+aeon -> nexus: Conectar sistema
+nexus -> aeon: Sistema conectado
+
+== Ciclo de Execução ==
+loop Para cada movimento
+    aeon -> arquimax: Solicitar análise
+    arquimax -> symbiotic: Processar dados
+    symbiotic -> nexus: Adaptar execução
+    nexus -> arquimax: Retornar adaptação
+    arquimax -> aeon: Resultado adaptado
+end
+
+== Evolução ==
+loop Monitoramento contínuo
+    symbiotic -> arquimax: Coletar métricas
+    symbiotic -> nexus: Avaliar evolução
+    alt Métricas OK
+        nexus -> symbiotic: Manter estado
+    else Evolução necessária
+        nexus -> symbiotic: Iniciar evolução
+        symbiotic -> arquimax: Atualizar capacidades
+    end
+end
+
+== Sincronização ==
+loop A cada 5 minutos
+    arquimax -> nexus: Sincronizar estado
+    nexus -> arquimax: Confirmar sync
+    alt Divergência detectada
+        nexus -> symbiotic: Resolver conflito
+        symbiotic -> arquimax: Aplicar correção
+    end
+end
+
+@enduml

@@ -1,0 +1,72 @@
+@startuml AEON Chess Architecture
+
+' Estilos
+!define SYSTEM_COLOR #1B1B1B
+!define QUANTUM_COLOR #4B0082
+!define AI_COLOR #006400
+!define SYMBIOTIC_COLOR #8B0000
+
+skinparam component {
+    BackgroundColor SYSTEM_COLOR
+    BorderColor White
+    FontColor White
+}
+
+' Título
+title AEON Chess - Arquitetura do Sistema
+
+' Componentes principais
+package "Core System" {
+    [Chess Engine] as engine
+    [Board Manager] as board
+    [Rules Validator] as rules
+}
+
+package "Quantum Layer" {
+    [Quantum Field] as qfield #QUANTUM_COLOR
+    [Field Calculator] as qcalc #QUANTUM_COLOR
+    [State Manager] as qstate #QUANTUM_COLOR
+}
+
+package "AI System" {
+    [Adaptive AI] as ai #AI_COLOR
+    [Pattern Recognizer] as patterns #AI_COLOR
+    [Learning Engine] as learning #AI_COLOR
+}
+
+package "Symbiotic Layer" {
+    [ARQUIMAX Bridge] as arquimax #SYMBIOTIC_COLOR
+    [NEXUS Bridge] as nexus #SYMBIOTIC_COLOR
+    [Evolution Manager] as evolution #SYMBIOTIC_COLOR
+}
+
+' Interfaces
+interface "Game Interface" as game_interface
+interface "Quantum Interface" as quantum_interface
+interface "AI Interface" as ai_interface
+interface "Symbiotic Interface" as symbiotic_interface
+
+' Conexões
+game_interface -- engine
+engine -- board
+board -- rules
+
+quantum_interface -- qfield
+qfield -- qcalc
+qcalc -- qstate
+
+ai_interface -- ai
+ai -- patterns
+patterns -- learning
+
+symbiotic_interface -- arquimax
+arquimax -- nexus
+nexus -- evolution
+
+' Integrações
+board ..> qfield : uses
+ai ..> qfield : analyzes
+evolution ..> ai : evolves
+nexus ..> qstate : monitors
+
+@enduml

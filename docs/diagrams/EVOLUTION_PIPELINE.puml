@@ -1,0 +1,72 @@
+@startuml Evolution Pipeline
+
+' Estilos
+!define EVOLUTION_COLOR #4A0042
+!define METRICS_COLOR #006400
+!define LEARNING_COLOR #4B0082
+
+skinparam state {
+    BackgroundColor EVOLUTION_COLOR
+    BorderColor White
+    FontColor White
+}
+
+' Título
+title AEON Chess - Pipeline de Evolução
+
+' Estados principais
+state "Sistema Base" as base {
+    state "Coleta de Dados" as data
+    state "Análise de Performance" as performance
+    state "Avaliação de Métricas" as metrics
+}
+
+state "Ciclo de Aprendizado" as learning {
+    state "Processamento de Padrões" as patterns
+    state "Adaptação de Estratégias" as strategies
+    state "Evolução de Modelos" as models
+}
+
+state "Evolução Simbiótica" as evolution {
+    state "Avaliação de Capacidades" as capabilities
+    state "Otimização de Recursos" as resources
+    state "Emergência de Comportamentos" as behaviors
+}
+
+' Transições
+[*] -> base
+base -> learning : Métricas coletadas
+learning -> evolution : Padrões identificados
+evolution -> base : Ciclo completo
+
+' Detalhes das transições
+data -> performance
+performance -> metrics
+metrics --> patterns : Análise completa
+
+patterns -> strategies
+strategies -> models
+models --> capabilities : Modelos atualizados
+
+capabilities -> resources
+resources -> behaviors
+behaviors --> data : Novos comportamentos
+
+' Condições de transição
+state "Métricas de Qualidade" as quality <<choice>>
+state "Índice Simbiótico" as symbiotic <<choice>>
+state "Taxa de Evolução" as rate <<choice>>
+
+metrics -> quality
+quality -> patterns : Score > 0.8
+quality -> data : Score <= 0.8
+
+models -> symbiotic
+symbiotic -> capabilities : Índice > 0.7
+symbiotic -> patterns : Índice <= 0.7
+
+behaviors -> rate
+rate -> data : Taxa > 0.6
+rate -> capabilities : Taxa <= 0.6
+
+@enduml
