@@ -73,12 +73,14 @@ def test_pawn_moves():
 def test_piece_capture():
     """Testa captura de peças"""
     board = Board()
-    
+
     # Move peão branco para frente
-    board.move_piece(Position(2, 1), Position(3, 1))
-    
+    assert board.move_piece(Position(2, 1), Position(3, 1)), "Failed to move white pawn"
+    print(board)
+
     # Move peão preto para diagonal
-    board.move_piece(Position(7, 2), Position(5, 2))
+    assert board.move_piece(Position(7, 2), Position(5, 2)), "Failed to move black pawn"
+    print(board)
     
     # Captura diagonal
     assert board.move_piece(Position(3, 1), Position(4, 2))

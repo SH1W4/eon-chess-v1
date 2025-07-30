@@ -2,18 +2,12 @@ import pytest
 import numpy as np
 from typing import List, Optional
 from src.core.engine import ChessEngine, Position, Piece, Move
+from src.core.board import Board, Color
 from src.ai.adaptive_ai import AdaptiveAI, PlayerProfile, EvaluationWeights
 
 # Mock para ChessEngine nos testes
-class MockPiece:
-    def __init__(self, type_: str, color: str):
-        self.type = type_
-        self.color = color
-        self.has_moved = False
-        self.position = Position(0, 0)
-
 class MockMove:
-    def __init__(self, from_pos: Position, to_pos: Position, piece: MockPiece):
+    def __init__(self, from_pos: Position, to_pos: Position, piece: Piece):
         self.from_pos = from_pos
         self.to_pos = to_pos
         self.piece = piece
@@ -25,24 +19,16 @@ class MockMove:
 class MockChessEngine:
     def __init__(self):
         self.current_player = 'white'
-        self.board = [[None for _ in range(8)] for _ in range(8)]
+        self.board = Board()  # Use actual Board class
         self.move_history = []
-        self._setup_board()
+        self._setup_initial_position()
     
-    def _setup_board(self):
-        # Setup peões
-        for col in range(8):
-            self.board[1][col] = MockPiece('pawn', 'black')
-            self.board[6][col] = MockPiece('pawn', 'white')
-        
-        # Setup outras peças
-        pieces = ['rook', 'knight', 'bishop', 'queen', 'king', 'bishop', 'knight', 'rook']
-        for col, piece_type in enumerate(pieces):
-            self.board[0][col] = MockPiece(piece_type, 'black')
-            self.board[7][col] = MockPiece(piece_type, 'white')
+    def _setup_initial_position(self):
+        # Board will handle the initial setup
+        pass
     
-    def get_piece(self, pos: Position) -> Optional[MockPiece]:
-        return self.board[pos.row][pos.col]
+    def get_piece(self, pos: Position) -> Optional[Piece]:
+        return self.board.get_piece(pos)
     
     def make_move(self, move: MockMove) -> bool:
         self.move_history.append(move)
@@ -99,11 +85,11 @@ def test_evaluate_position():
     engine = ChessEngine()
     ai = AdaptiveAI()
     
-    # Avaliação da posição inicial
-    score = ai.evaluate_position(engine)
-    assert isinstance(score, float)
+    # Initial position evaluation from White's perspective
+    initial_score = ai.evaluate_position(engine.board, Color.WHITE)
+    assert isinstance(initial_score, float)
     
-    # Fazer um movimento e avaliar nova posição
+    # Move e2 to e4 and evaluate new position
     move = Move(
         Position(6, 4),  # e2
         Position(4, 4),  # e4
@@ -111,16 +97,21 @@ def test_evaluate_position():
     )
     engine.make_move(move)
     
-    new_score = ai.evaluate_position(engine)
+    # New position evaluation after e4
+    new_score = ai.evaluate_position(engine.board, Color.WHITE)
     assert isinstance(new_score, float)
-    assert new_score != score  # A avaliação deve mudar após um movimento
+    assert new_score > initial_score  # Score should improve after e4 due to center control
+    
+    # Verify position evaluation for Black's perspective
+    black_score = ai.evaluate_position(engine.board, Color.BLACK)
+    assert black_score < 0  # Black should have negative score due to White's advantage
 
 def test_get_best_move():
     engine = ChessEngine()
     ai = AdaptiveAI()
     
     # Obter melhor movimento na posição inicial
-    move = ai.get_best_move(engine)
+    move = ai.get_best_move(engine.board)
     assert isinstance(move, Move)
     assert engine._is_legal_move(move)
     
@@ -132,21 +123,21 @@ def test_evaluate_components():
     ai = AdaptiveAI()
     
     # Testar avaliação de mobilidade
-    mobility = ai._evaluate_mobility(engine, 'white')
+    mobility = ai._evaluate_mobility(engine.board, Color.WHITE)
     assert isinstance(mobility, float)
     assert mobility > 0  # Na posição inicial, deve haver movimentos disponíveis
     
     # Testar avaliação de segurança do rei
-    king_safety = ai._evaluate_king_safety(engine)
+    king_safety = ai._evaluate_king_safety(engine.board)
     assert isinstance(king_safety, float)
     assert king_safety > 0  # Na posição inicial, o rei deve estar relativamente seguro
     
     # Testar avaliação de estrutura de peões
-    pawn_structure = ai._evaluate_pawn_structure(engine, 'white')
+    pawn_structure = ai._evaluate_pawn_structure(engine.board, Color.WHITE)
     assert isinstance(pawn_structure, float)
     
     # Testar avaliação de controle do centro
-    center_control = ai._evaluate_center_control(engine, 'white')
+    center_control = ai._evaluate_center_control(engine.board, Color.WHITE)
     assert isinstance(center_control, float)
 
 def test_profile_update():
@@ -194,14 +185,14 @@ def test_adaptive_behavior():
     ai.profile.risk_taking = 0.7
     
     # Obter movimento com perfil agressivo
-    aggressive_move = ai.get_best_move(engine)
+    aggressive_move = ai.get_best_move(engine.board)
     
     # Configurar perfil mais defensivo
     ai.profile.aggression = 0.2
     ai.profile.risk_taking = 0.3
     
     # Obter movimento com perfil defensivo
-    defensive_move = ai.get_best_move(engine)
+    defensive_move = ai.get_best_move(engine.board)
     
     # Os movimentos devem ser diferentes devido aos diferentes perfis
     assert (aggressive_move.from_pos != defensive_move.from_pos or 

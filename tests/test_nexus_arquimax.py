@@ -43,7 +43,7 @@ class IntegrationTester:
             stockfish_path: Caminho para Stockfish
         """
         # Componentes principais
-        self.nexus = NexusCore(stockfish_path=stockfish_path)
+        self.nexus = NexusCore()
         self.config_manager = ArquimaxConfigManager()
         
         # Estado do teste
