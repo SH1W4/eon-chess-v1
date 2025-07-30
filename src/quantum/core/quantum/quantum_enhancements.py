@@ -2,7 +2,7 @@
 from dataclasses import dataclass
 from typing import Dict, List, Optional, Tuple
 import numpy as np
-from ..models import Position, Piece, Color
+from src.traditional.models.models import Position, Piece, Color
 from .quantum_field import QuantumField, INFLUENCE_THRESHOLD, ATTACK_THRESHOLD, CONTROL_THRESHOLD
 
 @dataclass
@@ -152,11 +152,11 @@ class EnhancedQuantumField(QuantumField):
             pawn_count = len(pawns_in_file)
             
             if pawn_count > 0:
-                # Base score for having a pawn (reduzido para equilibrar com penalidades)
-                pawn_structure_score += 0.2
+                # Base score for having a pawn (reduced to balance with penalties)
+                pawn_structure_score += 0.15
                 
-                if pawn_count > 1:  # Doubled pawns - penalidade ajustada
-                    pawn_structure_score -= 0.4 * (pawn_count - 1)  # Penalidade reduzida
+                if pawn_count > 1:  # Doubled pawns - increased penalty
+                    pawn_structure_score -= 0.6 * (pawn_count - 1)  # Stronger penalty for doubled pawns
                 
                 # Check for passed and isolated pawns
                 adjacent_files = [file-1, file+1] if 0 < file < 7 else [file-1] if file == 7 else [file+1]

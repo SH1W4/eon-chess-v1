@@ -1,8 +1,8 @@
 """Testes completos para o sistema de xadrez quântico"""
 import pytest
 import numpy as np
-from src.core.models import Position, Piece, Color, PieceType
-from src.core.quantum.quantum_enhancements import EnhancedQuantumField, PositionEvaluation
+from src.traditional.models.models import Position, Piece, Color, PieceType
+from src.quantum.core.quantum.quantum_enhancements import EnhancedQuantumField, PositionEvaluation
 
 def create_test_position(pieces_config):
     """Cria uma posição de teste a partir de uma configuração"""

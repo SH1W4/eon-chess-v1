@@ -3,7 +3,7 @@ import numpy as np
 from typing import Dict, List, Tuple, Optional
 from dataclasses import dataclass
 from enum import Enum
-from ..models import Position, Piece, PieceType, Color
+from src.traditional.models.models import Position, Piece, PieceType, Color
 
 # Constantes
 DIRECTIONS = [

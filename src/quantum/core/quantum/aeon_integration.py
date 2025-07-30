@@ -4,8 +4,8 @@ from pathlib import Path
 from typing import Dict, Any, Optional
 
 import yaml
-from src.core.quantum.quantum_enhancements import EnhancedQuantumField
-from src.core.models import Position, Piece
+from .quantum_enhancements import EnhancedQuantumField
+from src.traditional.models.models import Position, Piece
 
 class AeonQuantumIntegration:
     """Gerenciador da integração do campo quântico com AEON"""
