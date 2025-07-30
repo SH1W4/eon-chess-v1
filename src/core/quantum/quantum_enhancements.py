@@ -59,13 +59,22 @@ class EnhancedQuantumField(QuantumField):
                            if p.color == Color.BLACK)
         evaluation.material_score = float(white_material - black_material)
         
-        # Pontuação total (com pesos)
+        # Pontuação total (com pesos ajustados)
+        # Material continua sendo o fator mais importante
+        # Controle e mobilidade aumentados para favorecer jogo ativo
+        # Segurança do rei dinamicamente ajustada baseada na fase do jogo
+        material_count = len(pieces)
+        is_endgame = material_count <= 10  # Menos de 10 peças indica final de jogo
+        
+        king_safety_weight = 0.8 if is_endgame else 0.5  # Mais importante no final
+        control_weight = 0.7 if is_endgame else 0.6     # Mais importante no meio-jogo
+        
         evaluation.total_score = (
             evaluation.material_score * 1.0 +
-            evaluation.control_score * 0.5 +
-            evaluation.mobility_score * 0.3 +
-            evaluation.king_safety_score * 0.7 +
-            evaluation.pawn_structure_score * 0.4
+            evaluation.control_score * control_weight +
+            evaluation.mobility_score * 0.4 +           # Aumentado para incentivar atividade
+            evaluation.king_safety_score * king_safety_weight +
+            evaluation.pawn_structure_score * 0.5       # Aumentado para valorizar estrutura
         )
         
         return evaluation
@@ -126,12 +135,11 @@ class EnhancedQuantumField(QuantumField):
                 elif field[rank, file] >= 0.3:
                     next_rank = rank + direction
                     if 0 <= next_rank < 8:
+                        has_diagonal = False
                         if file > 0 and field[next_rank, file - 1] >= 0.8:
-                            pawn_positions.add((rank, file))
-                            break
+                            has_diagonal = True
                         if file < 7 and field[next_rank, file + 1] >= 0.8:
-                            pawn_positions.add((rank, file))
-                            break
+                            has_diagonal = True
                         
                         if has_diagonal:
                             pawn_positions.add((rank, file))
@@ -147,8 +155,8 @@ class EnhancedQuantumField(QuantumField):
                 # Base score for having a pawn (reduzido para equilibrar com penalidades)
                 pawn_structure_score += 0.2
                 
-                if pawn_count > 1:  # Doubled pawns - penalidade muito severa
-                    pawn_structure_score -= 0.6 * (pawn_count - 1)  # Penalidade aumentada
+                if pawn_count > 1:  # Doubled pawns - penalidade ajustada
+                    pawn_structure_score -= 0.4 * (pawn_count - 1)  # Penalidade reduzida
                 
                 # Check for passed and isolated pawns
                 adjacent_files = [file-1, file+1] if 0 < file < 7 else [file-1] if file == 7 else [file+1]
@@ -163,13 +171,16 @@ class EnhancedQuantumField(QuantumField):
                         advancement = (rank - 1) / 5.0  # 0.0 para rank 1, 1.0 para rank 6
                     else:
                         advancement = (6 - rank) / 5.0  # 0.0 para rank 6, 1.0 para rank 1
-                    pawn_structure_score += 0.2 + (advancement * 0.3)
+                    pawn_structure_score += 0.3 + (advancement * 0.4)  # Aumentado bônus para peões passados
                 elif file > 0 and file < 7:  # Isolated pawn
-                    pawn_structure_score -= 0.2
+                    pawn_structure_score -= 0.15  # Reduzida penalidade para peões isolados
                 
-                # Central pawn bonus (reduzido)
-                if 2 <= file <= 5:
-                    pawn_structure_score += 0.1
+                # Central pawn bonus (aumentado)
+                if 2 <= file <= 5:  # Peões centrais (colunas c, d, e, f)
+                    if 2 <= rank <= 5:  # Ranks centrais
+                        pawn_structure_score += 0.25  # Bônus maior para peões no centro
+                    else:
+                        pawn_structure_score += 0.15  # Bônus menor para peões centrais em outras fileiras
         
         # Bonus por quantidade total de peões (reduzido)
         total_pawns = len(pawn_positions)
