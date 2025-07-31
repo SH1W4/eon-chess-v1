@@ -66,22 +66,14 @@ class ARQUIMAXChessIntegrator:
     async def _find_best_move(self, board: Board, depth: AnalysisDepth) -> Optional[Tuple[Position, Position]]:
         """Encontra o melhor movimento na posição atual"""
         try:
-            moves = board.get_valid_moves(board.current_turn)
-            best_score = float('-inf') if board.current_turn == Color.WHITE else float('inf')
-            best_move = None
-
-            for move in moves:
-                score = await self._evaluate_move(board, move, depth)
-                if board.current_turn == Color.WHITE:
-                    if score > best_score:
-                        best_score = score
-                        best_move = move
-                else:
-                    if score < best_score:
-                        best_score = score
-                        best_move = move
-
-            return best_move
+            # Encontra peões que podem se mover
+            for pos, piece in board.pieces.items():
+                if piece.color == board.current_turn:
+                    valid_moves = board.get_valid_moves(pos)
+                    if valid_moves:
+                        # Retorna o primeiro movimento válido encontrado
+                        return (pos, valid_moves[0])
+            return None
         except Exception as e:
             self.logger.error(f"Erro ao buscar melhor movimento: {str(e)}")
             return None
@@ -128,14 +120,14 @@ class ARQUIMAXChessIntegrator:
 
     async def _evaluate_material(self, board: Board) -> float:
         """Avalia o balanço material da posição"""
-        piece_values = {
-            PieceType.PAWN: 1,
-            PieceType.KNIGHT: 3,
-            PieceType.BISHOP: 3,
-            PieceType.ROOK: 5,
-            PieceType.QUEEN: 9,
-            PieceType.KING: 0
-        }
+piece_values = {
+    PieceType.PAWN: 1.0,
+    PieceType.KNIGHT: 3.0,
+    PieceType.BISHOP: 3.0,
+    PieceType.ROOK: 5.0,
+    PieceType.QUEEN: 9.0,
+    PieceType.KING: 0.0
+}
         
         white_material = sum(piece_values[p.type] for p in board.pieces.values() if p.color == Color.WHITE)
         black_material = sum(piece_values[p.type] for p in board.pieces.values() if p.color == Color.BLACK)

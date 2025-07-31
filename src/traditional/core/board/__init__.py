@@ -1,3 +1,3 @@
 """Chess board implementation"""
-from ..models import Position, Color, PieceType, Piece
+from src.traditional.models.models import Position, Color, PieceType, Piece
 from .board import Board

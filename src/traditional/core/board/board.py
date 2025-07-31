@@ -1,7 +1,7 @@
 """Chess board implementation"""
 from typing import Dict, List, Optional, Tuple
-from ..quantum.quantum_field import QuantumField
-from ..models import Position, Color, PieceType, Piece
+from src.quantum.core.quantum.quantum_field import QuantumField
+from src.traditional.models.models import Position, Color, PieceType, Piece
 
 class Board:
     """Chess board implementation"""
@@ -416,6 +416,14 @@ class Board:
                     return False
 
         return True
+    
+    def get_pieces(self, color: Color) -> List[Piece]:
+        """Get all pieces of a specific color"""
+        return [piece for piece in self.pieces.values() if piece.color == color]
+    
+    def get_all_pieces(self) -> List[Piece]:
+        """Get all pieces on the board"""
+        return list(self.pieces.values())
     
     def __str__(self) -> str:
         """Return ASCII representation of the board"""

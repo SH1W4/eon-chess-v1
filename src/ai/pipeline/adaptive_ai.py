@@ -14,14 +14,14 @@ class AdaptiveAI:
         self.profile = profile or PlayerProfile()
         self.position_tables = self._init_position_tables()
         self.move_history: List[Tuple[Position, Position]] = []
-        self.piece_values = {
-            'P': 100,   # Peão
-            'N': 320,   # Cavalo
-            'B': 330,   # Bispo
-            'R': 500,   # Torre
-            'Q': 900,   # Dama
-            'K': 20000  # Rei
-        }
+self.piece_values = {
+    'P': 1.0,   # Peão
+    'N': 3.0,   # Cavalo
+    'B': 3.0,   # Bispo
+    'R': 5.0,   # Torre
+    'Q': 9.0,   # Dama
+    'K': 0.0    # Rei
+}
 
     def _init_position_tables(self) -> Dict[str, np.ndarray]:
         """Inicializa tabelas de valor posicional para cada peça"""
