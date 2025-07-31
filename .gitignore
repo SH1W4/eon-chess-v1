@@ -2,6 +2,22 @@
 __pycache__/
 *.py[cod]
 *$py.class
+
+# Logs e temporários
+aeon_execution.log
+test_avaliador.py
+
+# Ambiente virtual
+venv/
+.env
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+
+# Arquivos de sistema
+.DS_Store
 *.so
 .Python
 build/
