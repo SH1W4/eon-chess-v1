@@ -1,0 +1,150 @@
+name: "Império Bizantino"
+description: |
+  A cultura do xadrez no Império Bizantino reflete a sofisticação, 
+  diplomacia e tradição militar desta civilização. O jogo era visto 
+  como uma ferramenta de treinamento estratégico e uma demonstração 
+  de poder intelectual na corte imperial.
+
+historical_period:
+  era: "500-1453 CE"
+  region: "Constantinopla e Mediterrâneo Oriental"
+  influences:
+    - "Cultura Romana Oriental"
+    - "Tradição Grega"
+    - "Influências Persas"
+    - "Cristianismo Ortodoxo"
+
+cultural_values:
+  primary:
+    - name: "Estratégia Diplomática"
+      weight: 0.9
+      description: "Valorização da vitória através de manobras sutis e alianças"
+    - name: "Tradição Imperial"
+      weight: 0.8
+      description: "Respeito à hierarquia e protocolo imperial"
+  secondary:
+    - name: "Sofisticação Intelectual"
+      weight: 0.7
+      description: "Apreciação do xadrez como arte e ciência"
+    - name: "Poder Divino"
+      weight: 0.6
+      description: "Conexão entre autoridade imperial e providência divina"
+
+piece_metaphors:
+  pawn:
+    name: "Soldado Tagmata"
+    symbolism: "Guarda imperial profissional"
+    roles:
+      - "defensor da cidade"
+      - "guerreiro disciplinado"
+      - "servo leal do império"
+    
+  knight:
+    name: "Catafracta"
+    symbolism: "Cavalaria pesada bizantina"
+    roles:
+      - "cavaleiro blindado"
+      - "elite militar"
+      - "guardião das fronteiras"
+    
+  bishop:
+    name: "Patriarca"
+    symbolism: "Autoridade religiosa e conselheiro"
+    roles:
+      - "conselheiro espiritual"
+      - "guardião da ortodoxia"
+      - "mediador divino"
+    
+  rook:
+    name: "Fortaleza Tematá"
+    symbolism: "Sistema defensivo provincial"
+    roles:
+      - "bastião do império"
+      - "centro administrativo"
+      - "posto de comando militar"
+    
+  queen:
+    name: "Augusta"
+    symbolism: "Imperatriz consorte"
+    roles:
+      - "regente imperial"
+      - "patrona das artes"
+      - "protetora do império"
+    
+  king:
+    name: "Basileus"
+    symbolism: "Imperador Romano do Oriente"
+    roles:
+      - "autoridade suprema"
+      - "vigário de Cristo"
+      - "guardião da civilização romana"
+
+narrative_patterns:
+  moves:
+    advance:
+      - "Com a graça imperial, {piece} avança para {square}"
+      - "Seguindo o protocolo da corte, {piece} move-se para {square}"
+      - "Com autoridade divina, {piece} ocupa {square}"
+    capture:
+      - "{attacker} subjuga {defender} com diplomacia e força"
+      - "A glória de Roma brilha quando {attacker} conquista {defender}"
+      - "Pela vontade do Basileus, {attacker} remove {defender}"
+    check:
+      - "O trono imperial está ameaçado! Que a Theotokos nos proteja!"
+      - "Conspiradores ameaçam o Basileus! Às armas!"
+      - "A própria Constantinopla treme com esta ameaça ao imperador!"
+    
+  phases:
+    opening:
+      - "As forças imperiais se alinham em formação cerimonial"
+      - "O ritual de batalha começa sob os olhos de Cristo Pantocrator"
+      - "As legiões do Basileus tomam suas posições iniciais"
+    middlegame:
+      - "A batalha se desenrola como um mosaico complexo"
+      - "Estratégias dignas da Estrategika de Maurício revelam-se"
+      - "O campo de batalha ecoa com ordens em grego e latim"
+    endgame:
+      - "O destino do império pende por um fio"
+      - "A hora decisiva aproxima-se como o sino de Hagia Sophia"
+      - "A vitória será decidida pela graça divina e estratégia imperial"
+
+strategic_elements:
+  priorities:
+    - name: "Controle Central"
+      weight: 0.8
+      description: "Domínio do centro como Constantinopla domina o Bósforo"
+    - name: "Defesa Fortificada"
+      weight: 0.9
+      description: "Sistema defensivo em camadas como as muralhas de Teodósio"
+    - name: "Mobilidade Estratégica"
+      weight: 0.7
+      description: "Capacidade de resposta rápida como o sistema Thema"
+  
+  tactics:
+    - name: "Manobra Diplomática"
+      description: "Criar ameaças múltiplas forçando concessões do oponente"
+      cultural_context: "Tradição bizantina de diplomacia complexa"
+    - name: "Defesa em Profundidade"
+      description: "Sistema defensivo em camadas inspirado na arquitetura militar"
+      cultural_context: "Sistema defensivo bizantino"
+
+sources:
+  - type: "historical_document"
+    reference: "De Ceremoniis de Constantino VII"
+    relevance: "Protocolo e cerimônia imperial"
+  
+  - type: "cultural_research"
+    reference: "Estrategika de Maurício"
+    relevance: "Táticas militares bizantinas"
+
+metadata:
+  created_at: "2025-07-31"
+  updated_at: "2025-07-31"
+  version: "1.0"
+  author: "NEO_SH1W4"
+  tags:
+    - "bizantino"
+    - "medieval"
+    - "império"
+    - "ortodoxo"
+    - "diplomacia"
