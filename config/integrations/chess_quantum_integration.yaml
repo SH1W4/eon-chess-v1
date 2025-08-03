@@ -73,7 +73,7 @@ symbiotic_framework:
           condition: "response_time > 0.5s"
           action: "optimize_field_computation"
 
-aeon_integration:
+chess_system
   components:
     - name: "quantum_engine"
       path: "src/core/quantum"

@@ -1,3 +1,6 @@
+# Backups
+CHESS_BACKUP.tar.gz
+
 # Python
 __pycache__/
 *.py[cod]
