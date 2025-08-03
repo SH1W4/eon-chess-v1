@@ -1,0 +1,161 @@
+system:
+  name: "chess_cultural_engine"
+  version: "2.0.0"
+  description: "Motor cultural avançado com integração de perfis de liderança"
+
+cultural_engine:
+  core:
+    - name: "leadership_integration"
+      enabled: true
+      components:
+        - profile_analyzer
+        - strategy_matcher
+        - narrative_generator
+    - name: "cultural_processing"
+      enabled: true
+      components:
+        - context_analyzer
+        - theme_processor
+        - adaptation_engine
+
+leadership_profiles:
+  source: "/docs/cultural/profiles/LEADERSHIP_PROFILES.md"
+  categories:
+    - name: "strategic_masters"
+      enabled: true
+      examples:
+        - "Genghis Khan"
+        - "Sun Tzu"
+    - name: "chess_masters"
+      enabled: true
+      examples:
+        - "Garry Kasparov"
+        - "Magnus Carlsen"
+    - name: "warfare_masters"
+      enabled: true
+      examples:
+        - "Miyamoto Musashi"
+
+strategic_processing:
+  pattern_matching:
+    enabled: true
+    features:
+      - historical_pattern_recognition
+      - situational_analysis
+      - adaptive_strategy
+  
+  decision_making:
+    enabled: true
+    features:
+      - leadership_style_application
+      - cultural_context_integration
+      - narrative_enhancement
+
+narrative_generation:
+  enabled: true
+  components:
+    - strategic_storytelling
+    - cultural_adaptation
+    - leadership_wisdom
+  features:
+    - dynamic_narratives
+    - contextual_stories
+    - strategic_insights
+
+integration:
+  arquimax:
+    enabled: true
+    features:
+      - cultural_data_management
+      - profile_handling
+      - pattern_processing
+    monitoring:
+      - metrics_collection
+      - performance_tracking
+      - impact_analysis
+  
+  nexus:
+    enabled: true
+    connectors:
+      - cultural_processor
+      - profile_manager
+      - pattern_engine
+    features:
+      - adaptive_learning
+      - style_adaptation
+      - pattern_evolution
+
+monitoring:
+  metrics:
+    performance:
+      - name: "pattern_recognition_rate"
+        type: "gauge"
+        enabled: true
+      - name: "adaptation_accuracy"
+        type: "gauge"
+        enabled: true
+      - name: "narrative_quality"
+        type: "gauge"
+        enabled: true
+    
+    impact:
+      - name: "player_engagement"
+        type: "gauge"
+        enabled: true
+      - name: "learning_effectiveness"
+        type: "gauge"
+        enabled: true
+      - name: "cultural_appreciation"
+        type: "gauge"
+        enabled: true
+
+validation:
+  strategic:
+    enabled: true
+    tests:
+      - pattern_recognition
+      - decision_making
+      - adaptation_effectiveness
+  
+  cultural:
+    enabled: true
+    tests:
+      - historical_accuracy
+      - narrative_coherence
+      - cultural_authenticity
+
+logging:
+  paths:
+    strategic: "/var/log/cultural_engine/strategic/"
+    profiles: "/var/log/cultural_engine/profiles/"
+    cultural: "/var/log/cultural_engine/cultural/"
+  
+  levels:
+    - debug
+    - info
+    - warning
+    - error
+
+tools:
+  paths:
+    strategic: "/tools/cultural/strategic/"
+    profiles: "/tools/cultural/profiles/"
+    validation: "/tools/cultural/validation/"
+  
+  features:
+    - diagnostic_tools
+    - analysis_tools
+    - validation_tools
+
+cache:
+  strategic_patterns:
+    size: 10000
+    type: "lru"
+  
+  leadership_profiles:
+    size: 5000
+    type: "lru"
+  
+  cultural_contexts:
+    size: 8000
+    type: "lru"
