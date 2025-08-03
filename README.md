@@ -1,10 +1,10 @@
-# AEON Chess: Advanced Adaptive Chess AI
+# CHESS: Cultural Heritage & Evolution Symbiotic System
 
-> An intelligent chess ecosystem that combines traditional chess strategy with adaptive AI and machine learning.
+> An advanced chess ecosystem that combines traditional strategy with adaptive AI, cultural elements and symbiotic learning.
 
 ## 🚀 Project Overview
 
-AEON Chess is a sophisticated chess AI system that adapts to players' styles and strategies. It features an advanced evaluation engine with position analysis, learning capabilities, and dynamic gameplay adjustments. The system integrates cultural elements and adaptive learning to create a unique and challenging chess experience.
+CHESS is a sophisticated symbiotic system that adapts to players' cultural backgrounds and strategic styles. It features an advanced evaluation engine with position analysis, cultural profiling, learning capabilities, and dynamic gameplay adjustments. The system integrates cultural heritage elements and adaptive learning to create a unique and personalized chess experience.
 
 ## 📚 Documentação
 
@@ -89,8 +89,8 @@ AEON/
 
 1. Clone o repositório:
    ```bash
-   git clone https://github.com/seu-usuario/aeon-chess.git
-   cd aeon-chess
+git clone https://github.com/NEO_SH1W4/CHESS.git
+   cd CHESS
    ```
 
 2. Configure o ambiente:
@@ -147,6 +147,6 @@ Criado e mantido por:
 
 ## 📫 Contato
 
-- Email: contato@aeonchess.com
-- Twitter: [@AEONChess](https://twitter.com/AEONChess)
-- Discord: [Comunidade AEON Chess](https://discord.gg/aeonchess)
+- Email: contato@chesssystem.com
+- Twitter: [@CHESSSystem](https://twitter.com/CHESSSystem)
+- Discord: [Comunidade CHESS](https://discord.gg/chesssystem)

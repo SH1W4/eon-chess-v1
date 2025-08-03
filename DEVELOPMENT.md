@@ -1,4 +1,4 @@
-# Guia de Desenvolvimento - AEON CHESS
+# Guia de Desenvolvimento - CHESS (Cultural Heritage & Evolution Symbiotic System)
 
 ## 🚀 Começando
 
@@ -17,8 +17,8 @@ Este guia contém instruções detalhadas para configurar e desenvolver o AEON C
 
 1. Clone o repositório (privado):
 ```bash
-git clone git@github.com:NEO_SH1W4/AEON_CHESS.git
-cd AEON_CHESS
+git clone git@github.com:NEO_SH1W4/CHESS.git
+cd CHESS
 ```
 
 2. Crie e ative o ambiente virtual Python:
@@ -49,13 +49,13 @@ python scripts/setup_db.py
 ### 🏗️ Estrutura do Projeto
 
 ```
-/AEON
+/CHESS
 ├── src/                # Código fonte
 │   ├── core/          # Núcleo do sistema
 │   ├── ai/           # Sistema de IA adaptativa
-│   ├── mind/         # AEON MIND - Coaching IA
+│   ├── cultural/     # Motor cultural e perfis
 │   ├── ui/           # Interface do usuário
-│   ├── cultural/     # Elementos culturais
+│   ├── symbiotic/    # Sistema simbiótico
 │   └── utils/        # Utilitários
 ...
 ```
