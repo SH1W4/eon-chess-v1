@@ -1,0 +1,3229 @@
+{
+  "timestamp": "2025-08-02T13:42:34.448082",
+  "documents": {
+    "VALIDATION_PLAN.md": {
+      "last_checked": "2025-08-02T13:42:34.448445",
+      "size": 1631,
+      "broken_links": [],
+      "missing_sections": [
+        {
+          "section": "Vis\u00e3o Geral",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Instala\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Uso",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Endpoints",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Autentica\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Exemplos",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Introdu\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Como Usar",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Pr\u00f3ximos Passos",
+          "type": "missing_required_section"
+        }
+      ],
+      "consistency_issues": [],
+      "health_score": 100.0,
+      "missing_images": []
+    },
+    "PROJECT_WBS.md": {
+      "last_checked": "2025-08-02T13:42:34.448865",
+      "size": 1976,
+      "broken_links": [],
+      "missing_sections": [
+        {
+          "section": "Vis\u00e3o Geral",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Instala\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Uso",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Endpoints",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Autentica\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Exemplos",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Introdu\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Como Usar",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Pr\u00f3ximos Passos",
+          "type": "missing_required_section"
+        }
+      ],
+      "consistency_issues": [],
+      "health_score": 100.0,
+      "missing_images": []
+    },
+    "PROJECT_STATUS.md": {
+      "last_checked": "2025-08-02T13:42:34.449077",
+      "size": 4184,
+      "broken_links": [],
+      "missing_sections": [
+        {
+          "section": "Vis\u00e3o Geral",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Instala\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Uso",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Endpoints",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Autentica\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Exemplos",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Introdu\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Como Usar",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Pr\u00f3ximos Passos",
+          "type": "missing_required_section"
+        }
+      ],
+      "consistency_issues": [],
+      "health_score": 100.0,
+      "missing_images": []
+    },
+    "CHESS_MATHEMATICS.md": {
+      "last_checked": "2025-08-02T13:42:34.449319",
+      "size": 4955,
+      "broken_links": [],
+      "missing_sections": [
+        {
+          "section": "Vis\u00e3o Geral",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Instala\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Uso",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Endpoints",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Autentica\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Exemplos",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Introdu\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Como Usar",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Pr\u00f3ximos Passos",
+          "type": "missing_required_section"
+        }
+      ],
+      "consistency_issues": [],
+      "health_score": 100.0,
+      "missing_images": []
+    },
+    "INTEGRATION_PLAN.md": {
+      "last_checked": "2025-08-02T13:42:34.449587",
+      "size": 1103,
+      "broken_links": [],
+      "missing_sections": [
+        {
+          "section": "Vis\u00e3o Geral",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Instala\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Uso",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Endpoints",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Autentica\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Exemplos",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Introdu\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Como Usar",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Pr\u00f3ximos Passos",
+          "type": "missing_required_section"
+        }
+      ],
+      "consistency_issues": [],
+      "health_score": 100.0,
+      "missing_images": []
+    },
+    "matriz_inovacao.md": {
+      "last_checked": "2025-08-02T13:42:34.449769",
+      "size": 4231,
+      "broken_links": [],
+      "missing_sections": [
+        {
+          "section": "Vis\u00e3o Geral",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Instala\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Uso",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Endpoints",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Autentica\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Exemplos",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Introdu\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Como Usar",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Pr\u00f3ximos Passos",
+          "type": "missing_required_section"
+        }
+      ],
+      "consistency_issues": [],
+      "health_score": 100.0,
+      "missing_images": []
+    },
+    "QUANTUM_SYMBIOTIC_THESIS.md": {
+      "last_checked": "2025-08-02T13:42:34.449971",
+      "size": 3514,
+      "broken_links": [],
+      "missing_sections": [
+        {
+          "section": "Vis\u00e3o Geral",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Instala\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Uso",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Endpoints",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Autentica\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Exemplos",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Introdu\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Como Usar",
+          "type": "missing_required_section"
+        }
+      ],
+      "consistency_issues": [],
+      "health_score": 100.0,
+      "missing_images": []
+    },
+    "QUANTUM_CHESS_ENHANCEMENTS.md": {
+      "last_checked": "2025-08-02T13:42:34.450158",
+      "size": 3085,
+      "broken_links": [],
+      "missing_sections": [
+        {
+          "section": "Instala\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Uso",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Endpoints",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Autentica\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Exemplos",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Introdu\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Como Usar",
+          "type": "missing_required_section"
+        }
+      ],
+      "consistency_issues": [
+        {
+          "type": "invalid_heading_hierarchy",
+          "line": 58,
+          "content": "### An\u00e1lise de Posi\u00e7\u00e3o"
+        },
+        {
+          "type": "invalid_heading_hierarchy",
+          "line": 69,
+          "content": "### Exemplo de Sa\u00edda"
+        }
+      ],
+      "health_score": 100.0,
+      "missing_images": []
+    },
+    "MAPA_NAVEGACAO_SUPER_ESCOPO.md": {
+      "last_checked": "2025-08-02T13:42:34.450370",
+      "size": 7306,
+      "broken_links": [],
+      "missing_sections": [
+        {
+          "section": "Vis\u00e3o Geral",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Instala\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Uso",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Endpoints",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Autentica\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Exemplos",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Introdu\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Como Usar",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Pr\u00f3ximos Passos",
+          "type": "missing_required_section"
+        }
+      ],
+      "consistency_issues": [],
+      "health_score": 100.0,
+      "missing_images": []
+    },
+    "INTEGRATION_FLOWS.md": {
+      "last_checked": "2025-08-02T13:42:34.450645",
+      "size": 3888,
+      "broken_links": [],
+      "missing_sections": [
+        {
+          "section": "Vis\u00e3o Geral",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Instala\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Uso",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Endpoints",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Autentica\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Exemplos",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Introdu\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Como Usar",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Pr\u00f3ximos Passos",
+          "type": "missing_required_section"
+        }
+      ],
+      "consistency_issues": [],
+      "health_score": 100.0,
+      "missing_images": []
+    },
+    "CHESS_SYSTEM_DESIGN.md": {
+      "last_checked": "2025-08-02T13:42:34.450856",
+      "size": 4087,
+      "broken_links": [],
+      "missing_sections": [
+        {
+          "section": "Instala\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Uso",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Endpoints",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Autentica\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Exemplos",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Introdu\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Como Usar",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Pr\u00f3ximos Passos",
+          "type": "missing_required_section"
+        }
+      ],
+      "consistency_issues": [],
+      "health_score": 100.0,
+      "missing_images": []
+    },
+    "EXECUTION_PLAN.md": {
+      "last_checked": "2025-08-02T13:42:34.451074",
+      "size": 3091,
+      "broken_links": [],
+      "missing_sections": [
+        {
+          "section": "Vis\u00e3o Geral",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Instala\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Uso",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Endpoints",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Autentica\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Exemplos",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Introdu\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Como Usar",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Pr\u00f3ximos Passos",
+          "type": "missing_required_section"
+        }
+      ],
+      "consistency_issues": [
+        {
+          "type": "invalid_heading_hierarchy",
+          "line": 67,
+          "content": "### 3.2 M\u00e9tricas de Qualidade"
+        }
+      ],
+      "health_score": 100.0,
+      "missing_images": []
+    },
+    "todo.md": {
+      "last_checked": "2025-08-02T13:42:34.451189",
+      "size": 1837,
+      "broken_links": [],
+      "missing_sections": [
+        {
+          "section": "Vis\u00e3o Geral",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Instala\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Uso",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Endpoints",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Autentica\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Exemplos",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Introdu\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Como Usar",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Pr\u00f3ximos Passos",
+          "type": "missing_required_section"
+        }
+      ],
+      "consistency_issues": [],
+      "health_score": 100.0,
+      "missing_images": []
+    },
+    "DETAILED_ASSESSMENT.md": {
+      "last_checked": "2025-08-02T13:42:34.451371",
+      "size": 4599,
+      "broken_links": [],
+      "missing_sections": [
+        {
+          "section": "Vis\u00e3o Geral",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Instala\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Uso",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Endpoints",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Autentica\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Exemplos",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Introdu\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Como Usar",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Pr\u00f3ximos Passos",
+          "type": "missing_required_section"
+        }
+      ],
+      "consistency_issues": [],
+      "health_score": 100.0,
+      "missing_images": []
+    },
+    "QUANTUM_ANALYSIS.md": {
+      "last_checked": "2025-08-02T13:42:34.451584",
+      "size": 3505,
+      "broken_links": [],
+      "missing_sections": [
+        {
+          "section": "Vis\u00e3o Geral",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Instala\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Uso",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Endpoints",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Autentica\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Exemplos",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Introdu\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Como Usar",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Pr\u00f3ximos Passos",
+          "type": "missing_required_section"
+        }
+      ],
+      "consistency_issues": [],
+      "health_score": 100.0,
+      "missing_images": []
+    },
+    "README.md": {
+      "last_checked": "2025-08-02T13:42:34.451772",
+      "size": 4681,
+      "broken_links": [
+        {
+          "text": "LICENSE",
+          "link": "LICENSE",
+          "type": "broken_internal_link"
+        }
+      ],
+      "missing_sections": [
+        {
+          "section": "Endpoints",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Autentica\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Exemplos",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Introdu\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Como Usar",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Pr\u00f3ximos Passos",
+          "type": "missing_required_section"
+        }
+      ],
+      "consistency_issues": [
+        {
+          "type": "invalid_heading_hierarchy",
+          "line": 57,
+          "content": "### Configura\u00e7\u00e3o do Ambiente de Desenvolvimento"
+        },
+        {
+          "type": "invalid_heading_hierarchy",
+          "line": 89,
+          "content": "### Interface ARQUIMAX"
+        },
+        {
+          "type": "invalid_heading_hierarchy",
+          "line": 124,
+          "content": "### Testes de Carga"
+        },
+        {
+          "type": "invalid_heading_hierarchy",
+          "line": 131,
+          "content": "### Linting e Formata\u00e7\u00e3o"
+        },
+        {
+          "type": "invalid_heading_hierarchy",
+          "line": 153,
+          "content": "### Produ\u00e7\u00e3o"
+        }
+      ],
+      "health_score": 100.0,
+      "missing_images": []
+    },
+    "SESSION_2025_07_26.md": {
+      "last_checked": "2025-08-02T13:42:34.452028",
+      "size": 3226,
+      "broken_links": [],
+      "missing_sections": [
+        {
+          "section": "Vis\u00e3o Geral",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Instala\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Uso",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Endpoints",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Autentica\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Exemplos",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Introdu\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Como Usar",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Pr\u00f3ximos Passos",
+          "type": "missing_required_section"
+        }
+      ],
+      "consistency_issues": [],
+      "health_score": 100.0,
+      "missing_images": []
+    },
+    "QUANTUM_CHESS_APPROACH.md": {
+      "last_checked": "2025-08-02T13:42:34.452222",
+      "size": 5134,
+      "broken_links": [],
+      "missing_sections": [
+        {
+          "section": "Vis\u00e3o Geral",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Instala\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Uso",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Endpoints",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Autentica\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Exemplos",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Introdu\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Como Usar",
+          "type": "missing_required_section"
+        }
+      ],
+      "consistency_issues": [
+        {
+          "type": "invalid_heading_hierarchy",
+          "line": 20,
+          "content": "### Solu\u00e7\u00e3o Qu\u00e2ntica"
+        }
+      ],
+      "health_score": 100.0,
+      "missing_images": []
+    },
+    "INDEX.md": {
+      "last_checked": "2025-08-02T13:42:34.452425",
+      "size": 2974,
+      "broken_links": [],
+      "missing_sections": [
+        {
+          "section": "Instala\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Uso",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Endpoints",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Autentica\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Exemplos",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Introdu\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Como Usar",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Pr\u00f3ximos Passos",
+          "type": "missing_required_section"
+        }
+      ],
+      "consistency_issues": [
+        {
+          "type": "invalid_heading_hierarchy",
+          "line": 20,
+          "content": "### Uso B\u00e1sico"
+        }
+      ],
+      "health_score": 100.0,
+      "missing_images": []
+    },
+    "ANALISE_QUANTICA.md": {
+      "last_checked": "2025-08-02T13:42:34.452654",
+      "size": 3984,
+      "broken_links": [],
+      "missing_sections": [
+        {
+          "section": "Vis\u00e3o Geral",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Instala\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Uso",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Endpoints",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Autentica\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Exemplos",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Introdu\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Como Usar",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Pr\u00f3ximos Passos",
+          "type": "missing_required_section"
+        }
+      ],
+      "consistency_issues": [],
+      "health_score": 100.0,
+      "missing_images": []
+    },
+    "USER_DOCUMENTATION_PLAN.md": {
+      "last_checked": "2025-08-02T13:42:34.452849",
+      "size": 1097,
+      "broken_links": [],
+      "missing_sections": [
+        {
+          "section": "Vis\u00e3o Geral",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Instala\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Uso",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Endpoints",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Autentica\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Exemplos",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Introdu\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Como Usar",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Pr\u00f3ximos Passos",
+          "type": "missing_required_section"
+        }
+      ],
+      "consistency_issues": [],
+      "health_score": 100.0,
+      "missing_images": []
+    },
+    "PLANO_IMPLEMENTACAO_100.md": {
+      "last_checked": "2025-08-02T13:42:34.453019",
+      "size": 4301,
+      "broken_links": [],
+      "missing_sections": [
+        {
+          "section": "Vis\u00e3o Geral",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Instala\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Uso",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Endpoints",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Autentica\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Exemplos",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Introdu\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Como Usar",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Pr\u00f3ximos Passos",
+          "type": "missing_required_section"
+        }
+      ],
+      "consistency_issues": [],
+      "health_score": 100.0,
+      "missing_images": []
+    },
+    "TESE_INTEGRACAO_SIMBIOTICA.md": {
+      "last_checked": "2025-08-02T13:42:34.453227",
+      "size": 1395,
+      "broken_links": [],
+      "missing_sections": [
+        {
+          "section": "Vis\u00e3o Geral",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Instala\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Uso",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Endpoints",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Autentica\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Exemplos",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Como Usar",
+          "type": "missing_required_section"
+        }
+      ],
+      "consistency_issues": [],
+      "health_score": 100.0,
+      "missing_images": []
+    },
+    "TEST_IMPLEMENTATION_PLAN.md": {
+      "last_checked": "2025-08-02T13:42:34.453397",
+      "size": 1405,
+      "broken_links": [],
+      "missing_sections": [
+        {
+          "section": "Vis\u00e3o Geral",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Instala\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Uso",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Endpoints",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Autentica\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Exemplos",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Introdu\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Como Usar",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Pr\u00f3ximos Passos",
+          "type": "missing_required_section"
+        }
+      ],
+      "consistency_issues": [],
+      "health_score": 100.0,
+      "missing_images": []
+    },
+    "EAP_CHESS.md": {
+      "last_checked": "2025-08-02T13:42:34.453570",
+      "size": 4678,
+      "broken_links": [],
+      "missing_sections": [
+        {
+          "section": "Vis\u00e3o Geral",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Instala\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Uso",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Endpoints",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Autentica\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Exemplos",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Introdu\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Como Usar",
+          "type": "missing_required_section"
+        }
+      ],
+      "consistency_issues": [],
+      "health_score": 100.0,
+      "missing_images": []
+    },
+    "EXTERNAL_RESOURCES.md": {
+      "last_checked": "2025-08-02T13:42:34.453780",
+      "size": 1403,
+      "broken_links": [],
+      "missing_sections": [
+        {
+          "section": "Vis\u00e3o Geral",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Instala\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Uso",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Endpoints",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Autentica\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Exemplos",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Introdu\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Como Usar",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Pr\u00f3ximos Passos",
+          "type": "missing_required_section"
+        }
+      ],
+      "consistency_issues": [],
+      "health_score": 100.0,
+      "missing_images": []
+    },
+    "MATURITY_ASSESSMENT.md": {
+      "last_checked": "2025-08-02T13:42:34.453948",
+      "size": 4722,
+      "broken_links": [],
+      "missing_sections": [
+        {
+          "section": "Vis\u00e3o Geral",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Instala\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Uso",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Endpoints",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Autentica\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Exemplos",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Introdu\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Como Usar",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Pr\u00f3ximos Passos",
+          "type": "missing_required_section"
+        }
+      ],
+      "consistency_issues": [],
+      "health_score": 100.0,
+      "missing_images": []
+    },
+    "SYMBIOTIC_ARCHITECTURE.md": {
+      "last_checked": "2025-08-02T13:42:34.454123",
+      "size": 5052,
+      "broken_links": [],
+      "missing_sections": [
+        {
+          "section": "Instala\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Uso",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Endpoints",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Autentica\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Exemplos",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Introdu\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Como Usar",
+          "type": "missing_required_section"
+        }
+      ],
+      "consistency_issues": [
+        {
+          "type": "invalid_heading_hierarchy",
+          "line": 181,
+          "content": "### Monitoramento"
+        }
+      ],
+      "health_score": 100.0,
+      "missing_images": []
+    },
+    "SYMBIOTIC_CHESS_VALIDATION.md": {
+      "last_checked": "2025-08-02T13:42:34.454360",
+      "size": 4790,
+      "broken_links": [],
+      "missing_sections": [
+        {
+          "section": "Vis\u00e3o Geral",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Instala\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Uso",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Endpoints",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Autentica\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Exemplos",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Introdu\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Como Usar",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Pr\u00f3ximos Passos",
+          "type": "missing_required_section"
+        }
+      ],
+      "consistency_issues": [],
+      "health_score": 100.0,
+      "missing_images": []
+    },
+    "DOCSYNC_PLAN.md": {
+      "last_checked": "2025-08-02T13:42:34.454583",
+      "size": 3398,
+      "broken_links": [],
+      "missing_sections": [
+        {
+          "section": "Vis\u00e3o Geral",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Instala\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Uso",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Endpoints",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Autentica\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Exemplos",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Introdu\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Como Usar",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Pr\u00f3ximos Passos",
+          "type": "missing_required_section"
+        }
+      ],
+      "consistency_issues": [],
+      "health_score": 100.0,
+      "missing_images": []
+    },
+    "taskmash_documentation_plan.md": {
+      "last_checked": "2025-08-02T13:42:34.454836",
+      "size": 6581,
+      "broken_links": [],
+      "missing_sections": [
+        {
+          "section": "Vis\u00e3o Geral",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Instala\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Uso",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Endpoints",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Autentica\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Exemplos",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Introdu\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Como Usar",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Pr\u00f3ximos Passos",
+          "type": "missing_required_section"
+        }
+      ],
+      "consistency_issues": [],
+      "health_score": 100.0,
+      "missing_images": []
+    },
+    "taskmash_superescopo.md": {
+      "last_checked": "2025-08-02T13:42:34.454978",
+      "size": 5153,
+      "broken_links": [],
+      "missing_sections": [
+        {
+          "section": "Instala\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Uso",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Endpoints",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Autentica\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Exemplos",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Introdu\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Como Usar",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Pr\u00f3ximos Passos",
+          "type": "missing_required_section"
+        }
+      ],
+      "consistency_issues": [
+        {
+          "type": "invalid_heading_hierarchy",
+          "line": 31,
+          "content": "### 2.2 Documenta\u00e7\u00e3o de Usu\u00e1rio"
+        },
+        {
+          "type": "invalid_heading_hierarchy",
+          "line": 55,
+          "content": "### 3.2 Implementa\u00e7\u00f5es"
+        }
+      ],
+      "health_score": 100.0,
+      "missing_images": []
+    },
+    "EAP_PROJETO.md": {
+      "last_checked": "2025-08-02T13:42:34.455243",
+      "size": 3442,
+      "broken_links": [],
+      "missing_sections": [
+        {
+          "section": "Vis\u00e3o Geral",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Instala\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Uso",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Endpoints",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Autentica\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Exemplos",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Introdu\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Como Usar",
+          "type": "missing_required_section"
+        }
+      ],
+      "consistency_issues": [],
+      "health_score": 100.0,
+      "missing_images": []
+    },
+    "SYMBIOTIC_CHESS_SYSTEM.md": {
+      "last_checked": "2025-08-02T13:42:34.455445",
+      "size": 4784,
+      "broken_links": [],
+      "missing_sections": [
+        {
+          "section": "Vis\u00e3o Geral",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Instala\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Uso",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Endpoints",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Autentica\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Exemplos",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Introdu\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Como Usar",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Pr\u00f3ximos Passos",
+          "type": "missing_required_section"
+        }
+      ],
+      "consistency_issues": [],
+      "health_score": 100.0,
+      "missing_images": []
+    },
+    "documentation_update_plan.md": {
+      "last_checked": "2025-08-02T13:42:34.455648",
+      "size": 2130,
+      "broken_links": [],
+      "missing_sections": [
+        {
+          "section": "Vis\u00e3o Geral",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Instala\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Uso",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Endpoints",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Autentica\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Exemplos",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Introdu\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Como Usar",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Pr\u00f3ximos Passos",
+          "type": "missing_required_section"
+        }
+      ],
+      "consistency_issues": [],
+      "health_score": 100.0,
+      "missing_images": []
+    },
+    "tecnico/XadrezMaster & EstrategiX - Documenta\u00e7\u00e3o Completa.md": {
+      "last_checked": "2025-08-02T13:42:34.455903",
+      "size": 10430,
+      "broken_links": [],
+      "missing_sections": [
+        {
+          "section": "Vis\u00e3o Geral",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Instala\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Uso",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Endpoints",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Autentica\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Exemplos",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Introdu\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Como Usar",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Pr\u00f3ximos Passos",
+          "type": "missing_required_section"
+        }
+      ],
+      "consistency_issues": [],
+      "health_score": 100.0,
+      "missing_images": []
+    },
+    "tecnico/sistema-ia-adaptativa.md": {
+      "last_checked": "2025-08-02T13:42:34.456151",
+      "size": 513,
+      "broken_links": [],
+      "missing_sections": [
+        {
+          "section": "Instala\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Uso",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Endpoints",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Autentica\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Exemplos",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Introdu\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Como Usar",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Pr\u00f3ximos Passos",
+          "type": "missing_required_section"
+        }
+      ],
+      "consistency_issues": [],
+      "health_score": 100.0,
+      "missing_images": []
+    },
+    "tecnico/architecture/module-relationships.md": {
+      "last_checked": "2025-08-02T13:42:34.456261",
+      "size": 0,
+      "broken_links": [],
+      "missing_sections": [
+        {
+          "section": "Vis\u00e3o Geral",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Instala\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Uso",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Endpoints",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Autentica\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Exemplos",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Introdu\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Como Usar",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Pr\u00f3ximos Passos",
+          "type": "missing_required_section"
+        }
+      ],
+      "consistency_issues": [],
+      "health_score": 100.0,
+      "missing_images": []
+    },
+    "tecnico/architecture/dependencies.md": {
+      "last_checked": "2025-08-02T13:42:34.456300",
+      "size": 0,
+      "broken_links": [],
+      "missing_sections": [
+        {
+          "section": "Vis\u00e3o Geral",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Instala\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Uso",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Endpoints",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Autentica\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Exemplos",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Introdu\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Como Usar",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Pr\u00f3ximos Passos",
+          "type": "missing_required_section"
+        }
+      ],
+      "consistency_issues": [],
+      "health_score": 100.0,
+      "missing_images": []
+    },
+    "tecnico/architecture/README.md": {
+      "last_checked": "2025-08-02T13:42:34.456449",
+      "size": 2781,
+      "broken_links": [],
+      "missing_sections": [
+        {
+          "section": "Vis\u00e3o Geral",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Instala\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Uso",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Endpoints",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Autentica\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Exemplos",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Introdu\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Como Usar",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Pr\u00f3ximos Passos",
+          "type": "missing_required_section"
+        }
+      ],
+      "consistency_issues": [],
+      "health_score": 100.0,
+      "missing_images": []
+    },
+    "tecnico/architecture/integration-flows.md": {
+      "last_checked": "2025-08-02T13:42:34.456549",
+      "size": 0,
+      "broken_links": [],
+      "missing_sections": [
+        {
+          "section": "Vis\u00e3o Geral",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Instala\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Uso",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Endpoints",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Autentica\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Exemplos",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Introdu\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Como Usar",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Pr\u00f3ximos Passos",
+          "type": "missing_required_section"
+        }
+      ],
+      "consistency_issues": [],
+      "health_score": 100.0,
+      "missing_images": []
+    },
+    "tecnico/api/README.md": {
+      "last_checked": "2025-08-02T13:42:34.456619",
+      "size": 4619,
+      "broken_links": [],
+      "missing_sections": [
+        {
+          "section": "Instala\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Uso",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Endpoints",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Exemplos",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Introdu\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Como Usar",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Pr\u00f3ximos Passos",
+          "type": "missing_required_section"
+        }
+      ],
+      "consistency_issues": [
+        {
+          "type": "invalid_heading_hierarchy",
+          "line": 53,
+          "content": "### Posi\u00e7\u00e3o"
+        },
+        {
+          "type": "invalid_heading_hierarchy",
+          "line": 95,
+          "content": "### Aprendizado"
+        },
+        {
+          "type": "invalid_heading_hierarchy",
+          "line": 133,
+          "content": "### Intera\u00e7\u00e3o"
+        },
+        {
+          "type": "invalid_heading_hierarchy",
+          "line": 237,
+          "content": "### Python"
+        }
+      ],
+      "health_score": 100.0,
+      "missing_images": []
+    },
+    "research/ai_references.md": {
+      "last_checked": "2025-08-02T13:42:34.456955",
+      "size": 5431,
+      "broken_links": [],
+      "missing_sections": [
+        {
+          "section": "Vis\u00e3o Geral",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Instala\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Uso",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Endpoints",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Autentica\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Exemplos",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Introdu\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Como Usar",
+          "type": "missing_required_section"
+        }
+      ],
+      "consistency_issues": [],
+      "health_score": 100.0,
+      "missing_images": []
+    },
+    "analise/An\u00e1lise Competitiva e Diferenciais \u00danicos - XadrezMaster.md": {
+      "last_checked": "2025-08-02T13:42:34.457220",
+      "size": 17991,
+      "broken_links": [],
+      "missing_sections": [
+        {
+          "section": "Vis\u00e3o Geral",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Instala\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Uso",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Endpoints",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Autentica\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Exemplos",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Introdu\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Como Usar",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Pr\u00f3ximos Passos",
+          "type": "missing_required_section"
+        }
+      ],
+      "consistency_issues": [],
+      "health_score": 100.0,
+      "missing_images": []
+    },
+    "analise/Pesquisa de Tecnologias para XadrezMaster.md": {
+      "last_checked": "2025-08-02T13:42:34.457496",
+      "size": 7541,
+      "broken_links": [],
+      "missing_sections": [
+        {
+          "section": "Vis\u00e3o Geral",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Instala\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Uso",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Endpoints",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Autentica\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Exemplos",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Introdu\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Como Usar",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Pr\u00f3ximos Passos",
+          "type": "missing_required_section"
+        }
+      ],
+      "consistency_issues": [
+        {
+          "type": "multiple_empty_lines",
+          "description": "Multiple consecutive empty lines found"
+        }
+      ],
+      "health_score": 100.0,
+      "missing_images": []
+    },
+    "design/style-guide.md": {
+      "last_checked": "2025-08-02T13:42:34.457748",
+      "size": 3785,
+      "broken_links": [],
+      "missing_sections": [
+        {
+          "section": "Vis\u00e3o Geral",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Instala\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Uso",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Endpoints",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Autentica\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Exemplos",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Introdu\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Como Usar",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Pr\u00f3ximos Passos",
+          "type": "missing_required_section"
+        }
+      ],
+      "consistency_issues": [],
+      "health_score": 100.0,
+      "missing_images": []
+    },
+    "contributing/CONTRIBUTING.md": {
+      "last_checked": "2025-08-02T13:42:34.458021",
+      "size": 2192,
+      "broken_links": [
+        {
+          "text": "guia de desenvolvimento",
+          "link": "./development-guide.md",
+          "type": "broken_internal_link"
+        },
+        {
+          "text": "padr\u00f5es de c\u00f3digo",
+          "link": "./code-standards.md",
+          "type": "broken_internal_link"
+        },
+        {
+          "text": "guia de estilo",
+          "link": "../design/style-guide.md",
+          "type": "broken_internal_link"
+        }
+      ],
+      "missing_sections": [
+        {
+          "section": "Vis\u00e3o Geral",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Instala\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Uso",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Endpoints",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Autentica\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Exemplos",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Introdu\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Como Usar",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Pr\u00f3ximos Passos",
+          "type": "missing_required_section"
+        }
+      ],
+      "consistency_issues": [],
+      "health_score": 100.0,
+      "missing_images": []
+    },
+    "user_guide/GUIA_USUARIO.md": {
+      "last_checked": "2025-08-02T13:42:34.458353",
+      "size": 3064,
+      "broken_links": [
+        {
+          "text": "Introduction",
+          "link": "#introduction",
+          "type": "broken_internal_link"
+        },
+        {
+          "text": "Getting Started",
+          "link": "#getting-started",
+          "type": "broken_internal_link"
+        },
+        {
+          "text": "Game Interface",
+          "link": "#game-interface",
+          "type": "broken_internal_link"
+        },
+        {
+          "text": "Cultural Systems",
+          "link": "#cultural-systems",
+          "type": "broken_internal_link"
+        },
+        {
+          "text": "Game Modes",
+          "link": "#game-modes",
+          "type": "broken_internal_link"
+        },
+        {
+          "text": "Advanced Settings",
+          "link": "#advanced-settings",
+          "type": "broken_internal_link"
+        },
+        {
+          "text": "Troubleshooting",
+          "link": "#troubleshooting",
+          "type": "broken_internal_link"
+        }
+      ],
+      "missing_sections": [
+        {
+          "section": "Vis\u00e3o Geral",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Instala\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Uso",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Endpoints",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Autentica\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Exemplos",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Introdu\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Como Usar",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Pr\u00f3ximos Passos",
+          "type": "missing_required_section"
+        }
+      ],
+      "consistency_issues": [],
+      "health_score": 100.0,
+      "missing_images": []
+    },
+    "narrative/README.md": {
+      "last_checked": "2025-08-02T13:42:34.458511",
+      "size": 4896,
+      "broken_links": [],
+      "missing_sections": [
+        {
+          "section": "Instala\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Uso",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Endpoints",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Autentica\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Exemplos",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Introdu\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Como Usar",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Pr\u00f3ximos Passos",
+          "type": "missing_required_section"
+        }
+      ],
+      "consistency_issues": [],
+      "health_score": 100.0,
+      "missing_images": []
+    },
+    "guides/how-to-play.md": {
+      "last_checked": "2025-08-02T13:42:34.458662",
+      "size": 2838,
+      "broken_links": [
+        {
+          "text": "Personagens",
+          "link": "characters.md",
+          "type": "broken_internal_link"
+        },
+        {
+          "text": "Modos de Jogo",
+          "link": "game-modes.md",
+          "type": "broken_internal_link"
+        },
+        {
+          "text": "Ranking e Recompensas",
+          "link": "ranking.md",
+          "type": "broken_internal_link"
+        }
+      ],
+      "missing_sections": [
+        {
+          "section": "Vis\u00e3o Geral",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Instala\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Uso",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Endpoints",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Autentica\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Exemplos",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Introdu\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Como Usar",
+          "type": "missing_required_section"
+        }
+      ],
+      "consistency_issues": [],
+      "health_score": 100.0,
+      "missing_images": []
+    },
+    "guides/characters.md": {
+      "last_checked": "2025-08-02T13:42:34.458765",
+      "size": 4131,
+      "broken_links": [],
+      "missing_sections": [
+        {
+          "section": "Vis\u00e3o Geral",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Instala\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Uso",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Endpoints",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Autentica\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Exemplos",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Introdu\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Como Usar",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Pr\u00f3ximos Passos",
+          "type": "missing_required_section"
+        }
+      ],
+      "consistency_issues": [],
+      "health_score": 100.0,
+      "missing_images": []
+    },
+    "guides/getting-started.md": {
+      "last_checked": "2025-08-02T13:42:34.458863",
+      "size": 1727,
+      "broken_links": [
+        {
+          "text": "Como Jogar",
+          "link": "how-to-play.md",
+          "type": "broken_internal_link"
+        },
+        {
+          "text": "Personagens",
+          "link": "characters.md",
+          "type": "broken_internal_link"
+        },
+        {
+          "text": "Modos de Jogo",
+          "link": "game-modes.md",
+          "type": "broken_internal_link"
+        }
+      ],
+      "missing_sections": [
+        {
+          "section": "Vis\u00e3o Geral",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Instala\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Uso",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Endpoints",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Autentica\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Exemplos",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Como Usar",
+          "type": "missing_required_section"
+        }
+      ],
+      "consistency_issues": [],
+      "health_score": 100.0,
+      "missing_images": []
+    },
+    "arquitetura/Arquitetura T\u00e9cnica Detalhada do Ecossistema XadrezMaster.md": {
+      "last_checked": "2025-08-02T13:42:34.459195",
+      "size": 26065,
+      "broken_links": [],
+      "missing_sections": [
+        {
+          "section": "Vis\u00e3o Geral",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Instala\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Uso",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Endpoints",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Autentica\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Exemplos",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Introdu\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Como Usar",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Pr\u00f3ximos Passos",
+          "type": "missing_required_section"
+        }
+      ],
+      "consistency_issues": [
+        {
+          "type": "multiple_empty_lines",
+          "description": "Multiple consecutive empty lines found"
+        }
+      ],
+      "health_score": 100.0,
+      "missing_images": []
+    },
+    "arquitetura/XadrezMaster Multiplataforma: An\u00e1lise Tecnol\u00f3gica e Arquitetura Estrat\u00e9gica.md": {
+      "last_checked": "2025-08-02T13:42:34.459557",
+      "size": 32192,
+      "broken_links": [],
+      "missing_sections": [
+        {
+          "section": "Vis\u00e3o Geral",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Instala\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Uso",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Endpoints",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Autentica\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Exemplos",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Introdu\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Como Usar",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Pr\u00f3ximos Passos",
+          "type": "missing_required_section"
+        }
+      ],
+      "consistency_issues": [
+        {
+          "type": "multiple_empty_lines",
+          "description": "Multiple consecutive empty lines found"
+        }
+      ],
+      "health_score": 100.0,
+      "missing_images": []
+    },
+    "templates/analysis.md": {
+      "last_checked": "2025-08-02T13:42:34.460042",
+      "size": 583,
+      "broken_links": [],
+      "missing_sections": [
+        {
+          "section": "Vis\u00e3o Geral",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Instala\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Uso",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Endpoints",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Autentica\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Exemplos",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Introdu\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Como Usar",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Pr\u00f3ximos Passos",
+          "type": "missing_required_section"
+        }
+      ],
+      "consistency_issues": [],
+      "health_score": 100.0,
+      "missing_images": []
+    },
+    "templates/technical.md": {
+      "last_checked": "2025-08-02T13:42:34.460229",
+      "size": 484,
+      "broken_links": [],
+      "missing_sections": [
+        {
+          "section": "Instala\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Uso",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Endpoints",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Autentica\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Exemplos",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Introdu\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Como Usar",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Pr\u00f3ximos Passos",
+          "type": "missing_required_section"
+        }
+      ],
+      "consistency_issues": [],
+      "health_score": 100.0,
+      "missing_images": []
+    },
+    "produto/Estrat\u00e9gia de Produto e Roadmap - XadrezMaster.md": {
+      "last_checked": "2025-08-02T13:42:34.460519",
+      "size": 24654,
+      "broken_links": [],
+      "missing_sections": [
+        {
+          "section": "Vis\u00e3o Geral",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Instala\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Uso",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Endpoints",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Autentica\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Exemplos",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Introdu\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Como Usar",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Pr\u00f3ximos Passos",
+          "type": "missing_required_section"
+        }
+      ],
+      "consistency_issues": [
+        {
+          "type": "multiple_empty_lines",
+          "description": "Multiple consecutive empty lines found"
+        }
+      ],
+      "health_score": 100.0,
+      "missing_images": []
+    },
+    "produto/XadrezMaster & EstrategiX - Aplicativo Completo.md": {
+      "last_checked": "2025-08-02T13:42:34.460825",
+      "size": 6812,
+      "broken_links": [],
+      "missing_sections": [
+        {
+          "section": "Vis\u00e3o Geral",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Instala\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Uso",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Endpoints",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Autentica\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Exemplos",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Introdu\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Como Usar",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Pr\u00f3ximos Passos",
+          "type": "missing_required_section"
+        }
+      ],
+      "consistency_issues": [],
+      "health_score": 100.0,
+      "missing_images": []
+    },
+    "produto/vision.md": {
+      "last_checked": "2025-08-02T13:42:34.461065",
+      "size": 3205,
+      "broken_links": [],
+      "missing_sections": [
+        {
+          "section": "Vis\u00e3o Geral",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Instala\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Uso",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Endpoints",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Autentica\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Exemplos",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Introdu\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Como Usar",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Pr\u00f3ximos Passos",
+          "type": "missing_required_section"
+        }
+      ],
+      "consistency_issues": [],
+      "health_score": 100.0,
+      "missing_images": []
+    },
+    "produto/XadrezMaster Mobile - Aplicativo Multiplataforma.md": {
+      "last_checked": "2025-08-02T13:42:34.461289",
+      "size": 9073,
+      "broken_links": [],
+      "missing_sections": [
+        {
+          "section": "Vis\u00e3o Geral",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Instala\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Uso",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Endpoints",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Autentica\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Exemplos",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Introdu\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Como Usar",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Pr\u00f3ximos Passos",
+          "type": "missing_required_section"
+        }
+      ],
+      "consistency_issues": [
+        {
+          "type": "invalid_heading_hierarchy",
+          "line": 162,
+          "content": "### **Executar em Diferentes Plataformas**"
+        },
+        {
+          "type": "invalid_heading_hierarchy",
+          "line": 191,
+          "content": "### **Distribui\u00e7\u00e3o**"
+        },
+        {
+          "type": "invalid_heading_hierarchy",
+          "line": 222,
+          "content": "### **Desenvolvimento iOS no Mac**"
+        }
+      ],
+      "health_score": 100.0,
+      "missing_images": []
+    },
+    "produto/pitch_deck_script.md": {
+      "last_checked": "2025-08-02T13:42:34.461573",
+      "size": 4877,
+      "broken_links": [],
+      "missing_sections": [
+        {
+          "section": "Vis\u00e3o Geral",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Instala\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Uso",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Endpoints",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Autentica\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Exemplos",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Introdu\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Como Usar",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Pr\u00f3ximos Passos",
+          "type": "missing_required_section"
+        }
+      ],
+      "consistency_issues": [],
+      "health_score": 100.0,
+      "missing_images": []
+    },
+    "produto/naming_storytelling_xadrez.md": {
+      "last_checked": "2025-08-02T13:42:34.461886",
+      "size": 49316,
+      "broken_links": [],
+      "missing_sections": [
+        {
+          "section": "Vis\u00e3o Geral",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Instala\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Uso",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Endpoints",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Autentica\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Exemplos",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Introdu\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Como Usar",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Pr\u00f3ximos Passos",
+          "type": "missing_required_section"
+        }
+      ],
+      "consistency_issues": [
+        {
+          "type": "multiple_empty_lines",
+          "description": "Multiple consecutive empty lines found"
+        }
+      ],
+      "health_score": 100.0,
+      "missing_images": []
+    },
+    "technical/.docsync/backup/20250802_134030/cultural_engine_technical.md": {
+      "last_checked": "2025-08-02T13:42:34.462419",
+      "size": 441,
+      "broken_links": [],
+      "missing_sections": [
+        {
+          "section": "Instala\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Uso",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Endpoints",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Autentica\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Exemplos",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Introdu\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Como Usar",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Pr\u00f3ximos Passos",
+          "type": "missing_required_section"
+        }
+      ],
+      "consistency_issues": [
+        {
+          "type": "multiple_empty_lines",
+          "description": "Multiple consecutive empty lines found"
+        }
+      ],
+      "health_score": 100.0,
+      "missing_images": []
+    },
+    "technical/.docsync/backup/20250801_054746/cultural_engine_technical.md": {
+      "last_checked": "2025-08-02T13:42:34.462504",
+      "size": 441,
+      "broken_links": [],
+      "missing_sections": [
+        {
+          "section": "Instala\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Uso",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Endpoints",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Autentica\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Exemplos",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Introdu\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Como Usar",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Pr\u00f3ximos Passos",
+          "type": "missing_required_section"
+        }
+      ],
+      "consistency_issues": [
+        {
+          "type": "multiple_empty_lines",
+          "description": "Multiple consecutive empty lines found"
+        }
+      ],
+      "health_score": 100.0,
+      "missing_images": []
+    },
+    "technical/.docsync/backup/.docsync/backup/20250802_134030/cultural_engine_technical.md": {
+      "last_checked": "2025-08-02T13:42:34.462633",
+      "size": 441,
+      "broken_links": [],
+      "missing_sections": [
+        {
+          "section": "Instala\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Uso",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Endpoints",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Autentica\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Exemplos",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Introdu\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Como Usar",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Pr\u00f3ximos Passos",
+          "type": "missing_required_section"
+        }
+      ],
+      "consistency_issues": [
+        {
+          "type": "multiple_empty_lines",
+          "description": "Multiple consecutive empty lines found"
+        }
+      ],
+      "health_score": 100.0,
+      "missing_images": []
+    },
+    "technical/cultural/cultural_engine_technical.md": {
+      "last_checked": "2025-08-02T13:42:34.462714",
+      "size": 441,
+      "broken_links": [],
+      "missing_sections": [
+        {
+          "section": "Instala\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Uso",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Endpoints",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Autentica\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Exemplos",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Introdu\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Como Usar",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Pr\u00f3ximos Passos",
+          "type": "missing_required_section"
+        }
+      ],
+      "consistency_issues": [
+        {
+          "type": "multiple_empty_lines",
+          "description": "Multiple consecutive empty lines found"
+        }
+      ],
+      "health_score": 100.0,
+      "missing_images": []
+    },
+    "cultural/examples/EXEMPLO_METRICAS_CULTURAIS.md": {
+      "last_checked": "2025-08-02T13:42:34.462813",
+      "size": 2910,
+      "broken_links": [],
+      "missing_sections": [
+        {
+          "section": "Instala\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Uso",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Endpoints",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Autentica\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Exemplos",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Introdu\u00e7\u00e3o",
+          "type": "missing_required_section"
+        },
+        {
+          "section": "Como Usar",
+          "type": "missing_required_section"
+        }
+      ],
+      "consistency_issues": [
+        {
+          "type": "invalid_heading_hierarchy",
+          "line": 28,
+          "content": "#### Resultados Esperados:"
+        },
+        {
+          "type": "invalid_heading_hierarchy",
+          "line": 48,
+          "content": "#### Resultados Esperados:"
+        },
+        {
+          "type": "invalid_heading_hierarchy",
+          "line": 68,
+          "content": "#### Resultados Esperados:"
+        }
+      ],
+      "health_score": 100.0,
+      "missing_images": []
+    }
+  },
+  "global": {
+    "total_docs": 67,
+    "broken_links": 17,
+    "missing_sections": 572,
+    "consistency_issues": 32
+  }
+}
