@@ -7,15 +7,15 @@ logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
     handlers=[
-        logging.FileHandler('aeon_execution.log'),
+logging.FileHandler('chess_system.log')
         logging.StreamHandler()
     ]
 )
 
 async def main():
-    """Função principal de execução do AEON Chess"""
+    """Função principal de execução do AEON Chess com extensões CHESS"""
     logger = logging.getLogger(__name__)
-    logger.info("Iniciando AEON Chess System")
+    logger.info("Iniciando AEON Chess System com módulos CHESS")
 
     try:
         # Inicializa o orquestrador

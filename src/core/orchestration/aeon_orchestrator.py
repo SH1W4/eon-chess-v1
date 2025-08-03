@@ -24,7 +24,7 @@ class SystemMetrics:
     symbiotic_index: float
     stability_score: float
 
-class AEONOrchestrator:
+class ChessSystemOrchestrator:
     def __init__(self):
         self.logger = logging.getLogger(__name__)
         self.current_phase = SystemPhase.BOOTSTRAP
@@ -35,8 +35,8 @@ class AEONOrchestrator:
         }
 
     async def initialize_symbiotic_mode(self):
-        """Inicializa o modo simbiótico"""
-        self.logger.info("Iniciando modo simbiótico AEON")
+"""Inicializa o modo simbiótico"""
+        self.logger.info("Iniciando modo simbiótico CHESS")
         await self._activate_arquimax_capabilities()
         await self._activate_nexus_capabilities()
         return True
