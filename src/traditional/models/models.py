@@ -9,11 +9,27 @@ class PieceType(Enum):
     BISHOP = "B"
     KNIGHT = "N"
     PAWN = "P"
+    
+    def __eq__(self, other):
+        if isinstance(other, PieceType):
+            return self.value == other.value
+        return False
+    
+    def __hash__(self):
+        return hash(self.value)
 
 class Color(Enum):
     """Chess piece colors"""
     WHITE = "white"
     BLACK = "black"
+    
+    def __eq__(self, other):
+        if isinstance(other, Color):
+            return self.value == other.value
+        return False
+    
+    def __hash__(self):
+        return hash(self.value)
 
 @dataclass(frozen=True)
 class Position:

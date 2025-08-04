@@ -1,8 +1,7 @@
 import json
 from dataclasses import dataclass
 from typing import Dict, List, Optional, Tuple
-from src.core.board.board import Board, Position, PieceType, Color, Piece
-from src.core.engine import Move
+from core.board.board import Board, Position, PieceType, Color, Piece
 
 @dataclass
 class NarrativeConfig:
