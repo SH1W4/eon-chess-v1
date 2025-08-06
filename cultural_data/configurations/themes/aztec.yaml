@@ -1,0 +1,143 @@
+name: "Aztec"
+type: "ancient_civilization"
+attributes:
+  military_focus:
+    - "ritual_warfare"
+    - "eagle_warriors"
+    - "jaguar_warriors"
+    - "formation_combat"
+    - "siege_tactics"
+  
+  economic_patterns:
+    - "tribute_system"
+    - "market_networks"
+    - "agricultural_innovation"
+    - "craft_specialization"
+    - "trade_alliances"
+  
+  diplomatic_approaches:
+    - "tributary_alliances"
+    - "cultural_assimilation"
+    - "religious_diplomacy"
+    - "strategic_marriages"
+    - "vassal_management"
+
+  cultural_values:
+    - "sacrifice_and_renewal"
+    - "cosmic_order"
+    - "warrior_ethos"
+    - "divine_kingship"
+    - "ritual_precision"
+
+narrative_elements:
+  key_stories:
+    - "foundation_of_tenochtitlan"
+    - "prophecy_fulfillment"
+    - "great_temple_construction"
+    - "triple_alliance"
+    - "spanish_encounter"
+  
+  cultural_practices:
+    - "ritual_calendar"
+    - "human_sacrifice"
+    - "ball_game"
+    - "temple_ceremonies"
+    - "warrior_training"
+  
+  historical_events:
+    - "migration_period"
+    - "triple_alliance_formation"
+    - "flower_wars"
+    - "temple_expansions"
+    - "spanish_contact"
+
+strategic_elements:
+  military_tactics:
+    - name: "eagle_warrior_tactics"
+      focus: "mobility"
+      strength: 0.85
+    
+    - name: "jaguar_warrior_tactics"
+      focus: "stealth"
+      strength: 0.80
+    
+    - name: "ritual_combat"
+      focus: "psychological"
+      strength: 0.90
+  
+  economic_strategies:
+    - name: "tribute_collection"
+      focus: "resource_accumulation"
+      efficiency: 0.85
+    
+    - name: "market_system"
+      focus: "trade_control"
+      efficiency: 0.80
+    
+    - name: "agricultural_management"
+      focus: "food_security"
+      efficiency: 0.90
+  
+  diplomatic_methods:
+    - name: "religious_influence"
+      focus: "cultural_dominance"
+      effectiveness: 0.85
+    
+    - name: "alliance_building"
+      focus: "political_expansion"
+      effectiveness: 0.80
+    
+    - name: "vassal_integration"
+      focus: "territorial_control"
+      effectiveness: 0.90
+
+adaptation_rules:
+  context_sensitivity: 0.85
+  learning_rate: 0.70
+  evolution_enabled: true
+  
+behavior_patterns:
+  primary:
+    - "ritual_warfare"
+    - "tribute_collection"
+    - "religious_dominance"
+  
+  secondary:
+    - "market_control"
+    - "cultural_assimilation"
+    - "alliance_management"
+  
+  emergent:
+    - name: "sacred_warfare"
+      base_patterns: ["ritual_warfare", "religious_dominance"]
+      adaptation_rate: 0.75
+    
+    - name: "economic_domination"
+      base_patterns: ["tribute_collection", "market_control"]
+      adaptation_rate: 0.80
+    
+    - name: "cultural_expansion"
+      base_patterns: ["religious_dominance", "cultural_assimilation"]
+      adaptation_rate: 0.85
+
+narrative_integration:
+  themes:
+    - "sacrifice_and_renewal"
+    - "divine_authority"
+    - "cosmic_balance"
+    - "warrior_culture"
+    - "imperial_expansion"
+  
+  story_elements:
+    - "prophecy_fulfillment"
+    - "ritual_warfare"
+    - "divine_intervention"
+    - "cultural_assimilation"
+    - "imperial_destiny"
+  
+  character_archetypes:
+    - "warrior_priest"
+    - "divine_ruler"
+    - "master_craftsman"
+    - "market_merchant"
+    - "tribal_elder"
