@@ -165,6 +165,204 @@ O sistema cultural do CHESS é projetado para proporcionar uma experiência de j
   - Templos
   - Mercados
 
+### Cultura Asteca
+
+#### Valores Fundamentais
+- **Sacrifício** (0.95)
+  - Oferendas aos deuses
+  - Autossacrifício ritual
+  - Devoção espiritual
+
+- **Guerra Sagrada** (0.90)
+  - Guerras floridas
+  - Captura de guerreiros
+  - Honra militar
+
+- **Ordem Cósmica** (0.85)
+  - Harmonia com os ciclos
+  - Manutenção do equilíbrio
+  - Responsabilidade ritual
+
+- **Tradição** (0.80)
+  - Preservação de rituais
+  - Transmissão de conhecimento
+  - Respeito aos ancestrais
+
+#### Práticas Culturais
+1. **Rituais Religiosos** (0.90)
+   - Cerimônias de sacrifício
+   - Recursos: templos, instrumentos rituais, sacerdotes
+   - Impacto: conexão divina, ordem social, poder político
+
+2. **Guerra Ritual** (0.85)
+   - Guerras floridas e conquistas
+   - Recursos: guerreiros, armas, campos de batalha
+   - Impacto: prestígio militar, capturas rituais, expansão territorial
+
+3. **Agricultura Sagrada** (0.80)
+   - Cultivo do milho e outros alimentos
+   - Recursos: terras, conhecimento agrícola, rituais de fertilidade
+   - Impacto: sustentabilidade, coesão social, harmonia divina
+
+#### Sistema de Crenças
+- **Cosmologia**
+  - Cinco eras do mundo
+  - Níveis celestiais e inframundo
+  - Significância: 0.95
+
+- **Deidades**
+  - Huitzilopochtli, Tlaloc, Quetzalcoatl, Tezcatlipoca
+  - Significância: 0.90
+
+- **Rituais**
+  - Sacrifícios humanos
+  - Festas calendáricas
+  - Jogos rituais
+
+#### Estrutura Social
+- **Classes**
+  1. Nobreza (Pilli)
+  2. Sacerdotes
+  3. Guerreiros (Águias e Jaguares)
+  4. Comerciantes (Pochteca)
+  5. Comuns (Macehualtin)
+
+- **Instituições**
+  - Telpochcalli (escola militar)
+  - Calmecac (escola sacerdotal)
+
+### Cultura Egípcia
+
+#### Valores Fundamentais
+- **Eternidade** (0.95)
+  - Vida após a morte
+  - Preservação do corpo
+  - Monumentos eternos
+
+- **Ordem (Ma'at)** (0.90)
+  - Justiça e verdade
+  - Harmonia cósmica
+  - Equilíbrio social
+
+- **Divindade Real** (0.85)
+  - Faraó como deus vivo
+  - Poder divino
+  - Mediação celestial
+
+- **Tradição** (0.80)
+  - Rituais ancestrais
+  - Hierarquia social
+  - Práticas funerárias
+
+#### Práticas Culturais
+1. **Rituais Funerários** (0.90)
+   - Mumificação e enterro
+   - Recursos: embalsamadores, tumbas, materiais rituais
+   - Impacto: preservação eterna, conexão divina, legado
+
+2. **Construção Monumental** (0.85)
+   - Pirâmides e templos
+   - Recursos: arquitetos, trabalhadores, materiais de construção
+   - Impacto: poder real, glória eterna, ordem social
+
+3. **Agricultura do Nilo** (0.80)
+   - Cultivo baseado nas cheias
+   - Recursos: terras férteis, sistemas de irrigação, conhecimento agrícola
+   - Impacto: prosperidade, estabilidade social, rituais sazonais
+
+#### Sistema de Crenças
+- **Cosmologia**
+  - Duat (mundo dos mortos)
+  - Ciclo solar de Ra
+  - Significância: 0.95
+
+- **Deidades**
+  - Ra, Osíris, Ísis, Hórus, Anúbis
+  - Significância: 0.90
+
+- **Rituais**
+  - Oferendas diárias
+  - Festivais religiosos
+  - Rituais de proteção
+
+#### Estrutura Social
+- **Classes**
+  1. Faraó
+  2. Nobreza
+  3. Sacerdotes
+  4. Escribas
+  5. Artesãos
+  6. Camponeses
+
+- **Instituições**
+  - Templos
+  - Casa da Vida (centro de conhecimento)
+
+### Cultura Grega
+
+#### Valores Fundamentais
+- **Areté** (0.95)
+  - Excelência pessoal
+  - Virtude moral
+  - Busca da perfeição
+
+- **Conhecimento** (0.90)
+  - Filosofia
+  - Ciências
+  - Artes
+
+- **Democracia** (0.85)
+  - Participação política
+  - Debate público
+  - Cidadania
+
+- **Agon** (0.80)
+  - Competição
+  - Superação
+  - Glória
+
+#### Práticas Culturais
+1. **Filosofia** (0.90)
+   - Debate e ensino
+   - Recursos: academias, textos filosóficos, mentores
+   - Impacto: conhecimento, pensamento crítico, evolução social
+
+2. **Jogos Olímpicos** (0.85)
+   - Competições atléticas
+   - Recursos: estádios, atletas, prêmios
+   - Impacto: prestígio, união cultural, honra
+
+3. **Teatro** (0.80)
+   - Tragédias e comédias
+   - Recursos: anfiteatros, atores, textos dramáticos
+   - Impacto: educação moral, catarse, reflexão social
+
+#### Sistema de Crenças
+- **Cosmologia**
+  - Monte Olimpo
+  - Mundo dos mortos (Hades)
+  - Significância: 0.90
+
+- **Deidades**
+  - Zeus, Atena, Apolo, Poseidon, Hades
+  - Significância: 0.85
+
+- **Rituais**
+  - Festivais religiosos
+  - Oráculos
+  - Sacrifícios aos deuses
+
+#### Estrutura Social
+- **Classes**
+  1. Cidadãos
+  2. Metecos (estrangeiros)
+  3. Escravos
+
+- **Instituições**
+  - Ágora (praça pública)
+  - Academias
+  - Templos
+
 ### Cultura Samurai
 
 #### Valores Fundamentais
