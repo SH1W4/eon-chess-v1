@@ -16,7 +16,7 @@ logger = logging.getLogger('symbiotic_init')
 
 class SymbioticInitializer:
     def __init__(self):
-        self.config_dir = Path('/Users/jx/WORKSPACE/PROJECTS/CHESS/config')
+        self.config_dir = Path(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'config'))
         self.config = self._load_configurations()
         
     def _load_configurations(self):
