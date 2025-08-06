@@ -96,6 +96,12 @@ class EvaluationWeights:
             ]
         }
 
+class LearningMode(Enum):
+    """Modos de aprendizado da IA"""
+    PASSIVE = "passive"      # Aprende lentamente, mantém estabilidade
+    ACTIVE = "active"       # Aprende moderadamente, equilibra adaptação
+    AGGRESSIVE = "aggressive" # Aprende rapidamente, adapta-se muito
+
 @dataclass
 class PlayerProfile:
     """Profile representing player characteristics"""
@@ -104,6 +110,8 @@ class PlayerProfile:
     risk_taking: float = 0.5  # 0.0 = conservative, 1.0 = risky
     opening_preference: str = "balanced"  # e.g. "open", "closed", "balanced"
     learning_rate: float = 0.1  # Taxa de aprendizado para adaptação
+    learning_mode: LearningMode = LearningMode.PASSIVE  # Modo de aprendizado
+    evolution_cycles: int = 1  # Número de ciclos evolutivos
     wins: int = 0
     losses: int = 0
     draws: int = 0
@@ -432,6 +440,15 @@ class AdaptiveAI:
         if not board or not game_result:
             return
             
+        # Ajusta a taxa de aprendizado baseado no modo
+        base_learning_rate = self.profile.learning_rate
+        if self.profile.learning_mode == LearningMode.PASSIVE:
+            self.learning_rate = base_learning_rate * 0.5
+        elif self.profile.learning_mode == LearningMode.ACTIVE:
+            self.learning_rate = base_learning_rate
+        else:  # AGGRESSIVE
+            self.learning_rate = base_learning_rate * 2.0
+            
         # Analyze final position
         aggressive_moves = 0
         positional_moves = 0
@@ -458,12 +475,33 @@ class AdaptiveAI:
         
         # Update profile based on move analysis
         if total_moves > 0:
-            self.profile.aggression = 0.8 * self.profile.aggression + \
-                                    0.2 * (aggressive_moves / total_moves)
-            self.profile.positional = 0.8 * self.profile.positional + \
-                                  0.2 * (positional_moves / total_moves)
-            self.profile.risk_taking = 0.8 * self.profile.risk_taking + \
-                                     0.2 * (risky_moves / total_moves)
+            # Base weights dependem do modo de aprendizado
+            if self.profile.learning_mode == LearningMode.PASSIVE:
+                memory_weight = 0.9
+                new_weight = 0.1
+            elif self.profile.learning_mode == LearningMode.ACTIVE:
+                memory_weight = 0.8
+                new_weight = 0.2
+            else:  # AGGRESSIVE
+                memory_weight = 0.6
+                new_weight = 0.4
+            
+            # Aplica os pesos na atualização
+            self.profile.aggression = memory_weight * self.profile.aggression + \
+                                    new_weight * (aggressive_moves / total_moves)
+            self.profile.positional = memory_weight * self.profile.positional + \
+                                    new_weight * (positional_moves / total_moves)
+            self.profile.risk_taking = memory_weight * self.profile.risk_taking + \
+                                     new_weight * (risky_moves / total_moves)
+            
+            # Evolução adicional baseada nos ciclos
+            for _ in range(self.profile.evolution_cycles - 1):
+                # Simula jogos usando o perfil atual
+                simulated_profile = self._simulate_games()
+                # Incorpora resultados da simulação
+                self.profile.aggression = (self.profile.aggression + simulated_profile.aggression) / 2
+                self.profile.positional = (self.profile.positional + simulated_profile.positional) / 2
+                self.profile.risk_taking = (self.profile.risk_taking + simulated_profile.risk_taking) / 2
         
         # Adjust based on game result
         if game_result == "win":
@@ -559,6 +597,38 @@ class AdaptiveAI:
                         mobility_score += 0.05
         return mobility_score
         
+    def _simulate_games(self) -> PlayerProfile:
+        """Simula jogos para evolução do perfil"""
+        simulated_profile = PlayerProfile(
+            aggression=self.profile.aggression,
+            positional=self.profile.positional,
+            risk_taking=self.profile.risk_taking
+        )
+        
+        # Usa memória de jogos para simulação
+        if self.game_memory:
+            wins = 0
+            total = min(10, len(self.game_memory))  # Limita a 10 jogos recentes
+            
+            for game in self.game_memory[-total:]:
+                if game.get('result') == 'win':
+                    wins += 1
+                    # Reforça características bem sucedidas
+                    simulated_profile.aggression += 0.1 * (game.get('aggression', 0) - simulated_profile.aggression)
+                    simulated_profile.positional += 0.1 * (game.get('positional', 0) - simulated_profile.positional)
+                    simulated_profile.risk_taking += 0.1 * (game.get('risk_taking', 0) - simulated_profile.risk_taking)
+            
+            # Ajusta baseado no sucesso geral
+            if wins >= total * 0.6:  # Se ganhou 60% ou mais
+                pass  # Mantém a direção atual
+            else:
+                # Reverte um pouco em direção à média
+                simulated_profile.aggression = (simulated_profile.aggression + 0.5) / 2
+                simulated_profile.positional = (simulated_profile.positional + 0.5) / 2
+                simulated_profile.risk_taking = (simulated_profile.risk_taking + 0.5) / 2
+        
+        return simulated_profile
+    
     def _evaluate_components(self, board: Board, color: Color) -> Tuple[float, float, float]:
         """Evaluate various components such as material, position, and king safety."""
         material_score = 0.0
