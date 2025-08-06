@@ -7,8 +7,19 @@ __pycache__/
 *$py.class
 
 # Logs e temporários
-aeon_execution.log
-test_avaliador.py
+*.log
+*_implementation.log
+*_system.log
+*_analysis.log
+*_dashboard.log
+test_*.py
+
+# Backups e cache
+*.bak
+.docsync/backup/
+.docsync/cache/
+**/backup/
+**/.backup/
 
 # Ambiente virtual
 venv/
@@ -71,6 +82,21 @@ yarn-error.log*
 !.backup/.gitkeep
 temp/
 logs/
+
+# Motor Cultural
+cultural_data/temp/
+cultural_cache/
+.cultural_backup/
+
+# Motor Narrativo
+narrative_cache/
+.narrative_backup/
+narrative_temp/
+
+# Arquivos de análise e métricas
+analysis_results/
+metrics_data/
+profile_data/
 
 # Arquivos de configuração local
 config/local.yaml

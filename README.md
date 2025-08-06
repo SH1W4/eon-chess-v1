@@ -65,11 +65,15 @@ AEON/
 - Feedback visual e sonoro imersivo
 - Suporte para múltiplos dispositivos
 
-### 🤖 Sistema de IA
+### 🤖 Sistema de IA & Cultural
 - Aprendizado adaptativo baseado no perfil
 - Sistema de coaching personalizado
 - Análise preditiva de padrões
 - Recomendações contextuais
+- Culturas implementadas: Viking, Maia, Samurai, Azteca
+- Antagonistas híbridos com comportamentos emergentes
+- Sistema narrativo dinâmico
+- Análise preditiva cultural
 
 ### 📱 Multiplataforma
 - Aplicativo web progressivo
