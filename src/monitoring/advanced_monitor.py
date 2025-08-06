@@ -1,3 +1,198 @@
+from typing import Dict, List, Any, Optional
+from datetime import datetime
+import threading
+import json
+from pathlib import Path
+from dataclasses import dataclass, field
+
+@dataclass
+class MetricPoint:
+    """Ponto de métrica com timestamp"""
+    value: float
+    timestamp: datetime
+    metadata: Dict = field(default_factory=dict)
+
+@dataclass
+class Alert:
+    """Alerta do sistema de monitoramento"""
+    level: str
+    message: str
+    timestamp: datetime
+    context: Dict = field(default_factory=dict)
+
+class AdvancedMonitor:
+    """Sistema avançado de monitoramento"""
+    
+    def __init__(self):
+        self.metrics: Dict[str, List[MetricPoint]] = {}
+        self.alerts: List[Alert] = []
+        self._lock = threading.Lock()
+        self._alert_callbacks: List[callable] = []
+        
+    def record_metric(self, name: str, value: float, metadata: Optional[Dict] = None) -> None:
+        """Registra uma métrica"""
+        with self._lock:
+            if name not in self.metrics:
+                self.metrics[name] = []
+            
+            point = MetricPoint(
+                value=value,
+                timestamp=datetime.now(),
+                metadata=metadata or {}
+            )
+            self.metrics[name].append(point)
+            
+            # Verifica thresholds
+            self._check_thresholds(name, point)
+    
+    def get_metric_history(self, name: str, limit: Optional[int] = None) -> List[MetricPoint]:
+        """Retorna histórico de uma métrica"""
+        with self._lock:
+            history = self.metrics.get(name, [])
+            if limit:
+                return history[-limit:]
+            return history
+    
+    def add_alert_callback(self, callback: callable) -> None:
+        """Adiciona callback para alertas"""
+        self._alert_callbacks.append(callback)
+    
+    def raise_alert(self, level: str, message: str, context: Optional[Dict] = None) -> None:
+        """Gera um alerta"""
+        alert = Alert(
+            level=level,
+            message=message,
+            timestamp=datetime.now(),
+            context=context or {}
+        )
+        
+        with self._lock:
+            self.alerts.append(alert)
+            
+        # Notifica callbacks
+        for callback in self._alert_callbacks:
+            try:
+                callback(alert)
+            except Exception as e:
+                print(f"Erro no callback de alerta: {e}")
+    
+    def get_recent_alerts(self, limit: Optional[int] = None) -> List[Alert]:
+        """Retorna alertas recentes"""
+        with self._lock:
+            if limit:
+                return self.alerts[-limit:]
+            return self.alerts.copy()
+    
+    def _check_thresholds(self, metric_name: str, point: MetricPoint) -> None:
+        """Verifica thresholds para métricas"""
+        thresholds = {
+            'cultural_expression': {'warning': 0.3, 'critical': 0.1},
+            'style_consistency': {'warning': 0.4, 'critical': 0.2},
+            'cache_hit_rate': {'warning': 0.5, 'critical': 0.3},
+            'analysis_time': {'warning': 1.0, 'critical': 2.0}
+        }
+        
+        if metric_name in thresholds:
+            threshold = thresholds[metric_name]
+            
+            if point.value <= threshold['critical']:
+                self.raise_alert(
+                    'CRITICAL',
+                    f'Métrica {metric_name} em nível crítico: {point.value}',
+                    {'threshold': threshold['critical'], 'value': point.value}
+                )
+            elif point.value <= threshold['warning']:
+                self.raise_alert(
+                    'WARNING',
+                    f'Métrica {metric_name} em nível de alerta: {point.value}',
+                    {'threshold': threshold['warning'], 'value': point.value}
+                )
+    
+    def persist_metrics(self, filepath: str) -> None:
+        """Persiste métricas em disco"""
+        path = Path(filepath)
+        path.parent.mkdir(parents=True, exist_ok=True)
+        
+        with self._lock:
+            metrics_data = {
+                name: [
+                    {
+                        'value': point.value,
+                        'timestamp': point.timestamp.isoformat(),
+                        'metadata': point.metadata
+                    }
+                    for point in points
+                ]
+                for name, points in self.metrics.items()
+            }
+            
+            with open(filepath, 'w') as f:
+                json.dump(metrics_data, f)
+    
+    def load_metrics(self, filepath: str) -> None:
+        """Carrega métricas do disco"""
+        try:
+            with open(filepath, 'r') as f:
+                data = json.load(f)
+                
+            with self._lock:
+                self.metrics = {
+                    name: [
+                        MetricPoint(
+                            value=point['value'],
+                            timestamp=datetime.fromisoformat(point['timestamp']),
+                            metadata=point['metadata']
+                        )
+                        for point in points
+                    ]
+                    for name, points in data.items()
+                }
+        except FileNotFoundError:
+            pass  # Ignora se arquivo não existe
+
+# Exemplo de callback para Slack
+def slack_alert_callback(alert: Alert) -> None:
+    """Envia alerta para Slack"""
+    # Implementação do envio para Slack aqui
+    print(f"[SLACK] {alert.level}: {alert.message}")
+
+# Exemplo de callback para email
+def email_alert_callback(alert: Alert) -> None:
+    """Envia alerta por email"""
+    # Implementação do envio de email aqui
+    print(f"[EMAIL] {alert.level}: {alert.message}")
+
+# Exemplo de uso
+def monitor_example():
+    monitor = AdvancedMonitor()
+    
+    # Adiciona callbacks
+    monitor.add_alert_callback(slack_alert_callback)
+    monitor.add_alert_callback(email_alert_callback)
+    
+    # Registra algumas métricas
+    monitor.record_metric('cultural_expression', 0.2)
+    monitor.record_metric('style_consistency', 0.8)
+    monitor.record_metric('cache_hit_rate', 0.6)
+    
+    # Gera um alerta manual
+    monitor.raise_alert(
+        'WARNING',
+        'Detecção de padrão cultural incomum',
+        {'pattern': 'spiral_attack'}
+    )
+    
+    # Persiste métricas
+    monitor.persist_metrics('metrics.json')
+    
+    return {
+        'metrics': {
+            name: len(points)
+            for name, points in monitor.metrics.items()
+        },
+        'alerts': len(monitor.alerts)
+    }
+
 from dataclasses import dataclass
 from typing import Dict, List, Optional
 import asyncio

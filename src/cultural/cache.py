@@ -1,3 +1,112 @@
+from typing import Dict, Any, Optional
+from datetime import datetime, timedelta
+import json
+import threading
+from pathlib import Path
+
+class AdvancedCache:
+    """Cache avançado com suporte a persistência e métricas."""
+    
+    def __init__(self, max_size: int = 1000, ttl: int = 3600):
+        self._cache: Dict[str, Any] = {}
+        self._metadata: Dict[str, Dict] = {}
+        self._max_size = max_size
+        self._ttl = ttl
+        self._lock = threading.Lock()
+        self._hits = 0
+        self._misses = 0
+        self._evictions = 0
+        
+    def get(self, key: str) -> Optional[Any]:
+        """Obtém um valor do cache com suporte a TTL."""
+        with self._lock:
+            if key not in self._cache:
+                self._misses += 1
+                return None
+                
+            metadata = self._metadata[key]
+            if self._is_expired(metadata['timestamp']):
+                self._evict(key)
+                self._misses += 1
+                return None
+                
+            self._hits += 1
+            metadata['access_count'] += 1
+            metadata['last_access'] = datetime.now()
+            return self._cache[key]
+    
+    def set(self, key: str, value: Any, ttl: Optional[int] = None) -> None:
+        """Armazena um valor no cache com TTL opcional."""
+        with self._lock:
+            if len(self._cache) >= self._max_size:
+                self._evict_lru()
+            
+            self._cache[key] = value
+            self._metadata[key] = {
+                'timestamp': datetime.now(),
+                'ttl': ttl or self._ttl,
+                'access_count': 0,
+                'last_access': datetime.now(),
+                'size': self._estimate_size(value)
+            }
+    
+    def _is_expired(self, timestamp: datetime) -> bool:
+        """Verifica se um item expirou."""
+        age = (datetime.now() - timestamp).total_seconds()
+        return age > self._ttl
+    
+    def _evict(self, key: str) -> None:
+        """Remove um item do cache."""
+        del self._cache[key]
+        del self._metadata[key]
+        self._evictions += 1
+    
+    def _evict_lru(self) -> None:
+        """Remove o item menos recentemente usado."""
+        lru_key = min(
+            self._metadata.items(),
+            key=lambda x: x[1]['last_access']
+        )[0]
+        self._evict(lru_key)
+    
+    def _estimate_size(self, value: Any) -> int:
+        """Estima o tamanho em bytes de um valor."""
+        return len(json.dumps(value)) if hasattr(value, '__dict__') else 1
+    
+    def get_metrics(self) -> Dict[str, float]:
+        """Retorna métricas do cache."""
+        total_ops = self._hits + self._misses
+        return {
+            'hit_rate': self._hits / max(total_ops, 1),
+            'miss_rate': self._misses / max(total_ops, 1),
+            'eviction_rate': self._evictions / max(total_ops, 1),
+            'size': len(self._cache),
+            'memory_usage': sum(m['size'] for m in self._metadata.values())
+        }
+    
+    def persist(self, filepath: str) -> None:
+        """Persiste o cache em disco."""
+        path = Path(filepath)
+        path.parent.mkdir(parents=True, exist_ok=True)
+        
+        with self._lock:
+            with open(filepath, 'w') as f:
+                json.dump({
+                    'cache': self._cache,
+                    'metadata': self._metadata
+                }, f)
+    
+    def load(self, filepath: str) -> None:
+        """Carrega o cache do disco."""
+        try:
+            with open(filepath, 'r') as f:
+                data = json.load(f)
+                with self._lock:
+                    self._cache = data['cache']
+                    self._metadata = data['metadata']
+        except FileNotFoundError:
+            pass  # Ignora se arquivo não existe
+
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Any, Tuple
 from datetime import datetime, timedelta
