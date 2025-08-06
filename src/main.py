@@ -1,13 +1,13 @@
 import asyncio
 import logging
-from core.orchestration.aeon_orchestrator import AEONOrchestrator
+from core.orchestration.aeon_orchestrator import ChessSystemOrchestrator
 
 # Configuração de logging
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
     handlers=[
-logging.FileHandler('chess_system.log')
+        logging.FileHandler('chess_system.log'),
         logging.StreamHandler()
     ]
 )
@@ -19,7 +19,7 @@ async def main():
 
     try:
         # Inicializa o orquestrador
-        orchestrator = AEONOrchestrator()
+        orchestrator = ChessSystemOrchestrator()
         
         # Executa o workflow completo
         success = await orchestrator.execute_full_workflow()

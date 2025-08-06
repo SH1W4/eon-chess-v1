@@ -35,7 +35,7 @@ class ChessSystemOrchestrator:
         }
 
     async def initialize_symbiotic_mode(self):
-"""Inicializa o modo simbiótico"""
+        """Inicializa o modo simbiótico"""
         self.logger.info("Iniciando modo simbiótico CHESS")
         await self._activate_arquimax_capabilities()
         await self._activate_nexus_capabilities()
