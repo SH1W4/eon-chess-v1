@@ -14,22 +14,57 @@ class PieceType(Enum):
     KING = 6
 
 class Position:
-    def __init__(self, file: str, rank: int):
-        self.file = file
-        self.rank = rank
+    def __init__(self, file: str | int, rank: int):
+        # Convert file from string ('a'-'h') to int (0-7) if needed
+        if isinstance(file, str):
+            self.file = ord(file) - ord('a')
+        else:
+            self.file = file
+        # Convert from 1-8 to 0-7 if needed
+        if isinstance(rank, str):
+            rank = int(rank)
+        if rank > 8:
+            self.rank = rank - 1
+        else:
+            self.rank = rank
     
     def __str__(self):
-        return f"{self.file}{self.rank}"
+        # Convert back to chess notation
+        return f"{chr(self.file + ord('a'))}{self.rank + 1}"
+    
+    def __eq__(self, other):
+        if not isinstance(other, Position):
+            return False
+        return self.file == other.file and self.rank == other.rank
+    
+    def __hash__(self):
+        return hash((self.file, self.rank))
 
 class Piece:
-    def __init__(self, piece_type: PieceType, color: Color):
+    def __init__(self, piece_type: PieceType, color: Color, position: str = None):
         self.type = piece_type
         self.color = color
         self.has_moved = False
+        self._position = None
+        if position:
+            self.position = Position(
+                file=ord(position[0]) - ord('a'),
+                rank=int(position[1]) - 1
+            )
+    
+    @property
+    def position(self) -> Position:
+        return self._position
+    
+    @position.setter
+    def position(self, value: Position):
+        self._position = value
 
 class Board:
     def __init__(self):
         self.pieces: Dict[str, Piece] = {}
+        self.captured_pieces: List[Piece] = []
+        self.move_history: List[Tuple[Position, Position]] = []
         self.setup_initial_position()
         self.current_turn = Color.WHITE
         self.last_move = None
@@ -53,29 +88,31 @@ class Board:
 
     def setup_initial_position(self):
         # Setup white pieces
-        self.pieces["a1"] = Piece(PieceType.ROOK, Color.WHITE)
-        self.pieces["b1"] = Piece(PieceType.KNIGHT, Color.WHITE)
-        self.pieces["c1"] = Piece(PieceType.BISHOP, Color.WHITE)
-        self.pieces["d1"] = Piece(PieceType.QUEEN, Color.WHITE)
-        self.pieces["e1"] = Piece(PieceType.KING, Color.WHITE)
-        self.pieces["f1"] = Piece(PieceType.BISHOP, Color.WHITE)
-        self.pieces["g1"] = Piece(PieceType.KNIGHT, Color.WHITE)
-        self.pieces["h1"] = Piece(PieceType.ROOK, Color.WHITE)
+        self.pieces["a1"] = Piece(PieceType.ROOK, Color.WHITE, "a1")
+        self.pieces["b1"] = Piece(PieceType.KNIGHT, Color.WHITE, "b1")
+        self.pieces["c1"] = Piece(PieceType.BISHOP, Color.WHITE, "c1")
+        self.pieces["d1"] = Piece(PieceType.QUEEN, Color.WHITE, "d1")
+        self.pieces["e1"] = Piece(PieceType.KING, Color.WHITE, "e1")
+        self.pieces["f1"] = Piece(PieceType.BISHOP, Color.WHITE, "f1")
+        self.pieces["g1"] = Piece(PieceType.KNIGHT, Color.WHITE, "g1")
+        self.pieces["h1"] = Piece(PieceType.ROOK, Color.WHITE, "h1")
         
         # Setup black pieces
-        self.pieces["a8"] = Piece(PieceType.ROOK, Color.BLACK)
-        self.pieces["b8"] = Piece(PieceType.KNIGHT, Color.BLACK)
-        self.pieces["c8"] = Piece(PieceType.BISHOP, Color.BLACK)
-        self.pieces["d8"] = Piece(PieceType.QUEEN, Color.BLACK)
-        self.pieces["e8"] = Piece(PieceType.KING, Color.BLACK)
-        self.pieces["f8"] = Piece(PieceType.BISHOP, Color.BLACK)
-        self.pieces["g8"] = Piece(PieceType.KNIGHT, Color.BLACK)
-        self.pieces["h8"] = Piece(PieceType.ROOK, Color.BLACK)
+        self.pieces["a8"] = Piece(PieceType.ROOK, Color.BLACK, "a8")
+        self.pieces["b8"] = Piece(PieceType.KNIGHT, Color.BLACK, "b8")
+        self.pieces["c8"] = Piece(PieceType.BISHOP, Color.BLACK, "c8")
+        self.pieces["d8"] = Piece(PieceType.QUEEN, Color.BLACK, "d8")
+        self.pieces["e8"] = Piece(PieceType.KING, Color.BLACK, "e8")
+        self.pieces["f8"] = Piece(PieceType.BISHOP, Color.BLACK, "f8")
+        self.pieces["g8"] = Piece(PieceType.KNIGHT, Color.BLACK, "g8")
+        self.pieces["h8"] = Piece(PieceType.ROOK, Color.BLACK, "h8")
         
         # Setup pawns
         for file in "abcdefgh":
-            self.pieces[f"{file}2"] = Piece(PieceType.PAWN, Color.WHITE)
-            self.pieces[f"{file}7"] = Piece(PieceType.PAWN, Color.BLACK)
+            white_pos = f"{file}2"
+            black_pos = f"{file}7"
+            self.pieces[white_pos] = Piece(PieceType.PAWN, Color.WHITE, white_pos)
+            self.pieces[black_pos] = Piece(PieceType.PAWN, Color.BLACK, black_pos)
 
     def get_piece(self, pos: str) -> Optional[Piece]:
         return self.pieces.get(pos)
@@ -132,7 +169,16 @@ class Board:
         
         # Alterna o turno
         self.current_turn = Color.BLACK if self.current_turn == Color.WHITE else Color.WHITE
+        
+        # Update position tracking
+        from_position = Position(from_pos[0], int(from_pos[1]))
+        to_position = Position(to_pos[0], int(to_pos[1]))
         self.last_move = (from_pos, to_pos)
+        self.move_history.append((from_position, to_position))
+        
+        # Track captures
+        if target_piece:
+            self.captured_pieces.append(target_piece)
         
         return {"success": True}
         
@@ -205,8 +251,11 @@ class Board:
             return abs_dx == 0 or abs_dy == 0
             
         elif piece.type == PieceType.QUEEN:
-            # Rainha pode mover como bispo (diagonal) ou torre (linha reta)
-            return abs_dx == abs_dy or abs_dx == 0 or abs_dy == 0
+            # A rainha pode mover-se como uma torre ou um bispo
+            is_diagonal = abs_dx == abs_dy
+            is_straight = abs_dx == 0 or abs_dy == 0
+            print(f"DEBUG: Rainha movendo de {from_pos} para {to_pos} -> diagonal? {is_diagonal}, straight? {is_straight}")
+            return is_diagonal or is_straight
             
         elif piece.type == PieceType.KING:
             return abs_dx <= 1 and abs_dy <= 1
@@ -275,6 +324,30 @@ class Board:
                 
         return False
         
+    def get_valid_moves(self, pos: str | Position) -> list[Position]:
+        """Get all valid moves for a piece at the given position"""
+        if isinstance(pos, Position):
+            pos = str(pos)
+        
+        piece = self.get_piece(pos)
+        if not piece:
+            return []
+            
+        # Generate all possible destination squares
+        valid_moves = []
+        for file in "abcdefgh":
+            for rank in range(1, 9):
+                to_pos = f"{file}{rank}"
+                if to_pos != pos:
+                    coords = self._get_move_coordinates(pos, to_pos)
+                    if coords:
+                        if self._validate_piece_move(piece, pos, to_pos, coords):
+                            if piece.type == PieceType.KNIGHT or self._is_path_clear(pos, to_pos):
+                                target_piece = self.get_piece(to_pos)
+                                if not target_piece or target_piece.color != piece.color:
+                                    valid_moves.append(Position(file, rank))
+        return valid_moves
+            
     def _is_path_clear(self, from_pos: str, to_pos: str) -> bool:
         """Verifica se o caminho entre duas posições está livre."""
         from_file = ord(from_pos[0]) - ord('a')
@@ -282,33 +355,31 @@ class Board:
         to_file = ord(to_pos[0]) - ord('a')
         to_rank = int(to_pos[1])
         
-        print(f"DEBUG: Verificando caminho de {from_pos} para {to_pos} (diferença: {to_file - from_file}, {to_rank - from_rank})")
-        
         # Determina a direção do movimento
         file_step = 0 if from_file == to_file else (1 if to_file > from_file else -1)
         rank_step = 0 if from_rank == to_rank else (1 if to_rank > from_rank else -1)
         
+        print(f"DEBUG: Verificando caminho de {from_pos} para {to_pos}")
+        print(f"DEBUG: Movimento: File {from_file}->{to_file} (step: {file_step}), Rank {from_rank}->{to_rank} (step: {rank_step})")
+        
         current_file = from_file + file_step
         current_rank = from_rank + rank_step
         
-        while True:
-            # Se passar do destino, termina a verificação
-            if file_step > 0 and current_file > to_file: break
-            if file_step < 0 and current_file < to_file: break
-            if rank_step > 0 and current_rank > to_rank: break
-            if rank_step < 0 and current_rank < to_rank: break
-            if file_step == 0 and rank_step == 0: break
-            
-            # Se chegar ao destino, termina a verificação
-            if current_file == to_file and current_rank == to_rank:
-                break
-            
-            pos = f"{chr(current_file + ord('a'))}{current_rank}"
-            print(f"DEBUG: Verificando posição {pos}")
-            
-            if self.pieces.get(pos):
+        # Enquanto não chegar ao destino
+        while current_file != to_file or current_rank != to_rank:
+            # Valida limites do tabuleiro
+            if current_file < 0 or current_file > 7 or current_rank < 1 or current_rank > 8:
+                print(f"DEBUG: Movimento fora dos limites do tabuleiro")
                 return False
-                
+            
+            # Verifica posição intermediária
+            pos = f"{chr(current_file + ord('a'))}{current_rank}"
+            print(f"DEBUG: Verificando posição intermediária {pos}")
+            if self.pieces.get(pos):
+                print(f"DEBUG: Peça encontrada em {pos}, caminho bloqueado")
+                return False
+            
+            # Avança para próxima posição
             current_file += file_step
             current_rank += rank_step
         
@@ -469,16 +540,19 @@ class Board:
         # Verifica material insuficiente
         return self._has_insufficient_material()
 
-    def _is_under_attack(self, pos: str, color: Color) -> bool:
+    def _is_under_attack(self, pos: str | Position, color: Color) -> bool:
         """Verifica se uma posição está sob ataque por peças de uma cor.
 
         Args:
-            pos: A posição a ser verificada
+            pos: A posição a ser verificada (str ou Position)
             color: A cor das peças atacantes
             
         Returns:
             bool: True se a posição está sob ataque, False caso contrário
         """
+        if isinstance(pos, Position):
+            pos = str(pos)
+            
         for piece_pos, piece in self.pieces.items():
             if piece.color == color:
                 print(f"DEBUG: Verificando se {piece.type} em {piece_pos} pode atacar {pos}")
@@ -500,6 +574,10 @@ class Board:
                     else:
                         print(f"DEBUG: Movimento não é válido para {piece.type}")
         return False
+        
+    def is_square_attacked(self, pos: str | Position, color: Color) -> bool:
+        """Alias for _is_under_attack to match AI expectations"""
+        return self._is_under_attack(pos, color)
 
     def _has_legal_moves(self) -> bool:
         """Verifica se o jogador atual tem movimentos legais disponíveis."""

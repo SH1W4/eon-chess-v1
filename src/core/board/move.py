@@ -1,40 +1,41 @@
 from dataclasses import dataclass
-from enum import Enum, auto
-from .board import PieceType, Color
+from typing import Optional
+from .board import PieceType, Color, Piece, Position
 
 @dataclass
 class Move:
     """Representa um movimento no jogo"""
-    piece_type: PieceType
-    piece_color: Color
-    from_pos: str
-    to_pos: str
-    is_capture: bool = False
+    from_pos: Position
+    to_pos: Position
+    piece: Piece
+    captured_piece: Optional[Piece] = None
+    promotion_piece: Optional[Piece] = None
+    is_castling: bool = False
+    is_en_passant: bool = False
     is_check: bool = False
-    promoted_to: PieceType = None
     
     def __str__(self) -> str:
         """Retorna representação em string do movimento"""
         move_str = ""
         
         # Adiciona peça movida
-        if self.piece_type != PieceType.PAWN:
-            move_str += self.piece_type.value[0].upper()
+        if self.piece.type != PieceType.PAWN:
+            move_str += self.piece.type.value[0].upper()
             
         # Adiciona posição
-        move_str += self.from_pos
+        move_str += str(self.from_pos)
         
         # Adiciona captura
-        if self.is_capture:
+        if self.captured_piece:
             move_str += "x"
         else:
             move_str += "-"
             
-        move_str += self.to_pos
+        move_str += str(self.to_pos)
         
         # Adiciona promoção
-        if self.promoted_to:
-            move_str += "=" + self.promoted_to.value[0].upper()
+        if self.promotion_piece:
+            move_str += "=" + self.promotion_piece.type.value[0].upper()
             
         # Adiciona xeque
         if self.is_check:

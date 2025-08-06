@@ -1,8 +1,9 @@
 import pytest
 import numpy as np
 from typing import List, Optional
-from src.core.engine import ChessEngine, Position, Piece, Move
-from src.core.board import Board, Color
+from src.core.engine import ChessEngine
+from src.core.board.board import Board, Position, Piece, Color
+from src.core.board.move import Move
 from src.ai.adaptive_ai import AdaptiveAI, PlayerProfile, EvaluationWeights
 
 # Mock para ChessEngine nos testes
@@ -30,15 +31,34 @@ class MockChessEngine:
     def get_piece(self, pos: Position) -> Optional[Piece]:
         return self.board.get_piece(pos)
     
-    def make_move(self, move: MockMove) -> bool:
+    def make_move(self, move: MockMove) -> bool:
+        if not self._is_legal_move(move):
+            return False
+        
+        # Mock move execution
+        from_pos = move.from_pos
+        to_pos = move.to_pos
+        piece = self.get_piece(from_pos)
+        self.board.squares[(from_pos.file, from_pos.rank)] = None
+        self.board.squares[(to_pos.file, to_pos.rank)] = piece
+        if piece:
+            piece.position = to_pos
         self.move_history.append(move)
         return True
     
-    def get_legal_moves(self, pos: Position) -> List[Position]:
-        # Retorna alguns movimentos válidos para teste
-        if pos.row == 6 and pos.col == 4:  # e2
-            return [Position(4, 4)]  # e4
-        return []
+    def get_legal_moves(self, pos: Position) -> List[Position]:
+        piece = self.get_piece(pos)
+        if not piece:
+            return []
+        
+        moves = []
+        for rank in range(8):
+            for file in range(8):
+                to_pos = Position(file=file, rank=rank)
+                move = MockMove(from_pos=pos, to_pos=to_pos, piece=piece)
+                if self._is_legal_move(move):
+                    moves.append(to_pos)
+        return moves
     
     def _is_legal_move(self, move: MockMove) -> bool:
         return True

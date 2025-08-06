@@ -159,17 +159,28 @@ class AdaptiveAI:
         self.weights = weights or EvaluationWeights()
         self.position_history: List[Board] = []
         self.move_scores: Dict[Tuple[Position, Position], float] = {}
-        self.position_tables = {
-            'pawn': np.array(self.weights.positional_values[PieceType.PAWN]),
-            'knight': np.zeros((8, 8)),
-            'bishop': np.zeros((8, 8)),
-            'rook': np.zeros((8, 8)),
-            'queen': np.zeros((8, 8)),
-            'king_midgame': np.zeros((8, 8)),
-            'king_endgame': np.zeros((8, 8))
-        }
+        self.game_memory: List[Dict] = []  # Lista de jogos anteriores
         self.learning_rate = self.profile.learning_rate
         self.move_times: List[float] = []
+        
+        # Inicializar tabelas de posição com os valores padrão
+        self.position_tables = {}
+        for piece_type in PieceType:
+            if piece_type in self.weights.positional_values:
+                self.position_tables[piece_type] = np.array(self.weights.positional_values[piece_type])
+        
+        # Tabelas especiais para o rei em diferentes fases do jogo
+        self.position_tables['king_midgame'] = np.array(self.weights.positional_values[PieceType.KING])
+        self.position_tables['king_endgame'] = np.array([
+            [0.3, 0.4, 0.4, 0.5, 0.5, 0.4, 0.4, 0.3],
+            [0.3, 0.4, 0.4, 0.5, 0.5, 0.4, 0.4, 0.3],
+            [0.2, 0.3, 0.3, 0.4, 0.4, 0.3, 0.3, 0.2],
+            [0.1, 0.2, 0.2, 0.3, 0.3, 0.2, 0.2, 0.1],
+            [0.0, 0.1, 0.1, 0.2, 0.2, 0.1, 0.1, 0.0],
+            [-0.1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.1],
+            [-0.2, -0.1, -0.1, -0.1, -0.1, -0.1, -0.1, -0.2],
+            [-0.3, -0.2, -0.2, -0.2, -0.2, -0.2, -0.2, -0.3]
+        ])
         
     def evaluate_position(self, board: Board, color: Optional[Color] = None) -> float:
         """Evaluate board position from given color's perspective"""
@@ -179,7 +190,7 @@ class AdaptiveAI:
         score = 0.0
         
         # Material evaluation
-        for piece in board.pieces.values():
+        for piece in board.piece_list:
             piece_value = self.weights.piece_values[piece.type]
             if piece.color == color:
                 score += piece_value
@@ -191,15 +202,15 @@ class AdaptiveAI:
         black_starting_rank = {PieceType.PAWN: 1, PieceType.KNIGHT: 0, PieceType.BISHOP: 0, PieceType.ROOK: 0, PieceType.QUEEN: 0}
         development_score = 0.0
         
-        for piece in board.pieces.values():
+        for piece in board.piece_list:
             if piece.type == PieceType.KING:
                 continue
                 
             # Center control
             center_value = 0.0
-            if 3 <= piece.position.rank <= 6 and 3 <= piece.position.file <= 6:
+            if 2 <= piece.position.rank <= 5 and 2 <= piece.position.file <= 5:
                 center_value = 0.3  # Outer center
-                if 4 <= piece.position.rank <= 5 and 4 <= piece.position.file <= 5:
+                if 3 <= piece.position.rank <= 4 and 3 <= piece.position.file <= 4:
                     center_value = 0.5  # Inner center
                     
             # Development evaluation
@@ -277,53 +288,49 @@ class AdaptiveAI:
             
         return score
     
-    def get_best_move(self, board: Board, color: Optional[Color] = None, depth: int = 3) -> Optional[Tuple[Position, Position]]:
+    def get_best_move(self, board: Board, color: Optional[Color] = None, depth: int = 3) -> Optional[Move]:
+        """Get best move using minimax with alpha-beta pruning"""
         if color is None:
             color = Color.WHITE
-        """Get best move using minimax with alpha-beta pruning"""
+            
         best_score = float('-inf')
         best_move = None
         
         # Get all valid moves for the current position
         all_moves = []
-        for piece in board.pieces.values():
+        for piece in board.piece_list:
             if piece.color == color:
-                for move in board.get_valid_moves(piece.position):
-                    all_moves.append((piece.position, move))
+                for to_pos in board.get_valid_moves(piece.position):
+                    move = Move(piece.position, to_pos, piece)
+                    if board.get_piece(to_pos):
+                        move.captured_piece = board.get_piece(to_pos)
+                    all_moves.append(move)
         
         # Randomize move order slightly based on risk_taking profile
         if self.profile.risk_taking > 0.7:
             random.shuffle(all_moves)
         
-        for from_pos, to_pos in all_moves:
+        for move in all_moves:
+            # Make copy of board for evaluation
+            board_copy = Board()
+            board_copy.squares = board.squares.copy()
+            board_copy.piece_list = board.piece_list.copy()
+            
             # Try move
-            piece = board.get_piece(from_pos)
-            captured = board.get_piece(to_pos)
+            if board_copy.make_move(move):
             
-            # Make temporary move
-            old_pos = piece.position
-            piece.position = to_pos
-            if captured:
-                del board.pieces[to_pos]
-            del board.pieces[from_pos]
-            board.pieces[to_pos] = piece
-            
-            # Evaluate position recursively
-            score = -self._minimax(board, depth - 1, float('-inf'), float('inf'),
-                                 Color.BLACK if color == Color.WHITE else Color.WHITE)
-            
-            # Add aggression bonus for captures
-            if captured:
-                capture_bonus = self.weights.piece_values[captured.type] * self.profile.aggression
-                score += capture_bonus
-            
-            # Revert move
-            piece.position = old_pos
-            board.pieces[old_pos] = piece
-            if captured:
-                board.pieces[to_pos] = captured
-            else:
-                del board.pieces[to_pos]
+                # Evaluate position recursively
+                score = -self._minimax(board_copy, depth - 1, float('-inf'), float('inf'),
+                                     Color.BLACK if color == Color.WHITE else Color.WHITE)
+                
+                # Add aggression bonus for captures
+                if move.captured_piece:
+                    capture_bonus = self.weights.piece_values[move.captured_piece.type] * self.profile.aggression
+                    score += capture_bonus
+                
+                if score > best_score:
+                    best_score = score
+                    best_move = move
             
             # Update best move
             if score > best_score:
@@ -337,76 +344,88 @@ class AdaptiveAI:
         if depth == 0:
             return self.evaluate_position(board, color)
         
-        try:
-            if color == Color.WHITE:
-                max_score = float('-inf')
-                for piece in board.pieces.values():
-                    if piece.color == color:
-                        for move in board.get_valid_moves(piece.position):
-                            try:
-                                # Try move
-                                captured = board.get_piece(move)
-                                old_pos = piece.position
-                                piece.position = move
-                                if captured:
-                                    del board.pieces[move]
-                                del board.pieces[old_pos]
-                                board.pieces[move] = piece
-                                
-                                score = self._minimax(board, depth - 1, alpha, beta, Color.BLACK)
-                                
-                                # Revert move
-                                piece.position = old_pos
-                                board.pieces[old_pos] = piece
-                                if captured:
-                                    board.pieces[move] = captured
-                                else:
-                                    del board.pieces[move]
-                                
-                                max_score = max(max_score, score)
-                                alpha = max(alpha, score)
-                                if beta <= alpha:
-                                    break
-                            except Exception as e:
-                                print(f"Error processing move in minimax: {str(e)}")
-                                continue
-                return max_score
-            else:
-                min_score = float('inf')
-                for piece in board.pieces.values():
-                    if piece.color == color:
-                        for move in board.get_valid_moves(piece.position):
-                            try:
-                                # Try move
-                                captured = board.get_piece(move)
-                                old_pos = piece.position
-                                piece.position = move
-                                if captured:
-                                    del board.pieces[move]
-                                del board.pieces[old_pos]
-                                board.pieces[move] = piece
-                                
-                                score = self._minimax(board, depth - 1, alpha, beta, Color.WHITE)
-                                
-                                # Revert move
-                                piece.position = old_pos
-                                board.pieces[old_pos] = piece
-                                if captured:
-                                    board.pieces[move] = captured
-                                else:
-                                    del board.pieces[move]
-                                
-                                min_score = min(min_score, score)
-                                beta = min(beta, score)
-                                if beta <= alpha:
-                                    break
-                            except Exception as e:
-                                print(f"Error processing move in minimax: {str(e)}")
-                                continue
-                return min_score
-        except Exception as e:
-            print(f"Error in minimax: {str(e)}")
-            return 0.0
+        if color == Color.WHITE:
+            max_score = float('-inf')
+            
+            # Get all valid moves for white pieces
+            moves = []
+            for piece in board.piece_list:
+                if piece.color == color:
+                    for to_pos in board.get_valid_moves(piece.position):
+                        moves.append(Move(piece.position, to_pos, piece))
+            
+            # Order moves to improve alpha-beta pruning
+            moves = self._order_moves(board, moves)
+            
+            for move in moves:
+                # Make copy of board
+                board_copy = Board()
+                board_copy.squares = board.squares.copy()
+                board_copy.piece_list = board.piece_list.copy()
+                
+                if board_copy.make_move(move):
+                    score = self._minimax(board_copy, depth - 1, alpha, beta, Color.BLACK)
+                    max_score = max(max_score, score)
+                    alpha = max(alpha, score)
+                    if beta <= alpha:
+                        break
+            
+            return max_score
+        else:
+            min_score = float('inf')
+            
+            # Get all valid moves for black pieces
+            moves = []
+            for piece in board.piece_list:
+                if piece.color == color:
+                    for to_pos in board.get_valid_moves(piece.position):
+                        moves.append(Move(piece.position, to_pos, piece))
+            
+            # Order moves to improve alpha-beta pruning
+            moves = self._order_moves(board, moves)
+            
+            for move in moves:
+                # Make copy of board
+                board_copy = Board()
+                board_copy.squares = board.squares.copy()
+                board_copy.piece_list = board.piece_list.copy()
+                
+                if board_copy.make_move(move):
+                    score = self._minimax(board_copy, depth - 1, alpha, beta, Color.WHITE)
+                    min_score = min(min_score, score)
+                    beta = min(beta, score)
+                    if beta <= alpha:
+                        break
+            
+            return min_score
+            
+    def _order_moves(self, board: Board, moves: List[Move]) -> List[Move]:
+        """Order moves to improve alpha-beta pruning efficiency"""
+        move_scores = []
+        
+        for move in moves:
+            score = 0
+            
+            # Captures are likely good moves
+            if move.captured_piece:
+                score += self.weights.piece_values[move.captured_piece.type]
+            
+            # Check if move was successful in past games
+            move_key = (str(move.from_pos), str(move.to_pos))
+            if move_key in self.move_scores:
+                score += self.move_scores[move_key]
+            
+            # Center control is generally good
+            if 2 <= move.to_pos.rank <= 5 and 2 <= move.to_pos.file <= 5:
+                score += 0.3
+                if 3 <= move.to_pos.rank <= 4 and 3 <= move.to_pos.file <= 4:
+                    score += 0.2
+            
+            move_scores.append((score, move))
+        
+        # Sort moves by score in descending order
+        move_scores.sort(reverse=True)
+        return [move for _, move in move_scores]
     
     def update_profile(self, board: Board, game_result: str):
         """Update AI profile based on board state and game result"""
@@ -461,26 +480,36 @@ class AdaptiveAI:
         self.profile.games_played += 1
 
     def save_profile(self, path: str) -> None:
-        """Save the AI profile to a file."""
-        profile_data = {
-            'aggression': self.profile.aggression,
-            'positional': self.profile.positional,
-            'risk_taking': self.profile.risk_taking,
-            'learning_rate': self.profile.learning_rate,
-            'wins': self.profile.wins,
-            'losses': self.profile.losses,
-            'draws': self.profile.draws,
-            'games_played': self.profile.games_played
+        """Save the AI profile and game memory to a file."""
+        data = {
+            'profile': {
+                'aggression': self.profile.aggression,
+                'positional': self.profile.positional,
+                'risk_taking': self.profile.risk_taking,
+                'learning_rate': self.profile.learning_rate,
+                'wins': self.profile.wins,
+                'losses': self.profile.losses,
+                'draws': self.profile.draws,
+                'games_played': self.profile.games_played,
+                'piece_preferences': {str(k): v for k, v in self.profile.piece_preferences.items()},
+                'favorite_openings': self.profile.favorite_openings
+            },
+            'game_memory': self.game_memory,
+            'move_scores': {str(k): v for k, v in self.move_scores.items()},
+            'position_tables': {str(k): v.tolist() for k, v in self.position_tables.items()}
         }
         with open(path, 'w') as file:
-            json.dump(profile_data, file)
+            json.dump(data, file)
 
     @classmethod
     def load_profile(cls, path: str) -> 'AdaptiveAI':
-        """Load the AI profile from a file."""
+        """Load the AI profile and game memory from a file."""
         try:
             with open(path, 'r') as file:
-                profile_data = json.load(file)
+                data = json.load(file)
+                profile_data = data['profile']
+                
+                # Create profile
                 profile = PlayerProfile(
                     aggression=profile_data.get('aggression', 0.5),
                     positional=profile_data.get('positional', 0.5),
@@ -492,7 +521,27 @@ class AdaptiveAI:
                 profile.draws = profile_data.get('draws', 0)
                 profile.games_played = profile_data.get('games_played', 0)
                 
-                return cls(profile=profile)
+                # Create AI instance
+                ai = cls(profile=profile)
+                
+                # Load additional data
+                ai.game_memory = data.get('game_memory', [])
+                ai.move_scores = {tuple(eval(k)): v for k, v in data.get('move_scores', {}).items()}
+                
+                # Load position tables
+                for k, v in data.get('position_tables', {}).items():
+                    piece_type = None
+                    if k in ['king_midgame', 'king_endgame']:
+                        ai.position_tables[k] = np.array(v)
+                    else:
+                        for pt in PieceType:
+                            if str(pt) == k:
+                                piece_type = pt
+                                break
+                        if piece_type:
+                            ai.position_tables[piece_type] = np.array(v)
+                
+                return ai
         except Exception as e:
             print(f"Error loading profile: {str(e)}")
             return cls()
