@@ -14,16 +14,15 @@ class EvolutionMetrics:
     
     def update(self, success: float, behavior: CulturalBehavior):
         """Atualiza as métricas com novos dados"""
-        # Atualiza taxa de sucesso com média móvel
-        self.success_rate = 0.9 * self.success_rate + 0.1 * success
+        # Atualiza taxa de sucesso com média móvel ponderada por recência
+        self.success_rate = 0.3 * self.success_rate + 0.7 * success
         
-        # Atualiza distribuição de comportamentos
-        # Atualiza distribuição de comportamentos
-        # Atualiza contadores
+        # Atualiza distribuição de comportamentos com peso por sucesso
+        weight = 1.0 + success  # Comportamentos bem-sucedidos têm mais peso
         if behavior in self.behavior_distribution:
-            self.behavior_distribution[behavior] += 1
+            self.behavior_distribution[behavior] += weight
         else:
-            self.behavior_distribution[behavior] = 1
+            self.behavior_distribution[behavior] = weight
 
         # Normaliza a distribuição
         total = sum(self.behavior_distribution.values())

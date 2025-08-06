@@ -31,12 +31,14 @@ class DecisionNode:
     
     def adapt(self, success_rate: float):
         """Adapta o peso do nó baseado no sucesso"""
-        self.weight += self.adaptation_rate * (success_rate - 0.5)
-        self.weight = max(0.1, min(2.0, self.weight))
+        # Ajuste mais agressivo para comportamentos bem-sucedidos
+        adaptation_factor = 2.0 if success_rate > 0.7 else 1.0
+        self.weight += (self.adaptation_rate * adaptation_factor) * (success_rate - 0.4)
+        self.weight = max(0.2, min(3.0, self.weight))  # Limites mais amplos
         
-        # Propaga a adaptação para os filhos
+        # Propaga a adaptação para os filhos com menor decaimento
         for child in self.children:
-            child.adapt(success_rate * 0.9)  # Efeito reduzido nos níveis mais profundos
+            child.adapt(success_rate * 0.95)  # Efeito reduzido mais suave
             
     def evaluate(self, context: Dict[str, Any]) -> CulturalBehavior:
         """Avalia o contexto e retorna o comportamento mais apropriado"""
