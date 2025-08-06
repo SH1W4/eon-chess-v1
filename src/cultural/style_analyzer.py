@@ -1,5 +1,18 @@
 from dataclasses import dataclass, field
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Any
+from enum import Enum, auto
+from .cultural_evolution import CulturalBehavior
+from core.board.board import PieceType
+from core.board.move import Move
+
+class StyleElement(Enum):
+    """Elementos que compõem um estilo de jogo"""
+    AGGRESSION = auto()         # Tendência a ataques e sacrifícios
+    POSITIONAL = auto()         # Foco em controle posicional
+    TACTICAL = auto()           # Preferência por combinações táticas
+    DEFENSIVE = auto()          # Ênfase em segurança e defesa
+    TEMPO = auto()              # Controle do ritmo do jogo
+    FLEXIBILITY = auto()        # Adaptabilidade a diferentes situações
 from core.board.board import Board, Piece, PieceType, Color
 from cultural.culture_framework import ChessCulture
 from cultural.memory import CulturalMemory
@@ -319,8 +332,70 @@ class CulturalStyleAnalyzer:
     
     def _calculate_style_consistency(self, memory: CulturalMemory) -> float:
         """Calcula a consistência do estilo ao longo do jogo"""
-        # Implementação simplificada
-        return 0.7
+        if not memory.moves_history:
+            return 0.0
+            
+        moves = memory.moves_history
+        total_consistency = 0.0
+        prev_chars = None
+        
+        # Analisa consistência entre movimentos consecutivos
+        for i in range(1, len(moves)):
+            current_chars = self._calculate_move_characteristics(moves[i])
+            if prev_chars:
+                similarity = self._calculate_characteristics_similarity(
+                    prev_chars,
+                    current_chars
+                )
+                total_consistency += similarity
+            prev_chars = current_chars
+        
+        return total_consistency / max(1, len(moves) - 1)
+    
+    def _calculate_move_characteristics(self, move: Dict[str, Any]) -> Dict[str, float]:
+        """Calcula características de um único movimento"""
+        chars = {
+            "aggression": 0.0,
+            "defense": 0.0,
+            "mobility": 0.0,
+            "development": 0.0
+        }
+        
+        # Calcula mobilidade baseado na distância do movimento
+        from_rank = int(move['from_pos'][1])
+        from_file = ord(move['from_pos'][0]) - ord('a')
+        to_rank = int(move['to_pos'][1])
+        to_file = ord(move['to_pos'][0]) - ord('a')
+        distance = abs(from_rank - to_rank) + abs(from_file - to_file)
+        chars['mobility'] = min(distance / 6, 1.0)
+        
+        # Analisa desenvolvimento
+        if move['piece_type'] in [PieceType.KNIGHT, PieceType.BISHOP]:
+            chars['development'] = 0.8
+        
+        # Analisa agressão/defesa baseado na direção
+        if move['piece_color'] == Color.WHITE:
+            if int(move['to_pos'][1]) > int(move['from_pos'][1]):
+                chars['aggression'] = 0.7
+            else:
+                chars['defense'] = 0.7
+        else:  # BLACK
+            if int(move['to_pos'][1]) < int(move['from_pos'][1]):
+                chars['aggression'] = 0.7
+            else:
+                chars['defense'] = 0.7
+        
+        return chars
+    
+    def _calculate_characteristics_similarity(self, chars1: Dict[str, float], 
+                                           chars2: Dict[str, float]) -> float:
+        """Calcula similaridade entre duas conjuntos de características"""
+        total_diff = sum(
+            abs(chars1[key] - chars2[key])
+            for key in chars1
+            if key in chars2
+        )
+        return 1.0 - (total_diff / len(chars1))
     
     def _generate_recommendations(self, characteristics: Dict[str, float],
                                 style: PlayStyle,

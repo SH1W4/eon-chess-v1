@@ -45,14 +45,23 @@ class DecisionNode:
         if not self.condition(context):
             return self.behavior
             
+        # Avalia nó atual primeiro
+        current_weight = self.weight
+        current_behavior = self.behavior
+        
+        # Avalia filhos que atendem às condições
         matching_children = [c for c in self.children if c.condition(context)]
-        if not matching_children:
-            return self.behavior
+        if matching_children:
+            # Inclui nó atual na seleção
+            all_nodes = [self] + matching_children
+            weights = [n.weight for n in all_nodes]
+            chosen = random.choices(all_nodes, weights=weights)[0]
             
-        # Escolhe um filho baseado nos pesos
-        weights = [c.weight for c in matching_children]
-        chosen = random.choices(matching_children, weights=weights)[0]
-        return chosen.evaluate(context)
+            # Se escolheu um filho, avalia recursivamente
+            if chosen != self:
+                return chosen.evaluate(context)
+                
+        return current_behavior
 
 class AdaptiveDecisionTree:
     """Árvore de decisão adaptativa para comportamentos culturais"""
