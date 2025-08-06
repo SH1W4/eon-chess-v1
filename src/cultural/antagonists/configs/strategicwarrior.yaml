@@ -1,0 +1,101 @@
+name: "strategic_warrior"
+description: "Antagonista que combina perfis de guerreiro e estrategista"
+
+profiles:
+  primary_profile:
+    name: "warrior"
+    patterns:
+      - "aggressive_tactics"
+      - "defensive_formations"
+      - "tactical_maneuvers"
+      - "combat_adaptations"
+    volatility: 0.8
+    adaptation_rate: 0.7
+    focus_areas:
+      - "combat"
+      - "territory"
+      - "honor"
+      - "strength"
+    
+  secondary_profile:
+    name: "strategist"
+    patterns:
+      - "resource_optimization"
+      - "long_term_planning"
+      - "diplomatic_negotiations"
+      - "tactical_analysis"
+    volatility: 0.4
+    adaptation_rate: 0.9
+    focus_areas:
+      - "strategy"
+      - "economy"
+      - "diplomacy"
+      - "intelligence"
+
+cultural_profile:
+  name: "viking"
+  values:
+    - "honor"
+    - "bravery"
+    - "strength"
+    - "exploration"
+    - "community"
+  practices:
+    - "raiding"
+    - "seafaring"
+    - "trading"
+    - "crafting"
+  historical_context:
+    era: "viking_age"
+    region: "scandinavia"
+    notable_events:
+      - "norse_exploration"
+      - "trade_establishment"
+      - "cultural_expansion"
+
+behavior_patterns:
+  base_patterns:
+    offensive:
+      - "aggressive_assault"
+      - "tactical_pressure"
+      - "resource_denial"
+    defensive:
+      - "strategic_retreat"
+      - "resource_fortification"
+      - "diplomatic_shield"
+    adaptive:
+      - "battlefield_analysis"
+      - "cultural_integration"
+      - "resource_management"
+  
+  emergent:
+    - name: "hybrid_tactical_negotiation"
+      base_patterns: ["tactical_maneuvers", "diplomatic_negotiations"]
+      adaptation_rate: 0.85
+      evolution_enabled: true
+      
+    - name: "hybrid_strategic_combat"
+      base_patterns: ["combat_adaptations", "tactical_analysis"]
+      adaptation_rate: 0.9
+      evolution_enabled: true
+      
+    - name: "hybrid_resource_warfare"
+      base_patterns: ["aggressive_tactics", "resource_optimization"]
+      adaptation_rate: 0.8
+      evolution_enabled: true
+
+adaptation_rules:
+  context_sensitivity: 0.85
+  evolution_enabled: true
+  learning_rate: 0.7
+  stability_threshold: 0.6
+  
+  behavioral_weights:
+    primary_influence: 0.7
+    secondary_influence: 0.3
+    cultural_factor: 0.5
+    
+  emergence_conditions:
+    min_stability: 0.6
+    min_resonance: 0.7
+    evolution_threshold: 0.8
