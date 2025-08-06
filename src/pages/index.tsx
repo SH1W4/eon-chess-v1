@@ -1,22 +1,38 @@
 import React, { useState, useCallback } from 'react';
 import { MemoizedChessBoard } from '../web/components/board/ChessBoard';
+import { MemoizedGameControls } from '../web/components/controls/GameControls';
+import { MemoizedGameInfo } from '../web/components/info/GameInfo';
 import { ChessPosition, ChessMove } from '../shared/types/chess';
 import { CulturalChessEngine } from '../shared/engine/CulturalChessEngine';
 import { CULTURAL_STYLES } from '../shared/constants/game';
 
-const engine = new CulturalChessEngine();
+const [engine] = useState(() => new CulturalChessEngine());
+const [gameHistory, setGameHistory] = useState<ChessMove[]>([]);
+const [canUndo, setCanUndo] = useState(false);
 
 export default function Home() {
   const [orientation, setOrientation] = useState<'white' | 'black'>('white');
   const [culturalStyle, setCulturalStyle] = useState('modern');
   const [narratives, setNarratives] = useState<string[]>([]);
+  const [evaluation, setEvaluation] = useState(0);
+  const [events, setEvents] = useState<Array<{
+    type: string;
+    description: string;
+    timestamp: number;
+  }>>([]);
 
-  const handleMove = useCallback((from: ChessPosition, to: ChessPosition) => {
+const handleMove = useCallback((from: ChessPosition, to: ChessPosition) => {
     const success = engine.makeMove(from, to);
     if (success) {
       const analysis = engine.getStyleBasedEvaluation();
       const newNarratives = engine.getCulturalNarrative();
+      const newEvents = engine.getCulturalEventHistory();
+      
       setNarratives(newNarratives);
+      setEvaluation(analysis.evaluation);
+      setEvents(newEvents);
+      setGameHistory(prev => [...prev, { from, to, piece: engine.getPieceAt(to)! }]);
+      setCanUndo(true);
     }
   }, []);
 
@@ -24,20 +40,47 @@ export default function Home() {
     alert(`Jogo finalizado! Resultado: ${result}`);
   }, []);
 
-  const handleStyleChange = useCallback((style: string) => {
+const handleStyleChange = useCallback((style: string) => {
     if (style in CULTURAL_STYLES) {
       setCulturalStyle(style);
       engine.setCulturalStyle(style);
+      const analysis = engine.getStyleBasedEvaluation();
+      setEvaluation(analysis.evaluation);
     }
   }, []);
+
+  const handleNewGame = useCallback(() => {
+    engine.reset();
+    setGameHistory([]);
+    setNarratives([]);
+    setEvents([]);
+    setEvaluation(0);
+    setCanUndo(false);
+  }, []);
+
+  const handleUndo = useCallback(() => {
+    if (canUndo) {
+      engine.undoLastMove();
+      setGameHistory(prev => prev.slice(0, -1));
+      setCanUndo(gameHistory.length > 1);
+      
+      const analysis = engine.getStyleBasedEvaluation();
+      const newNarratives = engine.getCulturalNarrative();
+      const newEvents = engine.getCulturalEventHistory();
+      
+      setEvaluation(analysis.evaluation);
+      setNarratives(newNarratives);
+      setEvents(newEvents);
+    }
+  }, [canUndo, gameHistory.length]);
 
   const handleFlipBoard = useCallback(() => {
     setOrientation(prev => prev === 'white' ? 'black' : 'white');
   }, []);
 
-  return (
+return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-900 to-emerald-700 py-8">
-      <div className="max-w-7xl mx-auto px-4">
+      <div className="max-w-7xl mx-auto px-4 flex flex-col gap-8">
         {/* Cabeçalho */}
         <div className="mb-8 text-center">
           <h1 className="text-4xl font-bold text-white mb-2">
@@ -48,87 +91,43 @@ export default function Home() {
           </p>
         </div>
 
-        {/* Controles */}
-        <div className="mb-8 flex justify-center space-x-4">
-          <select
-            value={culturalStyle}
-            onChange={(e) => handleStyleChange(e.target.value)}
-            className="bg-emerald-800 text-white border border-emerald-600 rounded px-4 py-2"
-          >
-            {Object.entries(CULTURAL_STYLES).map(([key, value]) => (
-              <option key={key} value={value}>
-                Estilo {value}
-              </option>
-            ))}
-          </select>
-
-          <button
-            onClick={handleFlipBoard}
-            className="bg-emerald-800 text-white border border-emerald-600 rounded px-4 py-2 hover:bg-emerald-700"
-          >
-            Inverter Tabuleiro
-          </button>
-        </div>
+        {/* Área principal */}
+        <div className="grid lg:grid-cols-3 gap-8">
 
         {/* Área principal */}
         <div className="grid lg:grid-cols-3 gap-8">
-          {/* Tabuleiro */}
-          <div className="lg:col-span-2 flex justify-center">
-            <MemoizedChessBoard
-              orientation={orientation}
+          {/* Controles e Tabuleiro */}
+          <div className="lg:col-span-2 space-y-8">
+            <MemoizedGameControls
               culturalStyle={culturalStyle}
-              showCoordinates={true}
-              onMove={handleMove}
-              onGameEnd={handleGameEnd}
+              onStyleChange={handleStyleChange}
+              onFlipBoard={handleFlipBoard}
+              onNewGame={handleNewGame}
+              onUndo={handleUndo}
+              canUndo={canUndo}
+              isPlayerTurn={true} // TODO: Implementar lógica de turno
             />
+            
+            <div className="flex justify-center">
+              <MemoizedChessBoard
+                orientation={orientation}
+                culturalStyle={culturalStyle}
+                showCoordinates={true}
+                onMove={handleMove}
+                onGameEnd={handleGameEnd}
+              />
+            </div>
           </div>
 
-          {/* Painel lateral */}
-          <div className="space-y-4">
-            {/* Narrativas culturais */}
-            <div className="bg-emerald-800/50 border border-emerald-600 rounded-lg p-4">
-              <h2 className="text-xl font-bold text-white mb-4">
-                Narrativas Culturais
-              </h2>
-              <div className="space-y-2">
-                {narratives.map((narrative, index) => (
-                  <p key={index} className="text-emerald-100">
-                    {narrative}
-                  </p>
-                ))}
-              </div>
-            </div>
-
-            {/* Avaliação */}
-            <div className="bg-emerald-800/50 border border-emerald-600 rounded-lg p-4">
-              <h2 className="text-xl font-bold text-white mb-4">
-                Análise da Posição
-              </h2>
-              <div className="space-y-2">
-                {engine.getStyleBasedEvaluation().explanation.split('\n').map((line, index) => (
-                  <p key={index} className="text-emerald-100">
-                    {line}
-                  </p>
-                ))}
-              </div>
-            </div>
-
-            {/* Histórico de eventos */}
-            <div className="bg-emerald-800/50 border border-emerald-600 rounded-lg p-4">
-              <h2 className="text-xl font-bold text-white mb-4">
-                Eventos Culturais
-              </h2>
-              <div className="space-y-2">
-                {engine.getCulturalEventHistory().map((event, index) => (
-                  <div key={index} className="text-emerald-100">
-                    <span className="text-emerald-400">
-                      {new Date(event.timestamp).toLocaleTimeString()}:
-                    </span>{' '}
-                    {event.description}
-                  </div>
-                ))}
-              </div>
-            </div>
+          {/* Painel de Informações */}
+          <div>
+            <MemoizedGameInfo
+              culturalStyle={culturalStyle}
+              moves={gameHistory}
+              evaluation={evaluation}
+              narratives={narratives}
+              events={events}
+            />
           </div>
         </div>
       </div>
