@@ -2,7 +2,7 @@ from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Any
 import random
 from core.board.board import PieceType
-from adaptive_decision import CulturalBehavior, AdaptiveDecisionTree
+from .adaptive_decision import CulturalBehavior, AdaptiveDecisionTree
 
 @dataclass
 class EvolutionMetrics:
