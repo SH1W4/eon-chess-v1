@@ -86,11 +86,50 @@ python scripts/setup_db.py
 - ⏳ Integração NEXUS pendente
 - ⏳ Evolução adaptativa em desenvolvimento
 
+#### Motor de Xadrez [Em Desenvolvimento]
+- ✅ Implementação básica do tabuleiro
+- ✅ Movimentação das peças implementada
+- ✅ Framework base de avaliação de posição
+- ⏳ Ajustes na avaliação de posição:
+  - Melhorar avaliação de controle do centro
+  - Refinar avaliação de estrutura de peões
+  - Otimizar penalidades para peões isolados
+  - Balancear pesos das avaliações
+- ⏳ Testes unitários em andamento:
+  - Testes de movimentação: 80% completo
+  - Testes de avaliação: 40% completo
+  - Testes de integração: 20% completo
+- ⏳ Otimização de performance pendente
+
+##### Critérios de Qualidade do Motor
+- Precisão da avaliação de posição > 85%
+- Tempo máximo de avaliação < 100ms por posição
+- Cobertura de testes > 90%
+- Profundidade mínima de análise: 4 movimentos
+
+##### Integração com Outros Sistemas
+- Sistema Cultural:
+  - Adaptação do estilo de jogo baseado no perfil cultural
+  - Pesos de avaliação ajustáveis por cultura
+  - Biblioteca de aberturas culturalmente relevantes
+
+- Sistema Narrativo:
+  - Geração de comentários sobre movimentos
+  - Identificação de momentos críticos do jogo
+  - Integração com histórico de partidas
+
+- Sistema Simbiótico:
+  - Adaptação em tempo real do estilo de jogo
+  - Aprendizado contínuo através do ARQUIMAX
+  - Otimização via NEXUS
+
 #### Próximas Prioridades
-1. Implementar testes para o sistema cultural
-2. Completar integração cultural-narrativa
-3. Otimizar performance de validação
-4. Expandir dados de treinamento
+1. Corrigir avaliação de posição no motor de xadrez
+2. Implementar testes para o sistema cultural
+3. Completar integração cultural-narrativa
+4. Otimizar performance de validação
+5. Expandir dados de treinamento
+6. Otimizar performance do motor de xadrez
 
 ### 🔄 Fluxo de Desenvolvimento
 
@@ -194,6 +233,80 @@ Checklist para revisão:
 - Issue Tracker: GitHub Issues
 - Wiki: Documentação detalhada
 - Chat: Discord do projeto
+
+## 📊 Estrutura Analítica do Projeto (EAP)
+
+### 1. Motor de Xadrez [60%]
+1.1. Núcleo do Motor [85%]
+   - ✅ Representação do tabuleiro
+   - ✅ Regras e movimentação
+   - ✅ Validação de movimentos
+   - ⏳ Otimização de performance
+
+1.2. Sistema de Avaliação [40%]
+   - ✅ Framework base
+   - 🔄 Avaliação de posição
+   - 🔄 Estrutura de peões
+   - ⏳ Avaliação estratégica
+
+1.3. Testes e Qualidade [45%]
+   - 🔄 Testes unitários
+   - 🔄 Testes de integração
+   - ⏳ Benchmarks
+
+### 2. Sistema Cultural [70%]
+2.1. Núcleo Cultural [90%]
+   - ✅ Sistema de padrões
+   - ✅ Perfis culturais
+   - ✅ Validação
+   - 🔄 Otimização
+
+2.2. Integração [65%]
+   - ✅ Interface básica
+   - 🔄 Conectores culturais
+   - ⏳ Adaptação dinâmica
+
+2.3. Dados e Treinamento [55%]
+   - ✅ Dataset base
+   - 🔄 Expansão de dados
+   - ⏳ Validação cruzada
+
+### 3. Sistema Narrativo [45%]
+3.1. Motor Narrativo [75%]
+   - ✅ Geração básica
+   - 🔄 Contextualização
+   - ⏳ Personalização
+
+3.2. Integração Cultural [30%]
+   - 🔄 Interface cultural
+   - ⏳ Adaptação narrativa
+   - ⏳ Validação
+
+3.3. Análise e Feedback [30%]
+   - 🔄 Coleta de dados
+   - ⏳ Análise de impacto
+   - ⏳ Otimização
+
+### 4. Sistema Simbiótico [50%]
+4.1. Framework Base [85%]
+   - ✅ ARQUIMAX
+   - 🔄 NEXUS
+   - 🔄 Integração
+
+4.2. Evolução Adaptativa [35%]
+   - 🔄 Aprendizado
+   - ⏳ Otimização
+   - ⏳ Validação
+
+4.3. Monitoramento [30%]
+   - 🔄 Métricas base
+   - ⏳ Análise avançada
+   - ⏳ Ajuste automático
+
+Legenda:
+✅ Completo
+🔄 Em progresso
+⏳ Pendente
 
 ## 🛠️ Tecnologias Principais
 
