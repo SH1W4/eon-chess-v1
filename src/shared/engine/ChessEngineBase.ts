@@ -8,10 +8,11 @@ import {
 import { 
   ChessPosition, 
   ChessPiece, 
-  ChessMove 
+  ChessMove,
+  PieceType
 } from '../types/chess';
 import { INITIAL_FEN } from '../constants/game';
-import EventEmitter from 'events';
+import { EventEmitter } from 'events';
 
 export class ChessEngineBase implements ChessEngine {
   protected game: Chess;
@@ -32,10 +33,10 @@ export class ChessEngineBase implements ChessEngine {
     return board.map(row => 
       row.map(square => 
         square ? {
-          type: square.type,
-          color: square.color,
-        } as ChessPiece : null
-      ).filter((piece): piece is ChessPiece => piece !== null)
+          type: square.type as PieceType,
+          color: square.color === 'w' ? 'white' : 'black'
+        } : null
+      )
     );
   }
 
@@ -44,82 +45,91 @@ export class ChessEngineBase implements ChessEngine {
   }
 
   setFEN(fen: string): void {
-    if (this.game.validate_fen(fen).valid) {
+    try {
+      // Na nova versão do chess.js, load() já valida o FEN
       this.game.load(fen);
       this.emitEvent({ 
         type: 'POSITION_CHANGED', 
         fen 
       });
-    } else {
+    } catch (e) {
       throw new Error('Invalid FEN string');
     }
   }
 
   // Movimentos
   getPossibleMoves(position: ChessPosition): ChessMove[] {
-    const moves = this.game.moves({ 
-      square: this.positionToSquare(position),
-      verbose: true 
-    });
+    try {
+      const moves = this.game.moves({ 
+        square: this.positionToSquare(position),
+        verbose: true 
+      });
 
-    return moves.map(move => ({
-      from: this.squareToPosition(move.from),
-      to: this.squareToPosition(move.to),
-      piece: {
-        type: move.piece,
-        color: this.getCurrentPlayer()
-      },
-      captured: move.captured ? {
-        type: move.captured,
-        color: this.getCurrentPlayer() === 'white' ? 'black' : 'white'
-      } : undefined,
-      promotion: move.promotion,
-    }));
-  }
-
-  makeMove(from: ChessPosition, to: ChessPosition): boolean {
-    const move = this.game.move({
-      from: this.positionToSquare(from),
-      to: this.positionToSquare(to),
-      promotion: 'q' // Auto-promove para rainha por padrão
-    });
-
-    if (move) {
-      const chessMove: ChessMove = {
-        from,
-        to,
+      return moves.map(move => ({
+        from: this.squareToPosition(move.from),
+        to: this.squareToPosition(move.to),
         piece: {
-          type: move.piece,
+          type: move.piece as PieceType,
           color: move.color === 'w' ? 'white' : 'black'
         },
         captured: move.captured ? {
-          type: move.captured,
+          type: move.captured as PieceType,
           color: move.color === 'w' ? 'black' : 'white'
         } : undefined,
-        promotion: move.promotion,
-      };
-
-      this.emitEvent({ type: 'MOVE_MADE', move: chessMove });
-
-      if (this.isCheck()) {
-        this.emitEvent({ 
-          type: 'CHECK',
-          kingPosition: this.findKing(this.getCurrentPlayer())
-        });
-      }
-
-      if (this.isGameOver()) {
-        let result = 'draw';
-        if (this.isCheckmate()) {
-          result = this.getCurrentPlayer() === 'white' ? 'black' : 'white';
-        }
-        this.emitEvent({ type: 'GAME_OVER', result });
-      }
-
-      return true;
+        promotion: move.promotion as PieceType | undefined,
+      }));
+    } catch (e) {
+      // Se houver erro na geração de movimentos, retorna lista vazia
+      return [];
     }
+  }
 
-    return false;
+  makeMove(from: ChessPosition, to: ChessPosition): boolean {
+    try {
+      const move = this.game.move({
+        from: this.positionToSquare(from),
+        to: this.positionToSquare(to),
+        promotion: 'q' // Auto-promove para rainha por padrão
+      });
+
+      if (move) {
+        const chessMove: ChessMove = {
+          from,
+          to,
+          piece: {
+            type: move.piece,
+            color: move.color === 'w' ? 'white' : 'black'
+          },
+          captured: move.captured ? {
+            type: move.captured,
+            color: move.color === 'w' ? 'black' : 'white'
+          } : undefined,
+          promotion: move.promotion,
+        };
+
+        this.emitEvent({ type: 'MOVE_MADE', move: chessMove });
+
+        if (this.isCheck()) {
+          this.emitEvent({ 
+            type: 'CHECK',
+            kingPosition: this.findKing(this.getCurrentPlayer())
+          });
+        }
+
+        if (this.isGameOver()) {
+          let result = 'draw';
+          if (this.isCheckmate()) {
+            result = this.getCurrentPlayer() === 'white' ? 'black' : 'white';
+          }
+          this.emitEvent({ type: 'GAME_OVER', result });
+        }
+
+        return true;
+      }
+      return false;
+    } catch (e) {
+      return false;
+    }
   }
 
   undoLastMove(): boolean {
@@ -136,23 +146,24 @@ export class ChessEngineBase implements ChessEngine {
 
   // Estado do jogo
   isCheck(): boolean {
-    return this.game.in_check();
+    return this.game.isCheck();
   }
 
   isCheckmate(): boolean {
-    return this.game.in_checkmate();
+    return this.game.isCheckmate();
   }
 
   isDraw(): boolean {
-    return this.game.in_draw();
+    return this.game.isDraw();
   }
 
   isGameOver(): boolean {
-    return this.game.game_over();
+    return this.game.isGameOver();
   }
 
   getCurrentPlayer(): 'white' | 'black' {
-    return this.game.turn() === 'w' ? 'white' : 'black';
+    const turn = this.game.turn();
+    return turn === 'w' ? 'white' : 'black';
   }
 
   // Avaliação e análise
@@ -263,10 +274,35 @@ export class ChessEngineBase implements ChessEngine {
 
   // Validação
   isValidMove(from: ChessPosition, to: ChessPosition): boolean {
-    const moves = this.getPossibleMoves(from);
-    return moves.some(move => 
-      move.to.row === to.row && move.to.col === to.col
-    );
+    // Validação básica de posição
+    if (!this.isValidPosition(from) || !this.isValidPosition(to)) {
+      return false;
+    }
+
+    // Verifica se a peça pertence ao jogador atual
+    const piece = this.game.board()[from.row][from.col];
+    if (!piece || piece.color !== (this.getCurrentPlayer() === 'white' ? 'w' : 'b')) {
+      return false;
+    }
+
+    // Tenta fazer o movimento no chess.js
+    try {
+      const move = this.game.move({
+        from: this.positionToSquare(from),
+        to: this.positionToSquare(to),
+        promotion: 'q'
+      });
+
+      if (move) {
+        // Desfaz o movimento para manter o estado original
+        this.game.undo();
+        return true;
+      }
+    } catch (e) {
+      // Ignora erros do chess.js
+    }
+
+    return false;
   }
 
   isValidPosition(position: ChessPosition): boolean {
@@ -351,9 +387,10 @@ export class ChessEngineBase implements ChessEngine {
 
   private evaluateMobility(): number {
     const whiteMoves = this.game.moves().length;
-    this.game.turn = () => 'b'; // Hack para ver movimentos do oponente
-    const blackMoves = this.game.moves().length;
-    this.game.turn = () => 'w'; // Restaura
+    // Clona o jogo para ver os movimentos do oponente
+    const tempGame = new Chess(this.game.fen());
+    tempGame.load(this.game.fen().replace(' w ', ' b '));
+    const blackMoves = tempGame.moves().length;
     
     return whiteMoves - blackMoves;
   }
