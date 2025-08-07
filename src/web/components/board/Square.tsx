@@ -1,7 +1,6 @@
 import React from 'react';
 import { ChessPosition, ChessPiece } from '../../../shared/types/chess';
 import { getSquareColor } from '../../../shared/utils/chess';
-import { theme } from '../../../shared/styles/theme';
 
 interface SquareProps {
   position: ChessPosition;
@@ -29,18 +28,37 @@ export const Square: React.FC<SquareProps> = ({
   const { row, col } = position;
   const squareColor = getSquareColor(row, col);
   
-  // Obtém as cores do tema cultural
-  const culturalTheme = theme.culturalConfig[culturalStyle as keyof typeof theme.culturalConfig];
-  const baseColor = culturalTheme.boardStyle[squareColor];
+  // Determina a cor final da casa com base nos estados e estilo cultural
+  let backgroundColor;
   
-  // Determina a cor final da casa com base nos estados
-  let backgroundColor = baseColor;
+  // Cores base do tabuleiro para cada estilo cultural
+  const boardColors = {
+    modern: {
+      light: '#f0d9b5',
+      dark: '#b58863'
+    },
+    ancient: {
+      light: '#e6d5ac',
+      dark: '#7c6c54'
+    },
+    medieval: {
+      light: '#eed2a4',
+      dark: '#8b4513'
+    }
+  };
+  
+  // Seleciona as cores base do estilo cultural atual
+  const styleColors = boardColors[culturalStyle as keyof typeof boardColors] || boardColors.modern;
+  
+  // Aplica as cores de acordo com o estado do quadrado
   if (isSelected) {
-    backgroundColor = theme.colors.board.selected;
+    backgroundColor = '#fcd34d';
   } else if (isLastMove) {
-    backgroundColor = theme.colors.board.lastMove;
+    backgroundColor = '#34d399';
   } else if (isPossibleMove) {
-    backgroundColor = theme.colors.board.possible;
+    backgroundColor = '#fbbf24';
+  } else {
+    backgroundColor = styleColors[squareColor];
   }
 
   // Gera coordenadas algébricas para exibição
@@ -68,7 +86,7 @@ export const Square: React.FC<SquareProps> = ({
         ${isLastMove ? 'ring-2 ring-green-400' : ''}
       `}
       style={{
-        backgroundColor: culturalTheme.boardStyle[squareColor],
+        backgroundColor: backgroundColor,
       }}
       onClick={handleClick}
     >

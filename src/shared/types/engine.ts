@@ -1,6 +1,37 @@
 import { ChessPosition, ChessPiece, ChessMove } from './chess';
 
-export interface ChessEngine {
+/**
+ * Métricas coletadas pelo sistema de monitoramento.
+ */
+export interface EngineMetrics {
+  /** Movimentos por segundo */
+  movesPerSecond: number;
+  /** Tempo médio de 'pensamento' para cada movimento */
+  averageThinkingTime: number;
+  /** Taxa de acerto do cache */
+  cacheHitRate: number;
+  /** Uso de memória em MB */
+  memoryUsage: number;
+  /** Uso de CPU em porcentagem */
+  cpuUsage: number;
+}
+
+/**
+ * Status de saúde do sistema.
+ */
+export interface HealthStatus {
+  /** Estado atual do sistema */
+  status: 'healthy' | 'degraded' | 'unhealthy';
+  /** Métricas no momento da verificação */
+  metrics: EngineMetrics;
+  /** Timestamp da verificação */
+  timestamp: number;
+}
+
+/**
+ * Eventos emitidos pelo motor de xadrez.
+ */
+export interface EngineEvent {
   // Estado do jogo
   getBoard(): ChessPiece[][];
   getFEN(): string;

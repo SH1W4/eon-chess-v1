@@ -3,7 +3,8 @@ import {
   ChessEngine, 
   EngineOptions, 
   EngineAnalysis,
-  EngineEvent 
+  EngineEvent,
+  HealthStatus
 } from '../types/engine';
 import { 
   ChessPosition, 
@@ -11,23 +12,56 @@ import {
   ChessMove,
   PieceType
 } from '../types/chess';
+import { ArquimaxMonitor } from './monitoring/ArquimaxMonitor';
 import { INITIAL_FEN } from '../constants/game';
 import { EventEmitter } from 'events';
 
+/**
+ * Implementação base do motor de xadrez.
+ * 
+ * Esta classe fornece a funcionalidade central para um motor de xadrez,
+ * incluindo gerenciamento de estado do jogo, validação de movimentos,
+ * avaliação de posição e eventos do jogo.
+ * 
+ * @implements {ChessEngine}
+ */
 export class ChessEngineBase implements ChessEngine {
+  /** Instância do chess.js que gerencia as regras e estado do jogo */
   protected game: Chess;
+
+  /** Opções de configuração do motor */
   protected options: EngineOptions;
+
+  /** Emissor de eventos para notificar mudanças no estado do jogo */
   protected eventEmitter: EventEmitter;
+
+  /** Cache de análises de posição para otimização */
   protected positionCache: Map<string, EngineAnalysis>;
 
+  private monitor: ArquimaxMonitor;
+
+  /**
+   * Cria uma nova instância do motor de xadrez.
+   * 
+   * @param options - Opções de configuração do motor
+   * @param options.startPosition - Posição inicial em notação FEN (opcional)
+   * @param options.evaluationParameters - Parâmetros para avaliação de posição (opcional)
+   */
   constructor(options: EngineOptions = {}) {
     this.game = new Chess(options.startPosition || INITIAL_FEN);
     this.options = options;
     this.eventEmitter = new EventEmitter();
     this.positionCache = new Map();
+    this.monitor = new ArquimaxMonitor();
   }
 
   // Estado do jogo
+  /**
+   * Obtém a representação atual do tabuleiro.
+   * 
+   * @returns Uma matriz 8x8 representando o tabuleiro, onde cada elemento
+   * é uma peça de xadrez ou null para casas vazias.
+   */
   getBoard(): ChessPiece[][] {
     const board = this.game.board();
     return board.map(row => 
@@ -40,10 +74,22 @@ export class ChessEngineBase implements ChessEngine {
     );
   }
 
+  /**
+   * Obtém a posição atual em notação FEN.
+   * 
+   * @returns String FEN representando o estado atual do jogo
+   */
   getFEN(): string {
     return this.game.fen();
   }
 
+  /**
+   * Define uma nova posição para o jogo usando notação FEN.
+   * 
+   * @param fen - String FEN representando a nova posição
+   * @throws {Error} Se a string FEN for inválida
+   * @emits {POSITION_CHANGED} Quando a posição é alterada com sucesso
+   */
   setFEN(fen: string): void {
     try {
       // Na nova versão do chess.js, load() já valida o FEN
@@ -58,12 +104,45 @@ export class ChessEngineBase implements ChessEngine {
   }
 
   // Movimentos
+  /**
+   * Obtém todos os movimentos legais possíveis para uma peça em uma determinada posição.
+   * 
+   * @param position - Posição da peça no tabuleiro
+   * @returns Lista de movimentos legais possíveis
+   */
   getPossibleMoves(position: ChessPosition): ChessMove[] {
     try {
-      const moves = this.game.moves({ 
-        square: this.positionToSquare(position),
-        verbose: true 
-      });
+      const square = this.positionToSquare(position);
+      const fen = this.getFEN();
+      const cacheKey = `${fen}:${square}`;
+      const cacheHit = this.positionCache.has(cacheKey);
+      
+      let moves;
+      if (cacheHit) {
+        const cache = this.positionCache.get(cacheKey);
+        moves = cache!.bestLine;
+      } else {
+        moves = this.game.moves({ 
+          square,
+          verbose: true 
+        });
+        // Cache the result
+        this.positionCache.set(cacheKey, {
+          evaluation: 0,
+          depth: 0,
+          bestLine: moves,
+          threats: [],
+          positionalFeatures: {
+            pawnStructure: 0,
+            kingSafety: 0,
+            mobility: 0,
+            centerControl: 0,
+            pieceActivity: 0
+          }
+        });
+      }
+      
+      this.monitor.recordCacheAccess(cacheHit);
 
       return moves.map(move => ({
         from: this.squareToPosition(move.from),
@@ -84,6 +163,16 @@ export class ChessEngineBase implements ChessEngine {
     }
   }
 
+  /**
+   * Executa um movimento no tabuleiro.
+   * 
+   * @param from - Posição inicial da peça
+   * @param to - Posição final da peça
+   * @returns true se o movimento foi executado com sucesso, false caso contrário
+   * @emits {MOVE_MADE} Quando um movimento é realizado com sucesso
+   * @emits {CHECK} Quando o movimento resulta em xeque
+   * @emits {GAME_OVER} Quando o movimento resulta em fim de jogo
+   */
   makeMove(from: ChessPosition, to: ChessPosition): boolean {
     try {
       const move = this.game.move({
@@ -132,6 +221,12 @@ export class ChessEngineBase implements ChessEngine {
     }
   }
 
+  /**
+   * Desfaz o último movimento realizado.
+   * 
+   * @returns true se havia um movimento para desfazer, false caso contrário
+   * @emits {POSITION_CHANGED} Quando o movimento é desfeito com sucesso
+   */
   undoLastMove(): boolean {
     const move = this.game.undo();
     if (move) {
@@ -145,28 +240,66 @@ export class ChessEngineBase implements ChessEngine {
   }
 
   // Estado do jogo
+  /**
+   * Verifica se o jogador atual está em xeque.
+   * 
+   * @returns true se o jogador atual está em xeque, false caso contrário
+   */
   isCheck(): boolean {
     return this.game.isCheck();
   }
 
+  /**
+   * Verifica se o jogador atual está em xeque-mate.
+   * 
+   * @returns true se o jogador atual está em xeque-mate, false caso contrário
+   */
   isCheckmate(): boolean {
     return this.game.isCheckmate();
   }
 
+  /**
+   * Verifica se o jogo está empatado.
+   * 
+   * @returns true se o jogo está empatado, false caso contrário
+   */
   isDraw(): boolean {
     return this.game.isDraw();
   }
 
+  /**
+   * Verifica se o jogo terminou (xeque-mate ou empate).
+   * 
+   * @returns true se o jogo terminou, false caso contrário
+   */
   isGameOver(): boolean {
     return this.game.isGameOver();
   }
 
+  /**
+   * Obtém o jogador atual.
+   * 
+   * @returns 'white' para as brancas, 'black' para as pretas
+   */
   getCurrentPlayer(): 'white' | 'black' {
     const turn = this.game.turn();
     return turn === 'w' ? 'white' : 'black';
   }
 
   // Avaliação e análise
+  /**
+   * Avalia a posição atual do jogo.
+   * 
+   * Esta função considera diversos fatores para avaliar a posição:
+   * - Material: Valor das peças presentes no tabuleiro
+   * - Posição: Qualidade do posicionamento das peças
+   * - Mobilidade: Quantidade de movimentos disponíveis
+   * - Segurança do Rei: Avaliação da proteção do rei
+   * - Estrutura de Peões: Qualidade da estrutura de peões
+   * 
+   * @returns Um número que representa a avaliação da posição.
+   * Valores positivos favorecem as brancas, negativos favorecem as pretas.
+   */
   evaluatePosition(): number {
     // Implementação básica de avaliação
     const weights = this.options.evaluationParameters || {
@@ -251,11 +384,23 @@ export class ChessEngineBase implements ChessEngine {
     return score;
   }
 
+  /**
+   * Encontra o melhor movimento possível para o jogador atual.
+   * 
+   * @param depth - Profundidade máxima de busca na árvore de movimentos
+   * @returns O melhor movimento encontrado, ou null se nenhum movimento for possível
+   * @todo Implementar algoritmo minimax com poda alpha-beta
+   */
   getBestMove(depth: number): ChessMove | null {
     // TODO: Implementar busca minimax com poda alpha-beta
     return null;
   }
 
+  /**
+   * Obtém o histórico completo de movimentos do jogo.
+   * 
+   * @returns Lista de movimentos realizados desde o início do jogo
+   */
   getGameHistory(): ChessMove[] {
     return this.game.history({ verbose: true }).map(move => ({
       from: this.squareToPosition(move.from),
@@ -273,6 +418,13 @@ export class ChessEngineBase implements ChessEngine {
   }
 
   // Validação
+  /**
+   * Verifica se um movimento é válido sem executá-lo.
+   * 
+   * @param from - Posição inicial da peça
+   * @param to - Posição final da peça
+   * @returns true se o movimento é legal, false caso contrário
+   */
   isValidMove(from: ChessPosition, to: ChessPosition): boolean {
     // Validação básica de posição
     if (!this.isValidPosition(from) || !this.isValidPosition(to)) {
@@ -305,12 +457,23 @@ export class ChessEngineBase implements ChessEngine {
     return false;
   }
 
+  /**
+   * Verifica se uma posição está dentro dos limites do tabuleiro.
+   * 
+   * @param position - Posição a ser verificada
+   * @returns true se a posição é válida, false caso contrário
+   */
   isValidPosition(position: ChessPosition): boolean {
     return position.row >= 0 && position.row < 8 &&
            position.col >= 0 && position.col < 8;
   }
 
   // Utilidades
+  /**
+   * Reinicia o jogo para a posição inicial.
+   * 
+   * @emits {POSITION_CHANGED} Quando o tabuleiro é reiniciado
+   */
   reset(): void {
     this.game.reset();
     this.positionCache.clear();
@@ -320,6 +483,11 @@ export class ChessEngineBase implements ChessEngine {
     });
   }
 
+  /**
+   * Cria uma cópia independente do motor de xadrez atual.
+   * 
+   * @returns Uma nova instância do motor com o mesmo estado atual
+   */
   clone(): ChessEngine {
     const clonedEngine = new ChessEngineBase(this.options);
     clonedEngine.setFEN(this.getFEN());
@@ -354,8 +522,23 @@ export class ChessEngineBase implements ChessEngine {
     throw new Error('King not found');
   }
 
+  /**
+   * Verifica o status de saúde do motor.
+   * 
+   * @returns Status atual do motor incluindo métricas de desempenho
+   */
+  public checkHealth(): HealthStatus {
+    return this.monitor.checkHealth();
+  }
+
+  /**
+   * Emite um evento do motor.
+   * 
+   * @param event - Evento a ser emitido
+   */
   protected emitEvent(event: EngineEvent): void {
     this.eventEmitter.emit('engine-event', event);
+    this.monitor.recordEvent(event);
   }
 
   // Métodos de avaliação

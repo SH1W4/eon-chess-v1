@@ -3,7 +3,6 @@ import { ChessPosition, ChessPiece } from '../../../shared/types/chess';
 import { useGameState } from '../../hooks/useGameState';
 import { MemoizedSquare } from './Square';
 import { MemoizedPiece } from './Piece';
-import { theme } from '../../../shared/styles/theme';
 import { BOARD_SIZE } from '../../../shared/constants/game';
 
 interface ChessBoardProps {
@@ -126,6 +125,7 @@ export const ChessBoard: React.FC<ChessBoardProps> = ({
         board.push(
           <div
             key={`${row}-${col}`}
+            data-testid={`square-${row}-${col}`}
             style={{
               width: squareSize,
               height: squareSize,
@@ -201,9 +201,11 @@ export const ChessBoard: React.FC<ChessBoardProps> = ({
       <div className="p-2 rounded-lg shadow-xl bg-gradient-to-br from-emerald-700 to-emerald-900">
         {/* Grade do tabuleiro */}
         <div
+          data-testid="chessboard"
+          data-style={culturalStyle}
           className="grid grid-cols-8 rounded-md overflow-hidden border-4 border-emerald-800"
           style={{
-            backgroundImage: theme.culturalConfig[culturalStyle as keyof typeof theme.culturalConfig].backgroundPattern,
+            backgroundImage: `url('/images/patterns/${culturalStyle}.png')`
           }}
         >
           {renderBoard()}
@@ -215,7 +217,7 @@ export const ChessBoard: React.FC<ChessBoardProps> = ({
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
-            border: `4px solid ${theme.colors.feedback.warning}`,
+            border: '4px solid #f59e0b',
             animation: 'pulse 2s infinite',
           }}
         />
@@ -226,7 +228,7 @@ export const ChessBoard: React.FC<ChessBoardProps> = ({
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
-            border: `4px solid ${theme.colors.feedback.error}`,
+            border: '4px solid #ef4444',
             animation: 'shake 0.5s',
           }}
         />
@@ -247,7 +249,7 @@ export const ChessBoard: React.FC<ChessBoardProps> = ({
         }
 
         .grid {
-          background-image: ${theme.culturalConfig[culturalStyle as keyof typeof theme.culturalConfig].backgroundPattern};
+          background-image: url('/images/patterns/${culturalStyle}.png');
           background-size: cover;
           background-blend-mode: overlay;
         }

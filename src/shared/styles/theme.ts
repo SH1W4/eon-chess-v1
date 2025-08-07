@@ -1,7 +1,7 @@
 // Tema base compartilhado entre web e mobile
 import { patterns } from './patterns';
 
-export const colors = {
+const colors = {
   // Cores primárias
   primary: {
     50: '#E6F6FF',
@@ -183,6 +183,21 @@ export const culturalConfig = {
 
 // Exporta o tema completo
 export const theme = {
+  colors: {
+    ...colors,
+    emerald: {
+      50: '#ecfdf5',
+      100: '#d1fae5',
+      200: '#a7f3d0',
+      300: '#6ee7b7',
+      400: '#34d399',
+      500: '#10b981',
+      600: '#059669',
+      700: '#047857',
+      800: '#065f46',
+      900: '#064e3b',
+    }
+  },
   colors,
   spacing,
   typography,

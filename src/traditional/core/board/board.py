@@ -49,6 +49,12 @@ class Board:
     def get_piece(self, position: Position) -> Optional[Piece]:
         """Get piece at a position"""
         return self.pieces.get(position)
+        
+    def _is_diagonal_move(self, from_pos: Position, to_pos: Position) -> bool:
+        """Verifica se um movimento é diagonal"""
+        dx = abs(to_pos.file - from_pos.file)
+        dy = abs(to_pos.rank - from_pos.rank)
+        return dx == dy
     
     def is_in_check(self, color: Color) -> bool:
         """Check if the king is in check"""
@@ -133,31 +139,56 @@ class Board:
 
         elif piece.type in [PieceType.BISHOP, PieceType.ROOK, PieceType.QUEEN]:
             directions = []
-            if piece.type in [PieceType.BISHOP, PieceType.QUEEN]:
+            if piece.type in [PieceType.QUEEN, PieceType.BISHOP]:
                 directions.extend([(1, 1), (1, -1), (-1, 1), (-1, -1)])
-            if piece.type in [PieceType.ROOK, PieceType.QUEEN]:
+            if piece.type in [PieceType.QUEEN, PieceType.ROOK]:
                 directions.extend([(0, 1), (0, -1), (1, 0), (-1, 0)])
 
             for dr, df in directions:
-                # Keep moving in the direction until we hit a piece or the edge of the board
-                for distance in range(1, 9):
+                for distance in range(1, 9):  # Mudando para 9 para cobrir todo o tabuleiro
                     try:
-                        new_pos = Position(
-                            piece.position.rank + dr * distance,
-                            piece.position.file + df * distance
-                        )
-                        # Check if there's a piece on this square
+                        new_rank = piece.position.rank + dr * distance
+                        new_file = piece.position.file + df * distance
+                        new_pos = Position(new_rank, new_file)
+                        
+                        # Print debug info
+                        dx = new_file - piece.position.file
+                        dy = new_rank - piece.position.rank
+
+# Check if there is a piece on the new position
                         target = self.get_piece(new_pos)
-                        # If we hit a piece:
-                        # - Add the square if it's an enemy piece
-                        # - Stop searching this direction
-                        if target:
-                            if target.color != piece.color:
-                                moves.append(new_pos)
-                            break
-                        # No piece on this square, keep searching this direction
-                        moves.append(new_pos)
+                        
+                        # Print debug info
+                        dx = new_pos.file - piece.position.file
+                        dy = new_pos.rank - piece.position.rank
+                        print(f"Calculando coordenadas: {piece.position.to_algebraic()} -> {new_pos.to_algebraic()}")
+                        print(f"Arquivo: {piece.position.file}->{new_pos.file} ({df})")
+                        print(f"Rank: {piece.position.rank}->{new_pos.rank} ({dr})")
+                        print(f"Diferenças dx={dx}, dy={dy}, abs_dx={abs(dx)}, abs_dy={abs(dy)}")
+                        
+                        # Verifica se é um movimento diagonal ou reto válido
+                        # Para movimento diagonal, as diferenças absolutas em x e y devem ser iguais
+                        is_diagonal = abs(dx) == abs(dy)
+                        is_straight = dx == 0 or dy == 0
+                        print(f"Rainha movendo de {piece.position.to_algebraic()} para {new_pos.to_algebraic()} -> diagonal? {is_diagonal}, straight? {is_straight}")
+                        
+                        # Adiciona o movimento se for válido
+                        # Bispo pode mover apenas diagonalmente
+                        # Torre pode mover apenas em linha reta
+                        # Rainha pode mover tanto diagonalmente quanto em linha reta
+                        if ((piece.type == PieceType.BISHOP and is_diagonal) or 
+                            (piece.type == PieceType.ROOK and is_straight) or 
+                            (piece.type == PieceType.QUEEN and (is_diagonal or is_straight))):
+                            if target:
+                                if target.color != piece.color:
+                                    moves.append(new_pos)  # Captura possível
+                                break  # Para a direção se encontrou uma peça
+                            else:
+                                moves.append(new_pos)  # Casa vazia, movimento válido
                     except ValueError:
+                        break
+                    except ValueError:
+                        # Posição fora do tabuleiro
                         break
 
         elif piece.type == PieceType.KING:

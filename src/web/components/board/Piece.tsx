@@ -1,7 +1,6 @@
 import React from 'react';
 import { ChessPiece } from '../../../shared/types/chess';
 import { getPieceSymbol } from '../../../shared/utils/chess';
-import { theme } from '../../../shared/styles/theme';
 
 interface PieceProps {
   piece: ChessPiece;
@@ -20,14 +19,16 @@ export const Piece: React.FC<PieceProps> = ({
   onDragStart,
   onDragEnd,
 }) => {
-  // Obtém o estilo cultural das peças
-  const culturalTheme = theme.culturalConfig[culturalStyle as keyof typeof theme.culturalConfig];
-  const pieceStyle = culturalTheme.pieceStyle;
+  // Define o estilo da peça baseado no estilo cultural
+  const pieceStyles = {
+    modern: 'traditional',
+    ancient: 'hieroglyphic',
+    medieval: 'artistic'
+  };
+  const pieceStyle = pieceStyles[culturalStyle as keyof typeof pieceStyles] || 'traditional';
 
   // Calcula a escala baseada no estado de dragging
-  const scale = isDragging 
-    ? theme.boardConfig.pieceScale.dragging 
-    : theme.boardConfig.pieceScale.default;
+  const scale = isDragging ? 1.2 : 1;
 
   // Determina o símbolo da peça
   const symbol = getPieceSymbol(piece);
@@ -37,7 +38,7 @@ export const Piece: React.FC<PieceProps> = ({
     fontSize: `${size}px`,
     lineHeight: `${size}px`,
     transform: `scale(${scale})`,
-    transition: `transform ${theme.transitions.duration.fast}ms ${theme.transitions.ease}`,
+    transition: 'transform 150ms ease',
     color: piece.color === 'white' ? '#fff' : '#000',
     textShadow: piece.color === 'white'
       ? '2px 2px 2px rgba(0,0,0,0.4)'
@@ -79,7 +80,7 @@ export const Piece: React.FC<PieceProps> = ({
         width: size,
         height: size,
         transform: `scale(${scale})`,
-        transition: `transform ${theme.transitions.duration.fast}ms ${theme.transitions.ease}`,
+        transition: 'transform 150ms ease',
       }}
       draggable={true}
       onDragStart={onDragStart}

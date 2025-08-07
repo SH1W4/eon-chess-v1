@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from typing import Dict, List, Optional, Tuple
 from enum import Enum
 from src.core.board.board import Board, Position, PieceType, Color, Piece
+from src.core.board.move import Move
 import random
 import json
 import numpy as np

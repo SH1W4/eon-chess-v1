@@ -6,11 +6,11 @@ import { ChessPosition, ChessMove } from '../shared/types/chess';
 import { CulturalChessEngine } from '../shared/engine/CulturalChessEngine';
 import { CULTURAL_STYLES } from '../shared/constants/game';
 
-const [engine] = useState(() => new CulturalChessEngine());
-const [gameHistory, setGameHistory] = useState<ChessMove[]>([]);
-const [canUndo, setCanUndo] = useState(false);
-
 export default function Home() {
+  const [engine] = useState(() => new CulturalChessEngine());
+  const [gameHistory, setGameHistory] = useState<ChessMove[]>([]);
+  const [canUndo, setCanUndo] = useState(false);
+
   const [orientation, setOrientation] = useState<'white' | 'black'>('white');
   const [culturalStyle, setCulturalStyle] = useState('modern');
   const [narratives, setNarratives] = useState<string[]>([]);
@@ -21,7 +21,7 @@ export default function Home() {
     timestamp: number;
   }>>([]);
 
-const handleMove = useCallback((from: ChessPosition, to: ChessPosition) => {
+  const handleMove = useCallback((from: ChessPosition, to: ChessPosition) => {
     const success = engine.makeMove(from, to);
     if (success) {
       const analysis = engine.getStyleBasedEvaluation();
@@ -40,7 +40,7 @@ const handleMove = useCallback((from: ChessPosition, to: ChessPosition) => {
     alert(`Jogo finalizado! Resultado: ${result}`);
   }, []);
 
-const handleStyleChange = useCallback((style: string) => {
+  const handleStyleChange = useCallback((style: string) => {
     if (style in CULTURAL_STYLES) {
       setCulturalStyle(style);
       engine.setCulturalStyle(style);
@@ -78,26 +78,22 @@ const handleStyleChange = useCallback((style: string) => {
     setOrientation(prev => prev === 'white' ? 'black' : 'white');
   }, []);
 
-return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-900 to-emerald-700 py-8">
-      <div className="max-w-7xl mx-auto px-4 flex flex-col gap-8">
+  return (
+    <div data-testid="app-container" className="flex flex-col gap-8">
         {/* Cabeçalho */}
-        <div className="mb-8 text-center">
-          <h1 className="text-4xl font-bold text-white mb-2">
+        <div data-testid="header" className="mb-8 text-center">
+          <h1 data-testid="title" className="text-4xl font-bold text-white mb-2">
             CHESS: Sistema Cultural de Xadrez
           </h1>
-          <p className="text-emerald-100">
+          <p data-testid="subtitle" className="text-emerald-100">
             Uma experiência única de xadrez com elementos culturais adaptativos
           </p>
         </div>
 
         {/* Área principal */}
-        <div className="grid lg:grid-cols-3 gap-8">
-
-        {/* Área principal */}
-        <div className="grid lg:grid-cols-3 gap-8">
+        <div data-testid="main-content" className="grid lg:grid-cols-3 gap-8">
           {/* Controles e Tabuleiro */}
-          <div className="lg:col-span-2 space-y-8">
+          <div data-testid="board-controls" className="lg:col-span-2 space-y-8">
             <MemoizedGameControls
               culturalStyle={culturalStyle}
               onStyleChange={handleStyleChange}
@@ -108,7 +104,7 @@ return (
               isPlayerTurn={true} // TODO: Implementar lógica de turno
             />
             
-            <div className="flex justify-center">
+            <div data-testid="board-container" className="flex justify-center">
               <MemoizedChessBoard
                 orientation={orientation}
                 culturalStyle={culturalStyle}
@@ -120,7 +116,7 @@ return (
           </div>
 
           {/* Painel de Informações */}
-          <div>
+          <div data-testid="info-panel">
             <MemoizedGameInfo
               culturalStyle={culturalStyle}
               moves={gameHistory}
@@ -130,7 +126,6 @@ return (
             />
           </div>
         </div>
-      </div>
     </div>
   );
 }

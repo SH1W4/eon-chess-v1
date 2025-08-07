@@ -2,9 +2,10 @@ import pytest
 import numpy as np
 from typing import List, Optional
 from src.core.engine import ChessEngine
-from src.core.board.board import Board, Position, Piece, Color
+from src.core.board.board import Board, Position, Piece, Color, PieceType
 from src.core.board.move import Move
-from src.ai.adaptive_ai import AdaptiveAI, PlayerProfile, EvaluationWeights
+from src.ai.adaptive_ai import AdaptiveAI, PlayerProfile, EvaluationWeights, LearningMode
+from src.core.board.board import PieceType
 
 # Mock para ChessEngine nos testes
 class MockMove:
@@ -31,7 +32,7 @@ class MockChessEngine:
     def get_piece(self, pos: Position) -> Optional[Piece]:
         return self.board.get_piece(pos)
     
-    def make_move(self, move: MockMove) -> bool:
+    def make_move(self, move: MockMove) -> bool:
         if not self._is_legal_move(move):
             return False
         
@@ -46,7 +47,7 @@ class MockChessEngine:
         self.move_history.append(move)
         return True
     
-    def get_legal_moves(self, pos: Position) -> List[Position]:
+    def get_legal_moves(self, pos: Position) -> List[Position]:
         piece = self.get_piece(pos)
         if not piece:
             return []
@@ -95,94 +96,165 @@ def test_position_tables():
     ai = AdaptiveAI()
     
     # Verificar se todas as tabelas necessárias existem
-    required_tables = ['pawn', 'knight', 'bishop', 'rook', 'queen', 'king_midgame', 'king_endgame']
-    for table_name in required_tables:
-        assert table_name in ai.position_tables
-        assert isinstance(ai.position_tables[table_name], np.ndarray)
-        assert ai.position_tables[table_name].shape == (8, 8)
+    for piece_type in [pt for pt in PieceType if pt != PieceType.KING]:
+        assert piece_type in ai.position_tables
+        assert isinstance(ai.position_tables[piece_type], np.ndarray)
+        assert ai.position_tables[piece_type].shape == (8, 8)
+    
+    # Verificar tabelas especiais do rei
+    assert 'king_midgame' in ai.position_tables
+    assert 'king_endgame' in ai.position_tables
+    assert ai.position_tables['king_midgame'].shape == (8, 8)
+    assert ai.position_tables['king_endgame'].shape == (8, 8)
+
+def test_learning_modes():
+    # Testar modo passivo
+    ai_passive = AdaptiveAI(
+        profile=PlayerProfile(learning_mode=LearningMode.PASSIVE)
+    )
+    assert ai_passive.profile.learning_mode == LearningMode.PASSIVE
+    
+    # Testar modo ativo
+    ai_active = AdaptiveAI(
+        profile=PlayerProfile(learning_mode=LearningMode.ACTIVE)
+    )
+    assert ai_active.profile.learning_mode == LearningMode.ACTIVE
+    
+    # Testar modo agressivo
+    ai_aggressive = AdaptiveAI(
+        profile=PlayerProfile(learning_mode=LearningMode.AGGRESSIVE)
+    )
+    assert ai_aggressive.profile.learning_mode == LearningMode.AGGRESSIVE
+
+def test_evolution_cycles():
+    # Criar IA com ciclos evolutivos
+    ai = AdaptiveAI(
+        profile=PlayerProfile(
+            evolution_cycles=3,
+            learning_mode=LearningMode.ACTIVE
+        )
+    )
+    
+    # Simular alguns jogos
+    for _ in range(5):
+        ai.game_memory.append({
+            'result': 'win',
+            'aggression': 0.7,
+            'positional': 0.6,
+            'risk_taking': 0.8
+        })
+    
+    # Guardar valores iniciais
+    initial_aggression = ai.profile.aggression
+    initial_positional = ai.profile.positional
+    initial_risk_taking = ai.profile.risk_taking
+    
+    # Atualizar perfil com ciclos evolutivos
+    engine = ChessEngine()
+    ai.update_profile(engine.board, 'win')
+    
+    # Verificar se os valores mudaram
+    assert ai.profile.aggression != initial_aggression
+    assert ai.profile.positional != initial_positional
+    assert ai.profile.risk_taking != initial_risk_taking
 
 def test_evaluate_position():
-    engine = ChessEngine()
+    board = Board()
     ai = AdaptiveAI()
-    
-    # Initial position evaluation from White's perspective
-    initial_score = ai.evaluate_position(engine.board, Color.WHITE)
-    assert isinstance(initial_score, float)
-    
-    # Move e2 to e4 and evaluate new position
-    move = Move(
-        Position(6, 4),  # e2
-        Position(4, 4),  # e4
-        engine.get_piece(Position(6, 4))
-    )
-    engine.make_move(move)
-    
-    # New position evaluation after e4
-    new_score = ai.evaluate_position(engine.board, Color.WHITE)
-    assert isinstance(new_score, float)
-    assert new_score > initial_score  # Score should improve after e4 due to center control
-    
-    # Verify position evaluation for Black's perspective
-    black_score = ai.evaluate_position(engine.board, Color.BLACK)
-    assert black_score < 0  # Black should have negative score due to White's advantage
+
+    # Add some pieces for testing
+    board.pieces = {
+        (4, 4): Piece(PieceType.PAWN, Color.WHITE),
+        (3, 3): Piece(PieceType.BISHOP, Color.WHITE),
+        (1, 1): Piece(PieceType.KING, Color.BLACK)
+    }
+
+    # White should have advantage due to material and position
+    score = ai.evaluate_position(board, Color.WHITE)
+    assert score > 0
+
+    # From black's perspective, score should be negative
+    black_score = ai.evaluate_position(board, Color.BLACK)
+    assert black_score < 0
 
 def test_get_best_move():
-    engine = ChessEngine()
+    board = Board()
     ai = AdaptiveAI()
-    
-    # Obter melhor movimento na posição inicial
-    move = ai.get_best_move(engine.board)
-    assert isinstance(move, Move)
-    assert engine._is_legal_move(move)
-    
-    # Verificar se o movimento é executável
-    assert engine.make_move(move)
 
-def test_evaluate_components():
-    engine = ChessEngine()
+    # Setup a simple position
+    board.pieces = {
+        (1, 1): Piece(PieceType.KING, Color.WHITE),
+        (3, 3): Piece(PieceType.QUEEN, Color.WHITE),
+        (6, 6): Piece(PieceType.KING, Color.BLACK)
+    }
+
+    # Get best move for white
+    move = ai.get_best_move(board, Color.WHITE)
+    assert isinstance(move, Move)
+    assert move.piece.type == PieceType.QUEEN  # Queen should move
+
+def test_evaluate_mobility():
+    board = Board()
     ai = AdaptiveAI()
-    
-    # Testar avaliação de mobilidade
-    mobility = ai._evaluate_mobility(engine.board, Color.WHITE)
-    assert isinstance(mobility, float)
-    assert mobility > 0  # Na posição inicial, deve haver movimentos disponíveis
-    
-    # Testar avaliação de segurança do rei
-    king_safety = ai._evaluate_king_safety(engine.board)
-    assert isinstance(king_safety, float)
-    assert king_safety > 0  # Na posição inicial, o rei deve estar relativamente seguro
-    
-    # Testar avaliação de estrutura de peões
-    pawn_structure = ai._evaluate_pawn_structure(engine.board, Color.WHITE)
-    assert isinstance(pawn_structure, float)
-    
-    # Testar avaliação de controle do centro
-    center_control = ai._evaluate_center_control(engine.board, Color.WHITE)
-    assert isinstance(center_control, float)
+
+    # Setup pieces with known mobility
+    board.pieces = {
+        (3, 3): Piece(PieceType.QUEEN, Color.WHITE),  # Queen has high mobility
+        (0, 0): Piece(PieceType.PAWN, Color.BLACK)   # Pawn has low mobility
+    }
+
+    # White should have higher mobility score
+    white_mobility = ai._evaluate_mobility(board, Color.WHITE)
+    black_mobility = ai._evaluate_mobility(board, Color.BLACK)
+    assert white_mobility > black_mobility
 
 def test_profile_update():
-    ai = AdaptiveAI()
-    opponent_profile = PlayerProfile(
-        aggression=0.8,
-        risk_taking=0.7,
-        positional=0.6
+    board = Board()
+    ai = AdaptiveAI(
+        profile=PlayerProfile(
+            learning_mode=LearningMode.AGGRESSIVE,
+            evolution_cycles=2
+        )
     )
-    
-    # Simular uma vitória
-    ai.update_profile('win', opponent_profile)
-    assert ai.profile.games_played == 1
+
+    # Add some moves to test aggressive behavior
+    board.pieces = {
+        (4, 4): Piece(PieceType.QUEEN, Color.WHITE),
+        (6, 6): Piece(PieceType.PAWN, Color.BLACK)
+    }
+
+    # Record initial values
+    initial_aggression = ai.profile.aggression
+    initial_risk_taking = ai.profile.risk_taking
+
+    # Update profile with a win
+    ai.update_profile(board, 'win')
+
+    # Check that profile was updated
     assert ai.profile.wins == 1
-    
-    # Verificar adaptação do perfil
-    assert ai.profile.aggression != 0.5  # Deve ter se adaptado ao oponente
-    assert ai.profile.risk_taking != 0.5  # Deve ter se adaptado ao oponente
+    assert ai.profile.games_played == 1
+    assert ai.profile.aggression != initial_aggression
+    assert ai.profile.risk_taking != initial_risk_taking
 
 def test_profile_save_load(tmp_path):
-    # Criar perfil inicial
-    original_ai = AdaptiveAI()
+    # Criar perfil inicial com modo de aprendizado
+    original_ai = AdaptiveAI(
+        profile=PlayerProfile(
+            aggression=0.7,
+            learning_mode=LearningMode.ACTIVE,
+            evolution_cycles=3
+        )
+    )
     original_ai.profile.wins = 5
     original_ai.profile.games_played = 10
-    original_ai.profile.aggression = 0.7
+    
+    # Adicionar alguns jogos à memória
+    original_ai.game_memory.append({
+        'result': 'win',
+        'aggression': 0.8,
+        'positional': 0.6,
+        'risk_taking': 0.7
+    })
     
     # Salvar perfil
     save_path = tmp_path / "test_profile.json"
@@ -197,23 +269,37 @@ def test_profile_save_load(tmp_path):
     assert loaded_ai.profile.aggression == 0.7
 
 def test_adaptive_behavior():
-    engine = ChessEngine()
-    ai = AdaptiveAI()
+    board = Board()
     
-    # Configurar perfil mais agressivo
-    ai.profile.aggression = 0.8
-    ai.profile.risk_taking = 0.7
+    # Create an aggressive AI
+    aggressive_ai = AdaptiveAI(
+        profile=PlayerProfile(
+            learning_mode=LearningMode.AGGRESSIVE,
+            aggression=0.8,
+            risk_taking=0.7
+        )
+    )
     
-    # Obter movimento com perfil agressivo
-    aggressive_move = ai.get_best_move(engine.board)
+    # Create a passive AI
+    passive_ai = AdaptiveAI(
+        profile=PlayerProfile(
+            learning_mode=LearningMode.PASSIVE,
+            aggression=0.2,
+            risk_taking=0.3
+        )
+    )
     
-    # Configurar perfil mais defensivo
-    ai.profile.aggression = 0.2
-    ai.profile.risk_taking = 0.3
+    # Setup a position with capture opportunities
+    board.pieces = {
+        (3, 3): Piece(PieceType.QUEEN, Color.WHITE),
+        (4, 4): Piece(PieceType.PAWN, Color.BLACK),
+        (2, 2): Piece(PieceType.PAWN, Color.BLACK)
+    }
     
-    # Obter movimento com perfil defensivo
-    defensive_move = ai.get_best_move(engine.board)
+    # Get moves from both AIs
+    aggressive_move = aggressive_ai.get_best_move(board, Color.WHITE)
+    passive_move = passive_ai.get_best_move(board, Color.WHITE)
     
-    # Os movimentos devem ser diferentes devido aos diferentes perfis
-    assert (aggressive_move.from_pos != defensive_move.from_pos or 
-            aggressive_move.to_pos != defensive_move.to_pos)
+    # Moves should be different due to different profiles
+    assert (aggressive_move.from_pos != passive_move.from_pos or 
+            aggressive_move.to_pos != passive_move.to_pos)

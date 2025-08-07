@@ -1,0 +1,49 @@
+{
+  "summary": {
+    "start_time": 1754512306.4321542,
+    "end_time": 1754512318.7972422,
+    "duration": 12.365087985992432,
+    "total_tests": 1,
+    "passed": 0,
+    "failed": 1
+  },
+  "results": {
+    "ui_testing": {
+      "name": "ui_testing",
+      "type": "selenium",
+      "start_time": "2025-08-06T17:31:56.440124",
+      "status": "failed",
+      "metrics": {
+        "duration": 12.36475682258606,
+        "coverage": {
+          "statements": 0.0,
+          "branches": 0.0,
+          "functions": 0.0,
+          "lines": 0.0
+        },
+        "performance": {
+          "average_response_time": 0,
+          "peak_memory_usage": 0,
+          "total_requests": 0
+        }
+      },
+      "errors": [
+        "Command '['pytest', 'tests/web/test_chess_components.py', '-v']' returned non-zero exit status 1."
+      ],
+      "end_time": "2025-08-06T17:31:58.796838"
+    }
+  },
+  "metrics": {
+    "coverage": {
+      "statements": 0.0,
+      "branches": 0.0,
+      "functions": 0.0,
+      "lines": 0.0
+    },
+    "performance": {
+      "average_response_time": 0,
+      "peak_memory_usage": 0,
+      "total_requests": 0
+    }
+  }
+}

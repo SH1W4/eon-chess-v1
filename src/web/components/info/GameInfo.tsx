@@ -1,6 +1,5 @@
 import React from 'react';
 import { ChessMove } from '../../../shared/types/chess';
-import { theme } from '../../../shared/styles/theme';
 
 interface GameInfoProps {
   culturalStyle: string;
@@ -22,9 +21,9 @@ export const GameInfo: React.FC<GameInfoProps> = ({
   events,
 }) => {
   // Formata a avaliação como string com sinal
-  const formatEvaluation = (eval: number): string => {
-    const absEval = Math.abs(eval);
-    const sign = eval > 0 ? '+' : eval < 0 ? '-' : '';
+  const formatEvaluation = (value: number): string => {
+    const absEval = Math.abs(value);
+    const sign = value > 0 ? '+' : value < 0 ? '-' : '';
     return `${sign}${absEval.toFixed(1)}`;
   };
 
@@ -50,11 +49,19 @@ export const GameInfo: React.FC<GameInfoProps> = ({
   return (
     <div className="flex flex-col gap-4">
       {/* Avaliação */}
-      <div className="bg-emerald-800/50 rounded-lg border border-emerald-600 p-4">
-        <h2 className="text-xl font-bold text-white mb-2">Avaliação</h2>
+      <div 
+        data-testid="evaluation-panel"
+        className="bg-emerald-800/30 backdrop-blur-sm rounded-xl border border-emerald-600/50 shadow-xl p-6"
+      >
+        <h2 className="text-2xl font-bold text-white mb-4 flex items-center gap-2">
+          <span className="w-8 h-8 flex items-center justify-center rounded-lg bg-emerald-500/20">📊</span>
+          Avaliação
+        </h2>
         <div className="flex items-center justify-between">
           <span className="text-emerald-100">Posição atual:</span>
           <span
+            data-testid="evaluation-value"
+            data-value={evaluation}
             className={`text-lg font-bold ${
               evaluation > 0
                 ? 'text-emerald-400'
@@ -69,11 +76,21 @@ export const GameInfo: React.FC<GameInfoProps> = ({
       </div>
 
       {/* Narrativas Culturais */}
-      <div className="bg-emerald-800/50 rounded-lg border border-emerald-600 p-4">
-        <h2 className="text-xl font-bold text-white mb-2">Narrativas</h2>
+      <div 
+        data-testid="narratives-panel"
+        className="bg-emerald-800/30 backdrop-blur-sm rounded-xl border border-emerald-600/50 shadow-xl p-6"
+      >
+        <h2 className="text-2xl font-bold text-white mb-4 flex items-center gap-2">
+          <span className="w-8 h-8 flex items-center justify-center rounded-lg bg-emerald-500/20">📖</span>
+          Narrativas
+        </h2>
         <div className="space-y-2">
           {narratives.map((narrative, index) => (
-            <p key={index} className="text-emerald-100 text-sm">
+            <p 
+              key={index} 
+              data-testid={`narrative-${index}`}
+              className="text-emerald-100 text-sm"
+            >
               {narrative}
             </p>
           ))}
@@ -82,20 +99,19 @@ export const GameInfo: React.FC<GameInfoProps> = ({
 
       {/* Histórico de Movimentos */}
       <div
-        className="bg-emerald-800/50 rounded-lg border border-emerald-600 p-4 max-h-48 overflow-y-auto"
-        style={{
-          scrollbarWidth: 'thin',
-          scrollbarColor: `${theme.colors.emerald[600]} ${theme.colors.emerald[800]}`,
-        }}
+        data-testid="move-history"
+        className="bg-emerald-800/30 backdrop-blur-sm rounded-xl border border-emerald-600/50 shadow-xl p-6 max-h-48 overflow-y-auto scrollbar-custom"
       >
-        <h2 className="text-xl font-bold text-white mb-2">Movimentos</h2>
+        <h2 className="text-2xl font-bold text-white mb-4 flex items-center gap-2">
+          <span className="w-8 h-8 flex items-center justify-center rounded-lg bg-emerald-500/20">♟️</span>
+          Movimentos
+        </h2>
         <div className="grid grid-cols-2 gap-2">
           {moves.map((move, index) => (
             <div
               key={index}
-              className={`text-sm ${
-                index % 2 === 0 ? 'text-right' : 'text-left'
-              }`}
+              data-testid={`move-history-item-${index}`}
+              className={`text-sm ${index % 2 === 0 ? 'text-right' : 'text-left'}`}
             >
               {index % 2 === 0 && (
                 <span className="text-emerald-400 mr-2">
@@ -110,16 +126,20 @@ export const GameInfo: React.FC<GameInfoProps> = ({
 
       {/* Eventos Culturais */}
       <div
-        className="bg-emerald-800/50 rounded-lg border border-emerald-600 p-4 max-h-48 overflow-y-auto"
-        style={{
-          scrollbarWidth: 'thin',
-          scrollbarColor: `${theme.colors.emerald[600]} ${theme.colors.emerald[800]}`,
-        }}
+        data-testid="events-panel"
+        className="bg-emerald-800/30 backdrop-blur-sm rounded-xl border border-emerald-600/50 shadow-xl p-6 max-h-48 overflow-y-auto scrollbar-custom"
       >
-        <h2 className="text-xl font-bold text-white mb-2">Eventos</h2>
+        <h2 className="text-2xl font-bold text-white mb-4 flex items-center gap-2">
+          <span className="w-8 h-8 flex items-center justify-center rounded-lg bg-emerald-500/20">🎭</span>
+          Eventos
+        </h2>
         <div className="space-y-2">
           {events.map((event, index) => (
-            <div key={index} className="flex items-center gap-2">
+            <div 
+              key={index} 
+              data-testid={`event-${index}`}
+              className="flex items-center gap-2"
+            >
               <span className="text-emerald-400 text-xs">
                 {new Date(event.timestamp).toLocaleTimeString()}
               </span>
@@ -133,19 +153,23 @@ export const GameInfo: React.FC<GameInfoProps> = ({
 
       {/* Estilo para scrollbars */}
       <style jsx global>{`
-        ::-webkit-scrollbar {
+        .scrollbar-custom {
+          scrollbar-width: thin;
+          scrollbar-color: #059669 #065f46;
+        }
+        .scrollbar-custom::-webkit-scrollbar {
           width: 8px;
         }
-        ::-webkit-scrollbar-track {
-          background: ${theme.colors.emerald[800]};
+        .scrollbar-custom::-webkit-scrollbar-track {
+          background: #065f46;
           border-radius: 4px;
         }
-        ::-webkit-scrollbar-thumb {
-          background: ${theme.colors.emerald[600]};
+        .scrollbar-custom::-webkit-scrollbar-thumb {
+          background: #059669;
           border-radius: 4px;
         }
-        ::-webkit-scrollbar-thumb:hover {
-          background: ${theme.colors.emerald[500]};
+        .scrollbar-custom::-webkit-scrollbar-thumb:hover {
+          background: #10b981;
         }
       `}</style>
     </div>
