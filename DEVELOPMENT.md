@@ -125,11 +125,13 @@ python scripts/setup_db.py
 
 #### Próximas Prioridades
 1. Corrigir avaliação de posição no motor de xadrez
-2. Implementar testes para o sistema cultural
-3. Completar integração cultural-narrativa
-4. Otimizar performance de validação
-5. Expandir dados de treinamento
-6. Otimizar performance do motor de xadrez
+2. Implementar aprendizado por reforço na IA adaptativa
+3. Implementar testes para o sistema cultural
+4. Completar integração cultural-narrativa
+5. Otimizar performance de validação
+6. Implementar auto-ajuste de parâmetros da IA
+7. Expandir dados de treinamento
+8. Otimizar performance do motor de xadrez
 
 ### 🔄 Fluxo de Desenvolvimento
 
@@ -287,7 +289,26 @@ Checklist para revisão:
    - ⏳ Análise de impacto
    - ⏳ Otimização
 
-### 4. Sistema Simbiótico [50%]
+### 4. Sistema de IA Adaptativa [55%]
+4.1. Núcleo de IA [70%]
+   - ✅ Arquitetura neural base
+   - ✅ Sistemas de inferência
+   - 🔄 Otimização de modelos
+   - ⏳ Auto-ajuste de parâmetros
+
+4.2. Aprendizado [55%]
+   - ✅ Pipeline de treinamento
+   - 🔄 Aprendizado por reforço
+   - 🔄 Adaptação dinâmica
+   - ⏳ Meta-learning
+
+4.3. Integração Cultural-Cognitiva [40%]
+   - ✅ Interface cultural base
+   - 🔄 Adaptação cultural
+   - ⏳ Evolução cognitiva
+   - ⏳ Auto-otimização
+
+### 5. Sistema Simbiótico [50%]
 4.1. Framework Base [85%]
    - ✅ ARQUIMAX
    - 🔄 NEXUS
