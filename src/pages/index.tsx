@@ -104,7 +104,10 @@ export default function Home() {
               isPlayerTurn={true} // TODO: Implementar lógica de turno
             />
             
-            <div data-testid="board-container" className="flex justify-center">
+            <div 
+              data-testid="board-container" 
+              className="flex justify-center w-full max-w-[800px] h-[calc(100vh-12rem)] min-h-[280px] mx-auto"
+            >
               <MemoizedChessBoard
                 orientation={orientation}
                 culturalStyle={culturalStyle}

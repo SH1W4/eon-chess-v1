@@ -36,8 +36,9 @@ class TranspositionTable:
         """Gera uma chave hash para a posição do tabuleiro"""
         # Hash simplificado baseado na posição das peças
         pieces = []
-        for piece in board.piece_list:
-            pieces.append(f"{piece.type.value}{piece.color.value}{piece.position.rank}{piece.position.file}")
+        for pos, piece in board.pieces.items():
+            rank, file = pos
+            pieces.append(f"{piece.type.value}{piece.color.value}{rank}{file}")
         return "_".join(sorted(pieces))
 
     def clear(self) -> None:

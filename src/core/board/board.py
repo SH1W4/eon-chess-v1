@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 from enum import Enum, auto
 from typing import Dict, List, Optional, Tuple
 
@@ -39,6 +40,13 @@ class Position:
     
     def __hash__(self):
         return hash((self.file, self.rank))
+
+@dataclass
+class Move:
+    """Representa um movimento no tabuleiro"""
+    from_pos: Position
+    to_pos: Position
+    piece: Optional['Piece'] = None
 
 class Piece:
     def __init__(self, piece_type: PieceType, color: Color, position: str = None):
@@ -262,14 +270,25 @@ class Board:
             
         return False
         
-    def _get_move_coordinates(self, from_pos: str, to_pos: str) -> dict:
+    def _get_move_coordinates(self, from_pos: str | tuple, to_pos: str | tuple) -> dict:
         """Calcula todas as coordenadas e diferenças necessárias para validação de movimento."""
         try:
             # Converte posições para coordenadas
-            from_file = ord(from_pos[0]) - ord('a')
-            from_rank = int(from_pos[1])
-            to_file = ord(to_pos[0]) - ord('a')
-            to_rank = int(to_pos[1])
+            if isinstance(from_pos, str):
+                from_file = ord(from_pos[0]) - ord('a')
+                from_rank = int(from_pos[1])
+            else:
+                rank, file = from_pos
+                from_rank = rank
+                from_file = file - 1
+                
+            if isinstance(to_pos, str):
+                to_file = ord(to_pos[0]) - ord('a')
+                to_rank = int(to_pos[1])
+            else:
+                rank, file = to_pos
+                to_rank = rank
+                to_file = file - 1
             
             # Calcula diferenças
             dx = to_file - from_file
@@ -295,6 +314,7 @@ class Board:
             return None
         
         
+
     def _is_valid_pawn_move(self, piece: Piece, from_pos: str, to_pos: str, coords: dict) -> bool:
         """Valida movimento específico de peão."""
         direction = 1 if piece.color == Color.WHITE else -1

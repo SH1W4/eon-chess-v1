@@ -52,6 +52,10 @@ python scripts/setup_db.py
 /CHESS
 ├── src/                # Código fonte
 │   ├── core/          # Núcleo do sistema
+│   │   ├── cultural_patterns.py    # Sistema de padrões culturais
+│   │   ├── cultural_validation.py   # Validação de padrões
+│   │   ├── cultural_training_data.py # Dados de treinamento
+│   │   └── cultural_integration.py   # Integração cultural
 │   ├── ai/           # Sistema de IA adaptativa
 │   ├── cultural/     # Motor cultural e perfis
 │   ├── ui/           # Interface do usuário
@@ -59,6 +63,34 @@ python scripts/setup_db.py
 │   └── utils/        # Utilitários
 ...
 ```
+
+### 📊 Status dos Componentes
+
+#### Sistema Cultural [Em Desenvolvimento]
+- ✅ Sistema base de padrões culturais implementado
+- ✅ Sistema de validação implementado
+- ✅ Dados de treinamento e warm-up adicionados
+- ✅ Integração com culturas existentes (Persa, Mongol, Chinesa, Viking, Samurai, Maia)
+- ⏳ Testes unitários e de integração pendentes
+- ⏳ Otimização de performance pendente
+
+#### Sistema Narrativo [Em Desenvolvimento]
+- ✅ Motor narrativo base
+- ✅ Geração de eventos
+- ⏳ Integração cultural-narrativa pendente
+- ⏳ Validação de narrativas pendente
+
+#### Sistema Simbiótico [Em Progresso]
+- ✅ Framework base implementado
+- ✅ Integração ARQUIMAX
+- ⏳ Integração NEXUS pendente
+- ⏳ Evolução adaptativa em desenvolvimento
+
+#### Próximas Prioridades
+1. Implementar testes para o sistema cultural
+2. Completar integração cultural-narrativa
+3. Otimizar performance de validação
+4. Expandir dados de treinamento
 
 ### 🔄 Fluxo de Desenvolvimento
 

@@ -2,6 +2,23 @@ from dataclasses import dataclass
 from typing import Dict, List, Tuple
 from src.core.board.board import Board, Position, Piece, Color, PieceType
 
+def coord_to_san(pos: str | Position | tuple) -> str:
+    """Convert various position formats to algebraic notation (e.g. 'd4' -> 'd4')"""
+    if isinstance(pos, str):
+        return pos
+    elif isinstance(pos, Position):
+        return str(pos)
+    else:
+        rank, file = pos
+        # Convert to algebraic with correct file offset
+        return f"{chr(ord('a') + file - 1)}{rank}"
+
+def san_to_coords(san: str) -> tuple[int, int]:
+    """Convert algebraic notation to rank, file coordinates (e.g. 'd4' -> (4, 4))"""
+    file = ord(san[0]) - ord('a') + 1  # a=1, b=2, etc.
+    rank = int(san[1])
+    return (rank, file)
+
 @dataclass
 class PositionalFeatures:
     """Características posicionais avaliadas"""
@@ -19,14 +36,14 @@ class AdvancedEvaluator:
     def __init__(self):
         # Fatores de peso para diferentes aspectos da posição
         self.weights = {
-            'material': 1.0,
-            'center_control': 0.3,
-            'mobility': 0.2,
-            'pawn_structure': 0.15,
-            'king_safety': 0.25,
-            'piece_coordination': 0.2,
-            'space': 0.1,
-            'development': 0.15
+            'material': 10.0,       # Base material value scale
+            'center_control': 5.0,   # Important for center control
+            'mobility': 3.0,        # Moderate for piece activity
+            'pawn_structure': 4.0,  # Important for structure
+            'king_safety': 6.0,     # Critical for king safety
+            'piece_coordination': 2.0, # Modest tactical strength
+            'space': 1.0,           # Minor territorial advantage
+            'development': 2.0      # Early game activity
         }
         
         # Define as casas centrais e o centro estendido
@@ -78,27 +95,46 @@ class AdvancedEvaluator:
         """Avalia o controle do centro"""
         score = 0.0
         
-        # Conta peças controlando o centro
+        # Strong weights for different pieces in the center
+        piece_weights = {
+            PieceType.PAWN: 3.0,    # Critical in center but not overwhelming
+            PieceType.KNIGHT: 3.5,  # Strong in center
+            PieceType.BISHOP: 2.5,  # Good in center
+            PieceType.ROOK: 2.0,    # Decent in center
+            PieceType.QUEEN: 1.5    # Avoid early development
+        }
+        
+        # Evaluate only center and extended center
         for rank in range(2, 6):
             for file in range(2, 6):
-                pos = Position(rank=rank, file=file)
-                if (rank, file) in self.center_squares:
-                    weight = 0.5
-                else:
-                    weight = 0.3
-                    
-                piece = board.get_piece(pos)
+                pos = (rank, file)
+                is_center = pos in self.center_squares
+                base_weight = 2.0 if is_center else 1.0  # Center square bonus
+                
+                piece = board.pieces.get(pos)
                 if piece:
+                    piece_weight = piece_weights.get(piece.type, 1.0)
                     if piece.color == color:
-                        score += weight
+                        # Bonus for piece placement and control
+                        score += base_weight * piece_weight
+                        if is_center:
+                            score += 2.0  # Center piece bonus
+                            # Extra bonus for centralized knights
+                            if piece.type == PieceType.KNIGHT:
+                                score += 1.5
                     else:
-                        score -= weight
-                        
-                # Avalia casas atacadas
-                if board.is_square_attacked(pos, color):
-                    score += weight * 0.5
-                if board.is_square_attacked(pos, Color.BLACK if color == Color.WHITE else Color.WHITE):
-                    score -= weight * 0.5
+                        # Smaller penalty for enemy pieces
+                        score -= base_weight * piece_weight * 0.4
+                
+                # Evaluate square control in center
+                if is_center:
+                    pos_san = coord_to_san(pos)
+                    if board.is_square_attacked(pos_san, color):
+                        score += 1.0  # Moderate bonus for controlling central square
+                        if piece and piece.color == color:
+                            score += 0.5  # Small bonus for piece attacking its square
+                    if board.is_square_attacked(pos_san, Color.BLACK if color == Color.WHITE else Color.WHITE):
+                        score -= 0.5  # Small penalty for enemy control
                     
         return score
     
@@ -113,11 +149,11 @@ class AdvancedEvaluator:
             PieceType.QUEEN: 0.5
         }
         
-        for piece in board.piece_list:
+        for piece_pos, piece in board.pieces.items():
             if piece.type == PieceType.KING:
                 continue
                 
-            moves = board.get_valid_moves(piece.position)
+            moves = board.get_valid_moves(piece_pos)
             mobility = len(moves) * piece_mobility_weights.get(piece.type, 0.2)
             
             if piece.color == color:
@@ -126,51 +162,90 @@ class AdvancedEvaluator:
                 score -= mobility
                 
         return score
-    
     def _evaluate_pawn_structure(self, board: Board, color: Color) -> float:
         """Avalia a estrutura de peões"""
         score = 0.0
         pawns_by_file = {i: [] for i in range(1, 9)}
+        enemy_pawns_by_file = {i: [] for i in range(1, 9)}
         
         # Mapeia peões por coluna
-        for piece in board.piece_list:
-            if piece.type == PieceType.PAWN:
-                pawns_by_file[piece.position.file].append(piece)
+        for piece_pos, piece in board.pieces.items():
+                if piece.type == PieceType.PAWN:
+                    # Handle tuple or string position
+                    if isinstance(piece_pos, tuple):
+                        rank, file = piece_pos
+                    else:
+                        rank, file = san_to_coords(piece_pos)
+                    if 1 <= file <= 8:  # Validate file index
+                        if piece.color == color:
+                            pawns_by_file[file].append((piece, rank))
+                        else:
+                            enemy_pawns_by_file[file].append((piece, rank))
         
-        # Avalia estrutura
+        # Avalia estrutura de peões para cada coluna
         for file in range(1, 9):
             pawns = pawns_by_file[file]
+            enemy_pawns = enemy_pawns_by_file[file]
             
-            # Peões dobrados (ruim)
+            # Doubled pawns (bad)
             if len(pawns) > 1:
-                score -= 0.3 * (len(pawns) - 1)
+                score -= 8.0 * (len(pawns) - 1)  # Moderate penalty for doubled pawns
+            if len(enemy_pawns) > 1:
+                score += 6.0 * (len(enemy_pawns) - 1)  # Small bonus for enemy doubled pawns
             
-            # Peões isolados (ruim)
+            # Connected pawns (very good)
             if len(pawns) > 0:
                 has_neighbor = False
                 if file > 1 and pawns_by_file[file-1]:
                     has_neighbor = True
+                    score += 10.0  # Moderate bonus for connected pawns
                 if file < 8 and pawns_by_file[file+1]:
                     has_neighbor = True
-                if not has_neighbor:
-                    score -= 0.4
-                    
-            # Peões passados (bom)
-            for pawn in pawns:
-                if pawn.color == color:
-                    is_passed = True
-                    target_rank = range(pawn.position.rank - 1, 0, -1) if color == Color.WHITE else range(pawn.position.rank + 1, 9)
-                    for r in target_rank:
-                        if any(p for p in board.piece_list 
-                              if p.type == PieceType.PAWN 
-                              and p.color != color
-                              and abs(p.position.file - pawn.position.file) <= 1
-                              and ((color == Color.WHITE and p.position.rank < pawn.position.rank)
-                                   or (color == Color.BLACK and p.position.rank > pawn.position.rank))):
-                            is_passed = False
-                            break
-                    if is_passed:
-                        score += 0.6
+                    score += 10.0  # Moderate bonus for connected pawns
+                
+                # Isolated pawns (very bad)
+                if not has_neighbor and len(pawns) > 0:
+                    score -= 15.0  # Moderate penalty for isolated pawns
+            
+            # Enemy isolated pawns (good for us)
+            if len(enemy_pawns) > 0:
+                enemy_has_neighbor = False
+                if file > 1 and enemy_pawns_by_file[file-1]:
+                    enemy_has_neighbor = True
+                if file < 8 and enemy_pawns_by_file[file+1]:
+                    enemy_has_neighbor = True
+                if not enemy_has_neighbor:
+                    score += 8.0  # Moderate bonus for enemy isolated pawns
+            
+            # Avalia peões passados e avançados
+            for pawn_info in pawns:
+                pawn, rank = pawn_info
+                is_passed = True
+                # Verifica se há peões inimigos que podem bloquear
+                target_rank = range(rank - 1, 0, -1) if color == Color.WHITE else range(rank + 1, 9)
+                
+                for r in target_rank:
+                    if any(p for pos, p in board.pieces.items() 
+                          if p.type == PieceType.PAWN 
+                          and p.color != color
+                          and abs(san_to_coords(pos)[1] - file) <= 1
+                          and ((color == Color.WHITE and san_to_coords(pos)[0] < rank)
+                              or (color == Color.BLACK and san_to_coords(pos)[0] > rank))):
+                        is_passed = False
+                        break
+                
+                if is_passed:
+                    # Strong bonuses for passed pawns
+                    base_weight = 5.0  # Moderate base bonus
+                    # Reasonable rank advancement bonus
+                    rank_bonus = 1.0 * (rank - 2 if color == Color.WHITE else 7 - rank)
+                    # Support bonus
+                    support_bonus = 2.0 if has_neighbor else 0.0
+                    score += base_weight + rank_bonus + support_bonus
+                
+                # Enhanced bonus for pawn advancement
+                    advance_bonus = 1.0 * (rank - 2 if color == Color.WHITE else 7 - rank)
+                score += advance_bonus
                         
         return score
     
@@ -179,41 +254,82 @@ class AdvancedEvaluator:
         score = 0.0
         
         # Encontra o rei
-        king = next((p for p in board.piece_list if p.type == PieceType.KING and p.color == color), None)
-        if not king:
+        king_pos = None
+        for pos, piece in board.pieces.items():
+            if piece.type == PieceType.KING and piece.color == color:
+                king_pos = pos
+                break
+                
+        if not king_pos:
             return -999.0  # Rei não encontrado (não deve acontecer em jogo normal)
             
-        # Penalidade por estar em xeque
-        if board.is_in_check(color):
-            score -= 1.0
+        # Check penalty
+        original_turn = board.current_turn
+        board.current_turn = color
+        if board.is_in_check():
+                score -= 2.5  # Check penalty
+        board.current_turn = original_turn
             
-        # Avalia proteção de peões
-        king_pos = king.position
+        # Evaluate king position and pawn protection
+        rank, file = san_to_coords(king_pos)
         pawn_shield = 0
+        
+        # Very large bonus for corner positions
+        if (rank == 1 or rank == 8) and (file == 1 or file == 8):
+            score += 35.0  # Strong corner bonus
+            if (rank == 1 and color == Color.WHITE) or (rank == 8 and color == Color.BLACK):
+                score += 25.0  # Strong bonus for correct back rank
+        
+        # Heavy central penalty
+        if 3 <= rank <= 6 and 3 <= file <= 6:
+            central_exposure = -25.0 * (5 - abs(4.5 - rank) - abs(4.5 - file))
+            score += central_exposure  # Severe central penalty
+        
+        # Evaluate pawn protection
+        pawn_direction = 1 if color == Color.WHITE else -1
         for file_offset in [-1, 0, 1]:
-            for rank_offset in [1] if color == Color.WHITE else [-1]:
-                shield_pos = Position(
-                    rank=king_pos.rank + rank_offset,
-                    file=max(1, min(8, king_pos.file + file_offset))
-                )
-                piece = board.get_piece(shield_pos)
+            shield_file = max(1, min(8, file + file_offset))
+            shield_rank = rank + pawn_direction
+            if 1 <= shield_rank <= 8:
+                shield_pos = coord_to_san((shield_rank, shield_file))
+                piece = board.pieces.get(shield_pos)
                 if piece and piece.type == PieceType.PAWN and piece.color == color:
-                    pawn_shield += 1
-                    
-        score += 0.2 * pawn_shield
+                    if file_offset == 0:  # Pawn directly in front
+                        pawn_shield += 25.0  # Strong bonus for direct protection
+                    else:  # Diagonal pawns
+                        pawn_shield += 15.0  # Significant diagonal protection
+
+        # Bonus for pawns on king's file
+        king_file_pawns = sum(1 for pos, piece in board.pieces.items()
+                             if piece.type == PieceType.PAWN
+                             and piece.color == color
+                             and san_to_coords(pos)[1] == file)
+        score += 5.0 * king_file_pawns
         
-        # Avalia exposição do rei
-        attacking_pieces = 0
-        for piece in board.piece_list:
+        # Evaluate enemy piece proximity
+        king_tropism = 0
+        for pos, piece in board.pieces.items():
             if piece.color != color:
-                moves = board.get_valid_moves(piece.position)
-                for move in moves:
-                    if abs(move.rank - king_pos.rank) <= 2 and abs(move.file - king_pos.file) <= 2:
-                        attacking_pieces += 1
-                        break
-                        
-        score -= 0.1 * attacking_pieces
+                # Calculate Manhattan distance to king
+                enemy_rank, enemy_file = san_to_coords(pos)
+                distance = abs(enemy_rank - rank) + abs(enemy_file - file)
+                
+                # Different weights by piece type
+                if distance <= 3:  # Only consider nearby pieces
+                    piece_danger = {
+                        PieceType.QUEEN: 15.0,
+                        PieceType.ROOK: 10.0,
+                        PieceType.BISHOP: 8.0,
+                        PieceType.KNIGHT: 8.0,
+                        PieceType.PAWN: 3.0
+                    }.get(piece.type, 0.0)
+                    
+                    king_tropism -= piece_danger / (distance + 1)  # Closer = more dangerous
         
+        # Apply all factors with appropriate weights
+        score += 2.0 * pawn_shield  # Pawn protection is very important
+        score += king_tropism      # Penalty for nearby enemy pieces
+                        
         return score
     
     def _evaluate_piece_coordination(self, board: Board, color: Color) -> float:
@@ -221,21 +337,22 @@ class AdvancedEvaluator:
         score = 0.0
         
         # Avalia peças defendidas
-        for piece in board.piece_list:
+        for pos, piece in board.pieces.items():
             if piece.color == color:
-                if board.is_square_attacked(piece.position, color):
+                pos_san = coord_to_san(pos)
+                if board.is_square_attacked(pos_san, color):
                     score += 0.2  # Peça defendida
                     
         # Avalia pares de bispos
-        bishops = [p for p in board.piece_list if p.type == PieceType.BISHOP and p.color == color]
+        bishops = [p for pos, p in board.pieces.items() if p.type == PieceType.BISHOP and p.color == color]
         if len(bishops) >= 2:
             score += 0.5  # Bônus por par de bispos
             
         # Avalia torres dobradas
-        rooks = [p for p in board.piece_list if p.type == PieceType.ROOK and p.color == color]
-        for i, rook1 in enumerate(rooks):
-            for rook2 in rooks[i+1:]:
-                if rook1.position.file == rook2.position.file:
+        rooks = [pos for pos, p in board.pieces.items() if p.type == PieceType.ROOK and p.color == color]
+        for i, rook1_pos in enumerate(rooks):
+            for rook2_pos in rooks[i+1:]:
+                if rook1_pos[1] == rook2_pos[1]:  # Mesma coluna
                     score += 0.3  # Bônus por torres na mesma coluna
                     
         return score
@@ -249,7 +366,8 @@ class AdvancedEvaluator:
         for rank in enemy_half:
             for file in range(1, 9):
                 pos = Position(rank=rank, file=file)
-                if board.is_square_attacked(pos, color):
+                pos_san = coord_to_san((rank, file))
+                if board.is_square_attacked(pos_san, color):
                     score += 0.1
                     
         return score
@@ -260,13 +378,14 @@ class AdvancedEvaluator:
         
         # Peças desenvolvidas são aquelas que saíram da posição inicial
         back_rank = 1 if color == Color.WHITE else 8
-        for piece in board.piece_list:
+        for pos, piece in board.pieces.items():
             if piece.color == color:
+                rank, file = san_to_coords(pos)
                 if piece.type in [PieceType.KNIGHT, PieceType.BISHOP]:
-                    if piece.position.rank != back_rank:
+                    if rank != back_rank:
                         score += 0.3  # Peça menor desenvolvida
                 elif piece.type == PieceType.QUEEN:
-                    if piece.position.rank != back_rank:
+                    if rank != back_rank:
                         score -= 0.1  # Penalidade por desenvolvimento prematuro da dama
                         
         return score
