@@ -15,7 +15,7 @@ export const Piece: React.FC<PieceProps> = ({
   piece,
   isDragging,
   culturalStyle = 'modern',
-  size = 45,
+  size,
   onDragStart,
   onDragEnd,
 }) => {

@@ -42,13 +42,11 @@ export const ChessBoard: React.FC<ChessBoardProps> = ({
     position: ChessPosition;
   } | null>(null);
 
-  // Calcula o tamanho do tabuleiro baseado no container
-  const boardSize = useMemo(() => {
-    // TODO: Implementar lógica de responsividade
-    return 400; // Tamanho fixo para exemplo
-  }, []);
+  // Container ref para dimensionamento responsivo
+  const containerRef = useRef<HTMLDivElement>(null);
 
-  const squareSize = boardSize / BOARD_SIZE;
+  // Hook de dimensionamento responsivo
+  const { boardSize, squareSize, pieceSize } = useResponsiveBoard(containerRef);
 
   // Manipuladores de eventos de arrastar e soltar
   const handleDragStart = useCallback((

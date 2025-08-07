@@ -164,6 +164,37 @@ class AdaptiveAI:
     
     def __init__(self, profile: Optional[PlayerProfile] = None, 
                  weights: Optional[EvaluationWeights] = None):
+        # Inicialização básica
+        self.profile = profile or PlayerProfile()
+        self.weights = weights or EvaluationWeights()
+        self.position_history: List[Board] = []
+        self.move_scores: Dict[Tuple[Position, Position], float] = {}
+        self.game_memory: List[Dict] = []  # Lista de jogos anteriores
+        self.learning_rate = self.profile.learning_rate
+        self.move_times: List[float] = []
+        
+        # Inicializa recursos avançados
+        self.transposition_table = TranspositionTable()
+        self.advanced_evaluator = AdvancedEvaluator()
+        
+        # Inicializar tabelas de posição
+        self.position_tables = {}
+        for piece_type in PieceType:
+            if piece_type in self.weights.positional_values:
+                self.position_tables[piece_type] = np.array(self.weights.positional_values[piece_type])
+        
+        # Tabelas especiais para o rei
+        self.position_tables['king_midgame'] = np.array(self.weights.positional_values[PieceType.KING])
+        self.position_tables['king_endgame'] = np.array([
+            [0.3, 0.4, 0.4, 0.5, 0.5, 0.4, 0.4, 0.3],
+            [0.3, 0.4, 0.4, 0.5, 0.5, 0.4, 0.4, 0.3],
+            [0.2, 0.3, 0.3, 0.4, 0.4, 0.3, 0.3, 0.2],
+            [0.1, 0.2, 0.2, 0.3, 0.3, 0.2, 0.2, 0.1],
+            [0.0, 0.1, 0.1, 0.2, 0.2, 0.1, 0.1, 0.0],
+            [-0.1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.1],
+            [-0.2, -0.1, -0.1, -0.1, -0.1, -0.1, -0.1, -0.2],
+            [-0.3, -0.2, -0.2, -0.2, -0.2, -0.2, -0.2, -0.3]
+        ])
         self.profile = profile or PlayerProfile()
         self.weights = weights or EvaluationWeights()
         self.position_history: List[Board] = []
@@ -192,6 +223,9 @@ class AdaptiveAI:
         ])
         
     def evaluate_position(self, board: Board, color: Optional[Color] = None) -> float:
+        # Usa avaliador avançado
+        score, features = self.advanced_evaluator.evaluate(board, color or Color.WHITE)
+        return score
         """Evaluate board position from given color's perspective"""
         if color is None:
             color = Color.WHITE
@@ -349,6 +383,17 @@ class AdaptiveAI:
         return best_move
     
     def _minimax(self, board: Board, depth: int, alpha: float, beta: float, color: Color) -> float:
+        # Verifica cache de transposição
+        tt_entry = self.transposition_table.lookup(board)
+        if tt_entry and tt_entry.depth >= depth:
+            if tt_entry.flag == 'exact':
+                return tt_entry.score
+            elif tt_entry.flag == 'lowerbound':
+                alpha = max(alpha, tt_entry.score)
+            elif tt_entry.flag == 'upperbound':
+                beta = min(beta, tt_entry.score)
+            if alpha >= beta:
+                return tt_entry.score
         """Minimax algorithm with alpha-beta pruning"""
         if depth == 0:
             return self.evaluate_position(board, color)
