@@ -1,0 +1,122 @@
+name: "Peças Astecas"
+type: "cultural_pieces"
+culture: "aztec"
+language: "pt-BR"
+
+pieces:
+  king:
+    name: "Tlatoani"
+    description: "Imperador Asteca, líder supremo militar e religioso"
+    cultural_significance:
+      - "Representante divino na Terra"
+      - "Centro do poder político e religioso"
+      - "Guardião da ordem cósmica"
+    visual_elements:
+      - "Cocar real com penas de quetzal"
+      - "Manto cerimonial"
+      - "Cetro de poder"
+    movement_symbolism: "Movimentos limitados representando a natureza sagrada e protegida do líder"
+
+  queen:
+    name: "Cihuacóatl"
+    description: "Conselheira Suprema e representante do poder feminino"
+    cultural_significance:
+      - "Poder feminino na sociedade asteca"
+      - "Equilíbrio entre forças masculinas e femininas"
+      - "Sabedoria administrativa"
+    visual_elements:
+      - "Vestimenta nobre feminina"
+      - "Símbolos de fertilidade"
+      - "Ornamentos de jade"
+    movement_symbolism: "Movimentos amplos representando influência abrangente na sociedade"
+
+  bishop:
+    name: "Sacerdote Guerreiro"
+    description: "Líder espiritual e estrategista"
+    cultural_significance:
+      - "Interpretação dos presságios"
+      - "Condução de rituais"
+      - "Conselheiro espiritual"
+    visual_elements:
+      - "Vestimentas sacerdotais"
+      - "Símbolos religiosos"
+      - "Incensário cerimonial"
+    movement_symbolism: "Movimento diagonal representando conexão entre céu e terra"
+
+  knight:
+    name: "Guerreiro Águia"
+    description: "Guerreiro de elite da ordem das águias"
+    cultural_significance:
+      - "Bravura e habilidade em combate"
+      - "Conexão com o sol"
+      - "Protetor da ordem social"
+    visual_elements:
+      - "Traje de águia"
+      - "Armas tradicionais"
+      - "Símbolos solares"
+    movement_symbolism: "Movimento em L representando ataques táticos especiais"
+
+  rook:
+    name: "Templo Fortificado"
+    description: "Estrutura sagrada de defesa"
+    cultural_significance:
+      - "Centro de poder religioso"
+      - "Ponto de defesa estratégico"
+      - "Conexão com deidades"
+    visual_elements:
+      - "Arquitetura de templo-pirâmide"
+      - "Elementos defensivos"
+      - "Símbolos religiosos"
+    movement_symbolism: "Movimento reto representando os eixos cardeais sagrados"
+
+  pawn:
+    name: "Guerreiro Jaguar"
+    description: "Guerreiro da ordem dos jaguares"
+    cultural_significance:
+      - "Força e coragem"
+      - "Conexão com a terra"
+      - "Disciplina militar"
+    visual_elements:
+      - "Traje de jaguar"
+      - "Armas básicas"
+      - "Pinturas corporais"
+    movement_symbolism: "Avanço gradual representando a progressão do guerreiro"
+
+cultural_mechanics:
+  sacrifice_system:
+    description: "Sistema de sacrifício ritual no jogo"
+    mechanics:
+      - "Captura como ritual sagrado"
+      - "Bônus por sacrifícios estratégicos"
+      - "Sequências rituais especiais"
+
+  warrior_progression:
+    description: "Sistema de evolução dos guerreiros"
+    mechanics:
+      - "Promoção como ascensão hierárquica"
+      - "Rituais de passagem"
+      - "Poderes especiais baseados em divindades"
+
+visual_theme:
+  color_scheme:
+    primary: "#CD853F"    # Marrom dourado
+    secondary: "#8B4513"  # Marrom escuro
+    accent: "#FFD700"     # Dourado
+    highlight: "#DC143C"  # Vermelho carmesim
+
+  material_suggestions:
+    - "Jade para peças nobres"
+    - "Obsidiana para detalhes"
+    - "Penas de quetzal para decoração"
+    - "Ouro para adornos"
+
+sound_effects:
+  movement:
+    - "Sons de tambores rituais"
+    - "Chocalhos cerimoniais"
+  capture:
+    - "Sons de batalha asteca"
+    - "Gritos de guerra"
+  special_moves:
+    - "Música cerimonial"
+    - "Cânticos rituais"
