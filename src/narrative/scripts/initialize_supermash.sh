@@ -22,9 +22,9 @@ init_capabilities() {
     echo "- Integrando módulo cultural"
     python3 $NARRATIVE_PATH/cultural_processor.py --mode=init
     
-    # Quantum Processing
-    echo "- Inicializando processamento quântico"
-    python3 $NARRATIVE_PATH/quantum_processor.py --mode=init
+    # Advanced Processing
+    echo "- Inicializando processamento avançado"
+    python3 $NARRATIVE_PATH/advanced_processor.py --mode=init
 }
 
 # Função de Setup do Gerenciador de Tarefas
@@ -86,9 +86,9 @@ run_analysis() {
     echo "- Analisando integração cultural"
     python3 $NARRATIVE_PATH/analyzer.py --mode=cultural
     
-    # Quantum Analysis
-    echo "- Analisando processamento quântico"
-    python3 $NARRATIVE_PATH/analyzer.py --mode=quantum
+    # Advanced Analysis
+    echo "- Analisando processamento avançado"
+    python3 $NARRATIVE_PATH/analyzer.py --mode=advanced
 }
 
 # Execução Principal

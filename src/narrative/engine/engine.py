@@ -7,11 +7,37 @@ Motor Principal do Sistema Narrativo AEON
 
 import logging
 import time
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Tuple
 from dataclasses import dataclass
+from enum import Enum, auto
+
 from .cultural_processor import CulturalProcessor, CultureConfig
-from .quantum_processor import AdvancedProcessor, ProcessorConfig
+from .advanced_processor import AdvancedProcessor, ProcessorConfig
 from .monitor import Monitor, MonitorConfig
+
+# Definições básicas para xadrez
+class Color(Enum):
+    WHITE = auto()
+    BLACK = auto()
+
+class PieceType(Enum):
+    PAWN = auto()
+    KNIGHT = auto()
+    BISHOP = auto()
+    ROOK = auto()
+    QUEEN = auto()
+    KING = auto()
+
+@dataclass
+class Position:
+    file: str  # a-h
+    rank: int  # 1-8
+
+@dataclass
+class Piece:
+    type: PieceType
+    color: Color
+    position: Position
 
 # Configuração de logging
 logging.basicConfig(
@@ -104,7 +130,13 @@ class NarrativeEngine:
         
         # Processa o evento usando o processador quântico se disponível
         if self.config.quantum_processing and self.quantum_processor:
-            processed_event = self.quantum_processor.process_parallel([event])[0]
+            processed = self.quantum_processor.process_parallel([event])[0]
+            # Normaliza o formato do resultado para conter a chave 'event'
+            if "event" not in processed and "task" in processed:
+                processed_event = {**processed, "event": processed.get("task")}
+                processed_event.pop("task", None)
+            else:
+                processed_event = processed
         else:
             processed_event = {"status": "processed", "event": event}
         
@@ -125,6 +157,10 @@ class NarrativeEngine:
         start_time = time.time()
         
         try:
+            # Validação básica do contexto
+            if not isinstance(context, dict) or context is None:
+                raise ValueError("Contexto inválido para geração de narrativa")
+            
             # Primeiro processa o contexto usando o processador quântico se disponível
             if self.config.quantum_processing and self.quantum_processor:
                 optimized_context = self.quantum_processor.optimize_processing(context)
