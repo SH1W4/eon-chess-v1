@@ -3,9 +3,14 @@
 ## [0.2.0] - 2025-08-08
 
 ### 🎯 Sistema Cultural
-- ✨ Implementado banco de dados cultural completo
-- 🏺 Adicionado tema cultural Azteca com conteúdo detalhado
-- 📝 Criados templates expansíveis para novos temas culturais
+- ✨ Implementado banco de dados cultural completo com 15+ temas:
+  - **Culturas Históricas**: Azteca, Viking, Samurai, Maia
+  - **Épocas Temporais**: Medieval, Renascimento (Renaissance)  
+  - **Temas Futuristas**: Neo-Tokyo 2050, Steampunk, Quantum Realm
+  - **Culturas Regionais**: Oriental/Eastern, Nórdica (Nordic)
+  - **Estilos Especiais**: Pirata, Espacial
+- 🏺 Narrativas temáticas detalhadas para cada cultura
+- 📝 Templates expansíveis e sistema de memória cultural
 - 🔄 Configurado DOCSYNC para sincronização automática com Notion
 - ✅ Implementada validação automatizada de conteúdo cultural
 

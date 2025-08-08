@@ -12,14 +12,30 @@
 O CHESS agora possui um **sistema cultural totalmente funcional** que permite experiências de xadrez imersivas e personalizadas:
 
 - **Banco de Dados Cultural**: Sistema robusto para armazenamento de múltiplos temas culturais
-- **7 Culturas Implementadas**: 
+- **15+ Culturas e Temas Implementados**: 
+  
+  **Culturas Históricas:**
   - 🪶 **Asteca**: Guerreiros sagrados e rituais de sacrifício
   - ⚔️ **Viking**: Bravura nórdica e sagas heroicas
-  - 🏛️ **Grego**: Filosofia, democracia e excelência (Areté)
   - 🐅 **Samurai**: Bushido, honra e disciplina
   - 🗿 **Maia**: Astronomia, calendários e harmonia cósmica
-  - 🏺 **Egípcio**: Eternidade, Ma'at e divindade real
-  - 🏛️ **Bizantino**: Estratégia imperial e diplomacia
+  
+  **Épocas Temporais:**
+  - 🏰 **Medieval**: Cavaleiros, castelos e honra feudal
+  - 🎨 **Renascimento**: Arte, ciência e humanismo estratégico
+  
+  **Temas Futuristas:**
+  - 🌆 **Neo-Tokyo 2050**: Cyberpunk com IA avançada e tecnologia
+  - ⚙️ **Steampunk**: Vapor, engrenagens e mecânica vitoriana
+  - ⚛️ **Quantum Realm**: Superposição quântica e probabilidades
+  
+  **Culturas Regionais:**
+  - 🌸 **Oriental/Eastern**: Filosofia do equilíbrio e harmonia
+  - 🛡️ **Nórdica**: Mitologia, runas e sagas épicas
+  
+  **Estilos Especiais:**
+  - ⚓ **Pirata**: Aventura nos sete mares e táticas navais
+  - 🚀 **Espacial**: Conquista galáctica e estratégia cósmica
 - **Narrativas Dinâmicas**: Mais de 200 padrões narrativos únicos por cultura
 - **Sistema Adaptativo**: Cada cultura evolui baseada no desempenho do jogador
 - **Templates Expansíveis**: Framework para criação de novos temas culturais
@@ -60,8 +76,8 @@ CHESS/
 ## 🎯 **Principais Funcionalidades**
 
 ### ✨ **Novo Sistema Cultural**
-- 🌍 **7 Culturas Completas**: Asteca, Viking, Grego, Samurai, Maia, Egípcio e Bizantino
-- 📜 **Narrativas Dinâmicas**: Mais de 1400 padrões narrativos únicos
+- 🌍 **15+ Culturas e Temas Completos**: Históricas, Temporais, Futuristas, Regionais e Especiais
+- 📜 **Narrativas Dinâmicas**: Mais de 3000 padrões narrativos únicos
 - 🎨 **Visualizações Culturais**: Interface temática adaptável por cultura
 - 🧠 **Sistema Adaptativo**: IA que aprende com o estilo de jogo
 - 🔄 **Sincronização**: Conteúdo sempre atualizado via DOCSYNC
