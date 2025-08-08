@@ -1,0 +1,434 @@
+# ============================================
+# CHESS Culture Configuration Template
+# ============================================
+# Instructions:
+# 1. Copy this file to cultural_data/configurations/themes/[your_culture].yaml
+# 2. Replace all [PLACEHOLDERS] with your culture-specific content
+# 3. Remove any sections that don't apply to your culture
+# 4. Add custom sections as needed
+# ============================================
+
+# Basic Culture Information
+culture:
+  id: "[culture_id]"  # Unique identifier (lowercase, no spaces)
+  name: "[Culture Name]"  # Display name
+  display_name: "[Culture Name - Description]"  # Full display name
+  category: "[historical|temporal|futuristic|regional|special]"  # Choose one
+  
+# Metadata
+metadata:
+  version: "1.0.0"
+  author: "[Your Name]"
+  created_date: "[YYYY-MM-DD]"
+  last_updated: "[YYYY-MM-DD]"
+  tags:
+    - "[tag1]"
+    - "[tag2]"
+    - "[tag3]"
+  
+# Cultural Characteristics
+characteristics:
+  # Core values that define the culture (3-5 main values)
+  primary_values:
+    - "[Value 1: e.g., Honor]"
+    - "[Value 2: e.g., Wisdom]"
+    - "[Value 3: e.g., Courage]"
+    
+  # Secondary values that support the culture
+  secondary_values:
+    - "[Value 4]"
+    - "[Value 5]"
+    
+  # Distinctive traits of the culture
+  cultural_traits:
+    - "[Trait 1: e.g., Strategic thinking]"
+    - "[Trait 2: e.g., Respect for tradition]"
+    - "[Trait 3: e.g., Innovation focus]"
+    
+  # Behavioral tendencies (0.0 to 1.0)
+  behavioral_metrics:
+    aggression: 0.5
+    diplomacy: 0.5
+    tradition: 0.5
+    innovation: 0.5
+    spirituality: 0.5
+    materialism: 0.5
+    individualism: 0.5
+    collectivism: 0.5
+    
+# Piece Metaphors - How chess pieces are represented in this culture
+piece_metaphors:
+  pawn:
+    name: "[Cultural name for pawn]"
+    plural: "[Plural form]"
+    description: "[Role and significance in the culture]"
+    rank: "[Social/military rank if applicable]"
+    
+  rook:
+    name: "[Cultural name for rook]"
+    plural: "[Plural form]"
+    description: "[Role and significance]"
+    symbolism: "[What it represents]"
+    
+  knight:
+    name: "[Cultural name for knight]"
+    plural: "[Plural form]"
+    description: "[Role and significance]"
+    special_ability: "[Unique characteristic]"
+    
+  bishop:
+    name: "[Cultural name for bishop]"
+    plural: "[Plural form]"
+    description: "[Role and significance]"
+    domain: "[Area of influence]"
+    
+  queen:
+    name: "[Cultural name for queen]"
+    plural: "[Plural form if multiple queens possible]"
+    description: "[Role and significance]"
+    power_source: "[Why they're powerful]"
+    
+  king:
+    name: "[Cultural name for king]"
+    plural: "[Plural form if applicable]"
+    description: "[Role and significance]"
+    title: "[Official title]"
+    
+# Narrative Templates
+narratives:
+  # Opening game narratives
+  opening_narratives:
+    - "[Opening narrative 1 - Setting the stage]"
+    - "[Opening narrative 2 - Preparing for battle]"
+    - "[Opening narrative 3 - Initial positioning]"
+    
+  # Movement narratives (use {piece} and {square} as placeholders)
+  move_narratives:
+    - "{piece} advances to {square} with [cultural characteristic]"
+    - "With [cultural value], {piece} takes position at {square}"
+    - "{piece} moves strategically to {square}"
+    
+  # Capture narratives (use {attacker} and {defender} as placeholders)
+  capture_narratives:
+    - "{attacker} [culturally appropriate action] {defender}"
+    - "In a display of [value], {attacker} defeats {defender}"
+    - "{attacker} eliminates {defender} with [technique]"
+    
+  # Check narratives (use {king} as placeholder)
+  check_narratives:
+    - "The {king} is under threat!"
+    - "[Cultural expression of danger to leader]!"
+    - "{king} must respond to the challenge!"
+    
+  # Checkmate narratives
+  checkmate_narratives:
+    - "[Cultural victory expression]!"
+    - "The {king} has fallen! [Victory message]"
+    - "[Cultural expression of total victory]!"
+    
+  # Stalemate narratives
+  stalemate_narratives:
+    - "[Cultural expression of draw/stalemate]"
+    - "Neither force can claim victory"
+    - "[Expression of balanced outcome]"
+    
+  # Special move narratives
+  tactical_narratives:
+    fork: "{piece} executes a [cultural double attack term]"
+    pin: "{piece} [cultural pinning action] the enemy"
+    skewer: "{piece} performs a [cultural penetrating attack]"
+    sacrifice: "A noble sacrifice of {piece} for [greater purpose]"
+    discovered_attack: "A hidden threat reveals itself"
+    
+# Visual Theme Configuration
+visual_theme:
+  # Color scheme (hex values)
+  colors:
+    primary: "#[HEX]"  # Main theme color
+    secondary: "#[HEX]"  # Secondary theme color
+    accent: "#[HEX]"  # Accent color for highlights
+    background: "#[HEX]"  # Background color
+    text: "#[HEX]"  # Text color
+    
+  # Board colors
+  board:
+    light_squares: "#[HEX]"
+    dark_squares: "#[HEX]"
+    highlight: "#[HEX]"  # Move highlights
+    selection: "#[HEX]"  # Selected piece
+    legal_moves: "#[HEX]"  # Legal move indicators
+    check: "#[HEX]"  # Check warning color
+    
+  # Style preferences
+  style:
+    board_style: "[traditional|modern|minimalist|ornate]"
+    piece_style: "[classic|cultural|symbolic|abstract]"
+    animation_style: "[smooth|quick|dramatic|subtle]"
+    
+  # Optional: Custom assets
+  assets:
+    background_image: "[path/to/background.jpg]"
+    board_texture: "[path/to/texture.png]"
+    piece_set: "[path/to/pieces/]"
+    
+# Audio Theme Configuration
+audio_theme:
+  # Music tracks
+  music:
+    menu: "[path/to/menu_music.mp3]"
+    opening: "[path/to/opening_music.mp3]"
+    middlegame: "[path/to/middlegame_music.mp3]"
+    endgame: "[path/to/endgame_music.mp3]"
+    victory: "[path/to/victory_music.mp3]"
+    defeat: "[path/to/defeat_music.mp3]"
+    
+  # Sound effects
+  sounds:
+    move: "[path/to/move_sound.wav]"
+    capture: "[path/to/capture_sound.wav]"
+    check: "[path/to/check_sound.wav]"
+    castle: "[path/to/castle_sound.wav]"
+    promotion: "[path/to/promotion_sound.wav]"
+    illegal_move: "[path/to/illegal_sound.wav]"
+    game_start: "[path/to/start_sound.wav]"
+    game_end: "[path/to/end_sound.wav]"
+    
+  # Voice lines (optional)
+  voice:
+    greeting: "[path/to/greeting.mp3]"
+    taunt: "[path/to/taunt.mp3]"
+    victory: "[path/to/victory_voice.mp3]"
+    defeat: "[path/to/defeat_voice.mp3]"
+    
+# AI Behavior Configuration
+ai_behavior:
+  # Personality traits (0.0 to 1.0)
+  personality:
+    aggression_level: 0.5
+    defensive_tendency: 0.5
+    tactical_preference: 0.5
+    positional_play: 0.5
+    risk_taking: 0.5
+    time_management: 0.5
+    psychological_warfare: 0.5
+    
+  # Playing style preferences
+  style:
+    opening_book_preference: "[aggressive|balanced|defensive|unusual]"
+    middlegame_approach: "[tactical|positional|dynamic|solid]"
+    endgame_style: "[technical|practical|aggressive|defensive]"
+    
+  # Decision-making parameters
+  decision_making:
+    think_time_base: 5.0  # Base seconds per move
+    think_time_increment: 2.0  # Additional time for complex positions
+    randomness: 0.1  # 0-1, adds variety to play
+    learning_rate: 0.05  # How quickly it adapts
+    
+  # Special behaviors
+  special_behaviors:
+    - name: "[Behavior name]"
+      trigger: "[Condition]"
+      action: "[What happens]"
+      probability: 0.5
+      
+# Cultural Events and Celebrations
+cultural_events:
+  # Special moves or situations that trigger events
+  special_moves:
+    - name: "[Special Move Name]"
+      description: "[What makes it special]"
+      trigger: "[Game condition]"
+      message: "[Message displayed]"
+      effect: "[Visual/audio effect]"
+      
+  # Achievements and milestones
+  celebrations:
+    - name: "[Celebration Name]"
+      trigger: "[Achievement condition]"
+      message: "[Celebration message]"
+      reward: "[If any]"
+      
+  # Cultural reactions to game events
+  reactions:
+    first_blood:  # First capture
+      message: "[Reaction to first capture]"
+      effect: "[Visual/audio effect]"
+      
+    queen_captured:
+      message: "[Reaction to queen capture]"
+      effect: "[Special effect]"
+      
+    comeback:  # When turning a losing game
+      message: "[Comeback message]"
+      effect: "[Motivational effect]"
+      
+# Historical and Cultural Context
+historical_context:
+  # Time period or era
+  period: "[Historical period or timeframe]"
+  
+  # Geographic or conceptual origin
+  location: "[Geographic location or conceptual space]"
+  
+  # Important figures in the culture
+  key_figures:
+    - name: "[Figure Name]"
+      role: "[Their role/title]"
+      significance: "[Why they matter]"
+      quote: "[Famous quote if any]"
+      
+  # Significant events
+  key_events:
+    - name: "[Event Name]"
+      date: "[When it occurred]"
+      description: "[What happened]"
+      impact: "[How it shaped the culture]"
+      
+  # Cultural artifacts and symbols
+  cultural_artifacts:
+    - name: "[Artifact Name]"
+      type: "[weapon|tool|symbol|building|etc]"
+      description: "[Description]"
+      significance: "[Cultural importance]"
+      
+  # Philosophy and beliefs
+  philosophy:
+    core_beliefs:
+      - "[Belief 1]"
+      - "[Belief 2]"
+      - "[Belief 3]"
+      
+    moral_code:
+      - "[Moral principle 1]"
+      - "[Moral principle 2]"
+      
+    wisdom_traditions:
+      - "[Wisdom saying 1]"
+      - "[Wisdom saying 2]"
+      
+# Integration with Other Cultures
+integration:
+  # Cultures that work well together
+  compatible_with:
+    - culture: "[culture_id_1]"
+      reason: "[Why they're compatible]"
+      
+    - culture: "[culture_id_2]"
+      reason: "[Why they're compatible]"
+      
+  # Cultures that conflict
+  conflicts_with:
+    - culture: "[culture_id_3]"
+      reason: "[Source of conflict]"
+      
+  # Possible hybrid combinations
+  hybrid_possibilities:
+    - base: "[this_culture_id]"
+      mix: "[other_culture_id]"
+      result: "[hybrid_culture_id]"
+      name: "[Hybrid Culture Name]"
+      description: "[What the hybrid represents]"
+      
+# Localization
+localization:
+  # Supported languages
+  languages:
+    en:
+      name: "[English Name]"
+      description: "[English Description]"
+      
+    es:
+      name: "[Spanish Name]"
+      description: "[Spanish Description]"
+      
+    pt:
+      name: "[Portuguese Name]"
+      description: "[Portuguese Description]"
+      
+    # Add more languages as needed
+    
+  # Cultural references that may need explanation
+  cultural_notes:
+    - term: "[Cultural term]"
+      explanation: "[What it means]"
+      
+# Progression and Unlockables
+progression:
+  # Starting state
+  initial_unlock: true  # Is this culture available from start?
+  unlock_condition: "[How to unlock if not initial]"
+  
+  # Mastery levels
+  mastery_levels:
+    - level: 1
+      name: "[Novice title]"
+      games_required: 0
+      
+    - level: 2
+      name: "[Intermediate title]"
+      games_required: 10
+      unlock: "[What gets unlocked]"
+      
+    - level: 3
+      name: "[Advanced title]"
+      games_required: 25
+      unlock: "[What gets unlocked]"
+      
+    - level: 4
+      name: "[Expert title]"
+      games_required: 50
+      unlock: "[What gets unlocked]"
+      
+    - level: 5
+      name: "[Master title]"
+      games_required: 100
+      unlock: "[What gets unlocked]"
+      
+  # Achievements specific to this culture
+  achievements:
+    - id: "[achievement_id]"
+      name: "[Achievement Name]"
+      description: "[How to earn it]"
+      icon: "[path/to/icon]"
+      reward: "[What you get]"
+      
+# Custom Extensions (Add your own sections as needed)
+custom:
+  # Example: Special abilities
+  special_abilities:
+    - name: "[Ability Name]"
+      description: "[What it does]"
+      cooldown: 10  # turns
+      cost: "[Resource cost if any]"
+      
+  # Example: Cultural units (for themed piece sets)
+  cultural_units:
+    elite_units:
+      - "[Elite unit 1]"
+      - "[Elite unit 2]"
+      
+    special_units:
+      - "[Special unit 1]"
+      
+  # Add any culture-specific features here
+  
+# Development Notes
+notes:
+  # Notes for developers
+  developer_notes: |
+    [Any special considerations for implementing this culture]
+    [Technical requirements]
+    [Dependencies]
+    
+  # Notes for designers
+  design_notes: |
+    [Design philosophy]
+    [Visual inspiration]
+    [Mood and atmosphere goals]
+    
+  # Future enhancements
+  todo:
+    - "[Future feature 1]"
+    - "[Future feature 2]"
+    - "[Future feature 3]"
