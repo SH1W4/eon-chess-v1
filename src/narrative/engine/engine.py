@@ -6,8 +6,12 @@ Motor Principal do Sistema Narrativo AEON
 """
 
 import logging
+import time
 from typing import Dict, List, Optional
 from dataclasses import dataclass
+from .cultural_processor import CulturalProcessor, CultureConfig
+from .quantum_processor import AdvancedProcessor, ProcessorConfig
+from .monitor import Monitor, MonitorConfig
 
 # Configuração de logging
 logging.basicConfig(
@@ -31,6 +35,9 @@ class NarrativeEngine:
     def __init__(self, config: Optional[NarrativeConfig] = None):
         self.config = config or NarrativeConfig()
         self.initialized = False
+        self.cultural_processor = None
+        self.quantum_processor = None
+        self.monitor = None
         logger.info("Inicializando Motor Narrativo AEON...")
     
     def initialize(self, mode: str = "standard") -> bool:
@@ -58,15 +65,33 @@ class NarrativeEngine:
         """Inicializa integração cultural"""
         if self.config.cultural_integration:
             logger.info("Inicializando integração cultural...")
-            # Implementar integração cultural
-            pass
+            culture_config = CultureConfig(
+                primary_culture="chess_traditional",
+                adaptation_rate=self.config.adaptation_rate
+            )
+            self.cultural_processor = CulturalProcessor(config=culture_config)
+            self.cultural_processor.initialize(mode=self.config.mode)
     
     def _initialize_quantum_processing(self):
         """Inicializa processamento quântico"""
         if self.config.quantum_processing:
             logger.info("Inicializando processamento quântico...")
-            # Implementar processamento quântico
-            pass
+            processor_config = ProcessorConfig(
+                threads=4,
+                optimization_level=self.config.adaptation_rate,
+                parallel_processing=True
+            )
+            self.quantum_processor = AdvancedProcessor(config=processor_config)
+            self.quantum_processor.initialize(mode=self.config.mode)
+
+            # Inicializa monitoramento
+            monitor_config = MonitorConfig(
+                metrics_enabled=True,
+                alert_enabled=True,
+                performance_tracking=True
+            )
+            self.monitor = Monitor(config=monitor_config)
+            self.monitor.initialize(mode=self.config.mode)
     
     def process_event(self, event: Dict) -> Dict:
         """Processa um evento narrativo"""
@@ -74,8 +99,22 @@ class NarrativeEngine:
             raise RuntimeError("Motor não inicializado")
         
         logger.info(f"Processando evento: {event.get('type', 'unknown')}")
-        # Implementar processamento de eventos
-        return {"status": "processed", "event": event}
+        
+        start_time = time.time()
+        
+        # Processa o evento usando o processador quântico se disponível
+        if self.config.quantum_processing and self.quantum_processor:
+            processed_event = self.quantum_processor.process_parallel([event])[0]
+        else:
+            processed_event = {"status": "processed", "event": event}
+        
+        # Registra métricas de processamento
+        if self.monitor:
+            processing_time = time.time() - start_time
+            self.monitor.record_metric("performance", "processing_time", processing_time)
+            self.monitor.record_metric("system", "total_requests", 1)
+        
+        return processed_event
     
     def generate_narrative(self, context: Dict) -> str:
         """Gera narrativa baseada no contexto"""
@@ -83,8 +122,48 @@ class NarrativeEngine:
             raise RuntimeError("Motor não inicializado")
         
         logger.info("Gerando narrativa...")
-        # Implementar geração de narrativa
-        return "Narrativa gerada"
+        start_time = time.time()
+        
+        try:
+            # Primeiro processa o contexto usando o processador quântico se disponível
+            if self.config.quantum_processing and self.quantum_processor:
+                optimized_context = self.quantum_processor.optimize_processing(context)
+                context = optimized_context.get('data', context)
+            
+            # Analisa padrões usando o processador quântico
+            patterns = []
+            if self.config.quantum_processing and self.quantum_processor:
+                patterns = self.quantum_processor.analyze_patterns(context)
+            
+            # Analisa o contexto cultural se disponível
+            if self.config.cultural_integration and self.cultural_processor:
+                cultural_context = self.cultural_processor.analyze_cultural_context(context)
+                
+                # Gera narrativa base considerando padrões identificados
+                narrative = f"Narrativa base gerada (com {len(patterns)} padrões)"
+                
+                # Adapta a narrativa ao contexto cultural
+                narrative = self.cultural_processor.adapt_narrative(
+                    narrative=narrative,
+                    culture=cultural_context["culture"]
+                )
+            else:
+                narrative = f"Narrativa base gerada (com {len(patterns)} padrões)"
+            
+            # Registra métricas de geração
+            if self.monitor:
+                generation_time = time.time() - start_time
+                self.monitor.record_metric("performance", "processing_time", generation_time)
+                self.monitor.record_metric("quality", "narrative_coherence", 0.85)  # Valor exemplo
+                self.monitor.record_metric("system", "total_requests", 1)
+            
+            return narrative
+            
+        except Exception as e:
+            logger.error(f"Erro na geração da narrativa: {e}")
+            if self.monitor:
+                self.monitor.record_metric("system", "error_count", 1)
+            return "Erro na geração da narrativa"
     
     def adapt(self, feedback: Dict) -> bool:
         """Adapta o motor baseado em feedback"""
@@ -101,7 +180,7 @@ class NarrativeEngine:
     
     def get_status(self) -> Dict:
         """Retorna status atual do motor"""
-        return {
+        status = {
             "initialized": self.initialized,
             "mode": self.config.mode,
             "language": self.config.language,
@@ -109,6 +188,14 @@ class NarrativeEngine:
             "quantum_processing": self.config.quantum_processing,
             "adaptation_rate": self.config.adaptation_rate
         }
+        
+        # Adiciona métricas do monitor se disponível
+        if self.monitor:
+            metrics = self.monitor.get_metrics_summary()
+            status["metrics"] = metrics
+            status["alerts"] = self.monitor.check_alerts()
+        
+        return status
 
 def main():
     """Função principal para testes"""

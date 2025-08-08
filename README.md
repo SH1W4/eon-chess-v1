@@ -31,27 +31,27 @@ O sistema cria uma experiência de xadrez única e personalizada, fundamentada e
 Nossa documentação está organizada de forma simbiótica:
 
 ### 🎮 Guia do Jogador
-- [Primeiros Passos](docs/guides/getting-started.md) - Comece sua jornada
+- [Primeiros Passos](docs/user_guide/GUIA_USUARIO.md) - Comece sua jornada
 - [Manual do Jogador](docs/guides/how-to-play.md) - Mecânicas e sistemas
-- [Civilizações & Personagens](docs/guides/characters.md) - Conheça as culturas
+- [Civilizações & Personagens](docs/cultural/CULTURAL_SYSTEMS.md) - Conheça as culturas
 - [Sistema AEON MIND](docs/guides/aeon-mind.md) - Coaching adaptativo
 
 ### 🛠 Documentação Técnica
-- [Arquitetura do Sistema](docs/tecnico/architecture/README.md) - Visão técnica
+- [Arquitetura do Sistema](docs/SYMBIOTIC_CHESS_SYSTEM.md) - Visão técnica
 - [API Reference](docs/tecnico/api/README.md) - Documentação da API
 - [Guia de Contribuição](docs/contributing/CONTRIBUTING.md) - Como contribuir
-- [Padrões de Código](docs/tecnico/code-standards.md) - Convenções
+- [Padrões de Código](docs/tecnico/architecture/module-relationships.md) - Convenções
 
 ### 🎨 Design & Experiência
-- [Visão do Produto](docs/produto/vision.md) - Nossa missão
+- [Visão do Produto](docs/VISION_AND_IMPACT.md) - Nossa missão
 - [Design System](docs/design/style-guide.md) - Guia de estilo
 - [Sistema Narrativo](docs/narrative/README.md) - Storytelling
-- [UX Research](docs/design/ux-research.md) - Pesquisas e insights
+- [UX Research](docs/technical/cultural/cultural_engine_technical.md) - Pesquisas e insights
 
 ## 🗂️ Estrutura do Projeto
 
 ```
-AEON/
+CHESS/
 ├── src/                # Código fonte
 │   ├── core/          # Motor do jogo e lógica principal
 │   ├── ai/            # Sistema de IA adaptativa
