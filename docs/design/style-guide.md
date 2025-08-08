@@ -29,7 +29,7 @@ $info: #3498DB        // Azul Info
 ### Tipografia
 
 #### Fontes
-- Título Principal: **Quantum** (custom)
+- Título Principal: **ChessType** (custom)
 - Subtítulos: **Exo 2**
 - Corpo: **Inter**
 - Monospace: **JetBrains Mono**
@@ -129,13 +129,13 @@ $padding-xl: 32px;
 
 ## 🎮 Game UI
 
-### HUD Elements
+### Elementos da Interface
 
 #### Barra de Status
 - Posição: Superior
 - Altura: 64px
 - Background: Semi-transparente
-- Informações: Vida, Energia, Score
+- Informações: Tempo, Avaliação, Estatísticas
 
 #### Menu de Jogo
 - Trigger: ESC
@@ -232,11 +232,11 @@ $wide: 1440px;
 
 ### Textos
 
-#### Tom de Voz
-- Profissional mas amigável
-- Direto e claro
-- Inspirador
-- Inclusivo
+#### Tom de Comunicação
+- Técnico mas acessível
+- Direto e educativo
+- Instrutivo
+- Profissional
 
 #### Nomenclatura
 - Consistente
@@ -253,7 +253,7 @@ $wide: 1440px;
 - 日本語
 
 #### Adaptações
-- Culturais
-- Linguísticas
-- Visuais
-- Monetização
+- Técnicas (terminologia de xadrez)
+- Linguísticas (traduções precisas)
+- Visuais (notação padrão)
+- Regionais (escolas de xadrez)

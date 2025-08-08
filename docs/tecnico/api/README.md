@@ -69,79 +69,90 @@ GET /position/evaluate
 }
 ```
 
-## API da IA Adaptativa
+## API do Sistema de Análise
 
-### Perfil
+### Perfil Técnico
 ```bash
 # Obter perfil do jogador
-GET /ai/profile/{player_id}
+GET /analysis/profile/{player_id}
 
 # Atualizar perfil
-PUT /ai/profile/{player_id}
+PUT /analysis/profile/{player_id}
 {
-  "aggression": 0.7,
-  "positional": 0.5,
-  "risk_taking": 0.3
+  "tactical_style": 0.7,    # Preferência por jogo tático
+  "positional_style": 0.5,  # Preferência por jogo posicional
+  "dynamic_style": 0.3     # Preferência por posições dinâmicas
 }
 
-# Obter sugestões adaptativas
-GET /ai/suggestions
+# Obter recomendações de análise
+GET /analysis/recommendations
 {
   "position": "fen_string",
   "profile_id": "player_profile_id"
 }
 ```
 
-### Aprendizado
+### Sistema de Aprendizado
 ```bash
-# Registrar resultado de partida
-POST /ai/learning/game-result
+# Registrar análise de partida
+POST /analysis/games/record
 {
   "game_id": "uuid",
   "result": "win|loss|draw",
-  "moves": ["e4", "e5", ...]
+  "moves": ["e4", "e5", ...],
+  "analysis": {
+    "accuracy": 85.5,
+    "critical_positions": [...],
+    "improvement_areas": [...]
+  }
 }
 
-# Atualizar modelo de aprendizado
-POST /ai/learning/update
+# Atualizar modelo de análise
+POST /analysis/model/update
 {
   "profile_id": "player_profile_id",
-  "game_data": {...}
+  "training_data": {...}
 }
 ```
 
-## API Cultural
+## API de Escolas de Xadrez
 
-### Conteúdo
+### Conteúdo Técnico
 ```bash
-# Obter elementos culturais
-GET /cultural/elements
+# Obter material de estudo
+GET /chess-school/content
 {
-  "category": "historical|strategic|tactical",
-  "language": "pt-BR|en-US"
+  "category": "classical|modern|hypermodern",
+  "language": "pt-BR|en-US",
+  "school": "russian|italian|spanish"
 }
 
-# Adicionar elemento cultural
-POST /cultural/elements
+# Adicionar material didático
+POST /chess-school/content
 {
-  "type": "story|lesson|challenge",
+  "type": "game_analysis|study_material|exercise",
+  "school": "russian|italian|spanish",
   "content": {...},
   "metadata": {...}
 }
 ```
 
-### Interação
+### Progressão Técnica
 ```bash
-# Registrar interação cultural
-POST /cultural/interaction
+# Registrar progresso de estudo
+POST /chess-school/progress
 {
-  "element_id": "uuid",
-  "type": "view|complete|share",
-  "metadata": {...}
+  "content_id": "uuid",
+  "type": "study|exercise|analysis",
+  "results": {
+    "accuracy": 85,
+    "completion_time": 1200,
+    "difficulty_level": "basic|intermediate|advanced"
+  }
 }
 
-# Obter progresso cultural
-GET /cultural/progress/{player_id}
+# Obter relatório de progressão
+GET /chess-school/progress/{player_id}
 ```
 
 ## Websockets
@@ -196,24 +207,38 @@ rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1
 }
 ```
 
-### Perfil do Jogador
+### Perfil Técnico do Jogador
 ```json
 {
   "id": "uuid",
-  "style": {
-    "aggression": 0.0-1.0,
-    "positional": 0.0-1.0,
-    "risk_taking": 0.0-1.0
+  "playing_style": {
+    "tactical": 0.0-1.0,      # Orientação tática
+    "positional": 0.0-1.0,    # Orientação posicional
+    "dynamic": 0.0-1.0        # Orientação dinâmica
   },
-  "stats": {
-    "games_played": 0,
-    "wins": 0,
-    "losses": 0,
-    "draws": 0
+  "statistics": {
+    "games_total": 0,
+    "victories": 0,
+    "defeats": 0,
+    "draws": 0,
+    "accuracy": {
+      "tactical": 0.0-1.0,
+      "positional": 0.0-1.0,
+      "endgame": 0.0-1.0
+    }
   },
-  "preferences": {
-    "opening_style": "open|closed|dynamic",
-    "time_control": "bullet|blitz|rapid|classical"
+  "technical_preferences": {
+    "opening_repertoire": "classical|modern|hypermodern",
+    "time_control": "bullet|blitz|rapid|classical",
+    "study_focus": ["tactics", "strategy", "endgame"]
+  },
+  "chess_school": {
+    "primary": "russian|italian|spanish",
+    "influences": ["modern", "hypermodern"],
+    "current_curriculum": {
+      "level": "basic|intermediate|advanced",
+      "focus_areas": ["pawn_structure", "piece_coordination"]
+    }
   }
 }
 ```

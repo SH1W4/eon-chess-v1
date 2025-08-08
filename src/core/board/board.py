@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from enum import Enum, auto
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional, Tuple, Union
 
 class Color(Enum):
     WHITE = auto()
@@ -15,7 +15,7 @@ class PieceType(Enum):
     KING = 6
 
 class Position:
-    def __init__(self, file: str | int, rank: int):
+    def __init__(self, file: Union[str, int], rank: int):
         # Convert file from string ('a'-'h') to int (0-7) if needed
         if isinstance(file, str):
             self.file = ord(file) - ord('a')
@@ -270,7 +270,7 @@ class Board:
             
         return False
         
-    def _get_move_coordinates(self, from_pos: str | tuple, to_pos: str | tuple) -> dict:
+    def _get_move_coordinates(self, from_pos: Union[str, tuple], to_pos: Union[str, tuple]) -> dict:
         """Calcula todas as coordenadas e diferenças necessárias para validação de movimento."""
         try:
             # Converte posições para coordenadas
@@ -344,7 +344,7 @@ class Board:
                 
         return False
         
-    def get_valid_moves(self, pos: str | Position) -> list[Position]:
+    def get_valid_moves(self, pos: Union[str, Position]) -> List[Position]:
         """Get all valid moves for a piece at the given position"""
         if isinstance(pos, Position):
             pos = str(pos)
@@ -560,7 +560,7 @@ class Board:
         # Verifica material insuficiente
         return self._has_insufficient_material()
 
-    def _is_under_attack(self, pos: str | Position, color: Color) -> bool:
+    def _is_under_attack(self, pos: Union[str, Position], color: Color) -> bool:
         """Verifica se uma posição está sob ataque por peças de uma cor.
 
         Args:
@@ -595,7 +595,7 @@ class Board:
                         print(f"DEBUG: Movimento não é válido para {piece.type}")
         return False
         
-    def is_square_attacked(self, pos: str | Position, color: Color) -> bool:
+    def is_square_attacked(self, pos: Union[str, Position], color: Color) -> bool:
         """Alias for _is_under_attack to match AI expectations"""
         return self._is_under_attack(pos, color)
 

@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import { ChessPosition, ChessPiece, GameState, ChessMove } from '../../shared/types/chess';
 import { INITIAL_FEN, GAME_STATUS } from '../../shared/constants/game';
+import { generateId } from '../../shared/utils/id';
 import { 
   algebraicToCoords,
   coordsToAlgebraic,
@@ -40,7 +41,7 @@ export function useGameState({
 }: UseGameStateProps = {}): UseGameStateReturn {
   // Estado do jogo
   const [gameState, setGameState] = useState<GameState>({
-    id: crypto.randomUUID(),
+    id: generateId(),
     fen: initialFen,
     moveHistory: [],
     currentPlayer: 'white',
@@ -59,7 +60,7 @@ export function useGameState({
   // Reseta o jogo para o estado inicial
   const resetGame = useCallback(() => {
     setGameState({
-      id: crypto.randomUUID(),
+      id: generateId(),
       fen: initialFen,
       moveHistory: [],
       currentPlayer: 'white',

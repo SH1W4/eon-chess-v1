@@ -1,6 +1,7 @@
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useState, useCallback, useMemo, useRef } from 'react';
 import { ChessPosition, ChessPiece } from '../../../shared/types/chess';
 import { useGameState } from '../../hooks/useGameState';
+import { useResponsiveBoard } from '../../hooks/useResponsiveBoard';
 import { MemoizedSquare } from './Square';
 import { MemoizedPiece } from './Piece';
 import { BOARD_SIZE } from '../../../shared/constants/game';

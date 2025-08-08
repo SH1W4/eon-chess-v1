@@ -28,24 +28,25 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "module",
   "bugs": {
     "url": "https://github.com/NEO-SH1W4/aeon-chess/issues"
   },
   "homepage": "https://github.com/NEO-SH1W4/aeon-chess#readme",
   "dependencies": {
     "@types/chess.js": "^0.13.7",
-    "@types/node": "20.0.0",
-    "@types/react": "18.2.0",
-    "@types/react-dom": "18.2.0",
-    "autoprefixer": "10.4.14",
-    "chess.js": "1.0.0-beta.6",
-    "next": "13.4.0",
-    "postcss": "8.4.24",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
-    "tailwindcss": "3.3.2",
-    "typescript": "5.1.3"
+    "@types/node": "^20.8.0",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "autoprefixer": "^10.4.14",
+    "chess.js": "^1.4.0",
+    "mermaid": "^10.6.0",
+    "next": "^13.5.3",
+    "postcss": "^8.4.24",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "tailwindcss": "^3.3.2",
+    "typescript": "^5.1.3",
+    "zustand": "^5.0.7"
   },
   "devDependencies": {
     "@types/jest": "^30.0.0",

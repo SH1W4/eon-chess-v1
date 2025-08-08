@@ -26,11 +26,11 @@ Monitora métricas específicas de cada componente:
 ### 3. Monitor de Performance
 
 Monitora métricas de performance do sistema:
-- Movimentos analisados
-- Padrões reconhecidos
-- Iterações de aprendizado
-- Score de adaptação
-- Operações quânticas
+- Análise de movimentos
+- Padrões estratégicos
+- Ciclos de aprendizado
+- Índice de adaptação
+- Operações de análise
 
 ## Alertas e Thresholds
 
@@ -46,10 +46,10 @@ Monitora métricas de performance do sistema:
 
 ## Sistema de Cache
 
-### Cache de Análise Cultural
-- Cache de padrões
-- Cache de eventos
-- Cache de narrativas
+### Cache de Análise Técnica
+- Cache de avaliações
+- Cache de recomendações
+- Cache de padrões táticos
 
 ### Características
 - TTL configurável
@@ -110,12 +110,12 @@ monitor.add_alert_callback(email_alert_callback)
 - `error_count`: Número de erros
 - `last_execution`: Timestamp da última execução
 
-### Métricas de Performance
-- `moves_analyzed`: Número de movimentos analisados
-- `patterns_recognized`: Número de padrões reconhecidos
-- `learning_iterations`: Número de iterações de aprendizado
-- `adaptation_score`: Score de adaptação (0-1)
-- `quantum_operations`: Número de operações quânticas
+### Métricas de Análise
+- `positions_analyzed`: Número de posições analisadas
+- `tactical_patterns`: Número de padrões táticos identificados
+- `training_iterations`: Número de ciclos de treinamento
+- `adaptation_index`: Índice de adaptação ao estilo (0-1)
+- `analysis_operations`: Número total de operações de análise
 
 ## Persistência de Dados
 
@@ -168,16 +168,16 @@ monitor.add_alert_callback(email_alert_callback)
 ## Roadmap
 
 ### Curto Prazo
-- [ ] Implementar mais métricas culturais
-- [ ] Melhorar sistema de alertas
-- [ ] Otimizar persistência
+- [ ] Ampliar métricas de análise técnica
+- [ ] Aprimorar sistema de notificações
+- [ ] Otimizar armazenamento de dados
 
 ### Médio Prazo
-- [ ] Adicionar visualizações
-- [ ] Implementar ML para detecção de anomalias
-- [ ] Expandir integrações
+- [ ] Implementar dashboards de análise
+- [ ] Desenvolver detecção inteligente de anomalias
+- [ ] Expandir integrações com engines
 
 ### Longo Prazo
-- [ ] Sistema preditivo
-- [ ] Auto-otimização
-- [ ] Escalabilidade horizontal
+- [ ] Sistema de análise preditiva
+- [ ] Otimização automática de recursos
+- [ ] Escalabilidade distribuída

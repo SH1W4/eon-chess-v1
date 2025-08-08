@@ -1,0 +1,49 @@
+graph TB
+    %% Interface Layer
+    subgraph Interface["Interface Layer"]
+        WebUI["Web UI"]
+        Mobile["Mobile"]
+        Desktop["Desktop"]
+        WebUI --- Mobile
+        Mobile --- Desktop
+    end
+
+    %% Symbiotic Core
+    subgraph Core["Symbiotic Core"]
+        ARQUIMAX["ARQUIMAX"]
+        NEXUS["NEXUS"]
+        CHESS["CHESS Engine"]
+        ARQUIMAX <--> NEXUS
+        NEXUS <--> CHESS
+    end
+
+    %% Neural Network Layer
+    subgraph Neural["Neural Network Layer"]
+        Cultural["Cultural Engine"]
+        AI["AI Engine"]
+        Cultural <--> AI
+    end
+
+    %% Data Layer
+    subgraph Data["Data & Learning Layer"]
+        CulturalDB["Cultural DB"]
+        NeuralDB["Neural DB & Cache"]
+        CulturalDB <--> NeuralDB
+    end
+
+    %% Connections between layers
+    Interface --> Core
+    Core --> Neural
+    Neural --> Data
+
+    %% Style definitions
+    classDef interface fill:#a8dadc,stroke:#1d3557,stroke-width:2px
+    classDef core fill:#e63946,stroke:#1d3557,stroke-width:2px,color:#fff
+    classDef neural fill:#457b9d,stroke:#1d3557,stroke-width:2px,color:#fff
+    classDef data fill:#2a9d8f,stroke:#1d3557,stroke-width:2px,color:#fff
+
+    %% Apply styles
+    class WebUI,Mobile,Desktop interface
+    class ARQUIMAX,NEXUS,CHESS core
+    class Cultural,AI neural
+    class CulturalDB,NeuralDB data

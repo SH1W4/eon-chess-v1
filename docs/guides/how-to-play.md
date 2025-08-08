@@ -1,6 +1,6 @@
-# Como Jogar - AEON Chess
+# Manual do Jogador - AEON Chess
 
-## Mecânicas Básicas
+## Fundamentos do Jogo
 
 ### Movimentação das Peças
 - **Peão**: Move-se uma casa para frente; no primeiro movimento pode mover duas casas
@@ -15,59 +15,59 @@
 2. **Roque**: Movimento especial do Rei com a Torre
 3. **Promoção do Peão**: Quando um peão alcança a última fileira
 
-## Sistema de IA Adaptativa
+## Sistema de Análise e Treinamento
 
-### Níveis de Dificuldade
-- **Iniciante**: IA focada em ensinar conceitos básicos
-- **Intermediário**: Adapta-se ao seu nível atual
-- **Avançado**: Desafia suas habilidades
-- **Mestre**: Comportamento similar a grandes mestres
+### Níveis de Desenvolvimento
+- **Iniciante**: Foco no aprendizado dos fundamentos
+- **Intermediário**: Adaptação ao seu progresso técnico
+- **Avançado**: Desafios táticos e estratégicos complexos
+- **Nível Mestre**: Comportamento baseado em grandes mestres
 
-### Feedback em Tempo Real
-- Análise de jogadas
-- Sugestões de melhoria
-- Identificação de padrões
-- Alertas de erros comuns
+### Análise em Tempo Real
+- Avaliação posicional
+- Recomendações táticas
+- Reconhecimento de padrões
+- Indicação de imprecisões
 
-## Modos de Jogo
+## Modalidades de Treinamento
 
-### Modo História
-- Campanha com narrativa envolvente
-- Personagens únicos
-- Desafios progressivos
-- Conteúdo cultural integrado
+### Jornada Histórica
+- Aprendizado através de partidas clássicas
+- Mestres históricos como mentores
+- Desafios progressivos baseados em partidas reais
+- Estudo das escolas clássicas de xadrez
 
-### Modo Ranqueado
-- Sistema ELO personalizado
-- Divisões e ligas
-- Temporadas competitivas
-- Recompensas exclusivas
+### Arena Competitiva
+- Sistema de rating adaptativo
+- Divisões técnicas
+- Ciclos competitivos
+- Conquistas técnicas
 
-### Modo Prática
-- Treino livre
-- Posições específicas
-- Problemas de xadrez
-- Análise posterior
+### Laboratório de Análise
+- Análise livre de posições
+- Estudo de posições críticas
+- Exercícios táticos
+- Revisão técnica
 
-### Desafios Diários
-- Novos puzzles diariamente
-- Recompensas especiais
-- Conquistas exclusivas
-- Ranking semanal
+### Treinamento Diário
+- Exercícios táticos diários
+- Reconhecimento por progresso
+- Conquistas técnicas
+- Classificação por desempenho
 
-## Elementos Culturais
+## Escolas e Tradições
 
-### Temas
-- Clássico
-- Moderno
-- Cultural
-- Sazonal
+### Estilos de Jogo
+- Clássico (Escola Italiana)
+- Moderno (Escola Hipermoderna)
+- Posicional (Escola Russa)
+- Dinâmico (Escola Soviética)
 
-### Eventos Especiais
-- Torneios temáticos
-- Desafios culturais
-- Colaborações especiais
-- Eventos sazonais
+### Eventos Especializados
+- Torneios temáticos por escola
+- Desafios técnicos específicos
+- Encontros entre escolas
+- Ciclos de estudo temáticos
 
 ## Dicas Avançadas
 
@@ -89,25 +89,25 @@
 3. Técnicas de mate
 4. Endgame com peões
 
-## Recursos de Aprendizado
+## Recursos Técnicos
 
-### Tutoriais Interativos
-- Lições passo a passo
-- Exercícios práticos
-- Feedback instantâneo
-- Progressão personalizada
+### Sistema de Treinamento
+- Metodologia progressiva
+- Exercícios práticos estruturados
+- Análise técnica imediata
+- Desenvolvimento personalizado
 
-### Análise de Partidas
-- Replay com comentários
-- Pontos críticos
-- Alternativas sugeridas
-- Estatísticas detalhadas
+### Ferramentas de Análise
+- Revisão comentada de partidas
+- Identificação de momentos decisivos
+- Exploração de variantes
+- Métricas de desempenho
 
-### Biblioteca de Conhecimento
-- Aberturas clássicas
-- Meio-jogo
-- Finais famosos
-- Partidas históricas
+### Base de Conhecimento
+- Repertório de aberturas
+- Estratégias do meio-jogo
+- Finais fundamentais
+- Partidas modelo
 
 ## Atalhos do Teclado
 
@@ -124,6 +124,6 @@
 
 ## Próximos Passos
 
-1. [Personagens](characters.md) - Conheça os personagens do jogo
-2. [Modos de Jogo](game-modes.md) - Explore diferentes formas de jogar
-3. [Ranking e Recompensas](ranking.md) - Entenda o sistema competitivo
+1. [Sistema de Análise](analysis-system.md) - Domine as ferramentas de análise
+2. [Mestres e Escolas](chess-masters.md) - Aprenda com os grandes mestres
+3. [Progressão Técnica](technical-progression.md) - Desenvolva suas habilidades
