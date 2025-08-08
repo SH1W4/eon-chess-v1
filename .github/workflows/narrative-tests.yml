@@ -1,0 +1,212 @@
+name: Narrative System Tests
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - 'src/narrative/**'
+      - 'tests/narrative/**'
+      - 'tests/integration/**'
+      - '.github/workflows/narrative-tests.yml'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'src/narrative/**'
+      - 'tests/narrative/**'
+      - 'tests/integration/**'
+
+jobs:
+  test-narrative:
+    name: Run Narrative System Tests
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        python-version: ['3.9', '3.10', '3.11']
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+        
+    - name: Cache pip packages
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+          
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install pytest pytest-cov pytest-asyncio pytest-mock
+        
+    - name: Run unit tests
+      run: |
+        pytest tests/narrative/test_engine.py -v --cov=src/narrative --cov-report=xml
+        
+    - name: Run integration tests
+      run: |
+        pytest tests/integration/test_narrative_integration.py -v --cov=src/narrative --cov-append --cov-report=xml
+        
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./coverage.xml
+        flags: narrative
+        name: narrative-coverage
+        fail_ci_if_error: false
+        
+    - name: Generate test report
+      if: always()
+      run: |
+        pytest tests/narrative tests/integration/test_narrative_integration.py --html=report.html --self-contained-html
+        
+    - name: Upload test results
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: test-results-${{ matrix.python-version }}
+        path: |
+          report.html
+          coverage.xml
+
+  performance-test:
+    name: Performance Testing
+    runs-on: ubuntu-latest
+    needs: test-narrative
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install pytest-benchmark memory_profiler
+        
+    - name: Run performance benchmarks
+      run: |
+        pytest tests/narrative/test_performance.py -v --benchmark-only --benchmark-json=benchmark.json
+        
+    - name: Store benchmark result
+      uses: benchmark-action/github-action-benchmark@v1
+      with:
+        tool: 'pytest'
+        output-file-path: benchmark.json
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        auto-push: true
+
+  lint-and-type-check:
+    name: Code Quality Checks
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        
+    - name: Install linting tools
+      run: |
+        python -m pip install --upgrade pip
+        pip install black flake8 mypy pylint isort
+        
+    - name: Run Black formatter check
+      run: |
+        black --check src/narrative tests/narrative tests/integration
+        
+    - name: Run Flake8 linter
+      run: |
+        flake8 src/narrative tests/narrative --max-line-length=100 --ignore=E203,W503
+        
+    - name: Run isort import checker
+      run: |
+        isort --check-only src/narrative tests/narrative
+        
+    - name: Run mypy type checker
+      run: |
+        mypy src/narrative --ignore-missing-imports
+        
+    - name: Run Pylint
+      run: |
+        pylint src/narrative --fail-under=8.0
+
+  security-scan:
+    name: Security Scanning
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      
+    - name: Run Trivy security scan
+      uses: aquasecurity/trivy-action@master
+      with:
+        scan-type: 'fs'
+        scan-ref: '.'
+        format: 'sarif'
+        output: 'trivy-results.sarif'
+        
+    - name: Upload Trivy results to GitHub Security
+      uses: github/codeql-action/upload-sarif@v2
+      with:
+        sarif_file: 'trivy-results.sarif'
+        
+    - name: Run Bandit security linter
+      run: |
+        pip install bandit
+        bandit -r src/narrative -f json -o bandit-report.json
+        
+    - name: Upload Bandit results
+      uses: actions/upload-artifact@v3
+      with:
+        name: security-reports
+        path: |
+          trivy-results.sarif
+          bandit-report.json
+
+  documentation:
+    name: Generate Documentation
+    runs-on: ubuntu-latest
+    needs: test-narrative
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        
+    - name: Install documentation tools
+      run: |
+        pip install sphinx sphinx-rtd-theme autodoc pydoc-markdown
+        
+    - name: Generate API documentation
+      run: |
+        sphinx-apidoc -o docs/api src/narrative
+        cd docs && make html
+        
+    - name: Deploy to GitHub Pages
+      if: github.ref == 'refs/heads/main'
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./docs/_build/html

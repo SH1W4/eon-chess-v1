@@ -1,0 +1,193 @@
+# SUPERMASH: Superescopo de Design Narrativo e UX/UI (ARQUIMAX + NEXUS)
+
+version: "1.0.0"
+name: "SUPERMASH_DESIGN"
+description: "Planejamento e execução integrados para Design Narrativo e UX/UI do AEON CHESS com ARQUIMAX e NEXUS"
+authors:
+  - "AEON CHESS Team"
+last_updated: "2025-08-08"
+
+context:
+  project: "AEON CHESS"
+  goals:
+    - "Consolidar o design narrativo com motor adaptativo e dimensão cultural"
+    - "Padronizar UX/UI com componentes, acessibilidade e fluxos principais"
+    - "Integrar execução e monitoramento com ARQUIMAX e NEXUS"
+
+integrations:
+  arquimax:
+    workflow_id: "ARQUIMAX_V1"
+    capabilities:
+      - task_management
+      - monitoring
+      - metrics
+  nexus:
+    workflow_id: "SYMBIOTIC_ARQUIMAX_NEXUS"
+    capabilities:
+      - document_sync
+      - connectors
+      - adaptive_execution
+
+phases:
+  - id: P1
+    name: "Descoberta e Alinhamento"
+    description: "Alinhar objetivos, inventariar documentos e mapear lacunas"
+    tasks:
+      - id: T1.1
+        name: "Inventário de Documentação"
+        outputs:
+          - docs_index.md
+        acceptance:
+          - "Lista de docs e status (atualizado/desatualizado)"
+      - id: T1.2
+        name: "Definição de Terminologia (Adaptativa)"
+        inputs:
+          - docs/CHESS_TERMINOLOGY.md
+          - docs/CHESS_GLOSSARY.md
+        outputs:
+          - docs/CHESS_TERMINOLOGY.md (atualizado)
+          - docs/CHESS_GLOSSARY.md (atualizado)
+        acceptance:
+          - "Preferência por termos adaptativos e de xadrez"
+    gates:
+      - "T1.1 e T1.2 concluídos"
+
+  - id: P2
+    name: "Design Narrativo"
+    description: "Consolidar o design narrativo com motor adaptativo e dimensão cultural"
+    tasks:
+      - id: T2.1
+        name: "Modelo Narrativo"
+        outputs:
+          - docs/narrative/DESIGN_NARRATIVO.md
+        acceptance:
+          - "Seções: Estruturas, Arcos, Padrões, Civilizações, Motor Narrativo"
+      - id: T2.2
+        name: "Motor Narrativo + Narrativa Dinâmica"
+        inputs:
+          - src/narrative/engine/engine.py
+          - src/narrative/engine/cultural_processor.py
+        outputs:
+          - docs/narrative/ENGINE_GUIDE.md
+        acceptance:
+          - "Exemplos de geração/adaptação e pontos de extensão"
+      - id: T2.3
+        name: "Integração Cultural"
+        outputs:
+          - docs/narrative/CULTURAS_E_ESCOLAS.md
+        acceptance:
+          - "Mapeamento por escolas (Italiana, Espanhola, Hipermoderna, Russa)"
+    metrics:
+      - name: narrative_coherence
+        target: ">= 0.8"
+      - name: cultural_relevance
+        target: ">= 0.8"
+    gates:
+      - "Guia do Engine e Modelo Narrativo aprovados"
+
+  - id: P3
+    name: "UX/UI (Componentes e Fluxos)"
+    description: "Padrões, componentes, acessibilidade e fluxos principais"
+    tasks:
+      - id: T3.1
+        name: "Design System"
+        inputs:
+          - docs/design/style-guide.md
+        outputs:
+          - docs/design/DESIGN_SYSTEM.md
+        acceptance:
+          - "Tokens (cores, tipografia), grid, espaçamento, ícones"
+      - id: T3.2
+        name: "Biblioteca de Componentes"
+        outputs:
+          - docs/design/COMPONENTS_LIBRARY.md
+        acceptance:
+          - "Cards, botões, inputs, modais, toasts, menus, overlays"
+      - id: T3.3
+        name: "Acessibilidade e Notação"
+        outputs:
+          - docs/design/ACCESSIBILITY_NOTATION.md
+        acceptance:
+          - "Regras WCAG + notação enxadrística padronizada"
+      - id: T3.4
+        name: "Fluxos Principais"
+        outputs:
+          - docs/design/USER_FLOWS.md
+        acceptance:
+          - "Onboarding, jogar partida, análise pós-jogo, treino, histórico"
+    metrics:
+      - name: ux_consistency
+        target: ">= 0.85"
+      - name: a11y_score
+        target: ">= 0.9"
+    gates:
+      - "Fluxos e componentes documentados"
+
+  - id: P4
+    name: "Automação, CI e Monitoramento"
+    description: "Automatizar validações e integrar monitoramento"
+    tasks:
+      - id: T4.1
+        name: "CI para Testes Narrativos"
+        outputs:
+          - .github/workflows/tests.yml
+        acceptance:
+          - "Executa suíte de testes src/narrative/tests em PR"
+      - id: T4.2
+        name: "Badges e Status"
+        outputs:
+          - README.md (badges de build/status)
+        acceptance:
+          - "Badges de build e cobertura adicionados"
+      - id: T4.3
+        name: "Integração com ARQUIMAX/NEXUS"
+        outputs:
+          - workflows/INTEGRATION_STATUS.md
+        acceptance:
+          - "Checklist de sincronização e healthchecks"
+    metrics:
+      - name: ci_pass_rate
+        target: ">= 0.95"
+
+orchestration:
+  triggers:
+    - on_project_load: [P1]
+    - on_docs_update: [P2, P3]
+    - on_tests_change: [P4]
+  transitions:
+    - from: P1
+      to: P2
+      condition: "T1.1 && T1.2"
+    - from: P2
+      to: P3
+      condition: "narrative_coherence >= 0.8 && cultural_relevance >= 0.8"
+    - from: P3
+      to: P4
+      condition: "ux_consistency >= 0.85 && a11y_score >= 0.9"
+
+acceptance_criteria:
+  general:
+    - "Documentos devem estar em pt-BR com termos técnicos consistentes"
+    - "Preferir terminologia adaptativa ao invés de simbiótica"
+    - "Código com exemplos mínimos executáveis quando aplicável"
+
+deliverables:
+  - docs/narrative/DESIGN_NARRATIVO.md
+  - docs/narrative/ENGINE_GUIDE.md
+  - docs/narrative/CULTURAS_E_ESCOLAS.md
+  - docs/design/DESIGN_SYSTEM.md
+  - docs/design/COMPONENTS_LIBRARY.md
+  - docs/design/ACCESSIBILITY_NOTATION.md
+  - docs/design/USER_FLOWS.md
+  - .github/workflows/tests.yml
+  - workflows/INTEGRATION_STATUS.md
+
+runbook:
+  steps:
+    - step: "Bootstrap"
+      command: "aeon symbiotic init --project-type=git_repository --mode=full"
+    - step: "Sincronização de Docs"
+      command: "aeon symbiotic status"
+    - step: "Evolução"
+      command: "aeon symbiotic evolve"
+

@@ -7,7 +7,9 @@
 [![Versão](https://img.shields.io/badge/versão-1.0.0-blue.svg)](https://github.com/NEO_SH1W4/CHESS/releases)
 [![Licença](https://img.shields.io/badge/licença-MIT-green.svg)](LICENSE)
 [![Status Build](https://img.shields.io/badge/build-passing-success.svg)](https://github.com/NEO_SH1W4/CHESS/actions)
+[![Narrative Tests](https://github.com/NEO_SH1W4/CHESS/actions/workflows/narrative-tests.yml/badge.svg)](https://github.com/NEO_SH1W4/CHESS/actions/workflows/narrative-tests.yml)
 [![Cobertura](https://img.shields.io/badge/cobertura-85%25-success.svg)](https://github.com/NEO_SH1W4/CHESS/actions)
+[![Python](https://img.shields.io/badge/python-3.9%2B-blue)](https://www.python.org/downloads/)
 
 </div>
 
