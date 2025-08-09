@@ -38,5 +38,30 @@ clean: ## Limpa arquivos temporários e caches
 	rm -rf .pytest_cache
 	go clean
 
+# Comandos do Arkitect
+arkitect-status: ## Verifica status do Arkitect/ARQUIMAX/NEXUS
+	@echo "🔍 Verificando status do Arkitect..."
+	@python scripts/check_arkitect_status.py
+
+arkitect-run: ## Executa integração completa do Arkitect
+	@echo "🚀 Iniciando Arkitect..."
+	@bash activate_arkitect.sh
+
+arkitect-monitor: ## Monitora métricas do Arkitect em tempo real
+	@echo "📊 Monitorando Arkitect..."
+	@python scripts/arkitect_monitor.py
+
+arkitect-init: ## Inicializa modo simbiótico do Arkitect
+	@echo "🔧 Inicializando modo simbiótico..."
+	@python scripts/init_symbiotic.py
+
+arkitect-evolve: ## Executa evolução adaptativa do Arkitect
+	@echo "🧬 Evoluindo capacidades..."
+	@python scripts/arkitect_full_extension.py --evolve
+
+arkitect-test: ## Executa testes de integração NEXUS-ARQUIMAX
+	@echo "🧪 Testando integração NEXUS-ARQUIMAX..."
+	@python tests/run_nexus_arquimax_tests.py
+
 # Define o target padrão
 .DEFAULT_GOAL := help

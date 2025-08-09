@@ -1,0 +1,66 @@
+name: ARQUIMAX
+description: "Script de Workflow ARQUIMAX - Integração com sistema ARQUIMAX"
+tags:
+  - arquimax
+  - architecture
+  - monitoring
+  - analysis
+
+workflows:
+  initialization:
+    - name: "init_capabilities"
+      description: "Inicializando capacidades do ARQUIMAX"
+      features:
+        - project_management
+        - architectural_analysis
+        - monitoring_system
+      
+    - name: "setup_task_manager"
+      description: "Configurando gerenciador de tarefas"
+      features:
+        - async_execution
+        - cache_system
+        - metrics_initialization
+      
+    - name: "activate_monitoring"
+      description: "Ativando sistemas de monitoramento"
+      features:
+        - real_time_monitoring
+        - health_checks
+        - metrics_collection
+      
+    - name: "system_validation"
+      description: "Executando validação do sistema"
+      features:
+        - capability_verification
+        - integrity_check
+        - connector_validation
+      
+    - name: "run_analysis"
+      description: "Executando análise arquitetural"
+      features:
+        - architecture_analysis
+        - performance_simulation
+        - cost_estimation
+
+metrics:
+  execution:
+    - name: "active_capabilities"
+      type: "gauge"
+      description: "Capacidades ativas no sistema"
+    
+    - name: "success_rate"
+      type: "percentage"
+      description: "Taxa de sucesso das operações"
+    
+    - name: "execution_time"
+      type: "duration"
+      description: "Tempo de execução do workflow"
+
+integration:
+  chess_system:
+    enabled: true
+    components:
+      - cultural_engine
+      - narrative_system
+      - cache_system

@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: istio-config
+data:
+  mesh: |
+    defaultConfig:
+      proxyStatsMatcher:
+        inclusionRegexps:
+        - ".*outlier_detection.*"
+        - ".*circuit_breakers.*"
+      holdApplicationUntilProxyStarts: true
+    defaultProviders:
+      metrics:
+      - prometheus
+      tracing:
+      - jaeger

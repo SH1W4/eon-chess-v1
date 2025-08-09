@@ -1,0 +1,18 @@
+# DOCSYNC Hooks Configuration
+hooks:
+  notion:
+    enabled: true
+    endpoint: https://api.notion.com/v1
+    events:
+      - on_create
+      - on_update
+      - on_delete
+    sync_interval: 5m
+    
+  cultural_metrics:
+    enabled: true
+    collectors:
+      - theme_usage
+      - cultural_coverage
+      - player_preferences
+    dashboard: /dashboard/cultural_metrics.html

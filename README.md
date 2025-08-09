@@ -114,6 +114,12 @@ CHESS/
 - **Integrações**: NEXUS e ARQUIMAX para análise e validação
 - **Templates**: Sistema expansível para novas culturas
 
+### 🤖 Arkitect (ARQUIMAX/NEXUS)
+- **Análise Arquitetural**: Monitoramento e evolução contínua do código
+- **Integração Simbiótica**: Adaptação automática às necessidades do projeto
+- **Métricas em Tempo Real**: Dashboards e alertas de saúde do sistema
+- **Evolução Adaptativa**: Aprendizado e melhoria contínua
+
 O sistema cultural é organizado em:
 
 ```
@@ -191,6 +197,30 @@ make lint
 
 # Build para produção
 make build
+```
+
+### Arkitect - Sistema de Análise e Evolução
+
+O Arkitect é nosso sistema de análise arquitetural e evolução adaptativa:
+
+```bash
+# Verifica status do sistema
+make arkitect-status
+
+# Inicia integração completa
+make arkitect-run
+
+# Monitora métricas em tempo real
+make arkitect-monitor
+
+# Inicializa modo simbiótico
+make arkitect-init
+
+# Executa evolução adaptativa
+make arkitect-evolve
+
+# Testa integração NEXUS-ARQUIMAX
+make arkitect-test
 ```
 
 ## 🤝 Como Contribuir
