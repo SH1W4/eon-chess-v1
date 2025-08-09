@@ -120,14 +120,14 @@ class ARQUIMAXChessIntegrator:
 
     async def _evaluate_material(self, board: Board) -> float:
         """Avalia o balanço material da posição"""
-piece_values = {
-    PieceType.PAWN: 1.0,
-    PieceType.KNIGHT: 3.0,
-    PieceType.BISHOP: 3.0,
-    PieceType.ROOK: 5.0,
-    PieceType.QUEEN: 9.0,
-    PieceType.KING: 0.0
-}
+        piece_values = {
+            PieceType.PAWN: 1.0,
+            PieceType.KNIGHT: 3.0,
+            PieceType.BISHOP: 3.0,
+            PieceType.ROOK: 5.0,
+            PieceType.QUEEN: 9.0,
+            PieceType.KING: 0.0
+        }
         
         white_material = sum(piece_values[p.type] for p in board.pieces.values() if p.color == Color.WHITE)
         black_material = sum(piece_values[p.type] for p in board.pieces.values() if p.color == Color.BLACK)

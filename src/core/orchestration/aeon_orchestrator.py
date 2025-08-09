@@ -144,3 +144,6 @@ class ChessSystemOrchestrator:
         except Exception as e:
             self.logger.error(f"Erro na execução do workflow: {str(e)}")
             return False
+
+# Backwards-compatibility alias expected by tests
+AEONOrchestrator = ChessSystemOrchestrator

@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="chess_system",
-    version="1.0.0",
+    version="0.2.1",
     packages=find_packages(),
     install_requires=[
         "pytest",

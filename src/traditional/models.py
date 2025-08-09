@@ -26,3 +26,7 @@ class Piece:
     color: Color
     position: Optional[Position] = None
 
+# Ensure imports like `src.traditional.models.models` resolve to this module if needed
+import sys as _sys
+_sys.modules['src.traditional.models.models'] = _sys.modules[__name__]
+
