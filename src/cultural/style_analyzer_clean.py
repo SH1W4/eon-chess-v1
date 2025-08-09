@@ -381,3 +381,4 @@ class CulturalStyleAnalyzer:
         if any(k in narrative.lower() for k in keywords):
             score += 0.2
         return round(min(1.0, score), 2)
+

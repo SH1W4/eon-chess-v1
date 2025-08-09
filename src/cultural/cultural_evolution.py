@@ -84,7 +84,14 @@ class CulturalEvolution:
         })
         
     def get_dominant_behavior(self) -> CulturalBehavior:
-        """Retorna o comportamento mais bem-sucedido"""
+        """Retorna o comportamento dominante baseado nas métricas observadas.
+        Preferimos a distribuição empírica (metrics.behavior_distribution) pois
+        reflete resultados e reforços recentes. Se estiver vazia, caímos para
+        os pesos estruturais da árvore.
+        """
+        if self.metrics.behavior_distribution:
+            return max(self.metrics.behavior_distribution.items(), key=lambda x: x[1])[0]
+        # Fallback: usar pesos da árvore
         weights = self.decision_tree.get_behavior_weights()
         return max(weights.items(), key=lambda x: x[1])[0]
     
