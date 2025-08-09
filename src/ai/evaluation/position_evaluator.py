@@ -1,8 +1,8 @@
 from dataclasses import dataclass
-from typing import Dict, List, Tuple
+from typing import Dict, List, Tuple, Union
 from src.core.board.board import Board, Position, Piece, Color, PieceType
 
-def coord_to_san(pos: str | Position | tuple) -> str:
+def coord_to_san(pos: Union[str, Position, tuple]) -> str:
     """Convert various position formats to algebraic notation (e.g. 'd4' -> 'd4')"""
     if isinstance(pos, str):
         return pos
@@ -13,7 +13,7 @@ def coord_to_san(pos: str | Position | tuple) -> str:
         # Convert to algebraic with correct file offset
         return f"{chr(ord('a') + file - 1)}{rank}"
 
-def san_to_coords(san: str) -> tuple[int, int]:
+def san_to_coords(san: str) -> Tuple[int, int]:
     """Convert algebraic notation to rank, file coordinates (e.g. 'd4' -> (4, 4))"""
     file = ord(san[0]) - ord('a') + 1  # a=1, b=2, etc.
     rank = int(san[1])

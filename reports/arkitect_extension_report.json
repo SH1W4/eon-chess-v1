@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-08-08T17:37:35.738291",
+  "timestamp": "2025-08-09T11:26:21.671155",
   "modules": {
     "chess_engine": {
       "py_files": 0,
@@ -74,18 +74,18 @@
       "exists": false
     },
     "integration": {
-      "py_files": 9,
-      "test_files": 0,
-      "total_lines": 2768,
+      "py_files": 10,
+      "test_files": 1,
+      "total_lines": 2794,
       "complexity": "HIGH",
       "priority": "HIGH",
       "path": "/Users/jx/WORKSPACE/PROJECTS/CHESS/src/integration",
       "exists": true
     },
     "monitoring": {
-      "py_files": 6,
-      "test_files": 0,
-      "total_lines": 971,
+      "py_files": 7,
+      "test_files": 1,
+      "total_lines": 997,
       "complexity": "MEDIUM",
       "priority": "MEDIUM",
       "path": "/Users/jx/WORKSPACE/PROJECTS/CHESS/src/monitoring",
@@ -203,7 +203,7 @@
         "memory_optimization"
       ],
       "message": "ARKITECT extended to integration",
-      "timestamp": "2025-08-08T17:37:36.751018"
+      "timestamp": "2025-08-09T11:26:22.683513"
     },
     "monitoring": {
       "success": true,
@@ -214,7 +214,7 @@
         "memory_optimization"
       ],
       "message": "ARKITECT extended to monitoring",
-      "timestamp": "2025-08-08T17:37:36.752410"
+      "timestamp": "2025-08-09T11:26:22.684430"
     }
   }
 }

@@ -52,7 +52,7 @@ class NarrativeConfig:
     mode: str = "standard"
     language: str = "pt-BR"
     cultural_integration: bool = True
-    quantum_processing: bool = True
+    advanced_processing: bool = True
     adaptation_rate: float = 0.75
 
 class NarrativeEngine:
@@ -62,7 +62,7 @@ class NarrativeEngine:
         self.config = config or NarrativeConfig()
         self.initialized = False
         self.cultural_processor = None
-        self.quantum_processor = None
+        self.advanced_processor = None
         self.monitor = None
         logger.info("Inicializando Motor Narrativo AEON...")
     
@@ -73,7 +73,7 @@ class NarrativeEngine:
             self.config.mode = mode
             self._setup_core_components()
             self._initialize_cultural_integration()
-            self._initialize_quantum_processing()
+            self._initialize_advanced_processing()
             self.initialized = True
             logger.info("Motor narrativo inicializado com sucesso")
             return True
@@ -98,17 +98,17 @@ class NarrativeEngine:
             self.cultural_processor = CulturalProcessor(config=culture_config)
             self.cultural_processor.initialize(mode=self.config.mode)
     
-    def _initialize_quantum_processing(self):
-        """Inicializa processamento quântico"""
-        if self.config.quantum_processing:
-            logger.info("Inicializando processamento quântico...")
+    def _initialize_advanced_processing(self):
+        """Inicializa processamento avançado"""
+        if self.config.advanced_processing:
+            logger.info("Inicializando processamento avançado...")
             processor_config = ProcessorConfig(
                 threads=4,
                 optimization_level=self.config.adaptation_rate,
                 parallel_processing=True
             )
-            self.quantum_processor = AdvancedProcessor(config=processor_config)
-            self.quantum_processor.initialize(mode=self.config.mode)
+            self.advanced_processor = AdvancedProcessor(config=processor_config)
+            self.advanced_processor.initialize(mode=self.config.mode)
 
             # Inicializa monitoramento
             monitor_config = MonitorConfig(
@@ -128,9 +128,9 @@ class NarrativeEngine:
         
         start_time = time.time()
         
-        # Processa o evento usando o processador quântico se disponível
-        if self.config.quantum_processing and self.quantum_processor:
-            processed = self.quantum_processor.process_parallel([event])[0]
+        # Processa o evento usando o processador avançado se disponível
+        if self.config.advanced_processing and self.advanced_processor:
+            processed = self.advanced_processor.process_parallel([event])[0]
             # Normaliza o formato do resultado para conter a chave 'event'
             if "event" not in processed and "task" in processed:
                 processed_event = {**processed, "event": processed.get("task")}
@@ -161,15 +161,15 @@ class NarrativeEngine:
             if not isinstance(context, dict) or context is None:
                 raise ValueError("Contexto inválido para geração de narrativa")
             
-            # Primeiro processa o contexto usando o processador quântico se disponível
-            if self.config.quantum_processing and self.quantum_processor:
-                optimized_context = self.quantum_processor.optimize_processing(context)
+            # Primeiro processa o contexto usando o processador avançado se disponível
+            if self.config.advanced_processing and self.advanced_processor:
+                optimized_context = self.advanced_processor.optimize_processing(context)
                 context = optimized_context.get('data', context)
             
-            # Analisa padrões usando o processador quântico
+            # Analisa padrões usando o processador avançado
             patterns = []
-            if self.config.quantum_processing and self.quantum_processor:
-                patterns = self.quantum_processor.analyze_patterns(context)
+            if self.config.advanced_processing and self.advanced_processor:
+                patterns = self.advanced_processor.analyze_patterns(context)
             
             # Analisa o contexto cultural se disponível
             if self.config.cultural_integration and self.cultural_processor:
@@ -221,7 +221,7 @@ class NarrativeEngine:
             "mode": self.config.mode,
             "language": self.config.language,
             "cultural_integration": self.config.cultural_integration,
-            "quantum_processing": self.config.quantum_processing,
+            "advanced_processing": self.config.advanced_processing,
             "adaptation_rate": self.config.adaptation_rate
         }
         

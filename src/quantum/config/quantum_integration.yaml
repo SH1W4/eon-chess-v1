@@ -193,7 +193,7 @@ observabilidade:
       - superposition_depth
       - quantum_error_rate
     sistema:
-      - quantum_processing_time
+      - advanced_processing_time
       - coherence_time
       - decoherence_rate
       - error_correction_rate

@@ -3,6 +3,7 @@ import logging
 import yaml
 from pathlib import Path
 from datetime import datetime
+import sys
 
 # Configuração de logging
 logging.basicConfig(
@@ -19,6 +20,9 @@ class ArkitectFullIntegration:
     def __init__(self):
         self.config = None
         self.project_root = Path('/Users/jx/WORKSPACE/PROJECTS/CHESS')
+        # Garante que o pacote local 'arkitect' seja visível para imports
+        if str(self.project_root) not in sys.path:
+            sys.path.insert(0, str(self.project_root))
         self.mcp_devops = None
         self.arkitect_core = None
         logger.info("Inicializando Integração Total do ARKITECT")

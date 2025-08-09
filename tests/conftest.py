@@ -5,7 +5,16 @@ import pytest
 from typing import Dict
 import json
 import os
+import sys
 from pathlib import Path
+
+# Garante que raiz do projeto e src estejam no sys.path
+PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+SRC_PATH = os.path.join(PROJECT_ROOT, 'src')
+if PROJECT_ROOT not in sys.path:
+    sys.path.insert(0, PROJECT_ROOT)
+if SRC_PATH not in sys.path:
+    sys.path.insert(0, SRC_PATH)
 
 # Configurações de teste
 TEST_CONFIG = {

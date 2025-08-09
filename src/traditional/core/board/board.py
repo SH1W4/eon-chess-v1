@@ -1,7 +1,10 @@
 """Chess board implementation"""
 from typing import Dict, List, Optional, Tuple
 from src.quantum.core.quantum.quantum_field import QuantumField
-from src.traditional.models.models import Position, Color, PieceType, Piece
+try:
+    from src.traditional.models import Position, Color, PieceType, Piece
+except Exception:
+    from src.traditional.models.models import Position, Color, PieceType, Piece
 
 class Board:
     """Chess board implementation"""
