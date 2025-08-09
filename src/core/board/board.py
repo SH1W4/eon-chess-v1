@@ -78,6 +78,12 @@ class Board:
         self.last_move = None
         self._setup_piece_symbols()
 
+
+    @property
+    def piece_list(self):
+        """Retorna lista de peças para compatibilidade"""
+        return list(self.pieces.values())
+
     def _setup_piece_symbols(self):
         self.piece_symbols = {
             (PieceType.KING, Color.WHITE): "♔",

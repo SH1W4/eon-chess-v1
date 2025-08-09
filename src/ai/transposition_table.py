@@ -2,6 +2,7 @@
 Transposition Table e Advanced Evaluator para IA adaptativa
 """
 from typing import Dict, Tuple, Optional, Any
+from types import SimpleNamespace
 import hashlib
 
 
@@ -104,7 +105,7 @@ class AdvancedEvaluator:
             for name, weight in self.feature_weights.items()
         )
         
-        return total_score, features
+        return total_score, SimpleNamespace(**features)
     
     def _evaluate_material(self, board: Any, color: Any) -> float:
         """Avalia material"""
