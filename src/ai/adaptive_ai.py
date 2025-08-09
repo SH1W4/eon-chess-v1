@@ -3,6 +3,7 @@ from typing import Dict, List, Optional, Tuple
 from enum import Enum
 from src.core.board.board import Board, Position, PieceType, Color, Piece
 from src.core.board.move import Move
+from src.ai.transposition_table import TranspositionTable, AdvancedEvaluator
 import random
 import json
 import numpy as np

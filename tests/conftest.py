@@ -105,6 +105,17 @@ def sample_game_position(mock_board):
     return mock_board
 
 @pytest.fixture
+def start_position():
+    """Fixture que fornece uma posição inicial padrão para testes de IA"""
+    try:
+        from src.traditional.core.board.async_board import Board
+        board = Board()
+        return board
+    except ImportError:
+        from src.core.board.board import Board
+        return Board()
+
+@pytest.fixture
 def ai_player():
     """Fixture para jogador IA"""
     from src.ai.pipeline.adaptive_ai import AdaptiveAI

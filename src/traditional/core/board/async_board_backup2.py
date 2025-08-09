@@ -1,9 +1,9 @@
-"""Wrapper assíncrono para o Board tradicional - Versão totalmente corrigida"""
+"""Wrapper assíncrono para o Board tradicional - Versão corrigida pelo ARKITECT"""
 import asyncio
 from typing import List, Optional
 from .board import Board as SyncBoard
-from src.traditional.models import Position, Piece, PieceType, Color
-from src.core.interfaces import Move, MoveType
+from src.traditional.models.models import Position, Piece, PieceType, Color
+from core.interfaces import Move, MoveType
 
 
 class Board(SyncBoard):
@@ -11,13 +11,10 @@ class Board(SyncBoard):
     
     def __init__(self):
         super().__init__()
-        # Garante que o rei preto está na posição padrão para testes
-        if not any(p.type == PieceType.KING and p.color == Color.BLACK for p in self.pieces.values()):
-            self.set_piece(Position(8, 5), Piece(PieceType.KING, Color.BLACK, Position(8, 5)))
     
     def is_in_check(self, color: Color) -> bool:
-        """Verifica se o rei está em xeque - versão corrigida"""
-        # Encontra o rei
+        """Check if the king is in check - versão melhorada pelo ARKITECT"""
+        # Find king position
         king_pos = None
         for pos, piece in self.pieces.items():
             if piece.type == PieceType.KING and piece.color == color:
@@ -27,20 +24,21 @@ class Board(SyncBoard):
         if not king_pos:
             return False
         
+        # Check for attacks from enemy pieces
         enemy_color = Color.BLACK if color == Color.WHITE else Color.WHITE
         
-        # Verifica ataques de peões
-        pawn_direction = 1 if color == Color.BLACK else -1  # Direção invertida
+        # Check for pawn attacks
+        pawn_direction = 1 if enemy_color == Color.WHITE else -1
         for file_offset in [-1, 1]:
             try:
-                attack_pos = Position(king_pos.rank + pawn_direction, king_pos.file + file_offset)
+                attack_pos = Position(king_pos.rank - pawn_direction, king_pos.file + file_offset)
                 piece = self.get_piece(attack_pos)
                 if piece and piece.color == enemy_color and piece.type == PieceType.PAWN:
                     return True
             except:
                 pass
         
-        # Verifica ataques de cavalos
+        # Check for knight attacks
         knight_moves = [(2,1), (2,-1), (-2,1), (-2,-1), (1,2), (1,-2), (-1,2), (-1,-2)]
         for dr, df in knight_moves:
             try:
@@ -51,10 +49,10 @@ class Board(SyncBoard):
             except:
                 pass
         
-        # Verifica ataques de peças deslizantes (Rainha, Torre, Bispo)
+        # Check for sliding piece attacks (Queen, Rook, Bishop)
         directions = [
-            (1,0), (-1,0), (0,1), (0,-1),  # Torre/Rainha
-            (1,1), (1,-1), (-1,1), (-1,-1)  # Bispo/Rainha
+            (1,0), (-1,0), (0,1), (0,-1),  # Rook/Queen
+            (1,1), (1,-1), (-1,1), (-1,-1)  # Bishop/Queen
         ]
         
         for dr, df in directions:
@@ -74,7 +72,7 @@ class Board(SyncBoard):
                                 return True
                             elif piece.type == PieceType.KING and distance == 1:
                                 return True
-                        break  # Peça bloqueia a linha
+                        break  # Piece blocks line
                 except:
                     break
         
@@ -82,7 +80,7 @@ class Board(SyncBoard):
     
     async def make_move(self, move: Move) -> bool:
         """Executa um movimento de forma assíncrona com validação completa"""
-        # Converte Move para posições
+        # Converte Move para chamada síncrona
         from_pos = move.from_pos if isinstance(move.from_pos, Position) else Position(move.from_pos.rank, move.from_pos.file)
         to_pos = move.to_pos if isinstance(move.to_pos, Position) else Position(move.to_pos.rank, move.to_pos.file)
         
@@ -94,7 +92,7 @@ class Board(SyncBoard):
         if piece.color != self.current_turn:
             return False
         
-        # Salva estado original
+        # Salva estado original para validação
         original_target = self.get_piece(to_pos)
         original_pos = piece.position
         
@@ -109,34 +107,36 @@ class Board(SyncBoard):
         
         # Se deixaria em xeque, desfaz o movimento
         if would_be_in_check:
+            # Restaura estado original
             self.pieces[from_pos] = piece
             piece.position = original_pos
             if original_target:
                 self.pieces[to_pos] = original_target
             elif to_pos in self.pieces:
                 del self.pieces[to_pos]
-            return False
+            return False  # Movimento ilegal
         
         # Movimento é válido, mantém as mudanças
+        # Adiciona peça capturada se houver
         if original_target:
             self.captured_pieces.append(original_target)
         
-        # Trata roque
+        # Handle castling - move a torre também
         if move.move_type == MoveType.CASTLE:
-            # Roque do lado do rei
+            # King side castling
             if to_pos.file == 7:
                 rook_from = Position(from_pos.rank, 8)
                 rook_to = Position(from_pos.rank, 6)
-                rook = self.get_piece(rook_from)
-                if rook and rook.type == PieceType.ROOK:
-                    self.pieces[rook_to] = rook
-                    rook.position = rook_to
-                    if rook_from in self.pieces:
-                        del self.pieces[rook_from]
-            # Roque do lado da rainha
+            # Queen side castling
             elif to_pos.file == 3:
                 rook_from = Position(from_pos.rank, 1)
                 rook_to = Position(from_pos.rank, 4)
+            else:
+                # Invalid castling position
+                rook_from = None
+                rook_to = None
+            
+            if rook_from and rook_to:
                 rook = self.get_piece(rook_from)
                 if rook and rook.type == PieceType.ROOK:
                     self.pieces[rook_to] = rook
@@ -193,97 +193,13 @@ class Board(SyncBoard):
         piece.position = position
     
     def is_checkmate(self) -> bool:
-        """Verifica xeque-mate - versão corrigida"""
-        # Para testes, verifica ambas as cores
-        for color in [Color.WHITE, Color.BLACK]:
-            if self.is_in_check(color):
-                # Verifica se há algum movimento que tira do xeque
-                has_valid_move = False
-                for pos, piece in list(self.pieces.items()):
-                    if piece.color == color:
-                        moves = self._get_piece_moves_no_check(piece)
-                        for move_pos in moves:
-                            # Simula o movimento
-                            original_target = self.get_piece(move_pos)
-                            original_pos = piece.position
-                            
-                            self.pieces[move_pos] = piece
-                            piece.position = move_pos
-                            if pos in self.pieces:
-                                del self.pieces[pos]
-                            
-                            # Verifica se ainda está em xeque
-                            still_in_check = self.is_in_check(color)
-                            
-                            # Desfaz o movimento
-                            self.pieces[pos] = piece
-                            piece.position = original_pos
-                            if original_target:
-                                self.pieces[move_pos] = original_target
-                            elif move_pos in self.pieces:
-                                del self.pieces[move_pos]
-                            
-                            if not still_in_check:
-                                has_valid_move = True
-                                break
-                    
-                    if has_valid_move:
-                        break
-                
-                if not has_valid_move:
-                    return True  # É xeque-mate
+        """Verifica xeque-mate - versão melhorada"""
+        if not self.is_in_check(self.current_turn):
+            return False
         
-        return False
-    
-    def is_stalemate(self) -> bool:
-        """Verifica empate por afogamento - versão corrigida"""
-        # Para cenários de teste com poucas peças, verifica BLACK
-        if len(self.pieces) <= 3:
-            # Verifica se BLACK está em stalemate
-            if not self.is_in_check(Color.BLACK):
-                has_valid_move = False
-                for pos, piece in list(self.pieces.items()):
-                    if piece.color == Color.BLACK:
-                        moves = self._get_piece_moves_no_check(piece)
-                        for move_pos in moves:
-                            # Simula o movimento
-                            original_target = self.get_piece(move_pos)
-                            original_pos = piece.position
-                            
-                            self.pieces[move_pos] = piece
-                            piece.position = move_pos
-                            if pos in self.pieces:
-                                del self.pieces[pos]
-                            
-                            # Verifica se o movimento é legal
-                            would_be_in_check = self.is_in_check(Color.BLACK)
-                            
-                            # Desfaz o movimento
-                            self.pieces[pos] = piece
-                            piece.position = original_pos
-                            if original_target:
-                                self.pieces[move_pos] = original_target
-                            elif move_pos in self.pieces:
-                                del self.pieces[move_pos]
-                            
-                            if not would_be_in_check:
-                                has_valid_move = True
-                                break
-                    
-                    if has_valid_move:
-                        break
-                
-                return not has_valid_move
-        
-        # Verificação normal para jogos completos
-        checking_color = self.current_turn
-        
-        if self.is_in_check(checking_color):
-            return False  # Se está em xeque, não é stalemate
-        
-        # Verifica se há algum movimento válido
+        # Verifica se há algum movimento que tira do xeque
         for pos, piece in list(self.pieces.items()):
-            if piece.color == checking_color:
+            if piece.color == self.current_turn:
                 moves = self._get_piece_moves_no_check(piece)
                 for move_pos in moves:
                     # Simula o movimento
@@ -295,8 +211,43 @@ class Board(SyncBoard):
                     if pos in self.pieces:
                         del self.pieces[pos]
                     
-                    # Verifica se o movimento é legal
-                    would_be_in_check = self.is_in_check(checking_color)
+                    # Verifica se ainda está em xeque
+                    still_in_check = self.is_in_check(self.current_turn)
+                    
+                    # Desfaz o movimento
+                    self.pieces[pos] = piece
+                    piece.position = original_pos
+                    if original_target:
+                        self.pieces[move_pos] = original_target
+                    elif move_pos in self.pieces:
+                        del self.pieces[move_pos]
+                    
+                    if not still_in_check:
+                        return False  # Encontrou movimento que salva do xeque
+        
+        return True  # Nenhum movimento salva do xeque = xeque-mate
+    
+    def is_stalemate(self) -> bool:
+        """Verifica empate por afogamento - versão melhorada"""
+        if self.is_in_check(self.current_turn):
+            return False  # Se está em xeque, não é stalemate
+        
+        # Verifica se há algum movimento válido
+        for pos, piece in list(self.pieces.items()):
+            if piece.color == self.current_turn:
+                moves = self._get_piece_moves_no_check(piece)
+                for move_pos in moves:
+                    # Simula o movimento
+                    original_target = self.get_piece(move_pos)
+                    original_pos = piece.position
+                    
+                    self.pieces[move_pos] = piece
+                    piece.position = move_pos
+                    if pos in self.pieces:
+                        del self.pieces[pos]
+                    
+                    # Verifica se o movimento é legal (não deixa em xeque)
+                    would_be_in_check = self.is_in_check(self.current_turn)
                     
                     # Desfaz o movimento
                     self.pieces[pos] = piece
@@ -309,4 +260,4 @@ class Board(SyncBoard):
                     if not would_be_in_check:
                         return False  # Encontrou movimento válido
         
-        return True  # Sem movimentos válidos = stalemate
+        return True  # Nenhum movimento válido = stalemate

@@ -63,7 +63,14 @@ async def test_piece_capture(board):
 @pytest.mark.asyncio
 async def test_check_detection(board):
     """Testa detecção de xeque."""
+    # Limpa o board para o teste
+    board.pieces.clear()
+    
     # Setup para xeque
+    board.set_piece(Position(8, 5), Piece(PieceType.KING, Color.BLACK, Position(8, 5)))
+    board.set_piece(Position(1, 5), Piece(PieceType.KING, Color.WHITE, Position(1, 5)))
+    
+    # Rainha branca ataca rei preto
     queen = Piece(PieceType.QUEEN, Color.WHITE, Position(4, 5))
     board.set_piece(Position(4, 5), queen)
     
@@ -73,11 +80,16 @@ async def test_check_detection(board):
 @pytest.mark.asyncio
 async def test_checkmate_detection(board):
     """Testa detecção de xeque-mate."""
-    # Setup para xeque-mate
-    board.set_piece(Position(7, 5), Piece(PieceType.KING, Color.BLACK, Position(7, 5)))
-    board.set_piece(Position(6, 4), Piece(PieceType.QUEEN, Color.WHITE, Position(6, 4)))
-    board.set_piece(Position(6, 6), Piece(PieceType.ROOK, Color.WHITE, Position(6, 6)))
+    # Limpa o board para o teste
+    board.pieces.clear()
     
+    # Setup para xeque-mate - rei preto encurralado
+    board.set_piece(Position(8, 5), Piece(PieceType.KING, Color.BLACK, Position(8, 5)))
+    board.set_piece(Position(7, 4), Piece(PieceType.QUEEN, Color.WHITE, Position(7, 4)))
+    board.set_piece(Position(7, 6), Piece(PieceType.QUEEN, Color.WHITE, Position(7, 6)))
+    board.set_piece(Position(1, 1), Piece(PieceType.KING, Color.WHITE, Position(1, 1)))
+    
+    # O rei preto está em xeque pela rainha e não tem para onde fugir
     assert board.is_checkmate()
 
 @pytest.mark.asyncio
