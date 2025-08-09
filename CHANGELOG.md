@@ -1,5 +1,22 @@
 # Changelog
 
+## [0.2.1-rc.1] - 2025-08-09
+
+### Compatibilidade e Infra de Testes
+- Adicionados shims/aliases para compatibilidade com caminhos legados:
+  - `src.core.quantum.*` reexporta implementações atuais
+  - `narrative.engine_simple` e `narrative.engine.quantum_processor`
+  - `cultural.cultures` expondo `persian_culture`, `mongol_culture`, `chinese_culture`
+  - Alias `AEONOrchestrator` em `core/orchestration/aeon_orchestrator.py`
+  - Compat de import para `traditional.models.models`
+  - `AvaliadorPosicao` e método `avaliar()` com `EvaluationResult` (campos: `pontuacao_total`, `pontuacao_material`, `pontuacao_posicional`, `influencia_quantica`)
+- Correções de indentação/sintaxe detectadas durante coleta do pytest.
+- Status: suíte sob `tests/` em processo de migração; alguns testes já coletam, demais ajustes em andamento.
+
+### Observações
+- Esta é uma pré-release (rc) focada em alinhar compatibilidade de testes legados.
+- Próximos passos: finalizar shims restantes, estabilizar coleta/execução completa e promover a release estável.
+
 ## [0.2.0] - 2025-08-08
 
 ### 🎯 Sistema Cultural

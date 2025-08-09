@@ -1,6 +1,6 @@
 {
   "name": "chess",
-  "version": "1.0.0",
+  "version": "0.2.1",
   "description": "> An advanced chess ecosystem that combines traditional strategy with adaptive AI, cultural elements and symbiotic learning.",
   "main": "index.js",
   "directories": {

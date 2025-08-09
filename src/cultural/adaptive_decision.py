@@ -41,27 +41,19 @@ class DecisionNode:
             child.adapt(success_rate * 0.95)  # Efeito reduzido mais suave
             
     def evaluate(self, context: Dict[str, Any]) -> CulturalBehavior:
-        """Avalia o contexto e retorna o comportamento mais apropriado"""
+        """Avalia o contexto e retorna o comportamento mais apropriado.
+        Regra: determinístico e estável. Se o nó atual atende, procura o primeiro
+        filho (em ordem de declaração) que também atende e avalia recursivamente.
+        Isso garante previsibilidade para cenários de teste e priorização explícita.
+        """
         if not self.condition(context):
             return self.behavior
-            
-        # Avalia nó atual primeiro
-        current_weight = self.weight
-        current_behavior = self.behavior
-        
-        # Avalia filhos que atendem às condições
-        matching_children = [c for c in self.children if c.condition(context)]
-        if matching_children:
-            # Inclui nó atual na seleção
-            all_nodes = [self] + matching_children
-            weights = [n.weight for n in all_nodes]
-            chosen = random.choices(all_nodes, weights=weights)[0]
-            
-            # Se escolheu um filho, avalia recursivamente
-            if chosen != self:
-                return chosen.evaluate(context)
-                
-        return current_behavior
+
+        for child in self.children:
+            if child.condition(context):
+                return child.evaluate(context)
+
+        return self.behavior
 
 class AdaptiveDecisionTree:
     """Árvore de decisão adaptativa para comportamentos culturais"""

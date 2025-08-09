@@ -205,22 +205,19 @@ class CulturalAnalysisCache(CulturalCache):
         self.pattern_cache: Dict[str, List[str]] = {}
     
     def cache_pattern(self, pattern_type: str, board_state: Dict) -> None:
-        """Armazena um padrão reconhecido"""
-        key = self._generate_key(pattern_type, json.dumps(board_state, sort_keys=True))
-        if key not in self.pattern_cache:
-            self.pattern_cache[key] = []
-        self.pattern_cache[key].append(pattern_type)
+        """Armazena um padrão reconhecido por estado de tabuleiro.
+        Usa a representação estável do estado (JSON ordenado) como chave, para
+        permitir recuperação direta sem colisões de hash.
+        """
+        board_key = json.dumps(board_state, sort_keys=True)
+        if board_key not in self.pattern_cache:
+            self.pattern_cache[board_key] = []
+        self.pattern_cache[board_key].append(pattern_type)
     
     def get_patterns(self, board_state: Dict) -> List[str]:
         """Recupera padrões reconhecidos para um estado"""
-        patterns = []
         board_key = json.dumps(board_state, sort_keys=True)
-        
-        for key in self.pattern_cache:
-            if board_key in key:
-                patterns.extend(self.pattern_cache[key])
-        
-        return patterns
+        return list(self.pattern_cache.get(board_key, []))
     
     def clear_patterns(self) -> None:
         """Limpa cache de padrões"""

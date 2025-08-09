@@ -2,7 +2,10 @@
 from dataclasses import dataclass
 from typing import Dict, List, Optional, Tuple
 import numpy as np
-from src.traditional.models.models import Position, Piece, Color
+try:
+    from src.traditional.models import Position, Piece, Color  # module form
+except Exception:
+    from src.traditional.models.models import Position, Piece, Color  # package form
 from .quantum_field import QuantumField, INFLUENCE_THRESHOLD, ATTACK_THRESHOLD, CONTROL_THRESHOLD
 
 @dataclass

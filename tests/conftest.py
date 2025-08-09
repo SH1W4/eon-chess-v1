@@ -77,6 +77,21 @@ def mock_board():
     return Board()
 
 @pytest.fixture
+def board():
+    """Fixture para tabuleiro tradicional"""
+    try:
+        from traditional.core.board.async_board import Board
+        return Board()
+    except ImportError:
+        try:
+            from src.traditional.core.board.async_board import Board
+            return Board()
+        except ImportError:
+            # Fallback para o board padrão se traditional não estiver disponível
+            from src.core.board.board import Board
+            return Board()
+
+@pytest.fixture
 def sample_game_position(mock_board):
     """Fixture para posição de jogo específica"""
     # Configurar uma posição interessante para testes

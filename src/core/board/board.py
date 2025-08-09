@@ -148,7 +148,12 @@ class Board:
         return "\n".join(board)
 
     def move_piece(self, from_pos: str, to_pos: str) -> dict:
-        """Move uma peça com validação completa."""
+        """Move uma peça com validação completa.
+        
+        Suporta movimentos especiais:
+        - Roque (rei de e1->g1/c1 ou e8->g8/c8 com validações completas)
+        - En passant (captura diagonal de peões com base no último movimento adversário)
+        """
         # Validações básicas
         piece = self.pieces.get(from_pos)
         if not piece:
@@ -162,31 +167,37 @@ class Board:
         if target_piece and target_piece.color == piece.color:
             return {"success": False, "error": "Posição ocupada por peça própria"}
         
+        # Trata roque (movimento do rei de duas colunas na mesma fileira)
+        if piece.type == PieceType.KING and from_pos[0] == 'e' and abs(ord(to_pos[0]) - ord(from_pos[0])) == 2 and from_pos[1] == to_pos[1]:
+            castle_result = self._attempt_castle(from_pos, to_pos)
+            if not castle_result["success"]:
+                return castle_result
+            return {"success": True}
+        
         # Validação específica por tipo de peça
         if not self._is_valid_move(piece, from_pos, to_pos):
             return {"success": False, "error": "Movimento inválido para esta peça"}
             
+        # Verifica en passant (captura de peão em diagonal com casa de destino vazia)
+        if piece.type == PieceType.PAWN:
+            if self._is_en_passant_capture(from_pos, to_pos):
+                ep_result = self._execute_en_passant(from_pos, to_pos)
+                if not ep_result["success"]:
+                    return ep_result
+                self._post_move_update(from_pos, to_pos, captured_piece=ep_result.get("captured"))
+                return {"success": True}
+        
         # Verifica se o movimento expõe o rei ao xeque
         if self._move_exposes_check(piece, from_pos, to_pos):
             return {"success": False, "error": "Movimento expõe o rei ao xeque"}
         
-        # Executa o movimento
+        # Executa o movimento normal
         self.pieces[to_pos] = piece
         del self.pieces[from_pos]
         piece.has_moved = True
         
-        # Alterna o turno
-        self.current_turn = Color.BLACK if self.current_turn == Color.WHITE else Color.WHITE
-        
-        # Update position tracking
-        from_position = Position(from_pos[0], int(from_pos[1]))
-        to_position = Position(to_pos[0], int(to_pos[1]))
-        self.last_move = (from_pos, to_pos)
-        self.move_history.append((from_position, to_position))
-        
-        # Track captures
-        if target_piece:
-            self.captured_pieces.append(target_piece)
+        # Pós-atualizações
+        self._post_move_update(from_pos, to_pos, captured_piece=target_piece)
         
         return {"success": True}
         
@@ -266,6 +277,7 @@ class Board:
             return is_diagonal or is_straight
             
         elif piece.type == PieceType.KING:
+            # Movimento normal do rei (uma casa) — roque é tratado em move_piece
             return abs_dx <= 1 and abs_dy <= 1
             
         return False
@@ -407,23 +419,17 @@ class Board:
         
     def _move_exposes_check(self, piece: Piece, from_pos: str, to_pos: str) -> bool:
         """Verifica se um movimento expõe o rei ao xeque."""
-        # Salva estado atual
         original_target_piece = self.pieces.get(to_pos)
-        
-        # Simula o movimento
+        # Simula
         self.pieces[to_pos] = piece
         del self.pieces[from_pos]
-        
-        # Verifica se o rei está em xeque
         king_in_check = self._is_king_in_check(piece.color)
-        
-        # Reverte o movimento
+        # Reverte
         self.pieces[from_pos] = piece
-        if original_target_piece:
+        if original_target_piece is not None:
             self.pieces[to_pos] = original_target_piece
         else:
-            del self.pieces[to_pos]
-        
+            self.pieces.pop(to_pos, None)
         return king_in_check
         
     def _is_king_in_check(self, color: Color) -> bool:
@@ -450,63 +456,138 @@ class Board:
         return False
         
     def _is_en_passant_target(self, pos: str) -> bool:
-        """Verifica se uma posição é alvo válido para en passant."""
+        """Verifica se uma posição é alvo válido para en passant (casa atrás do peão que avançou dois)."""
         if not self.last_move:
             return False
-            
         from_pos, to_pos = self.last_move
         last_piece = self.pieces.get(to_pos)
-        
         if not last_piece or last_piece.type != PieceType.PAWN:
             return False
-            
-        # Verifica se o último movimento foi um avanço duplo de peão
+        # Último lance foi avanço duplo?
         from_rank = int(from_pos[1])
         to_rank = int(to_pos[1])
-        return abs(to_rank - from_rank) == 2 and pos[0] == to_pos[0]
+        if abs(to_rank - from_rank) != 2:
+            return False
+        # A casa alvo precisa estar imediatamente atrás do peão que avançou
+        direction = -1 if last_piece.color == Color.WHITE else 1
+        behind_pos = f"{to_pos[0]}{to_rank + direction}"
+        return pos == behind_pos
+
+    def _attempt_castle(self, king_from: str, king_to: str) -> dict:
+        """Tenta executar o roque (rei se move duas casas). Valida todas as condições.
+        king_from: e1/e8, king_to: g1/g8 (lado rei) ou c1/c8 (lado dama)
+        """
+        king = self.pieces.get(king_from)
+        if not king or king.type != PieceType.KING:
+            return {"success": False, "error": "Rei não encontrado"}
+        if king.has_moved:
+            return {"success": False, "error": "Rei já se moveu"}
+        color = king.color
+        is_white = color == Color.WHITE
+        back_rank = '1' if is_white else '8'
+        opponent = Color.BLACK if is_white else Color.WHITE
+        # Determina lado e posições
+        if king_to[0] == 'g':
+            rook_pos = f"h{back_rank}"
+            rook_target = f"f{back_rank}"
+            path_squares = [f"f{back_rank}", f"g{back_rank}"]
+            between_for_clear = [f"f{back_rank}", f"g{back_rank}"]
+        elif king_to[0] == 'c':
+            rook_pos = f"a{back_rank}"
+            rook_target = f"d{back_rank}"
+            path_squares = [f"d{back_rank}", f"c{back_rank}"]
+            between_for_clear = [f"b{back_rank}", f"c{back_rank}", f"d{back_rank}"]
+        else:
+            return {"success": False, "error": "Destino de roque inválido"}
+        rook = self.pieces.get(rook_pos)
+        if not rook or rook.type != PieceType.ROOK or rook.has_moved:
+            return {"success": False, "error": "Torre inválida para roque"}
+        # Casas entre rei e torre devem estar vazias
+        for sq in between_for_clear:
+            if self.pieces.get(sq):
+                return {"success": False, "error": "Caminho do roque bloqueado"}
+        # Rei não pode estar em xeque, nem passar por casas atacadas, nem terminar em casa atacada
+        if self._is_king_in_check(color):
+            return {"success": False, "error": "Rei está em xeque"}
+        for sq in path_squares:
+            if self._is_under_attack(sq, opponent):
+                return {"success": False, "error": "Casa de passagem do roque atacada"}
+        # Executa o roque
+        self.pieces[king_to] = king
+        del self.pieces[king_from]
+        self.pieces[rook_target] = rook
+        del self.pieces[rook_pos]
+        king.has_moved = True
+        rook.has_moved = True
+        # Atualiza turno e histórico
+        self._post_move_update(king_from, king_to)
+        return {"success": True}
 
     def castle_kingside(self) -> dict:
         if self.current_turn == Color.WHITE:
-            king_pos, rook_pos = "e1", "h1"
-            king_target, rook_target = "g1", "f1"
+            return self._attempt_castle("e1", "g1")
         else:
-            king_pos, rook_pos = "e8", "h8"
-            king_target, rook_target = "g8", "f8"
-            
-        king = self.pieces.get(king_pos)
-        rook = self.pieces.get(rook_pos)
-        
-        if not king or not rook:
-            return {"success": False, "error": "Rei ou torre não encontrados"}
-            
-        if king.has_moved or rook.has_moved:
-            return {"success": False, "error": "Rei ou torre já se moveram"}
-            
-        # TODO: Implementar verificação de caminho livre e xeque
-        
-        # Executa o roque
-        self.pieces[king_target] = king
-        self.pieces[rook_target] = rook
-        del self.pieces[king_pos]
-        del self.pieces[rook_pos]
-        
-        king.has_moved = True
-        rook.has_moved = True
-        
-        return {"success": True}
+            return self._attempt_castle("e8", "g8")
 
     def is_en_passant_possible(self) -> bool:
         if not self.last_move:
             return False
-            
         from_pos, to_pos = self.last_move
-        piece = self.pieces.get(to_pos)
-        
+        last_piece = self.pieces.get(to_pos)
+        if not last_piece or last_piece.type != PieceType.PAWN:
+            return False
+        # Avanço duplo no último lance
+        return abs(int(to_pos[1]) - int(from_pos[1])) == 2
+
+    def _post_move_update(self, from_pos: str, to_pos: str, captured_piece: Optional[Piece] = None) -> None:
+        """Atualiza estado comum pós-movimento (turno, histórico, capturas)."""
+        # Alterna o turno
+        self.current_turn = Color.BLACK if self.current_turn == Color.WHITE else Color.WHITE
+        # Histórico
+        from_position = Position(from_pos[0], int(from_pos[1]))
+        to_position = Position(to_pos[0], int(to_pos[1]))
+        self.last_move = (from_pos, to_pos)
+        self.move_history.append((from_position, to_position))
+        # Capturas
+        if captured_piece:
+            self.captured_pieces.append(captured_piece)
+
+    def _is_en_passant_capture(self, from_pos: str, to_pos: str) -> bool:
+        """Retorna True se o movimento candidato é uma captura en passant válida."""
+        piece = self.pieces.get(from_pos)
         if not piece or piece.type != PieceType.PAWN:
             return False
-            
-        # TODO: Implementar lógica completa de en passant
-        return False
+        # Movimento diagonal para casa vazia
+        if self.pieces.get(to_pos):
+            return False
+        dx = ord(to_pos[0]) - ord(from_pos[0])
+        dy = int(to_pos[1]) - int(from_pos[1])
+        direction = 1 if piece.color == Color.WHITE else -1
+        if abs(dx) != 1 or dy != direction:
+            return False
+        # Verifica se casa alvo é a casa atrás do peão que avançou 2 no último lance
+        return self._is_en_passant_target(to_pos)
+
+    def _execute_en_passant(self, from_pos: str, to_pos: str) -> dict:
+        """Executa a captura en passant removendo o peão capturado corretamente."""
+        piece = self.pieces.get(from_pos)
+        if not piece or piece.type != PieceType.PAWN:
+            return {"success": False, "error": "Peão não encontrado para en passant"}
+        if not self._is_en_passant_target(to_pos):
+            return {"success": False, "error": "Destino não é válido para en passant"}
+        # Determina a posição do peão capturado (a casa do peão que moveu 2)
+        assert self.last_move is not None
+        _, last_to = self.last_move
+        captured_pos = last_to
+        captured_piece = self.pieces.get(captured_pos)
+        if not captured_piece or captured_piece.type != PieceType.PAWN:
+            return {"success": False, "error": "Nenhum peão para capturar en passant"}
+        # Executa: move peão atacante para to_pos e remove o capturado
+        self.pieces[to_pos] = piece
+        del self.pieces[from_pos]
+        self.pieces.pop(captured_pos, None)
+        piece.has_moved = True
+        return {"success": True, "captured": captured_piece}
 
     def promote_pawn(self, from_pos: str, to_pos: str, promotion: str) -> dict:
         piece = self.pieces.get(from_pos)

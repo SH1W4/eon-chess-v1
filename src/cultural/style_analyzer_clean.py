@@ -248,15 +248,9 @@ class CulturalStyleAnalyzer:
         forward_moves, defensive_moves = 0, 0
         for m in moves:
             if m['piece_color'] == Color.WHITE:
-                if int(m['to_pos'][1]) > int(m['from_pos'][1]):
-                    forward_moves += 1
-                else:
-                    defensive_moves += 1
+                (forward_moves if int(m['to_pos'][1]) > int(m['from_pos'][1]) else defensive_moves).__iadd__(1)
             else:
-                if int(m['to_pos'][1]) < int(m['from_pos'][1]):
-                    forward_moves += 1
-                else:
-                    defensive_moves += 1
+                (forward_moves if int(m['to_pos'][1]) < int(m['from_pos'][1]) else defensive_moves).__iadd__(1)
         characteristics['aggression'] = min(forward_moves / len(moves) * 1.5, 1.0)
         characteristics['defense'] = min(defensive_moves / len(moves) * 1.5, 1.0)
         return characteristics
@@ -387,3 +381,4 @@ class CulturalStyleAnalyzer:
         if any(k in narrative.lower() for k in keywords):
             score += 0.2
         return round(min(1.0, score), 2)
+

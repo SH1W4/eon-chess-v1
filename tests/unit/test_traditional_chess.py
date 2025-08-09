@@ -3,9 +3,9 @@ Testes unitários para o sistema tradicional de xadrez.
 """
 
 import pytest
-from traditional.core.board import Board
-from traditional.models import Position, Piece, PieceType, Color
-from core.interfaces import Move, MoveType
+from src.traditional.core.board.async_board import Board
+from src.traditional.models.models import Position, Piece, PieceType, Color
+from src.core.interfaces import Move, MoveType
 
 @pytest.mark.asyncio
 async def test_board_initialization(board):
