@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from typing import Optional
 from .board import PieceType, Color, Piece, Position
+from src.core.interfaces import MoveType
 
 @dataclass
 class Move:
@@ -13,6 +14,18 @@ class Move:
     is_castling: bool = False
     is_en_passant: bool = False
     is_check: bool = False
+    
+    @property
+    def move_type(self) -> MoveType:
+        """Retorna o tipo do movimento baseado nos flags booleanos"""
+        if self.is_castling:
+            return MoveType.CASTLE
+        elif self.is_en_passant:
+            return MoveType.EN_PASSANT
+        elif self.promotion_piece is not None:
+            return MoveType.PROMOTION
+        else:
+            return MoveType.NORMAL
     
     def __str__(self) -> str:
         """Retorna representação em string do movimento"""

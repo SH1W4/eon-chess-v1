@@ -342,50 +342,73 @@ class AdaptiveAI:
         
         # Get all valid moves for the current position
         all_moves = []
-        for piece in board.piece_list:
+        
+        # Verifica se board.pieces existe e tem itens
+        if not hasattr(board, 'pieces') or not board.pieces:
+            return None
+            
+        for pos, piece in board.pieces.items():
             if piece.color == color:
-                for to_pos in board.get_valid_moves(piece.position):
-                    move = Move(piece.position, to_pos, piece)
-                    if board.get_piece(to_pos):
-                        move.captured_piece = board.get_piece(to_pos)
+                # Get valid moves for this piece
+                valid_moves = board.get_valid_moves(pos)
+                for to_pos in valid_moves:
+                    move = Move(pos, to_pos, piece)
+                    # Check for captures
+                    captured = board.get_piece(to_pos)
+                    if captured:
+                        move.captured_piece = captured
                     all_moves.append(move)
+        
+        # Se não há movimentos válidos, retorna None
+        if not all_moves:
+            return None
         
         # Randomize move order slightly based on risk_taking profile
         if self.profile.risk_taking > 0.7:
+            import random
             random.shuffle(all_moves)
         
         for move in all_moves:
             # Make copy of board for evaluation
             board_copy = Board()
-            board_copy.squares = board.squares.copy()
-            board_copy.piece_list = board.piece_list.copy()
+            # Copia o estado do tabuleiro
+            if hasattr(board, 'squares'):
+                board_copy.squares = board.squares.copy()
+            if hasattr(board, 'pieces'):
+                board_copy.pieces = board.pieces.copy()
             
-            # Try move
-            if board_copy.make_move(move):
+            # Try move (make_move pode ser síncrono em Board básico)
+            piece_backup = board_copy.pieces.get(move.to_pos)
+            board_copy.pieces[move.to_pos] = move.piece
+            if move.from_pos in board_copy.pieces:
+                del board_copy.pieces[move.from_pos]
             
-                # Evaluate position recursively
-                score = -self._minimax(board_copy, depth - 1, float('-inf'), float('inf'),
-                                     Color.BLACK if color == Color.WHITE else Color.WHITE)
-                
-                # Add aggression bonus for captures
-                if move.captured_piece:
-                    capture_bonus = self.weights.piece_values[move.captured_piece.type] * self.profile.aggression
-                    score += capture_bonus
-                
-                if score > best_score:
-                    best_score = score
-                    best_move = move
+            # Evaluate position recursively
+            score = -self._minimax(board_copy, depth - 1, float('-inf'), float('inf'),
+                                 Color.BLACK if color == Color.WHITE else Color.WHITE)
             
-            # Update best move
+            # Restore board state
+            if move.from_pos != move.to_pos:
+                board_copy.pieces[move.from_pos] = move.piece
+                if piece_backup:
+                    board_copy.pieces[move.to_pos] = piece_backup
+                elif move.to_pos in board_copy.pieces:
+                    del board_copy.pieces[move.to_pos]
+            
+            # Add aggression bonus for captures
+            if move.captured_piece:
+                capture_bonus = self.weights.piece_values[move.captured_piece.type] * self.profile.aggression
+                score += capture_bonus
+            
             if score > best_score:
                 best_score = score
-                best_move = (from_pos, to_pos)
+                best_move = move
         
         return best_move
     
     def _minimax(self, board: Board, depth: int, alpha: float, beta: float, color: Color) -> float:
         # Verifica cache de transposição
-        tt_entry = self.transposition_table.lookup(board)
+        tt_entry = self.transposition_table.lookup(board, depth)
         if tt_entry and tt_entry.depth >= depth:
             if tt_entry.flag == 'exact':
                 return tt_entry.score
@@ -490,35 +513,46 @@ class AdaptiveAI:
         # Ajusta a taxa de aprendizado baseado no modo
         base_learning_rate = self.profile.learning_rate
         if self.profile.learning_mode == LearningMode.PASSIVE:
-            self.learning_rate = base_learning_rate * 0.5
+            learning_rate = base_learning_rate * 0.5
         elif self.profile.learning_mode == LearningMode.ACTIVE:
-            self.learning_rate = base_learning_rate
+            learning_rate = base_learning_rate * 1.0
         else:  # AGGRESSIVE
-            self.learning_rate = base_learning_rate * 2.0
+            learning_rate = base_learning_rate * 2.0
             
+        # Sempre adiciona o jogo atual à memória antes de processar
+        current_game = {
+            'result': game_result,
+            'aggression': self.profile.aggression,
+            'positional': self.profile.positional,
+            'risk_taking': self.profile.risk_taking
+        }
+        self.game_memory.append(current_game)
+        
         # Analyze final position
         aggressive_moves = 0
         positional_moves = 0
         risky_moves = 0
-        total_moves = len(board.move_history)
+        total_moves = len(board.move_history) if hasattr(board, 'move_history') and board.move_history else 0
         
-        for move in board.move_history:
-            from_pos, to_pos = move
-            # Count captures as aggressive moves
-            if to_pos in board.captured_pieces:
-                aggressive_moves += 1
-            
-            # Simple positional analysis
-            piece = board.get_piece(to_pos)
-            if piece and piece.type != PieceType.PAWN:
-                # Center control is positional
-                if 3 <= to_pos.rank <= 6 and 3 <= to_pos.file <= 6:
-                    positional_moves += 1
-                    
-            # Consider moves that put pieces at risk as risky
-            if piece and board.is_square_attacked(to_pos, 
-                Color.BLACK if piece.color == Color.WHITE else Color.WHITE):
-                risky_moves += 1
+        # Só processa move_history se existir
+        if hasattr(board, 'move_history') and board.move_history:
+            for move in board.move_history:
+                from_pos, to_pos = move
+                # Count captures as aggressive moves
+                if to_pos in board.captured_pieces:
+                    aggressive_moves += 1
+                
+                # Simple positional analysis
+                piece = board.get_piece(to_pos)
+                if piece and piece.type != PieceType.PAWN:
+                    # Center control is positional
+                    if 3 <= to_pos.rank <= 6 and 3 <= to_pos.file <= 6:
+                        positional_moves += 1
+                        
+                # Consider moves that put pieces at risk as risky
+                if piece and board.is_square_attacked(to_pos, 
+                    Color.BLACK if piece.color == Color.WHITE else Color.WHITE):
+                    risky_moves += 1
         
         # Update profile based on move analysis
         if total_moves > 0:
@@ -540,15 +574,36 @@ class AdaptiveAI:
                                     new_weight * (positional_moves / total_moves)
             self.profile.risk_taking = memory_weight * self.profile.risk_taking + \
                                      new_weight * (risky_moves / total_moves)
-            
-            # Evolução adicional baseada nos ciclos
-            for _ in range(self.profile.evolution_cycles - 1):
-                # Simula jogos usando o perfil atual
-                simulated_profile = self._simulate_games()
-                # Incorpora resultados da simulação
-                self.profile.aggression = (self.profile.aggression + simulated_profile.aggression) / 2
-                self.profile.positional = (self.profile.positional + simulated_profile.positional) / 2
-                self.profile.risk_taking = (self.profile.risk_taking + simulated_profile.risk_taking) / 2
+        
+        # Evolução adicional baseada nos ciclos (independente de move_history)
+        if self.profile.evolution_cycles > 0:
+                # Usa memória de jogos para aprendizado
+                if self.game_memory:
+                    memory_stats = {
+                        'aggression': sum(g.get('aggression', 0.5) for g in self.game_memory[-5:]) / min(5, len(self.game_memory)),
+                        'positional': sum(g.get('positional', 0.5) for g in self.game_memory[-5:]) / min(5, len(self.game_memory)),
+                        'risk_taking': sum(g.get('risk_taking', 0.5) for g in self.game_memory[-5:]) / min(5, len(self.game_memory))
+                    }
+                    
+                    # Aplica aprendizado baseado na memória com taxa de aprendizado
+                    evolution_rate = learning_rate * self.profile.evolution_cycles
+                    self.profile.aggression += evolution_rate * (memory_stats['aggression'] - self.profile.aggression)
+                    self.profile.positional += evolution_rate * (memory_stats['positional'] - self.profile.positional)
+                    self.profile.risk_taking += evolution_rate * (memory_stats['risk_taking'] - self.profile.risk_taking)
+                else:
+                    # Se não há memória, aplica pequenas mudanças aleatórias baseadas no modo
+                    if self.profile.learning_mode == LearningMode.AGGRESSIVE:
+                        self.profile.aggression = min(1.0, self.profile.aggression + 0.1)
+                        self.profile.risk_taking = min(1.0, self.profile.risk_taking + 0.1)
+                    elif self.profile.learning_mode == LearningMode.ACTIVE:
+                        self.profile.aggression += random.uniform(-0.05, 0.05)
+                        self.profile.positional += random.uniform(-0.05, 0.05)
+                        self.profile.risk_taking += random.uniform(-0.05, 0.05)
+                    
+                # Garante que valores fiquem no intervalo [0, 1]
+                self.profile.aggression = max(0.0, min(1.0, self.profile.aggression))
+                self.profile.positional = max(0.0, min(1.0, self.profile.positional))
+                self.profile.risk_taking = max(0.0, min(1.0, self.profile.risk_taking))
         
         # Adjust based on game result
         if game_result == "win":
@@ -634,14 +689,26 @@ class AdaptiveAI:
     def _evaluate_mobility(self, board: Board, color: Color) -> float:
         """Evaluate the mobility of pieces for a given color."""
         mobility_score = 0.0
+        
+        if not hasattr(board, 'pieces') or not board.pieces:
+            return 0.0
+            
         for pos, piece in board.pieces.items():
             if piece.color == color:
+                # get_valid_moves retorna uma lista de posições (Position)
                 valid_moves = board.get_valid_moves(pos)
+                # Cada movimento válido contribui para a mobilidade
                 mobility_score += len(valid_moves) * 0.1
                 # Bonus for controlling center squares
-                for move in valid_moves:
-                    if 3 <= move.rank <= 6 and 3 <= move.file <= 6:
-                        mobility_score += 0.05
+                for move_pos in valid_moves:
+                    # move_pos é uma Position
+                    if hasattr(move_pos, 'rank') and hasattr(move_pos, 'file'):
+                        if 3 <= move_pos.rank <= 4 and 3 <= move_pos.file <= 4:
+                            mobility_score += 0.05
+                    elif isinstance(move_pos, tuple) and len(move_pos) == 2:
+                        # Se for uma tupla (rank, file)
+                        if 3 <= move_pos[0] <= 4 and 3 <= move_pos[1] <= 4:
+                            mobility_score += 0.05
         return mobility_score
         
     def _simulate_games(self) -> PlayerProfile:

@@ -128,8 +128,24 @@ class Board:
             self.pieces[white_pos] = Piece(PieceType.PAWN, Color.WHITE, white_pos)
             self.pieces[black_pos] = Piece(PieceType.PAWN, Color.BLACK, black_pos)
 
-    def get_piece(self, pos: str) -> Optional[Piece]:
-        return self.pieces.get(pos)
+    def get_piece(self, pos: Union[str, tuple, Position]) -> Optional[Piece]:
+        """Get piece at position, accepting string, tuple or Position"""
+        if isinstance(pos, tuple):
+            # Se for tupla, usa diretamente (já que pieces pode ter tuplas como chaves)
+            return self.pieces.get(pos)
+        elif isinstance(pos, Position):
+            # Se for Position, converte para string
+            pos = str(pos)
+        # Se for string, tenta como está
+        piece = self.pieces.get(pos)
+        if piece:
+            return piece
+        # Se não encontrou como string, tenta converter para tupla
+        if isinstance(pos, str) and len(pos) == 2:
+            file_idx = ord(pos[0]) - ord('a')
+            rank = int(pos[1])
+            return self.pieces.get((file_idx, rank))
+        return None
 
     def display(self) -> str:
         board = []
@@ -362,12 +378,22 @@ class Board:
                 
         return False
         
-    def get_valid_moves(self, pos: Union[str, Position]) -> List[Position]:
+    def get_valid_moves(self, pos: Union[str, Position, tuple]) -> List[Position]:
         """Get all valid moves for a piece at the given position"""
-        if isinstance(pos, Position):
-            pos = str(pos)
+        # Guarda a posição original para usar consistentemente
+        original_pos = pos
         
-        piece = self.get_piece(pos)
+        # Converte para string para uso interno se necessário
+        if isinstance(pos, tuple):
+            file_idx, rank = pos
+            pos_str = f"{chr(ord('a') + file_idx)}{rank}"
+        elif isinstance(pos, Position):
+            pos_str = str(pos)
+        else:
+            pos_str = pos
+        
+        # Usa original_pos para buscar a peça (mantém consistência com o dicionário)
+        piece = self.get_piece(original_pos)
         if not piece:
             return []
             
@@ -376,22 +402,31 @@ class Board:
         for file in "abcdefgh":
             for rank in range(1, 9):
                 to_pos = f"{file}{rank}"
-                if to_pos != pos:
-                    coords = self._get_move_coordinates(pos, to_pos)
+                if to_pos != pos_str:
+                    coords = self._get_move_coordinates(pos_str, to_pos)
                     if coords:
-                        if self._validate_piece_move(piece, pos, to_pos, coords):
-                            if piece.type == PieceType.KNIGHT or self._is_path_clear(pos, to_pos):
+                        if self._validate_piece_move(piece, pos_str, to_pos, coords):
+                            if piece.type == PieceType.KNIGHT or self._is_path_clear(pos_str, to_pos):
+                                # Usa to_pos para verificar peça de destino
                                 target_piece = self.get_piece(to_pos)
                                 if not target_piece or target_piece.color != piece.color:
                                     valid_moves.append(Position(file, rank))
         return valid_moves
             
-    def _is_path_clear(self, from_pos: str, to_pos: str) -> bool:
+    def _is_path_clear(self, from_pos: Union[str, tuple], to_pos: Union[str, tuple]) -> bool:
         """Verifica se o caminho entre duas posições está livre."""
-        from_file = ord(from_pos[0]) - ord('a')
-        from_rank = int(from_pos[1])
-        to_file = ord(to_pos[0]) - ord('a')
-        to_rank = int(to_pos[1])
+        # Converte tuplas para coordenadas
+        if isinstance(from_pos, tuple):
+            from_file, from_rank = from_pos
+        else:
+            from_file = ord(from_pos[0]) - ord('a')
+            from_rank = int(from_pos[1])
+            
+        if isinstance(to_pos, tuple):
+            to_file, to_rank = to_pos
+        else:
+            to_file = ord(to_pos[0]) - ord('a')
+            to_rank = int(to_pos[1])
         
         # Determina a direção do movimento
         file_step = 0 if from_file == to_file else (1 if to_file > from_file else -1)

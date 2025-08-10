@@ -122,7 +122,15 @@ class Board(SyncBoard):
             self.captured_pieces.append(original_target)
         
         # Trata roque
-        if move.move_type == MoveType.CASTLE:
+        if hasattr(move, 'move_type') and move.move_type == MoveType.CASTLE:
+            # Usa o flag move_type se disponível
+            pass  # O movimento de torre é tratado abaixo
+        elif piece.type == PieceType.KING and abs(to_pos.file - from_pos.file) == 2:
+            # Fallback: detecta roque pelo movimento do rei (2 casas horizontalmente)
+            pass  # O movimento de torre é tratado abaixo
+        
+        # Executa movimento da torre no roque
+        if piece.type == PieceType.KING and abs(to_pos.file - from_pos.file) == 2:
             # Roque do lado do rei
             if to_pos.file == 7:
                 rook_from = Position(from_pos.rank, 8)
