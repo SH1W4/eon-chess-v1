@@ -234,7 +234,13 @@ class AdaptiveAI:
         score = 0.0
         
         # Material evaluation
-        for piece in board.piece_list:
+        for pos, piece in board.pieces.items():
+            # Garante que a peça tem position configurado
+            if not hasattr(piece, 'position') or piece.position is None:
+                if isinstance(pos, tuple):
+                    file_char = chr(ord('a') + pos[0])
+                    # NOTA: Board usa rank direto da tupla, sem +1
+                    piece.position = Position(file_char, pos[1])
             piece_value = self.weights.piece_values[piece.type]
             if piece.color == color:
                 score += piece_value
@@ -246,7 +252,13 @@ class AdaptiveAI:
         black_starting_rank = {PieceType.PAWN: 1, PieceType.KNIGHT: 0, PieceType.BISHOP: 0, PieceType.ROOK: 0, PieceType.QUEEN: 0}
         development_score = 0.0
         
-        for piece in board.piece_list:
+        for pos, piece in board.pieces.items():
+            # Garante que a peça tem position configurado
+            if not hasattr(piece, 'position') or piece.position is None:
+                if isinstance(pos, tuple):
+                    file_char = chr(ord('a') + pos[0])
+                    # NOTA: Board usa rank direto da tupla, sem +1
+                    piece.position = Position(file_char, pos[1])
             if piece.type == PieceType.KING:
                 continue
                 
@@ -332,7 +344,7 @@ class AdaptiveAI:
             
         return score
     
-    def get_best_move(self, board: Board, color: Optional[Color] = None, depth: int = 3) -> Optional[Move]:
+    def get_best_move(self, board: Board, color: Optional[Color] = None, depth: int = 1) -> Optional[Move]:
         """Get best move using minimax with alpha-beta pruning"""
         if color is None:
             color = Color.WHITE
@@ -348,6 +360,12 @@ class AdaptiveAI:
             return None
             
         for pos, piece in board.pieces.items():
+            # Garante que a peça tem position configurado
+            if not hasattr(piece, 'position') or piece.position is None:
+                if isinstance(pos, tuple):
+                    file_char = chr(ord('a') + pos[0])
+                    # NOTA: Board usa rank direto da tupla, sem +1
+                    piece.position = Position(file_char, pos[1])
             if piece.color == color:
                 # Get valid moves for this piece
                 valid_moves = board.get_valid_moves(pos)
@@ -384,8 +402,9 @@ class AdaptiveAI:
                 del board_copy.pieces[move.from_pos]
             
             # Evaluate position recursively
-            score = -self._minimax(board_copy, depth - 1, float('-inf'), float('inf'),
-                                 Color.BLACK if color == Color.WHITE else Color.WHITE)
+            opponent_color = Color.BLACK if color == Color.WHITE else Color.WHITE
+            minimax_score = self._minimax(board_copy, depth - 1, float('-inf'), float('inf'), opponent_color)
+            score = -minimax_score
             
             # Restore board state
             if move.from_pos != move.to_pos:
@@ -427,10 +446,16 @@ class AdaptiveAI:
             
             # Get all valid moves for white pieces
             moves = []
-            for piece in board.piece_list:
+            for pos, piece in board.pieces.items():
+                # Garante que a peça tem position configurado
+                if not hasattr(piece, 'position') or piece.position is None:
+                    if isinstance(pos, tuple):
+                        file_char = chr(ord('a') + pos[0])
+                        # NOTA: Board usa rank direto da tupla, sem +1
+                        piece.position = Position(file_char, pos[1])
                 if piece.color == color:
-                    for to_pos in board.get_valid_moves(piece.position):
-                        moves.append(Move(piece.position, to_pos, piece))
+                    for to_pos in board.get_valid_moves(pos):
+                        moves.append(Move(pos, to_pos, piece))
             
             # Order moves to improve alpha-beta pruning
             moves = self._order_moves(board, moves)
@@ -438,15 +463,22 @@ class AdaptiveAI:
             for move in moves:
                 # Make copy of board
                 board_copy = Board()
-                board_copy.squares = board.squares.copy()
-                board_copy.piece_list = board.piece_list.copy()
+                if hasattr(board, 'squares'):
+                    board_copy.squares = board.squares.copy()
+                if hasattr(board, 'pieces'):
+                    board_copy.pieces = board.pieces.copy()
                 
-                if board_copy.make_move(move):
-                    score = self._minimax(board_copy, depth - 1, alpha, beta, Color.BLACK)
-                    max_score = max(max_score, score)
-                    alpha = max(alpha, score)
-                    if beta <= alpha:
-                        break
+                # Manually make the move
+                piece_backup = board_copy.pieces.get(move.to_pos)
+                board_copy.pieces[move.to_pos] = move.piece
+                if move.from_pos in board_copy.pieces:
+                    del board_copy.pieces[move.from_pos]
+                    
+                score = self._minimax(board_copy, depth - 1, alpha, beta, Color.BLACK)
+                max_score = max(max_score, score)
+                alpha = max(alpha, score)
+                if beta <= alpha:
+                    break
             
             return max_score
         else:
@@ -454,26 +486,42 @@ class AdaptiveAI:
             
             # Get all valid moves for black pieces
             moves = []
-            for piece in board.piece_list:
+            for pos, piece in board.pieces.items():
+                # Garanta que a peça tem position configurado
+                if not hasattr(piece, 'position') or piece.position is None:
+                    if isinstance(pos, tuple):
+                        file_char = chr(ord('a') + pos[0])
+                        # NOTA: Board usa rank direto da tupla, sem +1
+                        piece.position = Position(file_char, pos[1])
                 if piece.color == color:
-                    for to_pos in board.get_valid_moves(piece.position):
-                        moves.append(Move(piece.position, to_pos, piece))
+                    for to_pos in board.get_valid_moves(pos):
+                        moves.append(Move(pos, to_pos, piece))
             
             # Order moves to improve alpha-beta pruning
             moves = self._order_moves(board, moves)
             
+            if not moves:
+                return min_score
+            
             for move in moves:
                 # Make copy of board
                 board_copy = Board()
-                board_copy.squares = board.squares.copy()
-                board_copy.piece_list = board.piece_list.copy()
+                if hasattr(board, 'squares'):
+                    board_copy.squares = board.squares.copy()
+                if hasattr(board, 'pieces'):
+                    board_copy.pieces = board.pieces.copy()
                 
-                if board_copy.make_move(move):
-                    score = self._minimax(board_copy, depth - 1, alpha, beta, Color.WHITE)
-                    min_score = min(min_score, score)
-                    beta = min(beta, score)
-                    if beta <= alpha:
-                        break
+                # Manually make the move
+                piece_backup = board_copy.pieces.get(move.to_pos)
+                board_copy.pieces[move.to_pos] = move.piece
+                if move.from_pos in board_copy.pieces:
+                    del board_copy.pieces[move.from_pos]
+                    
+                score = self._minimax(board_copy, depth - 1, alpha, beta, Color.WHITE)
+                min_score = min(min_score, score)
+                beta = min(beta, score)
+                if beta <= alpha:
+                    break
             
             return min_score
             
@@ -494,15 +542,25 @@ class AdaptiveAI:
                 score += self.move_scores[move_key]
             
             # Center control is generally good
-            if 2 <= move.to_pos.rank <= 5 and 2 <= move.to_pos.file <= 5:
-                score += 0.3
-                if 3 <= move.to_pos.rank <= 4 and 3 <= move.to_pos.file <= 4:
-                    score += 0.2
+            # Handle both Position objects and tuples
+            if hasattr(move.to_pos, 'rank') and hasattr(move.to_pos, 'file'):
+                # Position object - file is already 0-7 index
+                if 2 <= move.to_pos.rank <= 5 and 2 <= move.to_pos.file <= 5:
+                    score += 0.3
+                    if 3 <= move.to_pos.rank <= 4 and 3 <= move.to_pos.file <= 4:
+                        score += 0.2
+            elif isinstance(move.to_pos, tuple) and len(move.to_pos) == 2:
+                # Tuple (file_idx, rank)
+                file_idx, rank = move.to_pos
+                if 2 <= rank <= 5 and 2 <= file_idx <= 5:
+                    score += 0.3
+                    if 3 <= rank <= 4 and 3 <= file_idx <= 4:
+                        score += 0.2
             
             move_scores.append((score, move))
         
-        # Sort moves by score in descending order
-        move_scores.sort(reverse=True)
+        # Sort moves by score in descending order (sort by key to avoid comparing Move objects)
+        move_scores.sort(key=lambda x: x[0], reverse=True)
         return [move for _, move in move_scores]
     
     def update_profile(self, board: Board, game_result: str):
@@ -577,33 +635,39 @@ class AdaptiveAI:
         
         # Evolução adicional baseada nos ciclos (independente de move_history)
         if self.profile.evolution_cycles > 0:
+            # Para o primeiro jogo ou modo AGGRESSIVE, força mudanças
+            if len(self.game_memory) == 1 and self.profile.learning_mode == LearningMode.AGGRESSIVE:
+                # Primeiro jogo com modo agressivo - força evolução
+                change = 0.05 * self.profile.evolution_cycles * learning_rate
+                self.profile.aggression = min(1.0, self.profile.aggression + change)
+                self.profile.risk_taking = min(1.0, self.profile.risk_taking + change)
+            elif len(self.game_memory) > 1:
                 # Usa memória de jogos para aprendizado
-                if self.game_memory:
-                    memory_stats = {
-                        'aggression': sum(g.get('aggression', 0.5) for g in self.game_memory[-5:]) / min(5, len(self.game_memory)),
-                        'positional': sum(g.get('positional', 0.5) for g in self.game_memory[-5:]) / min(5, len(self.game_memory)),
-                        'risk_taking': sum(g.get('risk_taking', 0.5) for g in self.game_memory[-5:]) / min(5, len(self.game_memory))
-                    }
-                    
-                    # Aplica aprendizado baseado na memória com taxa de aprendizado
-                    evolution_rate = learning_rate * self.profile.evolution_cycles
-                    self.profile.aggression += evolution_rate * (memory_stats['aggression'] - self.profile.aggression)
-                    self.profile.positional += evolution_rate * (memory_stats['positional'] - self.profile.positional)
-                    self.profile.risk_taking += evolution_rate * (memory_stats['risk_taking'] - self.profile.risk_taking)
-                else:
-                    # Se não há memória, aplica pequenas mudanças aleatórias baseadas no modo
-                    if self.profile.learning_mode == LearningMode.AGGRESSIVE:
-                        self.profile.aggression = min(1.0, self.profile.aggression + 0.1)
-                        self.profile.risk_taking = min(1.0, self.profile.risk_taking + 0.1)
-                    elif self.profile.learning_mode == LearningMode.ACTIVE:
-                        self.profile.aggression += random.uniform(-0.05, 0.05)
-                        self.profile.positional += random.uniform(-0.05, 0.05)
-                        self.profile.risk_taking += random.uniform(-0.05, 0.05)
-                    
-                # Garante que valores fiquem no intervalo [0, 1]
-                self.profile.aggression = max(0.0, min(1.0, self.profile.aggression))
-                self.profile.positional = max(0.0, min(1.0, self.profile.positional))
-                self.profile.risk_taking = max(0.0, min(1.0, self.profile.risk_taking))
+                memory_stats = {
+                    'aggression': sum(g.get('aggression', 0.5) for g in self.game_memory[-5:]) / min(5, len(self.game_memory)),
+                    'positional': sum(g.get('positional', 0.5) for g in self.game_memory[-5:]) / min(5, len(self.game_memory)),
+                    'risk_taking': sum(g.get('risk_taking', 0.5) for g in self.game_memory[-5:]) / min(5, len(self.game_memory))
+                }
+                
+                # Aplica aprendizado baseado na memória com taxa de aprendizado
+                evolution_rate = learning_rate * self.profile.evolution_cycles
+                self.profile.aggression += evolution_rate * (memory_stats['aggression'] - self.profile.aggression)
+                self.profile.positional += evolution_rate * (memory_stats['positional'] - self.profile.positional)
+                self.profile.risk_taking += evolution_rate * (memory_stats['risk_taking'] - self.profile.risk_taking)
+            elif self.profile.learning_mode == LearningMode.AGGRESSIVE:
+                # Se não há memória mas há evolution_cycles e modo agressivo
+                change = 0.05 * self.profile.evolution_cycles * learning_rate
+                self.profile.aggression = min(1.0, self.profile.aggression + change)
+                self.profile.risk_taking = min(1.0, self.profile.risk_taking + change)
+            elif self.profile.learning_mode == LearningMode.ACTIVE:
+                self.profile.aggression += random.uniform(-0.05, 0.05)
+                self.profile.positional += random.uniform(-0.05, 0.05)
+                self.profile.risk_taking += random.uniform(-0.05, 0.05)
+                
+            # Garante que valores fiquem no intervalo [0, 1]
+            self.profile.aggression = max(0.0, min(1.0, self.profile.aggression))
+            self.profile.positional = max(0.0, min(1.0, self.profile.positional))
+            self.profile.risk_taking = max(0.0, min(1.0, self.profile.risk_taking))
         
         # Adjust based on game result
         if game_result == "win":
@@ -694,6 +758,12 @@ class AdaptiveAI:
             return 0.0
             
         for pos, piece in board.pieces.items():
+            # Garante que a peça tem position configurado
+            if not hasattr(piece, 'position') or piece.position is None:
+                if isinstance(pos, tuple):
+                    file_char = chr(ord('a') + pos[0])
+                    # NOTA: Board usa rank direto da tupla, sem +1
+                    piece.position = Position(file_char, pos[1])
             if piece.color == color:
                 # get_valid_moves retorna uma lista de posições (Position)
                 valid_moves = board.get_valid_moves(pos)

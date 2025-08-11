@@ -33,7 +33,15 @@ class Move:
         
         # Adiciona peça movida
         if self.piece.type != PieceType.PAWN:
-            move_str += self.piece.type.value[0].upper()
+            # Map piece types to their standard chess notation
+            piece_notation = {
+                PieceType.KNIGHT: 'N',
+                PieceType.BISHOP: 'B',
+                PieceType.ROOK: 'R',
+                PieceType.QUEEN: 'Q',
+                PieceType.KING: 'K'
+            }
+            move_str += piece_notation.get(self.piece.type, '')
             
         # Adiciona posição
         move_str += str(self.from_pos)
@@ -48,7 +56,13 @@ class Move:
         
         # Adiciona promoção
         if self.promotion_piece:
-            move_str += "=" + self.promotion_piece.type.value[0].upper()
+            piece_notation = {
+                PieceType.KNIGHT: 'N',
+                PieceType.BISHOP: 'B',
+                PieceType.ROOK: 'R',
+                PieceType.QUEEN: 'Q'
+            }
+            move_str += "=" + piece_notation.get(self.promotion_piece.type, 'Q')
             
         # Adiciona xeque
         if self.is_check:
