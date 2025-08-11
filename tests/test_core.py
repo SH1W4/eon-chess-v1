@@ -6,35 +6,37 @@ def test_board_initialization():
     """Testa inicialização do tabuleiro"""
     board = Board()
     
-    # Verifica peças brancas
-    assert board.get_piece(Position(1, 1)).type == PieceType.ROOK
-    assert board.get_piece(Position(1, 2)).type == PieceType.KNIGHT
-    assert board.get_piece(Position(1, 3)).type == PieceType.BISHOP
-    assert board.get_piece(Position(1, 4)).type == PieceType.QUEEN
-    assert board.get_piece(Position(1, 5)).type == PieceType.KING
-    assert board.get_piece(Position(1, 6)).type == PieceType.BISHOP
-    assert board.get_piece(Position(1, 7)).type == PieceType.KNIGHT
-    assert board.get_piece(Position(1, 8)).type == PieceType.ROOK
+    # Verifica peças brancas (rank 1)
+    assert board.get_piece(Position.from_algebraic("a1")).type == PieceType.ROOK
+    assert board.get_piece(Position.from_algebraic("b1")).type == PieceType.KNIGHT
+    assert board.get_piece(Position.from_algebraic("c1")).type == PieceType.BISHOP
+    assert board.get_piece(Position.from_algebraic("d1")).type == PieceType.QUEEN
+    assert board.get_piece(Position.from_algebraic("e1")).type == PieceType.KING
+    assert board.get_piece(Position.from_algebraic("f1")).type == PieceType.BISHOP
+    assert board.get_piece(Position.from_algebraic("g1")).type == PieceType.KNIGHT
+    assert board.get_piece(Position.from_algebraic("h1")).type == PieceType.ROOK
     
-    # Verifica peões brancos
-    for file in range(1, 9):
-        assert board.get_piece(Position(2, file)).type == PieceType.PAWN
-        assert board.get_piece(Position(2, file)).color == Color.WHITE
+    # Verifica peões brancos (rank 2)
+    for file in "abcdefgh":
+        pos = f"{file}2"
+        assert board.get_piece(Position.from_algebraic(pos)).type == PieceType.PAWN
+        assert board.get_piece(Position.from_algebraic(pos)).color == Color.WHITE
     
-    # Verifica peças pretas
-    assert board.get_piece(Position(8, 1)).type == PieceType.ROOK
-    assert board.get_piece(Position(8, 2)).type == PieceType.KNIGHT
-    assert board.get_piece(Position(8, 3)).type == PieceType.BISHOP
-    assert board.get_piece(Position(8, 4)).type == PieceType.QUEEN
-    assert board.get_piece(Position(8, 5)).type == PieceType.KING
-    assert board.get_piece(Position(8, 6)).type == PieceType.BISHOP
-    assert board.get_piece(Position(8, 7)).type == PieceType.KNIGHT
-    assert board.get_piece(Position(8, 8)).type == PieceType.ROOK
+    # Verifica peças pretas (rank 8)
+    assert board.get_piece(Position.from_algebraic("a8")).type == PieceType.ROOK
+    assert board.get_piece(Position.from_algebraic("b8")).type == PieceType.KNIGHT
+    assert board.get_piece(Position.from_algebraic("c8")).type == PieceType.BISHOP
+    assert board.get_piece(Position.from_algebraic("d8")).type == PieceType.QUEEN
+    assert board.get_piece(Position.from_algebraic("e8")).type == PieceType.KING
+    assert board.get_piece(Position.from_algebraic("f8")).type == PieceType.BISHOP
+    assert board.get_piece(Position.from_algebraic("g8")).type == PieceType.KNIGHT
+    assert board.get_piece(Position.from_algebraic("h8")).type == PieceType.ROOK
     
-    # Verifica peões pretos
-    for file in range(1, 9):
-        assert board.get_piece(Position(7, file)).type == PieceType.PAWN
-        assert board.get_piece(Position(7, file)).color == Color.BLACK
+    # Verifica peões pretos (rank 7)
+    for file in "abcdefgh":
+        pos = f"{file}7"
+        assert board.get_piece(Position.from_algebraic(pos)).type == PieceType.PAWN
+        assert board.get_piece(Position.from_algebraic(pos)).color == Color.BLACK
 
 def test_position_algebraic():
     """Testa conversão de notação algébrica"""
@@ -61,10 +63,8 @@ def test_piece_movement():
     board = Board()
     
     # Move peão branco
-    assert board.move_piece(
-        Position.from_algebraic("e2"),
-        Position.from_algebraic("e4")
-    )
+    result = board.move_piece("e2", "e4")
+    assert result["success"]
     assert board.get_piece(Position.from_algebraic("e4")).type == PieceType.PAWN
     assert board.get_piece(Position.from_algebraic("e4")).color == Color.WHITE
     
@@ -72,10 +72,8 @@ def test_piece_movement():
     assert board.current_turn == Color.BLACK
     
     # Move peão preto
-    assert board.move_piece(
-        Position.from_algebraic("e7"),
-        Position.from_algebraic("e5")
-    )
+    result = board.move_piece("e7", "e5")
+    assert result["success"]
     assert board.get_piece(Position.from_algebraic("e5")).type == PieceType.PAWN
     assert board.get_piece(Position.from_algebraic("e5")).color == Color.BLACK
     
@@ -87,16 +85,12 @@ def test_invalid_moves():
     board = Board()
     
     # Tenta mover peça errada no turno
-    assert not board.move_piece(
-        Position.from_algebraic("e7"),  # Peça preta
-        Position.from_algebraic("e5")
-    )
+    result = board.move_piece("e7", "e5")  # Peça preta
+    assert not result["success"]
     
     # Tenta mover de casa vazia
-    assert not board.move_piece(
-        Position.from_algebraic("e4"),
-        Position.from_algebraic("e5")
-    )
+    result = board.move_piece("e4", "e5")
+    assert not result["success"]
     
     # Movimento válido não deve afetar estado do jogo
     assert board.current_turn == Color.WHITE
@@ -107,20 +101,12 @@ def test_piece_capture():
     board = Board()
     
     # Move peão branco para perto do preto
-    board.move_piece(
-        Position.from_algebraic("e2"),
-        Position.from_algebraic("e4")
-    )
-    board.move_piece(
-        Position.from_algebraic("d7"),
-        Position.from_algebraic("d5")
-    )
+    board.move_piece("e2", "e4")
+    board.move_piece("d7", "d5")
     
     # Captura
-    assert board.move_piece(
-        Position.from_algebraic("e4"),
-        Position.from_algebraic("d5")
-    )
+    result = board.move_piece("e4", "d5")
+    assert result["success"]
     
     # Verifica captura
     assert len(board.captured_pieces) == 1
@@ -138,11 +124,11 @@ def test_check_detection():
     
     # Mate do pastor (sem o mate)
     print("Move White Pawn: e2 to e4")
-    board.move_piece(Position.from_algebraic("e2"), Position.from_algebraic("e4"))
+    board.move_piece("e2", "e4")
     print("Move Black Pawn: e7 to e5")
-    board.move_piece(Position.from_algebraic("e7"), Position.from_algebraic("e5"))
+    board.move_piece("e7", "e5")
     print("Move White Queen: d1 to h5")
-    board.move_piece(Position.from_algebraic("d1"), Position.from_algebraic("h5"))
+    board.move_piece("d1", "h5")
     
     # Verifica que não há xeque ainda
     assert not board.is_in_check(Color.BLACK)
@@ -150,7 +136,7 @@ def test_check_detection():
     
     # Move a dama para dar xeque
     print("Move White Queen: h5 to f7 for Check")
-    board.move_piece(Position.from_algebraic("h5"), Position.from_algebraic("f7"))
+    board.move_piece("h5", "f7")
     
     # Verifica xeque
     assert board.is_in_check(Color.BLACK)
@@ -162,11 +148,11 @@ def test_checkmate_detection():
     board = Board()
     
     # Executa o mate do pastor
-    board.move_piece(Position.from_algebraic("e2"), Position.from_algebraic("e4"))
-    board.move_piece(Position.from_algebraic("e7"), Position.from_algebraic("e5"))
-    board.move_piece(Position.from_algebraic("d1"), Position.from_algebraic("h5"))
-    board.move_piece(Position.from_algebraic("f7"), Position.from_algebraic("f6"))
-    board.move_piece(Position.from_algebraic("h5"), Position.from_algebraic("f7"))
+    board.move_piece("e2", "e4")
+    board.move_piece("e7", "e5")
+    board.move_piece("d1", "h5")
+    board.move_piece("f7", "f6")
+    board.move_piece("h5", "f7")
     
     # Verifica xeque-mate
     assert board.is_in_check(Color.BLACK)
@@ -177,14 +163,15 @@ def test_castling():
     board = Board()
     
     # Move peças para liberar caminho do roque pequeno
-    board.move_piece(Position.from_algebraic("e2"), Position.from_algebraic("e4"))
-    board.move_piece(Position.from_algebraic("e7"), Position.from_algebraic("e5"))
-    board.move_piece(Position.from_algebraic("f1"), Position.from_algebraic("c4"))
-    board.move_piece(Position.from_algebraic("d7"), Position.from_algebraic("d6"))
-    board.move_piece(Position.from_algebraic("g1"), Position.from_algebraic("f3"))
+    board.move_piece("e2", "e4")
+    board.move_piece("e7", "e5")
+    board.move_piece("f1", "c4")
+    board.move_piece("d7", "d6")
+    board.move_piece("g1", "f3")
     
     # Executa roque pequeno
-    assert board.move_piece(Position.from_algebraic("e1"), Position.from_algebraic("g1"))
+    result = board.move_piece("e1", "g1")
+    assert result["success"]
     
     # Verifica posições após o roque
     king = board.get_piece(Position.from_algebraic("g1"))

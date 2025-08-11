@@ -92,15 +92,37 @@ def board():
             return Board()
 
 @pytest.fixture
+def async_board():
+    """Fixture para tabuleiro assíncrono adaptado"""
+    from tests.test_helpers import AsyncBoardAdapter
+    
+    # Tenta importar o board tradicional primeiro
+    try:
+        from traditional.core.board.async_board import Board
+        board = Board()
+    except ImportError:
+        try:
+            from src.traditional.core.board.async_board import Board
+            board = Board()
+        except ImportError:
+            # Fallback para o board padrão
+            from src.core.board.board import Board
+            board = Board()
+    
+    # Retorna o board envolto no adapter async
+    return AsyncBoardAdapter(board)
+
+@pytest.fixture
 def sample_game_position(mock_board):
     """Fixture para posição de jogo específica"""
     # Configurar uma posição interessante para testes
     from src.core.board.board import Position
     
     # Mover algumas peças para criar uma posição de teste
-    mock_board.move_piece(Position.from_algebraic("e2"), Position.from_algebraic("e4"))
-    mock_board.move_piece(Position.from_algebraic("e7"), Position.from_algebraic("e5"))
-    mock_board.move_piece(Position.from_algebraic("d2"), Position.from_algebraic("d4"))
+    # Usa string diretamente ao invés de Position para compatibilidade
+    mock_board.move_piece("e2", "e4")
+    mock_board.move_piece("e7", "e5")
+    mock_board.move_piece("d2", "d4")
     
     return mock_board
 

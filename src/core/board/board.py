@@ -15,23 +15,28 @@ class PieceType(Enum):
     KING = 6
 
 class Position:
-    def __init__(self, file: Union[str, int], rank: int):
-        # Convert file from string ('a'-'h') to int (0-7) if needed
-        if isinstance(file, str):
-            self.file = ord(file) - ord('a')
-        else:
-            self.file = file
-        # Convert from 1-8 to 0-7 if needed
-        if isinstance(rank, str):
-            rank = int(rank)
-        if rank > 8:
-            self.rank = rank - 1
-        else:
-            self.rank = rank
+    def __init__(self, rank: int, file: int):
+        """Initialize position with rank and file (both 1-8)"""
+        self.rank = rank
+        self.file = file
+    
+    @classmethod
+    def from_algebraic(cls, algebraic: str) -> 'Position':
+        """Create Position from algebraic notation (e.g., 'e4')"""
+        if len(algebraic) != 2:
+            raise ValueError(f"Invalid algebraic notation: {algebraic}")
+        file = ord(algebraic[0]) - ord('a') + 1  # Convert 'a'-'h' to 1-8
+        rank = int(algebraic[1])  # Already 1-8
+        return cls(rank, file)
+    
+    def to_algebraic(self) -> str:
+        """Convert Position to algebraic notation"""
+        file_char = chr(self.file - 1 + ord('a'))  # Convert 1-8 to 'a'-'h'
+        return f"{file_char}{self.rank}"
     
     def __str__(self):
-        # Convert back to chess notation
-        return f"{chr(self.file + ord('a'))}{self.rank + 1}"
+        # Use algebraic notation for string representation
+        return self.to_algebraic()
     
     def __eq__(self, other):
         if not isinstance(other, Position):
@@ -331,9 +336,10 @@ class Board:
             abs_dx = abs(dx)
             abs_dy = abs(dy)
             
-            print(f"DEBUG: Calculando coordenadas: {from_pos} -> {to_pos}")
-            print(f"DEBUG: Arquivo: {from_file}->{to_file} ({dx})")
-            print(f"DEBUG: Rank: {from_rank}->{to_rank} ({dy})")
+            # DEBUG temporariamente desativado
+            # print(f"DEBUG: Calculando coordenadas: {from_pos} -> {to_pos}")
+            # print(f"DEBUG: Arquivo: {from_file}->{to_file} ({dx})")
+            # print(f"DEBUG: Rank: {from_rank}->{to_rank} ({dy})")
             
             return {
                 'from_file': from_file,
@@ -594,11 +600,26 @@ class Board:
         self._post_move_update(king_from, king_to)
         return {"success": True}
 
-    def castle_kingside(self) -> dict:
-        if self.current_turn == Color.WHITE:
+    def castle_kingside(self, color: Optional[Color] = None) -> dict:
+        if color is None:
+            color = self.current_turn
+        if color == Color.WHITE:
             return self._attempt_castle("e1", "g1")
         else:
             return self._attempt_castle("e8", "g8")
+    
+    def get_piece_at(self, pos: Union[str, Position]) -> Optional[Piece]:
+        """Retorna a peça em uma determinada posição.
+        
+        Args:
+            pos: A posição como string (ex: 'e4') ou objeto Position
+            
+        Returns:
+            A peça na posição ou None se não houver peça
+        """
+        if isinstance(pos, Position):
+            pos = pos.to_algebraic()
+        return self.pieces.get(pos)
 
     def is_en_passant_possible(self) -> bool:
         if not self.last_move:
@@ -681,9 +702,18 @@ class Board:
         
         return {"success": True}
 
-    def is_in_check(self) -> bool:
-        """Verifica se o jogador atual está em xeque."""
-        return self._is_king_in_check(self.current_turn)
+    def is_in_check(self, color: Optional[Color] = None) -> bool:
+        """Verifica se o jogador atual ou a cor especificada está em xeque.
+        
+        Args:
+            color: A cor a verificar (opcional, usa current_turn se não especificado)
+            
+        Returns:
+            bool: True se o rei está em xeque, False caso contrário
+        """
+        if color is None:
+            color = self.current_turn
+        return self._is_king_in_check(color)
 
     def is_checkmate(self) -> bool:
         """Verifica se o jogador atual está em xeque-mate."""
@@ -754,7 +784,10 @@ class Board:
     def _has_legal_moves(self) -> bool:
         """Verifica se o jogador atual tem movimentos legais disponíveis."""
         print("DEBUG: Verificando movimentos legais para cada peça...")
-        for from_pos, piece in self.pieces.items():
+        # Cria uma cópia da lista de peças para evitar modificação durante iteração
+        pieces_list = list(self.pieces.items())
+        
+        for from_pos, piece in pieces_list:
             if piece.color != self.current_turn:
                 continue
             print(f"DEBUG: Analisando peça em {from_pos}")

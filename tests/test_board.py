@@ -99,30 +99,54 @@ def test_check_detection():
     """Testa detecção de xeque"""
     board = Board()
     
-    # Move peão branco
-    board.move_piece(Position(2, 5), Position(3, 5))
+    # Move peão branco e2->e4
+    board.move_piece("e2", "e4")
     
-    # Move peão preto
-    board.move_piece(Position(7, 4), Position(5, 4))
+    # Move peão preto f7->f6
+    board.move_piece("f7", "f6")
     
-    # Move rainha branca para xeque
-    board.move_piece(Position(1, 4), Position(4, 7))
+    # Move rainha branca para dar xeque (d1->h5)
+    board.move_piece("d1", "h5")
     
+    # Agora a rainha branca em h5 dá xeque no rei preto em e8
     assert board.is_in_check(Color.BLACK)
     assert not board.is_in_check(Color.WHITE)
 
 def test_checkmate_detection():
-    """Testa detecção de xeque-mate (Mate do pastor)"""
+    """Testa detecção de xeque-mate (Mate do tolo)"""
     board = Board()
     
-    # Movimento do pastor
-    board.move_piece(Position(2, 5), Position(3, 5))  # Peão branco
-    board.move_piece(Position(7, 5), Position(5, 5))  # Peão preto
-    board.move_piece(Position(1, 4), Position(4, 7))  # Rainha branca
-    board.move_piece(Position(7, 6), Position(6, 6))  # Peão preto
-    board.move_piece(Position(4, 7), Position(7, 4))  # Rainha branca para xeque-mate
+    # Mate do tolo (Scholar's mate)
+    board.move_piece("f2", "f3")  # Peão branco f2-f3
+    board.move_piece("e7", "e5")  # Peão preto e7-e5
+    board.move_piece("g2", "g4")  # Peão branco g2-g4
+    board.move_piece("d8", "h4")  # Rainha preta dá xeque-mate
     
+    # Agora deve ser xeque-mate para as brancas
+    assert board.is_in_check(Color.WHITE)
     assert board.is_checkmate()
+
+def test_castling():
+    """Testa roque (castling)"""
+    board = Board()
+    
+    # Prepara roque pequeno das brancas
+    board.move_piece("e2", "e4")
+    board.move_piece("e7", "e5")
+    board.move_piece("g1", "f3")
+    board.move_piece("b8", "c6")
+    board.move_piece("f1", "c4")
+    board.move_piece("g8", "f6")
+    
+    # Executa roque pequeno (O-O)
+    result = board.castle_kingside(Color.WHITE)
+    assert result.get('success', False), "Roque pequeno deveria ser permitido"
+    
+    # Verifica posições após roque
+    king = board.get_piece_at("g1")
+    rook = board.get_piece_at("f1")
+    assert king and king.type == PieceType.KING
+    assert rook and rook.type == PieceType.ROOK
 
 def test_stalemate_detection():
     """Testa detecção de afogamento"""
