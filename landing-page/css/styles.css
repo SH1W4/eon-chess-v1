@@ -1,0 +1,207 @@
+/* Chess Theme - Estilos Específicos do ChessMaster */
+
+:root {
+    --chess-dark: #1a1a2e;
+    --chess-medium: #16213e;
+    --chess-blue: #0f4c75;
+    --chess-light-blue: #3282b8;
+    --chess-white: #e8e8e8;
+    --chess-gold: #ffd700;
+}
+
+/* Estilo para o modo selecionado */
+.game-mode-card.selected {
+    background: var(--chess-blue);
+    border-color: var(--chess-gold);
+    transform: scale(1.05);
+}
+
+/* Animação do tabuleiro */
+@keyframes chessboard-glow {
+    0%, 100% {
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+    50% {
+        box-shadow: 0 10px 40px rgba(50, 130, 184, 0.8);
+    }
+}
+
+.chessboard-preview:hover {
+    animation: chessboard-glow 2s ease-in-out infinite;
+}
+
+/* Seção de modos de jogo */
+.game-modes-section {
+    padding: 4rem 0;
+    background: linear-gradient(180deg, transparent 0%, rgba(15, 76, 117, 0.1) 100%);
+}
+
+.game-modes-section h2 {
+    text-align: center;
+    font-size: 2.5rem;
+    margin-bottom: 3rem;
+    color: var(--chess-white);
+}
+
+/* Estatísticas animadas */
+.stats-section {
+    padding: 3rem 0;
+    text-align: center;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.stat-card {
+    background: rgba(22, 33, 62, 0.8);
+    padding: 1.5rem;
+    border-radius: 12px;
+    border: 1px solid var(--chess-blue);
+}
+
+.stat-number {
+    font-size: 3rem;
+    font-weight: bold;
+    color: var(--chess-light-blue);
+    display: block;
+}
+
+.stat-label {
+    color: var(--chess-white);
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+}
+
+/* Efeito de peças flutuantes */
+@keyframes piece-float {
+    0% {
+        transform: translateY(0) rotate(0deg);
+    }
+    25% {
+        transform: translateY(-15px) rotate(5deg);
+    }
+    50% {
+        transform: translateY(-5px) rotate(-5deg);
+    }
+    75% {
+        transform: translateY(-20px) rotate(3deg);
+    }
+    100% {
+        transform: translateY(0) rotate(0deg);
+    }
+}
+
+.floating-pieces {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.floating-piece {
+    position: absolute;
+    font-size: 24px;
+    opacity: 0.1;
+    animation: piece-float 20s ease-in-out infinite;
+}
+
+/* Botões temáticos */
+.chess-button {
+    background: linear-gradient(135deg, var(--chess-blue) 0%, var(--chess-light-blue) 100%);
+    color: white;
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.chess-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(50, 130, 184, 0.4);
+}
+
+.chess-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.5s ease;
+}
+
+.chess-button:hover::before {
+    left: 100%;
+}
+
+/* Notação algébrica decorativa */
+.algebraic-notation {
+    font-family: 'Courier New', monospace;
+    color: var(--chess-gold);
+    font-size: 0.9rem;
+    opacity: 0.7;
+}
+
+/* Responsividade para mobile */
+@media (max-width: 768px) {
+    .chessboard-preview {
+        width: 250px;
+        height: 250px;
+    }
+    
+    .chess-piece {
+        font-size: 24px;
+    }
+    
+    .stat-number {
+        font-size: 2rem;
+    }
+    
+    .game-modes-section h2 {
+        font-size: 2rem;
+    }
+}
+
+/* Animação de entrada */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-in {
+    animation: fadeInUp 0.8s ease-out forwards;
+}
+
+/* Efeito de brilho nas bordas */
+@keyframes border-glow {
+    0%, 100% {
+        border-color: var(--chess-blue);
+    }
+    50% {
+        border-color: var(--chess-light-blue);
+        box-shadow: 0 0 20px rgba(50, 130, 184, 0.6);
+    }
+}
+
+.glow-border {
+    animation: border-glow 3s ease-in-out infinite;
+}

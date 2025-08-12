@@ -418,7 +418,7 @@
                   <span id="aeon-eval-score" class="text-sm text-[var(--muted)] ml-auto">=</span>
                 </div>
                 <div id="aeon-status" class="mt-3 text-xs text-[var(--muted)] text-center lg:text-left break-all"></div>
-                <div id="aeon-narration" class="mt-2 text-xs text-gray-400 italic text-center lg:text-left"></div
+                <div id="aeon-narration" class="mt-2 text-xs text-gray-400 italic text-center lg:text-left"></div>
               </div>
 
               <!-- Eval Bar -->
@@ -1336,7 +1336,7 @@
         }
       }
 
-      // Inicialização do tabuleiro com validação, Undo/Reset, barra de avaliação e modos Demo/Jogar
+      // Inicialização do tabuleiro com avaliação inteligente de nível
       document.addEventListener('DOMContentLoaded', function () {
         const board = document.getElementById('aeon-board');
         if (!board || typeof Chess === 'undefined') return;
@@ -1358,6 +1358,26 @@
         let engine = null;
         let engineReady = false;
         let engineBusy = false;
+        
+        // Sistema de avaliação inteligente
+        let playerAnalysis = {
+          moves: [],
+          totalMoves: 0,
+          accurateMovesCount: 0,
+          tacticalMovesCount: 0,
+          blundersCount: 0,
+          averageThinkingTime: 0,
+          openingKnowledge: 0,
+          endgameSkill: 0,
+          estimatedElo: 1200,
+          playStyle: 'balanced',
+          weaknesses: [],
+          strengths: []
+        };
+        
+        let moveStartTime = Date.now();
+        let gameStarted = false;
+        let movesAnalyzed = 0;
 
         function syncBoard() {
           if (typeof board.setPosition === 'function') {
@@ -1506,6 +1526,224 @@
           updateStatus();
         }
 
+        // Sistema inteligente de análise de movimentos
+        function analyzePlayerMove(move, positionBefore, positionAfter) {
+          if (!gameStarted) {
+            gameStarted = true;
+            moveStartTime = Date.now();
+          }
+          
+          // Calcular tempo de pensamento
+          const thinkingTime = Date.now() - moveStartTime;
+          playerAnalysis.averageThinkingTime = 
+            (playerAnalysis.averageThinkingTime * movesAnalyzed + thinkingTime) / (movesAnalyzed + 1);
+          
+          // Avaliar qualidade do movimento
+          const evaluation = evaluateMove(move, positionBefore, positionAfter);
+          playerAnalysis.moves.push({
+            move: move.san,
+            from: move.from,
+            to: move.to,
+            thinkingTime,
+            evaluation,
+            ply: game.ply()
+          });
+          
+          movesAnalyzed++;
+          playerAnalysis.totalMoves = movesAnalyzed;
+          
+          // Atualizar contadores baseado na avaliação
+          if (evaluation.score >= 0.8) playerAnalysis.accurateMovesCount++;
+          if (evaluation.isTactical) playerAnalysis.tacticalMovesCount++;
+          if (evaluation.score <= 0.3) playerAnalysis.blundersCount++;
+          
+          // Avaliar conhecimento de abertura (primeiros 12 movimentos)
+          if (game.ply() <= 12) {
+            playerAnalysis.openingKnowledge += evaluation.score / 12;
+          }
+          
+          // Detectar padrões de jogo
+          detectPlayStyle(move, evaluation);
+          
+          // Calcular ELO estimado a cada 3 movimentos
+          if (movesAnalyzed % 3 === 0) {
+            updateEstimatedElo();
+            updateIntelligentNarration();
+          }
+          
+          moveStartTime = Date.now();
+        }
+        
+        function evaluateMove(move, posBefore, posAfter) {
+          // Sistema básico de avaliação (seria mais sofisticado com engine completa)
+          let score = 0.5; // neutro
+          let isTactical = false;
+          let reasoning = [];
+          
+          // Avalia captures
+          if (move.captured) {
+            score += 0.3;
+            isTactical = true;
+            reasoning.push('captura');
+          }
+          
+          // Avalia checks
+          if (move.san.includes('+')) {
+            score += 0.2;
+            isTactical = true;
+            reasoning.push('xeque');
+          }
+          
+          // Avalia desenvolvimento (peças menores saindo da primeira fileira)
+          if ((move.piece === 'n' || move.piece === 'b') && 
+              (move.from[1] === '1' || move.from[1] === '8')) {
+            score += 0.2;
+            reasoning.push('desenvolvimento');
+          }
+          
+          // Avalia controle central
+          const centralSquares = ['d4', 'd5', 'e4', 'e5'];
+          if (centralSquares.includes(move.to)) {
+            score += 0.15;
+            reasoning.push('controle central');
+          }
+          
+          // Penaliza movimentos repetitivos
+          const recentMoves = playerAnalysis.moves.slice(-6);
+          const similarMoves = recentMoves.filter(m => m.from === move.from || m.to === move.to);
+          if (similarMoves.length > 2) {
+            score -= 0.2;
+            reasoning.push('movimento repetitivo');
+          }
+          
+          // Avalia castling
+          if (move.san.includes('O')) {
+            score += 0.25;
+            reasoning.push('roque');
+          }
+          
+          return {
+            score: Math.max(0, Math.min(1, score)),
+            isTactical,
+            reasoning
+          };
+        }
+        
+        function detectPlayStyle(move, evaluation) {
+          // Detecta se o jogador prefere jogadas agressivas, sólidas ou equilibradas
+          const moveHistory = playerAnalysis.moves;
+          if (moveHistory.length < 5) return;
+          
+          const recentMoves = moveHistory.slice(-5);
+          const tacticalMoves = recentMoves.filter(m => m.evaluation.isTactical).length;
+          const aggressiveRatio = tacticalMoves / recentMoves.length;
+          
+          if (aggressiveRatio > 0.6) {
+            playerAnalysis.playStyle = 'aggressive';
+          } else if (aggressiveRatio < 0.3) {
+            playerAnalysis.playStyle = 'solid';
+          } else {
+            playerAnalysis.playStyle = 'balanced';
+          }
+        }
+        
+        function updateEstimatedElo() {
+          if (playerAnalysis.totalMoves < 6) return;
+          
+          let baseElo = 1200;
+          const accuracy = playerAnalysis.accurateMovesCount / playerAnalysis.totalMoves;
+          const tacticalRatio = playerAnalysis.tacticalMovesCount / playerAnalysis.totalMoves;
+          const blunderRatio = playerAnalysis.blundersCount / playerAnalysis.totalMoves;
+          const avgThinkingTime = playerAnalysis.averageThinkingTime;
+          
+          // Ajustar ELO baseado na precisão
+          if (accuracy > 0.8) baseElo += 400;      // 1600+
+          else if (accuracy > 0.7) baseElo += 200; // 1400+
+          else if (accuracy > 0.6) baseElo += 100; // 1300+
+          else if (accuracy < 0.4) baseElo -= 100; // 1100-
+          
+          // Ajustar baseado em habilidade tática
+          if (tacticalRatio > 0.3) baseElo += 150;
+          else if (tacticalRatio < 0.1) baseElo -= 100;
+          
+          // Penalizar blunders
+          if (blunderRatio > 0.2) baseElo -= 200;
+          
+          // Ajustar baseado no tempo de pensamento
+          if (avgThinkingTime > 15000) baseElo += 100; // Pensa mais = possivelmente melhor
+          else if (avgThinkingTime < 3000) baseElo -= 50; // Muito rápido pode ser impreciso
+          
+          // Ajustar baseado no conhecimento de abertura
+          if (playerAnalysis.openingKnowledge > 0.7) baseElo += 100;
+          else if (playerAnalysis.openingKnowledge < 0.4) baseElo -= 50;
+          
+          playerAnalysis.estimatedElo = Math.max(800, Math.min(2400, baseElo));
+        }
+        
+        function updateIntelligentNarration() {
+          if (playerAnalysis.totalMoves < 6) return;
+          
+          const elo = playerAnalysis.estimatedElo;
+          const accuracy = (playerAnalysis.accurateMovesCount / playerAnalysis.totalMoves * 100).toFixed(0);
+          
+          let levelDescription = '';
+          let suggestion = '';
+          
+          if (elo >= 1800) {
+            levelDescription = 'Avançado';
+            suggestion = 'Continue com esse excelente nível!';
+          } else if (elo >= 1500) {
+            levelDescription = 'Intermediário+';
+            suggestion = 'Foque em táticas complexas para crescer.';
+          } else if (elo >= 1200) {
+            levelDescription = 'Intermediário';
+            suggestion = 'Trabalhe nas aberturas e finais.';
+          } else {
+            levelDescription = 'Iniciante+';
+            suggestion = 'Pratique táticas básicas diariamente.';
+          }
+          
+          const narrativeText = `🎯 Nível detectado: ${levelDescription} (~${elo} ELO) | Precisão: ${accuracy}% | ${suggestion}`;
+          setNarration(narrativeText);
+        }
+        
+        function generateAIRecommendation() {
+          const elo = playerAnalysis.estimatedElo;
+          const style = playerAnalysis.playStyle;
+          const accuracy = playerAnalysis.accurateMovesCount / playerAnalysis.totalMoves;
+          
+          // Mapear para os planos disponíveis
+          let recommendedPlan = 'Iniciante';
+          let planFeatures = ['Treinamento básico', 'Exercícios simples', 'IA adaptativa'];
+          let specialOffer = 'Kit de iniciação gratuito';
+          
+          if (elo >= 1700) {
+            recommendedPlan = 'Mestre';
+            planFeatures = ['Coach IA personalizado', 'Análise avançada', 'Preparação torneios'];
+            specialOffer = 'Sessão individual com GM';
+          } else if (elo >= 1300) {
+            recommendedPlan = 'Avançado';
+            planFeatures = ['Análises ilimitadas', 'Táticas avançadas', 'Repertório completo'];
+            specialOffer = '7 dias grátis + relatório detalhado';
+          }
+          
+          // Ajustar baseado no estilo
+          if (style === 'aggressive') {
+            planFeatures.push('Treinamento tático intensivo');
+          } else if (style === 'solid') {
+            planFeatures.push('Masterclass em finais');
+          }
+          
+          return {
+            plan: recommendedPlan,
+            elo: elo,
+            accuracy: (accuracy * 100).toFixed(0),
+            style: style,
+            features: planFeatures,
+            offer: specialOffer
+          };
+        }
+
         // Drop handler correto para chessboard-element
         board.addEventListener('drop', function (e) {
           const detail = e.detail || {};
@@ -1514,9 +1752,17 @@
           
           // Validar movimento com chess.js
           try {
+            const positionBefore = game.fen();
             const move = game.move({ from, to, promotion: 'q' });
             if (move) {
-              // Movimento válido - sincronizar tabuleiro
+              // Movimento válido - sincronizar tabuleiro e analisar
+              const positionAfter = game.fen();
+              
+              // Analisar movimento do jogador (somente em modo demonstrativo)
+              if (humanVsAI) {
+                analyzePlayerMove(move, positionBefore, positionAfter);
+              }
+              
               setTimeout(() => {
                 syncBoard();
                 updateStatus();
@@ -1525,6 +1771,12 @@
                   setTimeout(() => {
                     aiMoveWithNarration();
                   }, 400);
+                } else if (game.game_over() && humanVsAI && movesAnalyzed >= 8) {
+                  // Gerar recomendação final após partida demonstrativa
+                  setTimeout(() => {
+                    const recommendation = generateAIRecommendation();
+                    showIntelligentRecommendation(recommendation);
+                  }, 2000);
                 }
               }, 100);
             } else {
@@ -1537,6 +1789,59 @@
             setTimeout(() => syncBoard(), 100);
           }
         });
+        
+        // Função para exibir recomendação inteligente
+        function showIntelligentRecommendation(rec) {
+          const journeySection = document.getElementById('journey');
+          if (journeySection) {
+            // Scroll suave até a seção
+            journeySection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            
+            // Atualizar interface com recomendação IA
+            setTimeout(() => {
+              const recommendationHTML = `
+                <div class="bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl p-6 mb-6 text-white">
+                  <div class="flex items-center mb-4">
+                    <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center mr-4">
+                      <i class="fas fa-robot text-2xl"></i>
+                    </div>
+                    <div>
+                      <h3 class="text-xl font-bold">Análise IA Completa</h3>
+                      <p class="text-blue-100 text-sm">Baseada em ${playerAnalysis.totalMoves} movimentos analisados</p>
+                    </div>
+                  </div>
+                  <div class="grid md:grid-cols-3 gap-4 mb-4">
+                    <div class="text-center">
+                      <div class="text-2xl font-bold">${rec.elo}</div>
+                      <div class="text-sm text-blue-100">ELO Estimado</div>
+                    </div>
+                    <div class="text-center">
+                      <div class="text-2xl font-bold">${rec.accuracy}%</div>
+                      <div class="text-sm text-blue-100">Precisão</div>
+                    </div>
+                    <div class="text-center">
+                      <div class="text-2xl font-bold capitalize">${rec.style}</div>
+                      <div class="text-sm text-blue-100">Estilo</div>
+                    </div>
+                  </div>
+                  <div class="bg-white/10 rounded-lg p-4">
+                    <h4 class="font-semibold mb-2">🎯 Plano Recomendado: ${rec.plan}</h4>
+                    <p class="text-sm mb-2">✨ Oferta exclusiva: ${rec.offer}</p>
+                    <div class="text-xs text-blue-100">
+                      Recursos inclusos: ${rec.features.join(', ')}
+                    </div>
+                  </div>
+                </div>
+              `;
+              
+              // Inserir antes do formulário existente
+              const wizardDiv = journeySection.querySelector('[x-data="gamifiedJourney()"]');
+              if (wizardDiv) {
+                wizardDiv.insertAdjacentHTML('beforebegin', recommendationHTML);
+              }
+            }, 1000);
+          }
+        }
 
         // Handler adicional para snap back de movimentos inválidos
         board.addEventListener('snapback-end', function (e) {
@@ -1562,11 +1867,37 @@
         }
         if (ctaPlay) {
           ctaPlay.addEventListener('click', function () {
+            // Resetar análise
             humanVsAI = true;
+            gameStarted = false;
+            movesAnalyzed = 0;
+            playerAnalysis = {
+              moves: [],
+              totalMoves: 0,
+              accurateMovesCount: 0,
+              tacticalMovesCount: 0,
+              blundersCount: 0,
+              averageThinkingTime: 0,
+              openingKnowledge: 0,
+              endgameSkill: 0,
+              estimatedElo: 1200,
+              playStyle: 'balanced',
+              weaknesses: [],
+              strengths: []
+            };
+            moveStartTime = Date.now();
+            
+            // Resetar jogo
             game.reset();
             syncBoard();
-            setNarration('Partida demonstrativa: você (Brancas) vs IA. Boa sorte!');
+            setNarration('🎮 Partida demonstrativa iniciada! Você joga com as Brancas. Faça seu movimento para começar a análise IA.');
             updateStatus();
+            
+            // Destacar tabuleiro
+            board.style.boxShadow = '0 0 20px rgba(59, 130, 246, 0.5)';
+            setTimeout(() => {
+              board.style.boxShadow = 'var(--shadow-xl)';
+            }, 2000);
           });
         }
         if (ctaDemo) {
