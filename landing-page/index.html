@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ChessMaster - Plataforma de Xadrez com Inteligência Artificial</title>
-    <meta name="description" content="Aprenda e domine o xadrez com ChessMaster. IA avançada, análise de jogadas, treinamento personalizado e torneios online.">
+    <title>Aeon Chess - Plataforma de Xadrez com Inteligência Artificial</title>
+    <meta name="description" content="Aprenda e domine o xadrez com Aeon Chess. IA avançada, análise de jogadas, treinamento personalizado e torneios online.">
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     
     <!-- Tailwind CSS -->
@@ -201,7 +201,47 @@
                 box-shadow: 0 10px 20px rgba(50, 130, 184, 0.3);
             }
         </style>
-    <link rel="stylesheet" href="css/chess-theme.css">        </head>
+    <link rel="stylesheet" href="css/chess-theme.css">
+    
+    	<!-- Chessboard and Chess.js -->
+    <script type="module" src="https://unpkg.com/chessboard-element?module"></script>
+    <script src="https://unpkg.com/chess.js@1.0.0/dist/chess.min.js"></script>
+    
+    <!-- Optional strong engine: Stockfish WASM -->
+    <script src="https://cdn.jsdelivr.net/npm/stockfish@16/stockfish.wasm.js"></script>
+
+    <style>
+      /* Paleta harmonizada e estados de foco */
+      :root {
+        --bg: #0f0f10;
+        --text: #e8e8e8;
+        --muted: #b3b3b3;
+        --accent: #D4AF37;
+        --border: #2a2a2a;
+      }
+      body { background: var(--bg); color: var(--text); }
+      .btn-primary {
+        background: var(--accent);
+        color: #111;
+        font-weight: 600;
+        padding: 0.75rem 1.25rem;
+        border-radius: 0.5rem;
+        transition: transform .15s ease, box-shadow .15s ease, background-color .15s ease;
+      }
+      .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(212,175,55,.24); }
+      .btn-primary:focus-visible { outline: 2px solid #000; outline-offset: 2px; box-shadow: 0 0 0 4px rgba(212,175,55,.35); }
+      .btn-secondary {
+        border: 2px solid var(--accent);
+        color: var(--accent);
+        padding: 0.6875rem 1.125rem;
+        border-radius: 0.5rem;
+        font-weight: 600;
+        transition: background-color .15s ease, color .15s ease;
+      }
+      .btn-secondary:hover { background-color: var(--accent); color: #111; }
+      .btn-secondary:focus-visible { outline: 2px solid #000; outline-offset: 2px; box-shadow: 0 0 0 4px rgba(212,175,55,.35); }
+    </style>
+        </head>
 
   <body class="bg-chess-black text-white" x-data="{ showModal: false, darkMode: false }" x-cloak>
     <!-- Navigation -->
@@ -210,7 +250,7 @@
         <div class="flex justify-between h-16">
           <div class="flex items-center">
             <i class="fas fa-chess-king text-chess-accent text-2xl mr-3"></i>
-            <span class="text-xl font-bold gradient-text">ChessMaster</span>
+            <span class="text-xl font-bold gradient-text">Aeon Chess</span>
             <span class="ml-2 px-2 py-1 text-xs bg-chess-accent/20 text-chess-accent rounded-full border border-chess-accent/30">
               PRO
             </span>
@@ -238,16 +278,8 @@
     </nav>
 
     <!-- Hero Section -->
-    <section class="gradient-chess pt-32 pb-20 relative overflow-hidden">
+    <section class="bg-[#0f0f10] pt-32 pb-20">
       <!-- Background Chess Pattern -->
-      <div class="absolute inset-0 opacity-10">
-        <div class="grid grid-cols-8 grid-rows-8 h-full">
-          <div class="bg-white"></div>
-          <div class="bg-transparent"></div>
-          <!-- Pattern continues... -->
-        </div>
-      </div>
-      
       <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid lg:grid-cols-2 gap-12 items-center">
           <!-- Left Column - Content -->
@@ -269,15 +301,31 @@
               iniciante ao mestre com tecnologia de ponta.
             </p>
             
-            <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-              <button class="btn-chess">
+            	<div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+              <button id="cta-play" class="btn-primary">
                 <i class="fas fa-chess mr-2"></i>
-                Começar Grátis
+                Jogar Agora
               </button>
-              <button class="px-6 py-3 border-2 border-chess-accent text-chess-accent rounded-lg hover:bg-chess-accent hover:text-chess-black transition-all font-semibold">
+              <button id="cta-demo" class="btn-secondary">
                 <i class="fas fa-play-circle mr-2"></i>
                 Ver Demo
               </button>
+            </div>
+            
+            <!-- AI controls -->
+            <div class="mt-4 flex flex-col sm:flex-row gap-3 items-center justify-center lg:justify-start text-sm">
+              <label class="flex items-center gap-2">
+                <span class="text-gray-400">Nível da IA</span>
+                <select id="ai-level" class="bg-[#141415] border border-[var(--border)] rounded px-2 py-1">
+                  <option value="beginner">Iniciante</option>
+                  <option value="club" selected>Clube</option>
+                  <option value="master">Mestre</option>
+                </select>
+              </label>
+              <label class="flex items-center gap-2">
+                <input id="ai-strong" type="checkbox" class="accent-[var(--accent)]">
+                <span class="text-gray-400">IA Forte (Stockfish)</span>
+              </label>
             </div>
             
             <!-- Stats -->
@@ -297,27 +345,33 @@
             </div>
           </div>
           
-          <!-- Right Column - Interactive Chess Board -->
+          <!-- Right Column - Functional Chess Board + Eval -->
           <div class="flex justify-center lg:justify-end">
-            <div class="relative">
-              <div class="chessboard animate-pulse-glow">
-                <!-- Chess squares will be generated -->
-                <div class="absolute inset-0 flex items-center justify-center">
-                  <div class="text-6xl animate-float">
-                    <i class="fas fa-chess-queen text-chess-accent"></i>
-                  </div>
+            <div class="flex flex-col lg:flex-row items-center lg:items-start gap-4">
+              <!-- Board Card -->
+              <div class="bg-[#141415] border border-[var(--border)] rounded-xl p-4 shadow-xl w-full max-w-sm">
+                <chess-board id="aeon-board" draggable-pieces position="start" class="w-full" style="max-width: 100%; aspect-ratio: 1;"></chess-board>
+                <div class="mt-4 flex flex-wrap items-center justify-center lg:justify-start gap-2">
+                  <button id="aeon-undo" class="btn-secondary px-2 py-1 text-sm">
+                    <i class="fas fa-rotate-left mr-1"></i>Desfazer
+                  </button>
+                  <button id="aeon-reset" class="btn-secondary px-2 py-1 text-sm">
+                    <i class="fas fa-arrow-rotate-right mr-1"></i>Reset
+                  </button>
+                  <span id="aeon-eval-score" class="text-sm text-[var(--muted)] ml-auto">=</span>
                 </div>
+                <div id="aeon-status" class="mt-3 text-xs text-[var(--muted)] text-center lg:text-left break-all"></div>
+                <div id="aeon-narration" class="mt-2 text-xs text-gray-400 italic text-center lg:text-left"></div
               </div>
-              
-              <!-- Floating pieces around the board -->
-              <div class="absolute -top-8 -left-8 text-4xl animate-float" style="animation-delay: 0.5s;">
-                <i class="fas fa-chess-knight text-chess-accent/60"></i>
-              </div>
-              <div class="absolute -bottom-8 -right-8 text-4xl animate-float" style="animation-delay: 1s;">
-                <i class="fas fa-chess-rook text-chess-accent/60"></i>
-              </div>
-              <div class="absolute top-1/2 -right-12 text-3xl animate-float" style="animation-delay: 1.5s;">
-                <i class="fas fa-chess-bishop text-chess-accent/60"></i>
+
+              <!-- Eval Bar -->
+              <div class="flex lg:flex-col flex-row items-center lg:items-center select-none" aria-label="Barra de avaliação">
+                <div class="text-xs text-gray-400 mb-2 lg:mb-2 mr-2 lg:mr-0">Avaliação</div>
+                <div id="aeon-eval-bar" class="lg:w-4 w-20 rounded overflow-hidden border border-[var(--border)] lg:h-80 h-4" style="background: linear-gradient(to bottom, #f9fafb, #111827);">
+                  <div id="aeon-eval-white" class="lg:bg-[#f9fafb] bg-[#f9fafb]" style="height: 50%; width: 50%;"></div>
+                  <div id="aeon-eval-black" class="lg:bg-[#111827] bg-[#111827]" style="height: 50%; width: 50%;"></div>
+                </div>
+                <div class="text-[10px] text-gray-500 mt-2 lg:mt-2 ml-2 lg:ml-0 whitespace-nowrap">Brancas ▲ / Pretas ▼</div>
               </div>
             </div>
           </div>
@@ -330,10 +384,10 @@
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-16">
           <h2 class="text-4xl font-bold text-gray-900 dark:text-dark-text mb-4">
-            See the difference speed makes
+            Veja a diferença que a IA faz
           </h2>
           <p class="text-xl text-gray-600 dark:text-dark-muted">
-            Real performance comparisons with GitHub CLI
+            Comparações reais de desempenho e análise
           </p>
         </div>
 
@@ -344,16 +398,16 @@
               <thead>
                 <tr class="border-b border-gray-200 dark:border-dark-border">
                   <th class="text-left py-4 px-6 font-semibold text-gray-900 dark:text-dark-text">
-                    Operation
+                    Análise
                   </th>
                   <th class="text-center py-4 px-6 font-semibold text-gray-600 dark:text-dark-muted">
-                    GitHub CLI
+                    Jogador Humano
                   </th>
                   <th class="text-center py-4 px-6 font-semibold text-purple-600 dark:text-purple-400">
-                    Agent v2.0
+                    Aeon Chess IA
                   </th>
                   <th class="text-center py-4 px-6 font-semibold text-green-600 dark:text-green-400">
-                    Improvement
+                    Precisão
                   </th>
                 </tr>
               </thead>
@@ -363,68 +417,68 @@
                   x-data="{ visible: false }"
                   x-intersect="visible = true"
                 >
-                  <td class="py-4 px-6 font-medium dark:text-dark-text">Clone + Analyze</td>
+                  <td class="py-4 px-6 font-medium dark:text-dark-text">Melhores jogadas</td>
                   <td class="py-4 px-6 text-center">
                     <div class="bg-red-100 text-red-800 px-3 py-1 rounded-full text-sm">
-                      45s
+                      65%
                     </div>
                   </td>
                   <td class="py-4 px-6 text-center">
                     <div
                       class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm"
                     >
-                      4.2s
+                      98.5%
                     </div>
                   </td>
                   <td class="py-4 px-6 text-center">
                     <div
                       class="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm font-bold"
                     >
-                      10.7x faster
+                      +33.5%
                     </div>
                   </td>
                 </tr>
                 <tr class="border-b border-gray-100 dark:border-dark-border">
-                  <td class="py-4 px-6 font-medium dark:text-dark-text">Multi-repo sync</td>
+                  <td class="py-4 px-6 font-medium dark:text-dark-text">Análise tática</td>
                   <td class="py-4 px-6 text-center">
                     <div class="bg-red-100 text-red-800 px-3 py-1 rounded-full text-sm">
-                      3m 20s
+                      3-5 min
                     </div>
                   </td>
                   <td class="py-4 px-6 text-center">
                     <div
                       class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm"
                     >
-                      18s
+                      0.2s
                     </div>
                   </td>
                   <td class="py-4 px-6 text-center">
                     <div
                       class="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm font-bold"
                     >
-                      11.1x faster
+                      Instantânea
                     </div>
                   </td>
                 </tr>
                 <tr>
-                  <td class="py-4 px-6 font-medium dark:text-dark-text">Smart commit</td>
+                  <td class="py-4 px-6 font-medium dark:text-dark-text">Avaliação posicional</td>
                   <td class="py-4 px-6 text-center">
                     <div class="bg-red-100 text-red-800 px-3 py-1 rounded-full text-sm">
-                      12s
+                      70%
                     </div>
                   </td>
                   <td class="py-4 px-6 text-center">
                     <div
                       class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm"
                     >
-                      1.1s
+                      99.2%
                     </div>
                   </td>
                   <td class="py-4 px-6 text-center">
                     <div
                       class="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm font-bold"
                     >
-                      10.9x faster
+                      +29.2%
                     </div>
                   </td>
                 </tr>
@@ -433,47 +487,294 @@
           </div>
         </div>
 
-        <!-- Interactive Terminal Demo -->
-        <div class="bg-gray-900 rounded-xl p-6 terminal-bg">
-          <div class="flex items-center mb-4">
-            <div class="flex space-x-2">
-              <div class="w-3 h-3 bg-red-500 rounded-full"></div>
-              <div class="w-3 h-3 bg-yellow-500 rounded-full"></div>
-              <div class="w-3 h-3 bg-green-500 rounded-full"></div>
+        <!-- Terminal demo movido para a seção própria abaixo -->
+      </div>
+    </section>
+
+    <!-- Terminal Chess Demo Section -->
+    <section id="terminal-demo" class="py-20 bg-chess-dark relative overflow-hidden">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+          <h2 class="text-4xl lg:text-5xl font-bold mb-4 font-chess">
+            Xadrez no <span class="gradient-text">Terminal</span>
+          </h2>
+          <p class="text-xl text-gray-300 max-w-3xl mx-auto">
+            Uma experiência única de xadrez com narração cultural e histórica
+          </p>
+        </div>
+        
+        <!-- Terminal Window -->
+        <div class="max-w-4xl mx-auto">
+          <div class="bg-gray-900 rounded-lg shadow-2xl overflow-hidden border border-gray-700">
+            <!-- Terminal Header -->
+            <div class="bg-gray-800 px-4 py-2 flex items-center justify-between">
+              <div class="flex items-center space-x-2">
+                <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                <div class="w-3 h-3 rounded-full bg-green-500"></div>
+              </div>
+              <div class="text-gray-400 text-sm font-mono">aeon-chess@terminal</div>
             </div>
-            <div class="ml-4 text-gray-400 text-sm">
-              GitHub Agent v2.0 - Interactive Demo
+            
+            <!-- Terminal Content -->
+            <div class="p-6 font-mono text-sm leading-relaxed max-h-96 overflow-y-auto">
+              <div class="text-green-400 mb-2">$ aeon-chess partida --modo=cultural --jogadores="Capablanca vs Alekhine"</div>
+              <div class="text-gray-300 mb-4">Iniciando partida histórica com narração cultural...</div>
+              
+              <!-- Chess Board in ASCII -->
+              <pre class="text-gray-100 mb-4">    a   b   c   d   e   f   g   h
+  ┌───┬───┬───┬───┬───┬───┬───┬───┐
+8 │ ♜ │ ♞ │ ♝ │ ♛ │ ♚ │ ♝ │ ♞ │ ♜ │ 8
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+7 │ ♟ │ ♟ │ ♟ │ ♟ │   │ ♟ │ ♟ │ ♟ │ 7
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+6 │   │   │   │   │   │   │   │   │ 6
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+5 │   │   │   │   │ ♟ │   │   │   │ 5
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+4 │   │   │   │   │ ♙ │   │   │   │ 4
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+3 │   │   │   │   │   │ ♘ │   │   │ 3
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+2 │ ♙ │ ♙ │ ♙ │ ♙ │   │ ♙ │ ♙ │ ♙ │ 2
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+1 │ ♖ │ ♘ │ ♗ │ ♕ │ ♔ │ ♗ │   │ ♖ │ 1
+  └───┴───┴───┴───┴───┴───┴───┴───┘
+    a   b   c   d   e   f   g   h</pre>
+              
+              <!-- Game Narration -->
+              <div class="space-y-3">
+                <div class="text-yellow-400">
+                  <span class="text-gray-500">[10:32]</span> Capablanca (Brancas): e2-e4
+                </div>
+                <div class="text-blue-300 italic">
+                  "O Campeão Mundial cubano inicia com o clássico avanço do peão do rei,
+                  uma abertura favorita desde os tempos de Bobby Fischer."
+                </div>
+                
+                <div class="text-yellow-400">
+                  <span class="text-gray-500">[10:33]</span> Alekhine (Pretas): e7-e5
+                </div>
+                <div class="text-blue-300 italic">
+                  "Alekhine responde simetricamente. Esta posição nos remete ao
+                  'Jogo Imortal' de Anderssen contra Kieseritzky em 1851."
+                </div>
+                
+                <div class="text-yellow-400">
+                  <span class="text-gray-500">[10:34]</span> Capablanca: Ng1-f3
+                </div>
+                <div class="text-blue-300 italic">
+                  "O cavalo salta para f3, controlando o centro. Capablanca, conhecido
+                  como a 'Máquina de Xadrez', raramente cometia erros posicionais."
+                </div>
+                
+                <div class="text-green-400 mt-4">
+                  > Análise da IA: +0.3 para as Brancas
+                  > Sugestão: Nc6 desenvolvendo o cavalo (teoria clássica)
+                  > Probabilidade de vitória: Brancas 52.1% | Pretas 47.9%
+                </div>
+                
+                <div class="text-purple-400 mt-4 border-l-2 border-purple-400 pl-4">
+                  <strong>Contexto Cultural:</strong> Esta partida ocorreu em 1927 durante o
+                  Campeonato Mundial em Buenos Aires. O match durou 34 partidas,
+                  sendo considerado um dos mais longos e dramáticos da história.
+                </div>
+                
+                <div class="text-gray-400 mt-4">
+                  <span class="animate-pulse">_</span> Aguardando próximo movimento...
+                </div>
+              </div>
             </div>
           </div>
-          <div id="terminal-demo" class="text-green-400 font-mono text-sm">
-            <div class="mb-2">$ github-agent analyze --repo react --performance</div>
-            <div class="mb-2 text-yellow-400">🤖 AI Analysis starting...</div>
-            <div class="mb-2">✅ Repository cloned (1.2s)</div>
-            <div class="mb-2">✅ Dependencies analyzed (0.8s)</div>
-            <div class="mb-2">✅ Performance metrics calculated (0.3s)</div>
-            <div class="mb-2">✅ Security scan completed (0.5s)</div>
-            <div class="text-green-300 font-bold">
-              ⚡ Total time: 2.8s (vs 45s with GitHub CLI)
+          
+          <!-- Terminal Controls -->
+          <div class="mt-6 flex flex-wrap justify-center gap-4">
+            <button class="px-4 py-2 bg-chess-accent/20 text-chess-accent rounded border border-chess-accent/30 hover:bg-chess-accent/30 transition-all">
+              <i class="fas fa-play mr-2"></i> Continuar Partida
+            </button>
+            <button class="px-4 py-2 bg-gray-700 text-gray-300 rounded hover:bg-gray-600 transition-all">
+              <i class="fas fa-book mr-2"></i> Ver Análise Completa
+            </button>
+            <button class="px-4 py-2 bg-gray-700 text-gray-300 rounded hover:bg-gray-600 transition-all">
+              <i class="fas fa-terminal mr-2"></i> Instalar CLI
+            </button>
+          </div>
+        </div>
+        
+        <!-- Features Grid -->
+        <div class="grid md:grid-cols-3 gap-8 mt-16">
+          <div class="text-center">
+            <div class="w-16 h-16 bg-chess-accent/20 rounded-full flex items-center justify-center mx-auto mb-4">
+              <i class="fas fa-brain text-2xl text-chess-accent"></i>
             </div>
-            <div class="mt-4 text-gray-400">
-              <span class="typing-animation"
-                >Press any key to see AI suggestions...</span
-              >
+            <h3 class="text-xl font-semibold mb-2">IA Narrativa</h3>
+            <p class="text-gray-400">
+              Comentários contextualizados sobre cada movimento,
+              conectando história e estratégia
+            </p>
+          </div>
+          
+          <div class="text-center">
+            <div class="w-16 h-16 bg-chess-accent/20 rounded-full flex items-center justify-center mx-auto mb-4">
+              <i class="fas fa-history text-2xl text-chess-accent"></i>
             </div>
+            <h3 class="text-xl font-semibold mb-2">Partidas Históricas</h3>
+            <p class="text-gray-400">
+              Revisite os grandes confrontos do xadrez mundial
+              com análise moderna
+            </p>
+          </div>
+          
+          <div class="text-center">
+            <div class="w-16 h-16 bg-chess-accent/20 rounded-full flex items-center justify-center mx-auto mb-4">
+              <i class="fas fa-code text-2xl text-chess-accent"></i>
+            </div>
+            <h3 class="text-xl font-semibold mb-2">CLI Completa</h3>
+            <p class="text-gray-400">
+              Interface de linha de comando para jogar,
+              analisar e estudar xadrez
+            </p>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- AI Features Section -->
+    <!-- Gamified Journey Section -->
+    <section id="journey" class="py-20 bg-[#0f0f10] border-t border-[var(--border)]">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+          <h2 class="text-4xl font-bold font-chess mb-3">
+            Encontre seu caminho com nossa Jornada Gamificada
+          </h2>
+          <p class="text-lg text-gray-300">4 passos rápidos para descobrir seu perfil e desbloquear uma oferta ideal</p>
+        </div>
+
+        <!-- Wizard -->
+        <div x-data="gamifiedJourney()" x-init="init()" class="bg-[#141415] border border-[var(--border)] rounded-2xl p-6 lg:p-8 shadow-xl">
+          <!-- Progress -->
+          <div class="mb-6">
+            <div class="flex items-center justify-between text-xs text-gray-400 mb-2">
+              <span x-text="`Passo ${step} de ${totalSteps}`"></span>
+              <span x-text="`${points} pts`"></span>
+            </div>
+            <div class="w-full h-2 bg-[#1c1c1e] rounded">
+              <div class="h-2 bg-[var(--accent)] rounded transition-all" :style="`width: ${(step-1)/(totalSteps-1)*100}%`"></div>
+            </div>
+          </div>
+
+          <!-- Steps -->
+          <template x-if="view==='quiz'">
+            <div class="space-y-8">
+              <!-- Step 1 -->
+              <div x-show="step===1">
+                <h3 class="text-xl font-semibold mb-4">Qual é seu nível atual?</h3>
+                <div class="grid sm:grid-cols-3 gap-3">
+                  <button @click="select('level','iniciante')" class="border border-[var(--border)] rounded-lg p-4 hover:border-[var(--accent)]">
+                    <div class="font-semibold">Iniciante</div>
+                    <div class="text-xs text-gray-400">Até ~1200</div>
+                  </button>
+                  <button @click="select('level','intermediario')" class="border border-[var(--border)] rounded-lg p-4 hover:border-[var(--accent)]">
+                    <div class="font-semibold">Intermediário</div>
+                    <div class="text-xs text-gray-400">1200 - 1800</div>
+                  </button>
+                  <button @click="select('level','avancado')" class="border border-[var(--border)] rounded-lg p-4 hover:border-[var(--accent)]">
+                    <div class="font-semibold">Avançado</div>
+                    <div class="text-xs text-gray-400">1800+</div>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Step 2 -->
+              <div x-show="step===2">
+                <h3 class="text-xl font-semibold mb-4">Qual seu objetivo principal?</h3>
+                <div class="grid sm:grid-cols-2 gap-3">
+                  <button @click="select('goal','rating')" class="border border-[var(--border)] rounded-lg p-4 hover:border-[var(--accent)] text-left">
+                    <div class="font-semibold">Subir rating</div>
+                    <div class="text-xs text-gray-400">Plano focado em performance</div>
+                  </button>
+                  <button @click="select('goal','aberturas')" class="border border-[var(--border)] rounded-lg p-4 hover:border-[var(--accent)] text-left">
+                    <div class="font-semibold">Dominar aberturas</div>
+                    <div class="text-xs text-gray-400">Repertório e teoria</div>
+                  </button>
+                  <button @click="select('goal','tatica')" class="border border-[var(--border)] rounded-lg p-4 hover:border-[var(--accent)] text-left">
+                    <div class="font-semibold">Tática e cálculo</div>
+                    <div class="text-xs text-gray-400">Exercícios personalizados</div>
+                  </button>
+                  <button @click="select('goal','torneio')" class="border border-[var(--border)] rounded-lg p-4 hover:border-[var(--accent)] text-left">
+                    <div class="font-semibold">Preparação para torneios</div>
+                    <div class="text-xs text-gray-400">Treino competitivo</div>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Step 3 -->
+              <div x-show="step===3">
+                <h3 class="text-xl font-semibold mb-4">Quanto tempo por semana?</h3>
+                <div class="grid sm:grid-cols-4 gap-3">
+                  <button @click="select('time','<2h')" class="border border-[var(--border)] rounded-lg p-4 hover:border-[var(--accent)]">&lt; 2h</button>
+                  <button @click="select('time','2-5h')" class="border border-[var(--border)] rounded-lg p-4 hover:border-[var(--accent)]">2-5h</button>
+                  <button @click="select('time','5-10h')" class="border border-[var(--border)] rounded-lg p-4 hover:border-[var(--accent)]">5-10h</button>
+                  <button @click="select('time','10h+')" class="border border-[var(--border)] rounded-lg p-4 hover:border-[var(--accent)]">10h+</button>
+                </div>
+              </div>
+
+              <!-- Step 4 -->
+              <div x-show="step===4">
+                <h3 class="text-xl font-semibold mb-4">Qual seu estilo de jogo?</h3>
+                <div class="grid sm:grid-cols-3 gap-3">
+                  <button @click="select('style','agressivo')" class="border border-[var(--border)] rounded-lg p-4 hover:border-[var(--accent)]">Agressivo</button>
+                  <button @click="select('style','solido')" class="border border-[var(--border)] rounded-lg p-4 hover:border-[var(--accent)]">Sólido</button>
+                  <button @click="select('style','equilibrado')" class="border border-[var(--border)] rounded-lg p-4 hover:border-[var(--accent)]">Equilibrado</button>
+                </div>
+              </div>
+
+              <div class="flex justify-between pt-2">
+                <button class="btn-secondary px-3 py-2" @click="prev()" :disabled="step===1">Voltar</button>
+                <button class="btn-primary px-3 py-2" @click="next()" x-show="step<totalSteps">Continuar</button>
+              </div>
+            </div>
+          </template>
+
+          <!-- Result -->
+          <template x-if="view==='result'">
+            <div class="grid lg:grid-cols-3 gap-6">
+              <div class="lg:col-span-2">
+                <div class="flex items-center gap-3 mb-3">
+                  <div class="w-8 h-8 rounded-full bg-[var(--accent)] text-black flex items-center justify-center font-bold" x-text="badge"></div>
+                  <h3 class="text-2xl font-bold">Seu perfil: <span class="gradient-text" x-text="persona.title"></span></h3>
+                </div>
+                <p class="text-gray-300 mb-4" x-text="persona.subtitle"></p>
+                <ul class="space-y-2 text-sm">
+                  <template x-for="b in persona.benefits" :key="b">
+                    <li class="flex items-start"><i class="fas fa-check text-green-500 mt-1 mr-2"></i><span x-text="b"></span></li>
+                  </template>
+                </ul>
+              </div>
+              <div class="bg-[#0f0f10] border border-[var(--border)] rounded-xl p-5">
+                <div class="text-sm text-gray-400 mb-1">Plano recomendado</div>
+                <div class="text-3xl font-bold mb-2" x-text="recommendation.plan"></div>
+                <div class="text-gray-400 mb-4" x-text="recommendation.price"></div>
+                <ul class="space-y-2 text-sm mb-4">
+                  <template x-for="f in recommendation.features" :key="f"><li class="flex items-start"><i class="fas fa-star text-yellow-500 mt-1 mr-2"></i><span x-text="f"></span></li></template>
+                </ul>
+                <button class="w-full btn-primary" @click="goToPricing()">Ver plano</button>
+                <div class="text-[11px] text-gray-500 mt-3">Você desbloqueou: <span class="text-[var(--accent)]" x-text="perk"></span></div>
+              </div>
+            </div>
+          </template>
+        </div>
+      </div>
+    </section>
+
+    <!-- Main Content Area -->
     <section id="features" class="py-20 bg-gray-50 dark:bg-dark-surface">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-16">
           <h2 class="text-4xl font-bold text-gray-900 dark:text-dark-text mb-4">
-            Intelligence that understands your code
+            Inteligência que entende seu jogo
           </h2>
           <p class="text-xl text-gray-600 dark:text-dark-muted">
-            AI-powered features that learn from your patterns
+            Recursos avançados de IA que se adaptam ao seu estilo
           </p>
         </div>
 
@@ -487,18 +788,17 @@
             >
               <span class="text-3xl">🧠</span>
             </div>
-            <h3 class="text-2xl font-bold text-gray-900 dark:text-dark-text mb-4">Context-Aware Commits</h3>
+            <h3 class="text-2xl font-bold text-gray-900 dark:text-dark-text mb-4">Análise Contextual</h3>
             <p class="text-gray-600 dark:text-dark-muted mb-6">
-              AI analyzes your changes and generates perfect commit messages that follow
-              best practices.
+              IA analisa suas jogadas e sugere as melhores continuações baseadas no contexto da partida.
             </p>
             <div class="bg-gray-50 dark:bg-dark-surface rounded-lg p-4">
               <div class="text-sm font-mono">
-                <div class="text-green-600">+ Added user authentication system</div>
-                <div class="text-red-600">- Removed deprecated login method</div>
-                <div class="text-blue-600 mt-2">💡 Suggested commit:</div>
+                <div class="text-green-600">♖ Bispo em e7 - Desenvolvimento sólido</div>
+                <div class="text-red-600">⚠️ Cavalo em a3 - Posição passiva</div>
+                <div class="text-blue-600 mt-2">👡 Sugestão:</div>
                 <div class="text-gray-800 font-semibold">
-                  "feat(auth): implement OAuth2 with JWT tokens"
+                  "Nf3 desenvolvendo com pressão central"
                 </div>
               </div>
             </div>
@@ -513,21 +813,20 @@
             >
               <span class="text-3xl">🔮</span>
             </div>
-            <h3 class="text-2xl font-bold text-gray-900 dark:text-dark-text mb-4">Predictive Analysis</h3>
+            <h3 class="text-2xl font-bold text-gray-900 dark:text-dark-text mb-4">Análise Preditiva</h3>
             <p class="text-gray-600 dark:text-dark-muted mb-6">
-              Spot issues before they become problems with AI-powered code health
-              prediction.
+              Identifique ameaças e oportunidades antes que se concretizem com previsão avançada.
             </p>
             <div class="bg-gray-50 dark:bg-dark-surface rounded-lg p-4">
               <div class="flex items-center justify-between mb-2">
-                <span class="text-sm font-medium">Code Health Score</span>
-                <span class="text-lg font-bold text-green-600">87%</span>
+                <span class="text-sm font-medium">Avaliação da Posição</span>
+                <span class="text-lg font-bold text-green-600">+2.3</span>
               </div>
               <div class="w-full bg-gray-200 rounded-full h-2 mb-3">
-                <div class="bg-green-500 h-2 rounded-full" style="width: 87%"></div>
+                <div class="bg-green-500 h-2 rounded-full" style="width: 73%"></div>
               </div>
               <div class="text-xs text-gray-600">
-                ⚠️ Potential memory leak detected in utils/cache.js
+                ⚠️ Ameaça tática detectada em 3 lances: Nxf7!
               </div>
             </div>
           </div>
@@ -541,24 +840,23 @@
             >
               <span class="text-3xl">⚡</span>
             </div>
-            <h3 class="text-2xl font-bold text-gray-900 dark:text-dark-text mb-4">Smart Automation</h3>
+            <h3 class="text-2xl font-bold text-gray-900 dark:text-dark-text mb-4">Treinamento Inteligente</h3>
             <p class="text-gray-600 dark:text-dark-muted mb-6">
-              Learns your patterns and optimizes workflows automatically for maximum
-              efficiency.
+              Sistema adaptativo que aprende seus padrões e otimiza seu treinamento automaticamente.
             </p>
             <div class="bg-gray-50 dark:bg-dark-surface rounded-lg p-4">
               <div class="space-y-2 text-sm">
                 <div class="flex items-center">
                   <span class="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
-                  Auto-sync with main branch
+                  Exercícios de tática personalizados
                 </div>
                 <div class="flex items-center">
                   <span class="w-2 h-2 bg-blue-500 rounded-full mr-2"></span>
-                  Run tests before commit
+                  Análise automática pós-partida
                 </div>
                 <div class="flex items-center">
                   <span class="w-2 h-2 bg-purple-500 rounded-full mr-2"></span>
-                  Update dependencies weekly
+                  Repertório de aberturas adaptativo
                 </div>
               </div>
             </div>
@@ -572,10 +870,10 @@
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-16">
           <h2 class="text-4xl font-bold text-gray-900 dark:text-dark-text mb-4">
-            Join the exclusive preview
+            Junte-se à comunidade Aeon Chess
           </h2>
           <p class="text-xl text-gray-600 dark:text-dark-muted">
-            Trusted by developers at leading companies
+            Confiado por jogadores de todos os níveis
           </p>
         </div>
 
@@ -588,7 +886,7 @@
             >
               2,847
             </div>
-            <div class="text-gray-600 dark:text-dark-muted">developers on waitlist</div>
+            <div class="text-gray-600 dark:text-dark-muted">jogadores na lista de espera</div>
           </div>
           <div class="text-center">
             <div
@@ -597,7 +895,7 @@
             >
               94%
             </div>
-            <div class="text-gray-600 dark:text-dark-muted">would recommend to peers</div>
+            <div class="text-gray-600 dark:text-dark-muted">recomendam para amigos</div>
           </div>
           <div class="text-center">
             <div
@@ -606,7 +904,7 @@
             >
               12x
             </div>
-            <div class="text-gray-600 dark:text-dark-muted">average productivity gain</div>
+            <div class="text-gray-600 dark:text-dark-muted">melhoria média no rating</div>
           </div>
         </div>
 
@@ -621,12 +919,12 @@
               />
               <div>
                 <p class="text-gray-800 dark:text-dark-text mb-4">
-                  "The AI suggestions are incredible. It's like having a senior
-                  developer pair programming with you 24/7."
+                  "As sugestões da IA são incríveis. É como ter um Grande Mestre
+                  analisando cada jogada comigo 24/7."
                 </p>
                 <div class="text-sm">
-                  <div class="font-semibold text-gray-900 dark:text-dark-text">Alex Thompson</div>
-                  <div class="text-gray-600 dark:text-dark-muted">Senior Engineer @ Stripe</div>
+                  <div class="font-semibold text-gray-900 dark:text-dark-text">Carlos Silva</div>
+                  <div class="text-gray-600 dark:text-dark-muted">FM - Rating 2350</div>
                 </div>
               </div>
             </div>
@@ -641,12 +939,12 @@
               />
               <div>
                 <p class="text-gray-800 dark:text-dark-text mb-4">
-                  "We reduced our deployment time from 2 hours to 10 minutes. The ROI
-                  was immediate."
+                  "Melhorei 300 pontos de rating em apenas 6 meses. A análise
+                  instantânea é revolucionária."
                 </p>
                 <div class="text-sm">
-                  <div class="font-semibold text-gray-900 dark:text-dark-text">Maria Garcia</div>
-                  <div class="text-gray-600 dark:text-dark-muted">DevOps Lead @ Shopify</div>
+                  <div class="font-semibold text-gray-900 dark:text-dark-text">Ana Santos</div>
+                  <div class="text-gray-600 dark:text-dark-muted">Campeã Estadual</div>
                 </div>
               </div>
             </div>
@@ -658,10 +956,10 @@
           class="bg-gradient-to-r from-purple-600 to-blue-600 rounded-2xl p-8 text-center text-white"
         >
           <div class="max-w-2xl mx-auto">
-            <h3 class="text-3xl font-bold mb-4">Limited Beta Access Opening Soon</h3>
+            <h3 class="text-3xl font-bold mb-4">Acesso Beta Limitado Abrindo em Breve</h3>
             <p class="text-xl mb-8 text-purple-100">
-              Only 100 spots available for technical preview. Be among the first to
-              experience the future of GitHub automation.
+              Apenas 100 vagas disponíveis para teste exclusivo. Seja um dos primeiros a
+              experimentar o futuro do xadrez com IA.
             </p>
 
             <!-- Access Request Form -->
@@ -670,7 +968,7 @@
                 <input
                   type="email"
                   x-model="form.email"
-                  placeholder="Enter your email"
+                  placeholder="Digite seu email"
                   class="flex-1 px-4 py-3 rounded-lg text-gray-900 placeholder-gray-500"
                   required
                 />
@@ -678,11 +976,11 @@
                   type="submit"
                   class="bg-yellow-500 text-purple-900 px-8 py-3 rounded-lg font-semibold hover:bg-yellow-400 transition-colors"
                 >
-                  Request Priority Access
+                  Solicitar Acesso Prioritário
                 </button>
               </div>
               <p class="text-sm text-purple-100 mt-4">
-                No spam, ever. Unsubscribe at any time.
+                Sem spam. Cancele quando quiser.
               </p>
             </form>
           </div>
@@ -695,196 +993,179 @@
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-16">
           <h2 class="text-4xl font-bold text-gray-900 dark:text-dark-text mb-4">
-            Simple, transparent pricing
+            Preços simples e transparentes
           </h2>
-          <p class="text-xl text-gray-600 dark:text-dark-muted">Choose the plan that fits your needs</p>
+          <p class="text-xl text-gray-600 dark:text-dark-muted">Escolha o plano ideal para você</p>
         </div>
 
-        <div class="grid md:grid-cols-3 gap-8">
-          <!-- Individual Plan -->
-          <div class="bg-white dark:bg-dark-bg rounded-xl p-8 shadow-lg">
+        <div class="grid lg:grid-cols-3 md:grid-cols-1 gap-8">
+          <!-- Plano Iniciante -->
+          <div class="bg-white dark:bg-dark-bg rounded-xl p-6 shadow-lg">
             <div class="text-center">
-              <h3 class="text-2xl font-bold text-gray-900 dark:text-dark-text mb-4">Individual</h3>
-              <div class="text-4xl font-bold text-purple-600 dark:text-purple-400 mb-2">$99</div>
-              <div class="text-gray-600 dark:text-dark-muted mb-8">per month</div>
+              <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-chess-pawn text-blue-600 text-xl"></i>
+              </div>
+              <h3 class="text-2xl font-bold text-gray-900 dark:text-dark-text mb-2">Iniciante</h3>
+              <p class="text-sm text-gray-500 mb-4">Ideal para quem está começando</p>
+              <div class="text-4xl font-bold text-blue-600 dark:text-blue-400 mb-1">R$ 19</div>
+              <div class="text-gray-600 dark:text-dark-muted mb-6">por mês</div>
               <ul class="text-left space-y-3 mb-8">
-                <li class="flex items-center">
-                  <svg
-                    class="w-5 h-5 text-green-500 mr-3"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                    />
-                  </svg>
-                  Unlimited repositories
+                <li class="flex items-start">
+                  <i class="fas fa-check text-green-500 mr-3 mt-1 text-sm"></i>
+                  <div>
+                    <strong>10 análises por dia</strong>
+                    <div class="text-xs text-gray-500">Análise básica com sugestões</div>
+                  </div>
                 </li>
-                <li class="flex items-center">
-                  <svg
-                    class="w-5 h-5 text-green-500 mr-3"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                    />
-                  </svg>
-                  AI-powered automation
+                <li class="flex items-start">
+                  <i class="fas fa-check text-green-500 mr-3 mt-1 text-sm"></i>
+                  <div>
+                    <strong>Exercícios táticos básicos</strong>
+                    <div class="text-xs text-gray-500">50 puzzles por semana</div>
+                  </div>
                 </li>
-                <li class="flex items-center">
-                  <svg
-                    class="w-5 h-5 text-green-500 mr-3"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                    />
-                  </svg>
-                  Priority support
+                <li class="flex items-start">
+                  <i class="fas fa-check text-green-500 mr-3 mt-1 text-sm"></i>
+                  <div>
+                    <strong>5 aberturas principais</strong>
+                    <div class="text-xs text-gray-500">Teoria essencial</div>
+                  </div>
+                </li>
+                <li class="flex items-start">
+                  <i class="fas fa-check text-green-500 mr-3 mt-1 text-sm"></i>
+                  <div>
+                    <strong>IA até 1400 ELO</strong>
+                    <div class="text-xs text-gray-500">Oponente para iniciantes</div>
+                  </div>
                 </li>
               </ul>
-              <button
-                class="w-full bg-purple-600 text-white py-3 rounded-lg font-semibold hover:bg-purple-700 transition-colors"
-              >
-                Start Free Trial
+              <button class="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors">
+                Começar Agora
               </button>
             </div>
           </div>
 
-          <!-- Team Plan -->
-          <div
-            class="bg-white dark:bg-dark-bg rounded-xl p-8 shadow-lg border-2 border-purple-500 dark:border-purple-400 relative"
-          >
-            <div class="absolute -top-4 left-1/2 transform -translate-x-1/2">
-              <span
-                class="bg-purple-500 text-white px-4 py-1 rounded-full text-sm font-semibold"
-                >Most Popular</span
-              >
+          <!-- Plano Avançado -->
+          <div class="bg-white dark:bg-dark-bg rounded-xl p-6 shadow-lg border-2 border-purple-500 dark:border-purple-400 relative">
+            <div class="absolute -top-3 left-1/2 transform -translate-x-1/2">
+              <span class="bg-gradient-to-r from-purple-500 to-blue-500 text-white px-4 py-1 rounded-full text-sm font-semibold shadow-lg">
+                🔥 Mais Popular
+              </span>
             </div>
             <div class="text-center">
-              <h3 class="text-2xl font-bold text-gray-900 dark:text-dark-text mb-4">Team</h3>
-              <div class="text-4xl font-bold text-purple-600 dark:text-purple-400 mb-2">$499</div>
-              <div class="text-gray-600 dark:text-dark-muted mb-8">per month, up to 10 developers</div>
+              <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-chess-knight text-purple-600 text-xl"></i>
+              </div>
+              <h3 class="text-2xl font-bold text-gray-900 dark:text-dark-text mb-2">Avançado</h3>
+              <p class="text-sm text-gray-500 mb-4">Para jogadores sérios (1200-1800 ELO)</p>
+              <div class="text-4xl font-bold text-purple-600 dark:text-purple-400 mb-1">R$ 59</div>
+              <div class="text-gray-600 dark:text-dark-muted mb-6">por mês</div>
               <ul class="text-left space-y-3 mb-8">
-                <li class="flex items-center">
-                  <svg
-                    class="w-5 h-5 text-green-500 mr-3"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                    />
-                  </svg>
-                  Everything in Individual
+                <li class="flex items-start">
+                  <i class="fas fa-check text-green-500 mr-3 mt-1 text-sm"></i>
+                  <div>
+                    <strong>Análises ilimitadas</strong>
+                    <div class="text-xs text-gray-500">Com engine Stockfish 15</div>
+                  </div>
                 </li>
-                <li class="flex items-center">
-                  <svg
-                    class="w-5 h-5 text-green-500 mr-3"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                    />
-                  </svg>
-                  Team collaboration features
+                <li class="flex items-start">
+                  <i class="fas fa-check text-green-500 mr-3 mt-1 text-sm"></i>
+                  <div>
+                    <strong>2000+ exercícios táticos</strong>
+                    <div class="text-xs text-gray-500">Problemas personalizados</div>
+                  </div>
                 </li>
-                <li class="flex items-center">
-                  <svg
-                    class="w-5 h-5 text-green-500 mr-3"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                    />
-                  </svg>
-                  Advanced analytics
+                <li class="flex items-start">
+                  <i class="fas fa-check text-green-500 mr-3 mt-1 text-sm"></i>
+                  <div>
+                    <strong>Repertório completo</strong>
+                    <div class="text-xs text-gray-500">20+ aberturas com variantes</div>
+                  </div>
                 </li>
-                <li class="flex items-center">
-                  <svg
-                    class="w-5 h-5 text-green-500 mr-3"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                    />
-                  </svg>
-                  24/7 premium support
+                <li class="flex items-start">
+                  <i class="fas fa-check text-green-500 mr-3 mt-1 text-sm"></i>
+                  <div>
+                    <strong>IA até 2200 ELO</strong>
+                    <div class="text-xs text-gray-500">Nível clube forte</div>
+                  </div>
+                </li>
+                <li class="flex items-start">
+                  <i class="fas fa-check text-green-500 mr-3 mt-1 text-sm"></i>
+                  <div>
+                    <strong>Torneios mensais</strong>
+                    <div class="text-xs text-gray-500">Premiação R$ 500</div>
+                  </div>
+                </li>
+                <li class="flex items-start">
+                  <i class="fas fa-check text-green-500 mr-3 mt-1 text-sm"></i>
+                  <div>
+                    <strong>Relatórios detalhados</strong>
+                    <div class="text-xs text-gray-500">Progresso semanal</div>
+                  </div>
                 </li>
               </ul>
-              <button
-                class="w-full bg-purple-600 text-white py-3 rounded-lg font-semibold hover:bg-purple-700 transition-colors"
-              >
-                Start Free Trial
+              <button class="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white py-3 rounded-lg font-semibold hover:from-purple-700 hover:to-blue-700 transition-all transform hover:scale-105">
+                Começar Teste 7 Dias
               </button>
             </div>
           </div>
 
-          <!-- Enterprise Plan -->
-          <div class="bg-white dark:bg-dark-bg rounded-xl p-8 shadow-lg">
+          <!-- Plano Mestre -->
+          <div class="bg-white dark:bg-dark-bg rounded-xl p-6 shadow-lg">
             <div class="text-center">
-              <h3 class="text-2xl font-bold text-gray-900 dark:text-dark-text mb-4">Enterprise</h3>
-              <div class="text-4xl font-bold text-purple-600 dark:text-purple-400 mb-2">Custom</div>
-              <div class="text-gray-600 dark:text-dark-muted mb-8">starting at $2,000/month</div>
+              <div class="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-chess-king text-yellow-600 text-xl"></i>
+              </div>
+              <h3 class="text-2xl font-bold text-gray-900 dark:text-dark-text mb-2">Mestre</h3>
+              <p class="text-sm text-gray-500 mb-4">Para jogadores de elite (1800+ ELO)</p>
+              <div class="text-4xl font-bold text-yellow-600 dark:text-yellow-400 mb-1">R$ 129</div>
+              <div class="text-gray-600 dark:text-dark-muted mb-6">por mês</div>
               <ul class="text-left space-y-3 mb-8">
-                <li class="flex items-center">
-                  <svg
-                    class="w-5 h-5 text-green-500 mr-3"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                    />
-                  </svg>
-                  Everything in Team
+                <li class="flex items-start">
+                  <i class="fas fa-crown text-yellow-500 mr-3 mt-1 text-sm"></i>
+                  <div>
+                    <strong>Tudo do Avançado +</strong>
+                    <div class="text-xs text-gray-500">Recursos premium</div>
+                  </div>
                 </li>
-                <li class="flex items-center">
-                  <svg
-                    class="w-5 h-5 text-green-500 mr-3"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                    />
-                  </svg>
-                  Unlimited developers
+                <li class="flex items-start">
+                  <i class="fas fa-crown text-yellow-500 mr-3 mt-1 text-sm"></i>
+                  <div>
+                    <strong>IA até 2800 ELO</strong>
+                    <div class="text-xs text-gray-500">Nível Grande Mestre</div>
+                  </div>
                 </li>
-                <li class="flex items-center">
-                  <svg
-                    class="w-5 h-5 text-green-500 mr-3"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                    />
-                  </svg>
-                  SSO & security features
+                <li class="flex items-start">
+                  <i class="fas fa-crown text-yellow-500 mr-3 mt-1 text-sm"></i>
+                  <div>
+                    <strong>Coach IA personalizado</strong>
+                    <div class="text-xs text-gray-500">Plano de treino individual</div>
+                  </div>
                 </li>
-                <li class="flex items-center">
-                  <svg
-                    class="w-5 h-5 text-green-500 mr-3"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                    />
-                  </svg>
-                  Dedicated account manager
+                <li class="flex items-start">
+                  <i class="fas fa-crown text-yellow-500 mr-3 mt-1 text-sm"></i>
+                  <div>
+                    <strong>Análise de partidas GM</strong>
+                    <div class="text-xs text-gray-500">Base 10M+ jogos</div>
+                  </div>
+                </li>
+                <li class="flex items-start">
+                  <i class="fas fa-crown text-yellow-500 mr-3 mt-1 text-sm"></i>
+                  <div>
+                    <strong>Sessões 1:1 mensais</strong>
+                    <div class="text-xs text-gray-500">Com FM/IM certificados</div>
+                  </div>
+                </li>
+                <li class="flex items-start">
+                  <i class="fas fa-crown text-yellow-500 mr-3 mt-1 text-sm"></i>
+                  <div>
+                    <strong>Acesso beta features</strong>
+                    <div class="text-xs text-gray-500">Primeiros a testar</div>
+                  </div>
                 </li>
               </ul>
-              <button
-                class="w-full bg-gray-900 text-white py-3 rounded-lg font-semibold hover:bg-gray-800 transition-colors"
-              >
-                Contact Sales
+              <button class="w-full bg-gradient-to-r from-yellow-600 to-orange-500 text-white py-3 rounded-lg font-semibold hover:from-yellow-700 hover:to-orange-600 transition-all">
+                Agendar Demonstração
               </button>
             </div>
           </div>
@@ -896,7 +1177,7 @@
     <footer class="bg-gray-900 text-white py-12">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center">
-          <div class="text-2xl font-bold mb-4">ChessMaster AI</div>
+          <div class="text-2xl font-bold mb-4">Aeon Chess</div>
           <p class="text-gray-400 mb-8">
             Domine o xadrez com inteligência artificial avançada
           </p>
@@ -912,7 +1193,7 @@
             </a>
           </div>
           <div class="mt-8 text-gray-500 text-sm">
-            © 2024 ChessMaster AI. Todos os direitos reservados.
+            © 2024 Aeon Chess. Todos os direitos reservados.
           </div>
         </div>
       </div>
@@ -982,5 +1263,427 @@
     </div>
 
     <!-- Alpine.js runtime configurado em js/app.js -->
+
+    <script>
+      // Jornada Gamificada - lógica leve com Alpine
+      function gamifiedJourney() {
+        return {
+          step: 1,
+          totalSteps: 4,
+          view: 'quiz',
+          points: 0,
+          badge: 'A',
+          answers: { level: null, goal: null, time: null, style: null },
+          persona: { title: '', subtitle: '', benefits: [] },
+          recommendation: { plan: '', price: '', features: [] },
+          perk: '',
+          init() {},
+          select(key, val) {
+            this.answers[key] = val;
+            this.points += 10;
+            if (this.step < this.totalSteps) this.step++;
+            else this.finish();
+          },
+          next() { if (this.step < this.totalSteps) this.step++; },
+          prev() { if (this.step > 1) this.step--; },
+          finish() {
+            // Calcular persona
+            const { level, goal, time, style } = this.answers;
+            let title = 'Aprendiz Determinado';
+            let subtitle = 'Você busca evolução consistente com foco prático.';
+            let benefits = ['Trilhas guiadas por objetivos', 'Exercícios adaptativos semanais', 'Feedback imediato da IA'];
+            if (goal === 'torneio' || level === 'avancado') {
+              title = 'Competidor Estratégico';
+              subtitle = 'Seu foco é performance competitiva e preparação séria.';
+              benefits = ['Preparação de repertório por adversário', 'Relatórios detalhados pós-jogo', 'Simulações de torneio'];
+            } else if (goal === 'tatica' || style === 'agressivo') {
+              title = 'Tático Implacável';
+              subtitle = 'Você valoriza iniciativa e cálculo preciso.';
+              benefits = ['Drills de cálculo progressivos', 'Padrões táticos frequentes', 'Treinos de tempo reduzido'];
+            }
+            this.persona = { title, subtitle, benefits };
+
+            // Recomendar plano
+            const plan = this.choosePlan(level, goal, time);
+            const mapping = {
+              iniciante: { plan: 'Iniciante', price: 'R$ 19/mês', features: ['10 análises/dia', '50 puzzles/semana', 'IA até 1400 ELO'] },
+              avancado: { plan: 'Mestre', price: 'R$ 129/mês', features: ['Coach IA', 'Base 10M+ jogos', 'IA até 2800 ELO'] },
+              intermediario: { plan: 'Avançado', price: 'R$ 59/mês', features: ['Análises ilimitadas', '2000+ exercícios', 'IA até 2200 ELO'] }
+            };
+            this.recommendation = mapping[plan];
+
+            // Perk desbloqueado
+            if (plan === 'intermediario') this.perk = 'Teste grátis de 7 dias';
+            else if (plan === 'avancado') this.perk = 'Sessão de onboarding com coach IA';
+            else this.perk = 'Kit de iniciação com trilha guiada';
+
+            // Badge simples por pontos
+            this.badge = this.points >= 30 ? 'S' : 'A';
+            this.view = 'result';
+          },
+          choosePlan(level, goal, time) {
+            // Árvore simples: traduz para iniciante/intermediario/avancado
+            if (level === 'avancado') return 'avancado';
+            if (goal === 'torneio') return 'avancado';
+            if (level === 'intermediario' && (goal === 'rating' || goal === 'tatica')) return 'intermediario';
+            if (time === '10h+' && (goal === 'aberturas' || goal === 'rating')) return 'intermediario';
+            return 'iniciante';
+          },
+          goToPricing() {
+            // Rola até a seção de preços e destaca o cartão correspondente
+            const id = this.recommendation.plan.toLowerCase();
+            const pricing = document.getElementById('pricing');
+            if (pricing) pricing.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        }
+      }
+
+      // Inicialização do tabuleiro com validação, Undo/Reset, barra de avaliação e modos Demo/Jogar
+      document.addEventListener('DOMContentLoaded', function () {
+        const board = document.getElementById('aeon-board');
+        if (!board || typeof Chess === 'undefined') return;
+        const game = new Chess();
+        const status = document.getElementById('aeon-status');
+        const narration = document.getElementById('aeon-narration');
+        const undoBtn = document.getElementById('aeon-undo');
+        const resetBtn = document.getElementById('aeon-reset');
+        const evalWhite = document.getElementById('aeon-eval-white');
+        const evalBlack = document.getElementById('aeon-eval-black');
+        const evalScore = document.getElementById('aeon-eval-score');
+        const ctaPlay = document.getElementById('cta-play');
+        const ctaDemo = document.getElementById('cta-demo');
+
+        let demoTimer = null;
+        let demoIndex = 0;
+        let demoRunning = true;
+        let humanVsAI = false;
+        let engine = null;
+        let engineReady = false;
+        let engineBusy = false;
+
+        function syncBoard() {
+          if (typeof board.setPosition === 'function') {
+            board.setPosition(game.fen());
+          } else {
+            board.position = game.fen();
+          }
+        }
+
+        // Avaliação simples por material (pawns)
+        const pieceValues = { p: 1, n: 3, b: 3, r: 5, q: 9, k: 0 };
+        function evaluateMaterial() {
+          const fen = game.fen().split(' ')[0];
+          let score = 0; // positivo favorece Brancas
+          for (const ch of fen) {
+            if (ch === '/' || !isNaN(Number(ch))) continue;
+            const isUpper = ch === ch.toUpperCase();
+            const val = pieceValues[ch.toLowerCase()] ?? 0;
+            score += isUpper ? val : -val;
+          }
+          return score; // em peões
+        }
+
+        function updateEvalBar() {
+          const s = evaluateMaterial();
+          const pctWhite = 50 + 50 * Math.tanh(s / 3);
+          const pctClamped = Math.max(0, Math.min(100, pctWhite));
+          const whiteH = pctClamped;
+          const blackH = 100 - pctClamped;
+          if (window.innerWidth >= 1024) {
+            evalWhite.style.height = whiteH + '%';
+            evalWhite.style.width = '100%';
+            evalBlack.style.height = blackH + '%';
+            evalBlack.style.width = '100%';
+          } else {
+            evalWhite.style.width = whiteH + '%';
+            evalWhite.style.height = '100%';
+            evalBlack.style.width = blackH + '%';
+            evalBlack.style.height = '100%';
+          }
+          let txt = '=';
+          if (Math.abs(s) >= 0.05) txt = (s > 0 ? '+' : '') + s.toFixed(1);
+          evalScore.textContent = txt;
+        }
+
+        function setNarration(text) {
+          if (narration) narration.textContent = text;
+        }
+
+        function updateStatus() {
+          let msg = '';
+          if (game.in_checkmate()) {
+            msg = 'Xeque-mate! ' + (game.turn() === 'w' ? 'Pretas' : 'Brancas') + ' venceram.';
+          } else if (game.in_draw()) {
+            msg = 'Empate.';
+          } else {
+            msg = (game.turn() === 'w' ? 'Brancas' : 'Pretas') + ' para jogar' + (game.in_check() ? ' (em xeque)' : '');
+          }
+          status.textContent = msg;
+          updateEvalBar();
+        }
+
+        // Trilhas culturais: Europa x LatAm, Índia, Rússia, Brasil
+        const culturalTracks = [
+          {
+            name: 'Europa vs LatAm (Najdorf)',
+            moves: ['e4','c5','Nf3','d6','d4','cxd4','Nxd4','Nf6','Nc3','a6','Bg5','e6','f4','Be7'],
+            narr: [
+              'Brancas (Escola Clássica Europeia) avançam pelo centro.',
+              'Pretas (Estilo Latino-americano) respondem com Sicíliana dinâmica.',
+              'Desenvolvimento com pressão em e5 — pragmatismo europeu.',
+              'Estrutura flexível preparando ...g6 ou ...e6.',
+              'Abertura do centro: jogo aberto em perspectiva.',
+              'Contrajogo imediato no flanco da dama.',
+              'Cavalo centralizado mira casas fortes.',
+              'Desafio direto ao centro — ritmo latino.',
+              'Reforço no centro; ideias de Bg5 e f4 no horizonte.',
+              'Najdorf: ambição estratégica das Pretas.',
+              'Pressão posicional clássica sobre o cavalo de f6.',
+              'Estratégia sólida mantendo flexibilidade defensiva.',
+              'Plano agressivo: lançar ataque no roque curto.',
+              'Pretas completam o desenvolvimento, prontas para contragolpes.'
+            ]
+          },
+          {
+            name: 'Índia (Defesa Índia do Rei)',
+            moves: ['d4','Nf6','c4','g6','Nc3','Bg7','e4','d6','Nf3','O-O','Be2','e5'],
+            narr: [
+              'Brancas escolhem 1.d4, caminho posicional amplamente estudado na Índia.',
+              'Pretas respondem com flexibilidade indiana (…Cf6).',
+              'Estrutura clássica de peões no centro da dama.',
+              '…g6 anuncia a Índia do Rei, arma favorita de muitos mestres indianos.',
+              'Desenvolvimento natural rumo ao domínio central.',
+              'O bispo fianchettado observa o centro e o flanco da dama.',
+              'As Brancas cravam o espaço com e4.',
+              '…d6 prepara …e5 e jogo complexo — estilo combativo.',
+              'Peças brancas coordenam para ocupar o centro.',
+              'Roque curto, prontas para o embate central.',
+              'Calma preparatória das Brancas.',
+              '…e5 — ruptura temática da Índia do Rei, dinamismo cultural em ação.'
+            ]
+          },
+          {
+            name: 'Rússia (Defesa Eslava)',
+            moves: ['d4','d5','c4','c6','Nf3','Nf6','Nc3','dxc4','a4','Bf5','e3','e6'],
+            narr: [
+              'Ritmo sólido: 1.d4 d5, assinatura russa de resistência.',
+              'Estrutura simétrica que privilegia precisão teórica.',
+              'As Brancas desafiam com c4 — Gambito da Dama.',
+              '…c6: Eslava, conhecida pela robustez soviética.',
+              'Desenvolvimento sóbrio das forças.',
+              '…Cf6 espelha a disciplina posicional.',
+              'Coordenação no centro e no flanco da dama.',
+              'Tomada em c4: captura-tema da Eslava.',
+              'a4 restringe …b5 — medida profilática clássica.',
+              '…Bf5: desenvolvimento ativo, manual de escola soviética.',
+              'e3 liberta o bispo de f1 mantendose sólido.',
+              '…e6 completa uma cadeia compacta e resiliente.'
+            ]
+          },
+          {
+            name: 'Brasil (Ataque Indiano com tempero)',
+            moves: ['e4','e5','Nf3','Nc6','Bc4','Nf6','d3','Bc5','c3','d6','O-O','a6'],
+            narr: [
+              'Toque brasileiro: 1.e4 e4-e5 com intenção de jogo alegre e técnico.',
+              'Simetria inicial, abrindo caminho para criatividade.',
+              'Cavalo em f3 — desenvolvimento clássico com olhar ofensivo.',
+              '…Nc6 acompanha com leveza e precisão.',
+              'Bispo em c4: espírito italiano com gingado.',
+              '…Nf6 pressiona e pede resposta fina.',
+              'd3: estrutura flexível para um meio-jogo dançante.',
+              '…Bc5 harmoniza peças — fluidez tropical.',
+              'c3 prepara d4 no momento certo.',
+              '…d6 confere estabilidade antes do carnaval tático.',
+              'Roque: prontidão para atacar os pontos fracos.',
+              '…a6 previne Bb5 e mantém opções — malandragem posicional.'
+            ]
+          }
+        ];
+        let currentTrack = 0;
+
+        function playNextDemoMove() {
+          if (!demoRunning) return;
+          const track = culturalTracks[currentTrack % culturalTracks.length];
+          if (demoIndex >= track.moves.length) {
+            demoIndex = 0; // reinicia o ciclo e passa para próxima trilha
+            currentTrack = (currentTrack + 1) % culturalTracks.length;
+            game.reset();
+            syncBoard();
+          }
+          const t = culturalTracks[currentTrack % culturalTracks.length];
+          const moveSan = t.moves[demoIndex];
+          const move = game.move(moveSan, { sloppy: true });
+          if (move) {
+            syncBoard();
+            setNarration(t.narr[demoIndex] || t.name);
+            updateStatus();
+            demoIndex++;
+          }
+        }
+
+        function startDemo() {
+          stopDemo();
+          demoRunning = true;
+          humanVsAI = false;
+          game.reset();
+          demoIndex = 0;
+          syncBoard();
+          const t = culturalTracks[currentTrack % culturalTracks.length];
+          setNarration(t.name + ' — começando a trilha cultural.');
+          updateStatus();
+          demoTimer = setInterval(playNextDemoMove, 1500);
+        }
+        function stopDemo() {
+          demoRunning = false;
+          if (demoTimer) { clearInterval(demoTimer); demoTimer = null; }
+        }
+
+        // Inicializar Stockfish (opcional)
+        function initEngine() {
+          try {
+            if (typeof Stockfish === 'undefined') return;
+            engine = Stockfish();
+            engine.onmessage = function (e) {
+              const line = (typeof e === 'string') ? e : (e && e.data);
+              if (!line) return;
+              if (/uciok/.test(line)) engineReady = true;
+              if (/bestmove\s(\w{4,5})/.test(line)) {
+                engineBusy = false;
+                const m = /bestmove\s(\w{4,5})/.exec(line)[1];
+                applyBestmoveUci(m);
+              }
+            };
+            engine.postMessage('uci');
+          } catch (_) {}
+        }
+
+        function engineGo(fen, level) {
+          if (!engine || !engineReady) return false;
+          engineBusy = true;
+          engine.postMessage('ucinewgame');
+          engine.postMessage('isready');
+          engine.postMessage('position fen ' + fen);
+          // níveis: beginner, club, master
+          let movetime = 200; let depth = undefined;
+          if (level === 'beginner') { movetime = 150; }
+          else if (level === 'club') { movetime = 400; }
+          else if (level === 'master') { movetime = 800; }
+          if (movetime) engine.postMessage('go movetime ' + movetime);
+          else if (depth) engine.postMessage('go depth ' + depth);
+          return true;
+        }
+
+        function applyBestmoveUci(uci) {
+          const from = uci.slice(0,2);
+          const to = uci.slice(2,4);
+          const promo = uci.length === 5 ? uci[4] : undefined;
+          const mv = game.move({ from, to, promotion: promo || 'q' });
+          if (mv) {
+            syncBoard();
+            const sideName = (mv.color === 'w') ? 'Brancas' : 'Pretas';
+            const styleTag = (mv.color === 'w') ? 'Clássica' : 'Ataque';
+            setNarration(`${sideName} (${styleTag}) jogam ${mv.san}.`);
+            updateStatus();
+          }
+        }
+
+        // IA simples (fallback 1-ply material)
+        function aiBestMove() {
+          const moves = game.moves({ verbose: true });
+          if (moves.length === 0) return null;
+          function materialScore(side) { return evaluateMaterial() * (side === 'w' ? 1 : -1); }
+          const side = game.turn();
+          let best = null;
+          let bestScore = -Infinity;
+          for (const m of moves) {
+            game.move(m);
+            const score = -materialScore(side);
+            game.undo();
+            if (score > bestScore) { bestScore = score; best = m; }
+          }
+          return best;
+        }
+
+        function aiMoveWithNarration() {
+          const strong = document.getElementById('ai-strong')?.checked;
+          const level = document.getElementById('ai-level')?.value || 'club';
+          if (strong && engine && engineReady && !engineBusy) {
+            engineGo(game.fen(), level);
+            return; // aguardará bestmove async
+          }
+          const m = aiBestMove();
+          if (!m) return;
+          game.move(m);
+          syncBoard();
+          const sideName = (m.color === 'w') ? 'Brancas' : 'Pretas';
+          const styleTag = (m.color === 'w') ? 'Clássica' : 'Ataque';
+          setNarration(`${sideName} (${styleTag}) jogam ${m.san}.`);
+          updateStatus();
+        }
+
+        // Drop handler: respeitar modos
+        board.addEventListener('drop', function (e) {
+          const detail = e.detail || {};
+          const from = detail.source;
+          const to = detail.target;
+          if (!from || !to) return;
+          if (demoRunning && !humanVsAI) {
+            if (typeof e.preventDefault === 'function') e.preventDefault();
+            return;
+          }
+          const move = game.move({ from, to, promotion: 'q' });
+          if (move == null) {
+            if (typeof e.preventDefault === 'function') e.preventDefault();
+          } else {
+            syncBoard();
+            updateStatus();
+            if (humanVsAI) {
+              // Resposta da IA após pequeno delay
+              setTimeout(() => {
+                aiMoveWithNarration();
+              }, 400);
+            }
+          }
+        });
+
+        // Controles
+        if (undoBtn) {
+          undoBtn.addEventListener('click', function () {
+            const undone = game.undo();
+            if (undone) {
+              syncBoard();
+              updateStatus();
+            }
+          });
+        }
+        if (resetBtn) {
+          resetBtn.addEventListener('click', function () {
+            game.reset();
+            syncBoard();
+            updateStatus();
+          });
+        }
+        if (ctaPlay) {
+          ctaPlay.addEventListener('click', function () {
+            stopDemo();
+            humanVsAI = true;
+            game.reset();
+            syncBoard();
+            setNarration('Partida demonstrativa: você (Brancas) vs IA. Boa sorte!');
+            updateStatus();
+          });
+        }
+        if (ctaDemo) {
+          ctaDemo.addEventListener('click', function () {
+            startDemo();
+          });
+        }
+
+        // Inicializa em modo demo e engine
+        syncBoard();
+        startDemo();
+        initEngine();
+      });
+    </script>
   </body>
 </html>

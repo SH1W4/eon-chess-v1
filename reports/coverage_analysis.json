@@ -1,0 +1,76 @@
+{
+  "timestamp": "1754979238.98908",
+  "test_files": {
+    "unit": 5,
+    "integration": 2,
+    "cultural": 5,
+    "narrative": 1,
+    "ai": 5,
+    "web": 3,
+    "performance": 0,
+    "total": 21
+  },
+  "source_files": {
+    "core": 21,
+    "ai": 23,
+    "cultural": 31,
+    "narrative": 13,
+    "api": 2454,
+    "monitoring": 6,
+    "integration": 9,
+    "total": 2557
+  },
+  "test_results": {
+    "results": {
+      "core_chess": {
+        "total": 17,
+        "passing": 17,
+        "coverage": 100
+      },
+      "traditional_chess": {
+        "total": 10,
+        "passing": 10,
+        "coverage": 100
+      },
+      "cultural_engine": {
+        "total": 59,
+        "passing": 49,
+        "coverage": 83
+      },
+      "narrative": {
+        "total": 5,
+        "passing": 5,
+        "coverage": 100
+      },
+      "ai_adaptive": {
+        "total": 7,
+        "passing": 7,
+        "coverage": 100
+      },
+      "integration": {
+        "total": 8,
+        "passing": 0,
+        "coverage": 0
+      },
+      "web": {
+        "total": 10,
+        "passing": 0,
+        "coverage": 0
+      }
+    },
+    "total_tests": 116,
+    "passing_tests": 88,
+    "overall_coverage": 75.86206896551724
+  },
+  "module_coverage": {
+    "core": 100.0,
+    "ai": 95.0,
+    "cultural": 83.0,
+    "narrative": 90.0,
+    "api": 30.0,
+    "monitoring": 60.0,
+    "integration": 70.0,
+    "frontend": 25.0
+  },
+  "weighted_coverage": 69.125
+}

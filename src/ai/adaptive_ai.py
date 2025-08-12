@@ -343,9 +343,11 @@ class AdaptiveAI:
             score += 0.3 * self.weights.king_safety_weight
             
         return score
-    
     def get_best_move(self, board: Board, color: Optional[Color] = None, depth: int = 1) -> Optional[Move]:
         """Get best move using minimax with alpha-beta pruning"""
+        # Normaliza cor (aceita enum ou string)
+        if isinstance(color, str):
+            color = Color.WHITE if color.lower().startswith('w') else Color.BLACK
         if color is None:
             color = Color.WHITE
             
@@ -377,7 +379,16 @@ class AdaptiveAI:
                         move.captured_piece = captured
                     all_moves.append(move)
         
-        # Se não há movimentos válidos, retorna None
+        # Se não há movimentos válidos, tenta um fallback simples gerando do tabuleiro
+        if not all_moves:
+            try:
+                for pos, piece in list(board.pieces.items()):
+                    if piece.color == color:
+                        for to_pos in board.get_valid_moves(pos):
+                            mv = Move(pos, to_pos, piece)
+                            all_moves.append(mv)
+            except Exception:
+                pass
         if not all_moves:
             return None
         
@@ -423,7 +434,95 @@ class AdaptiveAI:
                 best_score = score
                 best_move = move
         
-        return best_move
+        # Antes de devolver, verifique se o movimento é executável pelo board
+        def _can_execute(mv: Move) -> bool:
+            try:
+                from_sq = str(mv.from_pos)
+                to_sq = str(mv.to_pos)
+            except Exception:
+                from_sq = mv.from_pos
+                to_sq = mv.to_pos
+            # Backup estado mínimo
+            pieces_backup = board.pieces.copy() if hasattr(board, 'pieces') else None
+            captured_backup = list(getattr(board, 'captured_pieces', [])) if hasattr(board, 'captured_pieces') else None
+            turn_backup = getattr(board, 'current_turn', None)
+            last_backup = getattr(board, 'last_move', None)
+            try:
+                # Garante que a vez esteja coerente com a peça que vai se mover
+                mover_color = None
+                try:
+                    mover_color = mv.piece.color if hasattr(mv, 'piece') and mv.piece else board.get_piece(from_sq).color
+                except Exception:
+                    pass
+                if mover_color is not None and hasattr(board, 'current_turn'):
+                    board.current_turn = mover_color
+                # Snapshot flags/positions to avoid side effects
+                flags_backup = {}
+                pos_backup = {}
+                try:
+                    for p in board.pieces.values():
+                        flags_backup[id(p)] = getattr(p, 'has_moved', False)
+                        pos_backup[id(p)] = getattr(p, 'position', None)
+                except Exception:
+                    pass
+                # Se não há peça na casa de origem, nem tenta
+                try:
+                    if hasattr(board, 'pieces') and board.pieces.get(from_sq) is None:
+                        return False
+                except Exception:
+                    pass
+                if hasattr(board, 'move_piece'):
+                    res = board.move_piece(from_sq, to_sq)
+                    ok = isinstance(res, dict) and res.get('success') is True
+                else:
+                    ok = False
+                # Restore per-piece flags/positions possibly mutated during simulation
+                try:
+                    for p in board.pieces.values():
+                        pid = id(p)
+                        if pid in flags_backup:
+                            p.has_moved = flags_backup[pid]
+                        if pid in pos_backup:
+                            p.position = pos_backup[pid]
+                except Exception:
+                    pass
+                return ok
+            finally:
+                # Restore
+                if pieces_backup is not None:
+                    board.pieces = pieces_backup
+                if captured_backup is not None and hasattr(board, 'captured_pieces'):
+                    board.captured_pieces = captured_backup
+                if turn_backup is not None and hasattr(board, 'current_turn'):
+                    board.current_turn = turn_backup
+                if hasattr(board, 'last_move'):
+                    board.last_move = last_backup
+        
+        # Se o melhor movimento não é válido, tenta o primeiro executável
+        if best_move is None or not _can_execute(best_move):
+            for mv in all_moves:
+                if _can_execute(mv):
+                    return mv
+            # Último fallback: tenta um avanço simples de peão válido
+            try:
+                for pos, piece in list(board.pieces.items()):
+                    try:
+                        is_black = (color == Color.BLACK)
+                    except Exception:
+                        is_black = False
+                    if piece.type == PieceType.PAWN and ((is_black and piece.color == Color.BLACK) or (not is_black and piece.color == Color.WHITE)):
+                        from_sq = str(pos)
+                        file_char = from_sq[0]
+                        rank = int(from_sq[1])
+                        dir_step = -1 if is_black else 1
+                        one_step = f"{file_char}{rank + dir_step}"
+                        if board.pieces.get(one_step) is None and _can_execute(Move(pos, Position.from_algebraic(one_step), piece)):
+                            return Move(pos, Position.from_algebraic(one_step), piece)
+            except Exception:
+                pass
+        
+        # Fallback final: se não escolheu, devolve primeiro movimento disponível
+        return best_move or (all_moves[0] if all_moves else None)
     
     def _minimax(self, board: Board, depth: int, alpha: float, beta: float, color: Color) -> float:
         # Verifica cache de transposição

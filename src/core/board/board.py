@@ -62,8 +62,8 @@ class Piece:
         self._position = None
         if position:
             self.position = Position(
-                file=ord(position[0]) - ord('a'),
-                rank=int(position[1]) - 1
+                file=ord(position[0]) - ord('a') + 1,  # Convert 'a'-'h' to 1-8
+                rank=int(position[1])                   # Already 1-8
             )
     
     @property
@@ -182,10 +182,38 @@ class Board:
         - Roque (rei de e1->g1/c1 ou e8->g8/c8 com validações completas)
         - En passant (captura diagonal de peões com base no último movimento adversário)
         """
+        # Helper: resolve the actual key for from_pos (supports string or tuple-based storage)
+        def _resolve_from_key(pos_str: str):
+            if pos_str in self.pieces:
+                return pos_str
+            # Try tuple key variant
+            if len(pos_str) == 2:
+                file_idx = ord(pos_str[0]) - ord('a')
+                rank = int(pos_str[1])
+                tup = (file_idx, rank)
+                if tup in self.pieces:
+                    return tup
+            # As a last resort, scan for a piece whose algebraic equals pos_str
+            for k, v in list(self.pieces.items()):
+                try:
+                    if isinstance(k, str) and k == pos_str:
+                        return k
+                    if hasattr(v, 'position') and str(v.position) == pos_str:
+                        return k
+                except Exception:
+                    continue
+            return pos_str
+        
         # Validações básicas
-        piece = self.pieces.get(from_pos)
+        actual_from_key = _resolve_from_key(from_pos)
+        piece = self.pieces.get(actual_from_key)
         if not piece:
-            return {"success": False, "error": "Não há peça na posição inicial"}
+            # Tenta fallback via get_piece para diferentes formatos
+            piece = self.get_piece(from_pos)
+            if not piece:
+                return {"success": False, "error": "Não há peça na posição inicial"}
+            # Atualiza a chave real novamente após get_piece
+            actual_from_key = _resolve_from_key(from_pos)
             
         if piece.color != self.current_turn:
             return {"success": False, "error": "Não é a vez desta cor"}
@@ -219,9 +247,10 @@ class Board:
         if self._move_exposes_check(piece, from_pos, to_pos):
             return {"success": False, "error": "Movimento expõe o rei ao xeque"}
         
-        # Executa o movimento normal
+        # Executa o movimento normal (padroniza armazenamento como string algebraica)
         self.pieces[to_pos] = piece
-        del self.pieces[from_pos]
+        if actual_from_key in self.pieces:
+            del self.pieces[actual_from_key]
         piece.has_moved = True
         
         # Pós-atualizações

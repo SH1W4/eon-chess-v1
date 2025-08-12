@@ -354,10 +354,52 @@ async def analyze_position(
         }
     }
 
+@app.get("/api/me")
+async def read_me(current_user: str = Depends(verify_token)):
+    """Retorna o usuário autenticado (sub do token)"""
+    return {"username": current_user}
+
 @app.websocket("/ws/{game_id}")
 async def websocket_endpoint(websocket: WebSocket, game_id: str):
-    """WebSocket para atualizações em tempo real"""
-    client_id = str(uuid.uuid4())
+    """WebSocket para atualizações em tempo real.
+    Autenticação simplificada: aceita header Authorization: Bearer <token>.
+    """
+    # Validar token do header Sec-WebSocket-Protocol (fallback simples) ou recusar
+    token = None
+    try:
+        # FastAPI expõe headers via .headers
+        auth_header = websocket.headers.get("authorization") or websocket.headers.get("Authorization")
+        if auth_header and auth_header.lower().startswith("bearer "):
+            token = auth_header.split(" ", 1)[1]
+        if not token:
+            # Aceitar e esperar primeira mensagem como {"type":"auth","token":"..."}
+            await websocket.accept()
+            first = await websocket.receive_text()
+            try:
+                payload = json.loads(first)
+                if payload.get("type") == "auth" and payload.get("token"):
+                    token = payload.get("token")
+                else:
+                    await websocket.close(code=4401)
+                    return
+            except Exception:
+                await websocket.close(code=4401)
+                return
+        # Decodificar token
+        decoded = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        username = decoded.get("sub")
+        if not username:
+            await websocket.close(code=4401)
+            return
+    except Exception:
+        await websocket.close(code=4401)
+        return
+
+    client_id = username  # Use o username como id lógico
+    # Se aceitou via auth message, a conexão já está aceita; caso contrário, aceite agora
+    if websocket.client_state.name != "CONNECTED":
+        await websocket.accept()
+
     await manager.connect(websocket, client_id, game_id)
     
     try:
@@ -367,17 +409,27 @@ async def websocket_endpoint(websocket: WebSocket, game_id: str):
             message = json.loads(data)
             
             # Processar mensagem
-            if message["type"] == "ping":
+            if message.get("type") == "ping":
                 await manager.send_personal_message(
                     json.dumps({"type": "pong"}),
                     client_id
                 )
-            elif message["type"] == "chat":
+            elif message.get("type") == "chat":
                 await manager.broadcast_to_game(
                     json.dumps({
                         "type": "chat",
-                        "user": client_id[:8],
-                        "message": message["data"]
+                        "user": client_id,
+                        "message": message.get("data")
+                    }),
+                    game_id
+                )
+            elif message.get("type") == "move":
+                # Encaminhar movimento (opcional)
+                await manager.broadcast_to_game(
+                    json.dumps({
+                        "type": "move",
+                        "user": client_id,
+                        "data": message.get("data")
                     }),
                     game_id
                 )
@@ -387,7 +439,7 @@ async def websocket_endpoint(websocket: WebSocket, game_id: str):
         await manager.broadcast_to_game(
             json.dumps({
                 "type": "user_disconnected",
-                "user": client_id[:8]
+                "user": client_id
             }),
             game_id
         )

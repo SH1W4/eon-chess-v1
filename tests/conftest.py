@@ -175,6 +175,27 @@ def performance_monitor():
     
     return PerformanceMonitor()
 
+# Fallback benchmark fixture when pytest-benchmark is not installed
+try:
+    import pytest_benchmark  # noqa: F401
+except Exception:
+    @pytest.fixture
+    def benchmark():
+        class DummyBenchmark:
+            def __call__(self, func, *args, **kwargs):
+                return func(*args, **kwargs)
+            async def async_call(self, coro_func, *args, **kwargs):
+                return await coro_func(*args, **kwargs)
+            def pedantic(self, func, rounds=1, iterations=1, args=(), kwargs=None):
+                results = None
+                kwargs = kwargs or {}
+                for _ in range(rounds):
+                    for _ in range(iterations):
+                        results = func(*args, **kwargs)
+                return results
+        return DummyBenchmark()
+
+
 def pytest_configure(config):
     """Configuração do pytest"""
     config.addinivalue_line(
