@@ -1,0 +1,169 @@
+name: "cultural_conflict"
+description: "Template de narrativa dinâmica para conflitos culturais"
+
+narrative_arcs:
+  - name: "confronto_cultural"
+    description: "Arco de confronto entre culturas diferentes"
+    stages:
+      - "tensão_inicial"
+      - "escalada_conflito"
+      - "confronto_direto"
+      - "resolução_cultural"
+      - "síntese_harmônica"
+    intensity_curve: [0.3, 0.5, 0.9, 0.7, 0.4]
+    cultural_elements:
+      - name: "diferenças_culturais"
+        type: "tension_source"
+        weight: 0.8
+        cultural_value: 0.9
+        adaptability: 0.7
+        
+      - name: "valores_conflitantes"
+        type: "conflict_driver"
+        weight: 0.85
+        cultural_value: 0.95
+        adaptability: 0.8
+        
+      - name: "busca_entendimento"
+        type: "resolution_path"
+        weight: 0.7
+        cultural_value: 0.8
+        adaptability: 0.9
+    resolution_paths:
+      - "integração_cultural"
+      - "respeito_mútuo"
+      - "síntese_valores"
+      
+  - name: "jornada_adaptação"
+    description: "Arco de adaptação cultural progressiva"
+    stages:
+      - "descoberta_cultural"
+      - "choque_inicial"
+      - "aprendizado_gradual"
+      - "aceitação_diferenças"
+      - "transformação_cultural"
+    intensity_curve: [0.4, 0.6, 0.7, 0.5, 0.8]
+    cultural_elements:
+      - name: "exposição_cultural"
+        type: "learning_trigger"
+        weight: 0.75
+        cultural_value: 0.85
+        adaptability: 0.9
+        
+      - name: "desafios_adaptação"
+        type: "growth_catalyst"
+        weight: 0.8
+        cultural_value: 0.8
+        adaptability: 0.85
+        
+      - name: "evolução_perspectiva"
+        type: "transformation_marker"
+        weight: 0.9
+        cultural_value: 0.9
+        adaptability: 0.95
+    resolution_paths:
+      - "adaptação_completa"
+      - "equilíbrio_cultural"
+      - "nova_identidade"
+
+narrative_elements:
+  - name: "ritual_cultural"
+    type: "cultural_practice"
+    weight: 0.8
+    cultural_value: 0.9
+    adaptability: 0.7
+    
+  - name: "tradição_ancestral"
+    type: "cultural_value"
+    weight: 0.85
+    cultural_value: 0.95
+    adaptability: 0.6
+    
+  - name: "inovação_cultural"
+    type: "cultural_evolution"
+    weight: 0.75
+    cultural_value: 0.8
+    adaptability: 0.9
+    
+  - name: "sabedoria_antiga"
+    type: "cultural_knowledge"
+    weight: 0.9
+    cultural_value: 0.9
+    adaptability: 0.7
+    
+  - name: "ponte_cultural"
+    type: "integration_element"
+    weight: 0.8
+    cultural_value: 0.85
+    adaptability: 0.9
+
+adaptation_rules:
+  intensity_factors:
+    cultural_tension: 0.3
+    conflict_level: 0.4
+    understanding_progress: 0.3
+    
+  transition_thresholds:
+    escalation: 0.7
+    de_escalation: 0.4
+    resolution: 0.8
+    
+  cultural_weights:
+    tradition: 0.4
+    innovation: 0.3
+    harmony: 0.3
+    
+evolution_patterns:
+  - condition: "high_tension"
+    adaptations:
+      - "increase_understanding_elements"
+      - "introduce_harmony_catalyst"
+    threshold: 0.8
+    
+  - condition: "cultural_harmony"
+    adaptations:
+      - "reinforce_positive_elements"
+      - "expand_cultural_bridges"
+    threshold: 0.7
+    
+  - condition: "cultural_crisis"
+    adaptations:
+      - "activate_wisdom_elements"
+      - "enhance_resolution_paths"
+    threshold: 0.9
+
+resolution_dynamics:
+  paths:
+    - name: "harmonia_cultural"
+      requirements:
+        understanding_level: 0.8
+        tension_level: 0.3
+        cultural_bridges: 3
+      
+    - name: "coexistência_respeitosa"
+      requirements:
+        respect_level: 0.7
+        conflict_level: 0.4
+        cultural_acceptance: 0.6
+      
+    - name: "integração_progressiva"
+      requirements:
+        adaptation_level: 0.8
+        innovation_acceptance: 0.7
+        traditional_preservation: 0.6
+
+cultural_markers:
+  traditional:
+    - "rituais_ancestrais"
+    - "valores_fundamentais"
+    - "práticas_históricas"
+  
+  progressive:
+    - "inovações_culturais"
+    - "adaptações_modernas"
+    - "sínteses_criativas"
+  
+  harmonizing:
+    - "pontes_culturais"
+    - "diálogos_construtivos"
+    - "entendimentos_mútuos"

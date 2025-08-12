@@ -1,0 +1,152 @@
+name: "mystic_commander"
+description: "Antagonista que combina liderança militar com sabedoria espiritual"
+
+profiles:
+  primary_profile:
+    name: "commander"
+    patterns:
+      - "strategic_command"
+      - "unit_coordination"
+      - "battlefield_control"
+      - "morale_management"
+    volatility: 0.6
+    adaptation_rate: 0.8
+    focus_areas:
+      - "leadership"
+      - "tactics"
+      - "inspiration"
+      - "coordination"
+    
+  secondary_profile:
+    name: "mystic"
+    patterns:
+      - "spiritual_insight"
+      - "wisdom_application"
+      - "inner_harmony"
+      - "cultural_understanding"
+    volatility: 0.3
+    adaptation_rate: 0.95
+    focus_areas:
+      - "spirituality"
+      - "wisdom"
+      - "harmony"
+      - "tradition"
+
+cultural_profile:
+  name: "samurai"
+  values:
+    - "honor"
+    - "discipline"
+    - "wisdom"
+    - "loyalty"
+    - "harmony"
+  practices:
+    - "meditation"
+    - "martial_arts"
+    - "tea_ceremony"
+    - "calligraphy"
+  historical_context:
+    era: "feudal_japan"
+    region: "japan"
+    notable_events:
+      - "bushido_codification"
+      - "zen_influence"
+      - "military_reform"
+
+behavior_patterns:
+  base_patterns:
+    command:
+      - "tactical_deployment"
+      - "strategic_planning"
+      - "unit_motivation"
+    spiritual:
+      - "inner_focus"
+      - "wisdom_sharing"
+      - "harmony_maintenance"
+    integrated:
+      - "inspired_leadership"
+      - "spiritual_warfare"
+      - "balanced_action"
+  
+  emergent:
+    - name: "hybrid_spiritual_command"
+      base_patterns: ["strategic_command", "spiritual_insight"]
+      adaptation_rate: 0.9
+      evolution_enabled: true
+      
+    - name: "hybrid_harmonious_tactics"
+      base_patterns: ["battlefield_control", "inner_harmony"]
+      adaptation_rate: 0.85
+      evolution_enabled: true
+      
+    - name: "hybrid_wise_leadership"
+      base_patterns: ["morale_management", "wisdom_application"]
+      adaptation_rate: 0.88
+      evolution_enabled: true
+
+adaptation_rules:
+  context_sensitivity: 0.9
+  evolution_enabled: true
+  learning_rate: 0.8
+  stability_threshold: 0.7
+  
+  behavioral_weights:
+    primary_influence: 0.6
+    secondary_influence: 0.4
+    cultural_factor: 0.8
+    
+  emergence_conditions:
+    min_stability: 0.7
+    min_resonance: 0.8
+    evolution_threshold: 0.85
+
+special_abilities:
+  spiritual:
+    - name: "battlefield_meditation"
+      effect: "Aumenta precisão tática"
+      activation_threshold: 0.8
+      
+    - name: "wisdom_aura"
+      effect: "Melhora tomada de decisão da unidade"
+      activation_threshold: 0.85
+      
+    - name: "harmonious_command"
+      effect: "Sincroniza ações táticas"
+      activation_threshold: 0.9
+  
+  combat:
+    - name: "inspired_charge"
+      effect: "Aumenta moral e coordenação"
+      activation_threshold: 0.75
+      
+    - name: "strategic_insight"
+      effect: "Prevê movimentos inimigos"
+      activation_threshold: 0.85
+      
+    - name: "balanced_assault"
+      effect: "Otimiza ataque e defesa"
+      activation_threshold: 0.8
+
+decision_making:
+  factors:
+    spiritual_wisdom: 0.4
+    tactical_analysis: 0.3
+    cultural_context: 0.3
+    
+  thresholds:
+    aggressive_action: 0.7
+    defensive_stance: 0.6
+    balanced_approach: 0.8
+    
+  adaptations:
+    - condition: "high_pressure"
+      response: "meditation_enhanced_command"
+      threshold: 0.75
+      
+    - condition: "unit_disorder"
+      response: "harmonious_coordination"
+      threshold: 0.8
+      
+    - condition: "tactical_uncertainty"
+      response: "wisdom_guided_strategy"
+      threshold: 0.85

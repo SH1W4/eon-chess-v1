@@ -1,0 +1,205 @@
+name: "economic_warlord"
+description: "Antagonista que combina domínio militar com maestria econômica"
+
+profiles:
+  primary_profile:
+    name: "warlord"
+    patterns:
+      - "territorial_control"
+      - "force_projection"
+      - "resource_domination"
+      - "power_consolidation"
+    volatility: 0.7
+    adaptation_rate: 0.75
+    focus_areas:
+      - "territory"
+      - "power"
+      - "resources"
+      - "control"
+    
+  secondary_profile:
+    name: "economist"
+    patterns:
+      - "market_manipulation"
+      - "resource_optimization"
+      - "trade_control"
+      - "economic_warfare"
+    volatility: 0.4
+    adaptation_rate: 0.9
+    focus_areas:
+      - "economy"
+      - "trade"
+      - "resources"
+      - "market"
+
+cultural_profile:
+  name: "merchant_prince"
+  values:
+    - "wealth"
+    - "power"
+    - "influence"
+    - "pragmatism"
+    - "control"
+  practices:
+    - "trade_dominance"
+    - "resource_control"
+    - "market_manipulation"
+    - "alliance_building"
+  historical_context:
+    era: "renaissance_italy"
+    region: "mediterranean"
+    notable_events:
+      - "trade_route_control"
+      - "economic_dominance"
+      - "military_innovation"
+
+behavior_patterns:
+  base_patterns:
+    military:
+      - "force_projection"
+      - "territory_control"
+      - "resource_securing"
+    economic:
+      - "market_control"
+      - "trade_manipulation"
+      - "resource_optimization"
+    hybrid:
+      - "economic_warfare"
+      - "resource_domination"
+      - "power_projection"
+  
+  emergent:
+    - name: "hybrid_economic_conquest"
+      base_patterns: ["territorial_control", "market_manipulation"]
+      adaptation_rate: 0.88
+      evolution_enabled: true
+      
+    - name: "hybrid_resource_dominance"
+      base_patterns: ["resource_domination", "resource_optimization"]
+      adaptation_rate: 0.92
+      evolution_enabled: true
+      
+    - name: "hybrid_power_projection"
+      base_patterns: ["force_projection", "economic_warfare"]
+      adaptation_rate: 0.85
+      evolution_enabled: true
+
+adaptation_rules:
+  context_sensitivity: 0.85
+  evolution_enabled: true
+  learning_rate: 0.75
+  stability_threshold: 0.65
+  
+  behavioral_weights:
+    primary_influence: 0.6
+    secondary_influence: 0.4
+    cultural_factor: 0.7
+    
+  emergence_conditions:
+    min_stability: 0.6
+    min_resonance: 0.75
+    evolution_threshold: 0.8
+
+special_abilities:
+  economic:
+    - name: "market_manipulation"
+      effect: "Controla recursos estratégicos"
+      activation_threshold: 0.8
+      
+    - name: "trade_dominance"
+      effect: "Maximiza vantagem econômica"
+      activation_threshold: 0.85
+      
+    - name: "resource_control"
+      effect: "Otimiza uso de recursos"
+      activation_threshold: 0.75
+  
+  military:
+    - name: "force_projection"
+      effect: "Maximiza impacto militar"
+      activation_threshold: 0.8
+      
+    - name: "territorial_dominance"
+      effect: "Controla áreas estratégicas"
+      activation_threshold: 0.85
+      
+    - name: "resource_security"
+      effect: "Protege recursos críticos"
+      activation_threshold: 0.75
+
+strategy_system:
+  priorities:
+    economic_control: 0.4
+    military_power: 0.3
+    resource_dominance: 0.3
+    
+  thresholds:
+    aggressive_expansion: 0.75
+    economic_warfare: 0.8
+    resource_acquisition: 0.7
+    
+  adaptations:
+    - condition: "resource_scarcity"
+      response: "aggressive_acquisition"
+      threshold: 0.8
+      
+    - condition: "market_instability"
+      response: "economic_control"
+      threshold: 0.85
+      
+    - condition: "territorial_threat"
+      response: "military_economic_response"
+      threshold: 0.75
+
+economic_warfare:
+  tactics:
+    - name: "resource_denial"
+      effect: "Limita acesso a recursos"
+      conditions:
+        - "resource_competition"
+        - "territorial_control"
+      
+    - name: "market_destabilization"
+      effect: "Cria vantagem econômica"
+      conditions:
+        - "market_opportunity"
+        - "competitor_weakness"
+      
+    - name: "trade_route_control"
+      effect: "Domina fluxo de recursos"
+      conditions:
+        - "strategic_position"
+        - "economic_advantage"
+
+military_economic_integration:
+  synergies:
+    - name: "resource_secured_expansion"
+      military_component: "territorial_control"
+      economic_component: "resource_optimization"
+      
+    - name: "trade_route_protection"
+      military_component: "force_projection"
+      economic_component: "trade_control"
+      
+    - name: "economic_conquest"
+      military_component: "power_consolidation"
+      economic_component: "market_manipulation"
+
+metrics:
+  performance_indicators:
+    - name: "resource_efficiency"
+      type: "economic"
+      target_value: 0.8
+      
+    - name: "military_effectiveness"
+      type: "combat"
+      target_value: 0.75
+      
+    - name: "market_control"
+      type: "influence"
+      target_value: 0.85
+    
+  success_criteria:
+    economic_dominance: 0.8
+    territorial_control: 0.75
+    resource_optimization: 0.85

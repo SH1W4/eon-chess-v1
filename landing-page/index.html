@@ -39,19 +39,57 @@
     <!-- Font Awesome para ícones -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700&display=swap');
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
       
       [x-cloak] { display: none !important; }
       
-      /* Animações personalizadas */
+      /* Tema Cursor AI - Preto Chique */
+      :root {
+        --bg-primary: #0a0a0a;
+        --bg-secondary: #111111;
+        --bg-tertiary: #1a1a1a;
+        --text-primary: #ffffff;
+        --text-secondary: #a3a3a3;
+        --text-muted: #6b7280;
+        --accent: #3b82f6;
+        --accent-hover: #2563eb;
+        --border: #2a2a2a;
+        --border-hover: #3a3a3a;
+        --success: #10b981;
+        --warning: #f59e0b;
+        --error: #ef4444;
+        --gradient: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+        --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.25);
+        --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+        --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
+        --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+      }
+      
+      body {
+        background: var(--bg-primary);
+        color: var(--text-primary);
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        line-height: 1.6;
+      }
+      
+      /* Animações suaves */
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      
       @keyframes float {
         0%, 100% { transform: translateY(0px); }
-        50% { transform: translateY(-20px); }
+        50% { transform: translateY(-8px); }
       }
       
       @keyframes pulse-glow {
-        0%, 100% { box-shadow: 0 0 20px rgba(212, 175, 55, 0.5); }
-        50% { box-shadow: 0 0 40px rgba(212, 175, 55, 0.8); }
+        0%, 100% { box-shadow: 0 0 20px rgba(59, 130, 246, 0.3); }
+        50% { box-shadow: 0 0 30px rgba(59, 130, 246, 0.5); }
+      }
+      
+      .animate-fade-in {
+        animation: fadeIn 0.6s ease-out;
       }
       
       .animate-float {
@@ -62,90 +100,109 @@
         animation: pulse-glow 2s ease-in-out infinite;
       }
       
-      /* Estilo do tabuleiro */
-      .chessboard {
-        display: grid;
-        grid-template-columns: repeat(8, 1fr);
-        grid-template-rows: repeat(8, 1fr);
-        width: 100%;
-        max-width: 400px;
-        aspect-ratio: 1;
-        border: 3px solid #D4AF37;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-      }
-      
-      .chess-square {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 2rem;
-      }
-      
-      .chess-square:nth-child(even) { background: #f0d9b5; }
-      .chess-square:nth-child(odd) { background: #b58863; }
-      
-      /* Ajuste para padrão xadrez correto */
-      .chess-row:nth-child(even) .chess-square:nth-child(even) { background: #b58863; }
-      .chess-row:nth-child(even) .chess-square:nth-child(odd) { background: #f0d9b5; }
-      
-      /* Gradientes */
-      .gradient-chess {
-        background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #D4AF37 100%);
-      }
-      
+      /* Gradientes modernos */
       .gradient-text {
-        background: linear-gradient(135deg, #D4AF37 0%, #f4e4c1 50%, #D4AF37 100%);
+        background: var(--gradient);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
       }
       
+      .gradient-bg {
+        background: var(--gradient);
+      }
+      
       /* Botões estilizados */
-      .btn-chess {
-        background: linear-gradient(135deg, #D4AF37 0%, #f4e4c1 50%, #D4AF37 100%);
-        color: #1a1a1a;
+      .btn-primary {
+        background: var(--gradient);
+        color: white;
         font-weight: 600;
-        padding: 0.75rem 2rem;
-        border-radius: 0.5rem;
-        transition: all 0.3s ease;
-        box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+        padding: 0.75rem 1.5rem;
+        border-radius: 0.75rem;
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        box-shadow: var(--shadow-md);
       }
       
-      .btn-chess:hover {
+      .btn-primary:hover {
+        transform: translateY(-1px);
+        box-shadow: var(--shadow-lg);
+        filter: brightness(1.1);
+      }
+      
+      .btn-secondary {
+        background: transparent;
+        color: var(--text-primary);
+        font-weight: 600;
+        padding: 0.75rem 1.5rem;
+        border: 2px solid var(--border);
+        border-radius: 0.75rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+      
+      .btn-secondary:hover {
+        border-color: var(--accent);
+        background: rgba(59, 130, 246, 0.1);
+        color: var(--accent);
+      }
+      
+      /* Cards modernos */
+      .card {
+        background: var(--bg-secondary);
+        border: 1px solid var(--border);
+        border-radius: 1rem;
+        padding: 1.5rem;
+        box-shadow: var(--shadow-md);
+        transition: all 0.3s ease;
+      }
+      
+      .card:hover {
+        border-color: var(--border-hover);
+        box-shadow: var(--shadow-lg);
         transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
-      }
-      
-      /* Cards de recursos */
-      .feature-card {
-        background: rgba(255, 255, 255, 0.05);
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(212, 175, 55, 0.2);
-        transition: all 0.3s ease;
-      }
-      
-      .feature-card:hover {
-        border-color: rgba(212, 175, 55, 0.5);
-        transform: translateY(-5px);
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
       }
       
       /* Scrollbar personalizada */
       ::-webkit-scrollbar {
-        width: 10px;
+        width: 8px;
       }
       
       ::-webkit-scrollbar-track {
-        background: #1a1a1a;
+        background: var(--bg-primary);
       }
       
       ::-webkit-scrollbar-thumb {
-        background: #D4AF37;
-        border-radius: 5px;
+        background: var(--border);
+        border-radius: 4px;
       }
       
       ::-webkit-scrollbar-thumb:hover {
-        background: #f4e4c1;
+        background: var(--border-hover);
+      }
+      
+      /* Navegação */
+      nav {
+        background: rgba(10, 10, 10, 0.8);
+        backdrop-filter: blur(20px);
+        border-bottom: 1px solid var(--border);
+      }
+      
+      /* Chess board specific styles */
+      chess-board {
+        border-radius: 0.75rem;
+        overflow: hidden;
+        box-shadow: var(--shadow-xl);
+        border: 2px solid var(--border);
+      }
+      
+      /* Evaluation bar */
+      .eval-bar {
+        background: linear-gradient(to bottom, #f8fafc 50%, #1f2937 50%);
+        border: 1px solid var(--border);
+        border-radius: 0.5rem;
+        overflow: hidden;
       }
     </style>
   
@@ -243,32 +300,32 @@
     </style>
         </head>
 
-  <body class="bg-chess-black text-white" x-data="{ showModal: false, darkMode: false }" x-cloak>
+  <body x-data="{ showModal: false, darkMode: false }" x-cloak>
     <!-- Navigation -->
-    <nav class="bg-chess-black/90 backdrop-blur-md shadow-lg fixed w-full z-50 border-b border-chess-accent/20">
+    <nav class="fixed w-full z-50">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
           <div class="flex items-center">
-            <i class="fas fa-chess-king text-chess-accent text-2xl mr-3"></i>
+            <i class="fas fa-chess-king text-2xl mr-3" style="color: var(--accent);"></i>
             <span class="text-xl font-bold gradient-text">Aeon Chess</span>
-            <span class="ml-2 px-2 py-1 text-xs bg-chess-accent/20 text-chess-accent rounded-full border border-chess-accent/30">
+            <span class="ml-2 px-2 py-1 text-xs rounded-full border" style="background: rgba(59, 130, 246, 0.1); color: var(--accent); border-color: rgba(59, 130, 246, 0.3);">
               PRO
             </span>
           </div>
           <div class="flex items-center space-x-6">
-            <a href="#recursos" class="text-gray-300 hover:text-chess-accent transition-colors">
+            <a href="#recursos" style="color: var(--text-secondary);" class="hover:text-blue-400 transition-colors">
               Recursos
             </a>
-            <a href="#analise" class="text-gray-300 hover:text-chess-accent transition-colors">
+            <a href="#analise" style="color: var(--text-secondary);" class="hover:text-blue-400 transition-colors">
               Análise IA
             </a>
-            <a href="#torneios" class="text-gray-300 hover:text-chess-accent transition-colors">
+            <a href="#torneios" style="color: var(--text-secondary);" class="hover:text-blue-400 transition-colors">
               Torneios
             </a>
-            <a href="#planos" class="text-gray-300 hover:text-chess-accent transition-colors">
+            <a href="#planos" style="color: var(--text-secondary);" class="hover:text-blue-400 transition-colors">
               Planos
             </a>
-            <button class="btn-chess">
+            <button class="btn-primary">
               <i class="fas fa-play mr-2"></i>
               Jogar Agora
             </button>
@@ -278,7 +335,7 @@
     </nav>
 
     <!-- Hero Section -->
-    <section class="bg-[#0f0f10] pt-32 pb-20">
+    <section class="pt-32 pb-20" style="background: var(--bg-primary);">
       <!-- Background Chess Pattern -->
       <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid lg:grid-cols-2 gap-12 items-center">
@@ -1363,121 +1420,8 @@
           updateEvalBar();
         }
 
-        // Trilhas culturais: Europa x LatAm, Índia, Rússia, Brasil
-        const culturalTracks = [
-          {
-            name: 'Europa vs LatAm (Najdorf)',
-            moves: ['e4','c5','Nf3','d6','d4','cxd4','Nxd4','Nf6','Nc3','a6','Bg5','e6','f4','Be7'],
-            narr: [
-              'Brancas (Escola Clássica Europeia) avançam pelo centro.',
-              'Pretas (Estilo Latino-americano) respondem com Sicíliana dinâmica.',
-              'Desenvolvimento com pressão em e5 — pragmatismo europeu.',
-              'Estrutura flexível preparando ...g6 ou ...e6.',
-              'Abertura do centro: jogo aberto em perspectiva.',
-              'Contrajogo imediato no flanco da dama.',
-              'Cavalo centralizado mira casas fortes.',
-              'Desafio direto ao centro — ritmo latino.',
-              'Reforço no centro; ideias de Bg5 e f4 no horizonte.',
-              'Najdorf: ambição estratégica das Pretas.',
-              'Pressão posicional clássica sobre o cavalo de f6.',
-              'Estratégia sólida mantendo flexibilidade defensiva.',
-              'Plano agressivo: lançar ataque no roque curto.',
-              'Pretas completam o desenvolvimento, prontas para contragolpes.'
-            ]
-          },
-          {
-            name: 'Índia (Defesa Índia do Rei)',
-            moves: ['d4','Nf6','c4','g6','Nc3','Bg7','e4','d6','Nf3','O-O','Be2','e5'],
-            narr: [
-              'Brancas escolhem 1.d4, caminho posicional amplamente estudado na Índia.',
-              'Pretas respondem com flexibilidade indiana (…Cf6).',
-              'Estrutura clássica de peões no centro da dama.',
-              '…g6 anuncia a Índia do Rei, arma favorita de muitos mestres indianos.',
-              'Desenvolvimento natural rumo ao domínio central.',
-              'O bispo fianchettado observa o centro e o flanco da dama.',
-              'As Brancas cravam o espaço com e4.',
-              '…d6 prepara …e5 e jogo complexo — estilo combativo.',
-              'Peças brancas coordenam para ocupar o centro.',
-              'Roque curto, prontas para o embate central.',
-              'Calma preparatória das Brancas.',
-              '…e5 — ruptura temática da Índia do Rei, dinamismo cultural em ação.'
-            ]
-          },
-          {
-            name: 'Rússia (Defesa Eslava)',
-            moves: ['d4','d5','c4','c6','Nf3','Nf6','Nc3','dxc4','a4','Bf5','e3','e6'],
-            narr: [
-              'Ritmo sólido: 1.d4 d5, assinatura russa de resistência.',
-              'Estrutura simétrica que privilegia precisão teórica.',
-              'As Brancas desafiam com c4 — Gambito da Dama.',
-              '…c6: Eslava, conhecida pela robustez soviética.',
-              'Desenvolvimento sóbrio das forças.',
-              '…Cf6 espelha a disciplina posicional.',
-              'Coordenação no centro e no flanco da dama.',
-              'Tomada em c4: captura-tema da Eslava.',
-              'a4 restringe …b5 — medida profilática clássica.',
-              '…Bf5: desenvolvimento ativo, manual de escola soviética.',
-              'e3 liberta o bispo de f1 mantendose sólido.',
-              '…e6 completa uma cadeia compacta e resiliente.'
-            ]
-          },
-          {
-            name: 'Brasil (Ataque Indiano com tempero)',
-            moves: ['e4','e5','Nf3','Nc6','Bc4','Nf6','d3','Bc5','c3','d6','O-O','a6'],
-            narr: [
-              'Toque brasileiro: 1.e4 e4-e5 com intenção de jogo alegre e técnico.',
-              'Simetria inicial, abrindo caminho para criatividade.',
-              'Cavalo em f3 — desenvolvimento clássico com olhar ofensivo.',
-              '…Nc6 acompanha com leveza e precisão.',
-              'Bispo em c4: espírito italiano com gingado.',
-              '…Nf6 pressiona e pede resposta fina.',
-              'd3: estrutura flexível para um meio-jogo dançante.',
-              '…Bc5 harmoniza peças — fluidez tropical.',
-              'c3 prepara d4 no momento certo.',
-              '…d6 confere estabilidade antes do carnaval tático.',
-              'Roque: prontidão para atacar os pontos fracos.',
-              '…a6 previne Bb5 e mantém opções — malandragem posicional.'
-            ]
-          }
-        ];
-        let currentTrack = 0;
-
-        function playNextDemoMove() {
-          if (!demoRunning) return;
-          const track = culturalTracks[currentTrack % culturalTracks.length];
-          if (demoIndex >= track.moves.length) {
-            demoIndex = 0; // reinicia o ciclo e passa para próxima trilha
-            currentTrack = (currentTrack + 1) % culturalTracks.length;
-            game.reset();
-            syncBoard();
-          }
-          const t = culturalTracks[currentTrack % culturalTracks.length];
-          const moveSan = t.moves[demoIndex];
-          const move = game.move(moveSan, { sloppy: true });
-          if (move) {
-            syncBoard();
-            setNarration(t.narr[demoIndex] || t.name);
-            updateStatus();
-            demoIndex++;
-          }
-        }
-
-        function startDemo() {
-          stopDemo();
-          demoRunning = true;
-          humanVsAI = false;
-          game.reset();
-          demoIndex = 0;
-          syncBoard();
-          const t = culturalTracks[currentTrack % culturalTracks.length];
-          setNarration(t.name + ' — começando a trilha cultural.');
-          updateStatus();
-          demoTimer = setInterval(playNextDemoMove, 1500);
-        }
-        function stopDemo() {
-          demoRunning = false;
-          if (demoTimer) { clearInterval(demoTimer); demoTimer = null; }
-        }
+        // O sistema cultural agora é gerenciado pelo AeonTerminalCultural
+        // Mantemos apenas a lógica do tabuleiro Hero
 
         // Inicializar Stockfish (opcional)
         function initEngine() {
@@ -1562,29 +1506,41 @@
           updateStatus();
         }
 
-        // Drop handler: respeitar modos
+        // Drop handler correto para chessboard-element
         board.addEventListener('drop', function (e) {
           const detail = e.detail || {};
           const from = detail.source;
           const to = detail.target;
-          if (!from || !to) return;
-          if (demoRunning && !humanVsAI) {
-            if (typeof e.preventDefault === 'function') e.preventDefault();
-            return;
-          }
-          const move = game.move({ from, to, promotion: 'q' });
-          if (move == null) {
-            if (typeof e.preventDefault === 'function') e.preventDefault();
-          } else {
-            syncBoard();
-            updateStatus();
-            if (humanVsAI) {
-              // Resposta da IA após pequeno delay
+          
+          // Validar movimento com chess.js
+          try {
+            const move = game.move({ from, to, promotion: 'q' });
+            if (move) {
+              // Movimento válido - sincronizar tabuleiro
               setTimeout(() => {
-                aiMoveWithNarration();
-              }, 400);
+                syncBoard();
+                updateStatus();
+                if (humanVsAI && !game.game_over()) {
+                  // Resposta da IA após pequeno delay
+                  setTimeout(() => {
+                    aiMoveWithNarration();
+                  }, 400);
+                }
+              }, 100);
+            } else {
+              // Movimento inválido - retornar peça
+              setTimeout(() => syncBoard(), 100);
             }
+          } catch (err) {
+            // Erro na validação - retornar peça
+            console.warn('Movimento inválido:', from, '->', to);
+            setTimeout(() => syncBoard(), 100);
           }
+        });
+
+        // Handler adicional para snap back de movimentos inválidos
+        board.addEventListener('snapback-end', function (e) {
+          syncBoard();
         });
 
         // Controles
@@ -1606,7 +1562,6 @@
         }
         if (ctaPlay) {
           ctaPlay.addEventListener('click', function () {
-            stopDemo();
             humanVsAI = true;
             game.reset();
             syncBoard();
@@ -1616,435 +1571,22 @@
         }
         if (ctaDemo) {
           ctaDemo.addEventListener('click', function () {
-            startDemo();
+            // Scroll para o terminal demo
+            const terminalSection = document.getElementById('terminal-demo');
+            if (terminalSection) {
+              terminalSection.scrollIntoView({ behavior: 'smooth' });
+            }
           });
         }
 
-      // Inicializa em modo demo e engine
+      // Inicializa o tabuleiro Hero e engine
       syncBoard();
-      startDemo();
+      updateStatus();
       initEngine();
     });
     
-    // Animação do Terminal Avançada
-    function initTerminalAnimation() {
-      const terminalOutput = document.getElementById('terminal-output');
-      if (!terminalOutput) return;
-      
-        // Múltiplas experiências culturais de xadrez
-        const culturalExperiences = {
-          capablanca_alekhine: {
-            info: {
-              white: 'José Raúl Capablanca',
-              black: 'Alexander Alekhine', 
-              event: 'World Championship Match',
-              site: 'Buenos Aires',
-              date: '1927.10.29',
-              result: '0-1',
-              opening: 'Queen\'s Gambit Declined',
-              culture: 'Escola Clássica Cubana vs Escola Dinâmica Russa'
-            },
-        moves: [
-          // Abertura
-          { move: 'd4', side: 'white', time: '14:00', eval: '+0.2', ply: 1 },
-          { move: 'd5', side: 'black', time: '14:01', eval: '=', ply: 2 },
-          { move: 'c4', side: 'white', time: '14:02', eval: '+0.3', ply: 3 },
-          { move: 'e6', side: 'black', time: '14:03', eval: '+0.2', ply: 4 },
-          { move: 'Nc3', side: 'white', time: '14:04', eval: '+0.3', ply: 5 },
-          { move: 'Nf6', side: 'black', time: '14:05', eval: '+0.2', ply: 6 },
-          { move: 'Bg5', side: 'white', time: '14:07', eval: '+0.4', ply: 7 },
-          { move: 'Be7', side: 'black', time: '14:09', eval: '+0.3', ply: 8 },
-          { move: 'e3', side: 'white', time: '14:11', eval: '+0.3', ply: 9 },
-          { move: 'O-O', side: 'black', time: '14:13', eval: '+0.2', ply: 10 },
-          // Meio-jogo inicial
-          { move: 'Nf3', side: 'white', time: '14:15', eval: '+0.4', ply: 11 },
-          { move: 'Nbd7', side: 'black', time: '14:18', eval: '+0.3', ply: 12 },
-          { move: 'Rc1', side: 'white', time: '14:22', eval: '+0.5', ply: 13 },
-          { move: 'c6', side: 'black', time: '14:25', eval: '+0.4', ply: 14 },
-          { move: 'Bd3', side: 'white', time: '14:28', eval: '+0.6', ply: 15 },
-          { move: 'dxc4', side: 'black', time: '14:32', eval: '+0.4', ply: 16 },
-          { move: 'Bxc4', side: 'white', time: '14:34', eval: '+0.7', ply: 17 },
-          { move: 'Nd5', side: 'black', time: '14:38', eval: '+0.3', ply: 18 },
-          // Complicações táticas
-          { move: 'Bxe7', side: 'white', time: '14:42', eval: '+0.8', ply: 19 },
-          { move: 'Qxe7', side: 'black', time: '14:44', eval: '+0.6', ply: 20 },
-          { move: 'O-O', side: 'white', time: '14:47', eval: '+0.9', ply: 21 },
-          { move: 'Nxf3+', side: 'black', time: '14:52', eval: '+0.1', ply: 22 },
-          { move: 'gxf3', side: 'white', time: '14:54', eval: '+0.2', ply: 23 },
-          { move: 'e5', side: 'black', time: '14:58', eval: '-0.1', ply: 24 },
-          { move: 'f4', side: 'white', time: '15:03', eval: '+0.3', ply: 25 },
-          { move: 'exd4', side: 'black', time: '15:07', eval: '-0.2', ply: 26 },
-          { move: 'exd4', side: 'white', time: '15:09', eval: '+0.1', ply: 27 },
-          { move: 'Bf5', side: 'black', time: '15:14', eval: '-0.3', ply: 28 },
-          // Meio-jogo complexo
-          { move: 'Qe2', side: 'white', time: '15:18', eval: '+0.4', ply: 29 },
-          { move: 'Qb4', side: 'black', time: '15:23', eval: '-0.1', ply: 30 },
-          { move: 'a3', side: 'white', time: '15:26', eval: '+0.2', ply: 31 },
-          { move: 'Qxb2', side: 'black', time: '15:31', eval: '-0.4', ply: 32 },
-          { move: 'Rab1', side: 'white', time: '15:34', eval: '+0.1', ply: 33 },
-          { move: 'Qxa3', side: 'black', time: '15:39', eval: '-0.6', ply: 34 },
-          { move: 'Rxb7', side: 'white', time: '15:42', eval: '+0.3', ply: 35 },
-          { move: 'Qd6', side: 'black', time: '15:47', eval: '-0.8', ply: 36 },
-          { move: 'Rfb1', side: 'white', time: '15:51', eval: '+0.5', ply: 37 },
-          { move: 'h6', side: 'black', time: '15:56', eval: '-1.1', ply: 38 },
-          // Final tático brilhante
-          { move: 'h3', side: 'white', time: '16:01', eval: '+0.8', ply: 39 },
-          { move: 'a5', side: 'black', time: '16:07', eval: '-1.3', ply: 40 },
-          { move: 'Kh2', side: 'white', time: '16:12', eval: '+1.1', ply: 41 },
-          { move: 'Ra6', side: 'black', time: '16:18', eval: '-1.8', ply: 42 },
-          { move: 'Kg3', side: 'white', time: '16:23', eval: '+1.5', ply: 43 },
-          { move: 'g6', side: 'black', time: '16:29', eval: '-2.1', ply: 44 },
-          { move: 'Kf2', side: 'white', time: '16:34', eval: '+1.8', ply: 45 },
-          { move: 'Re8!', side: 'black', time: '16:42', eval: '-0.3', ply: 46 }, // Movimento brilhante!
-          { move: 'Qd1', side: 'white', time: '16:47', eval: '+0.1', ply: 47 },
-          { move: 'Re2+!', side: 'black', time: '16:51', eval: '-1.2', ply: 48 }, // Sacrifício devastador
-          { move: 'Kf1', side: 'white', time: '16:53', eval: '-0.8', ply: 49 },
-          { move: 'Qd2', side: 'black', time: '16:56', eval: '-2.3', ply: 50 },
-          { move: 'Qxd2', side: 'white', time: '16:58', eval: '-1.9', ply: 51 },
-          { move: 'Rxd2', side: 'black', time: '16:59', eval: '-2.8', ply: 52 }
-          // 0-1 - Capablanca resigna
-          },
-          
-          kasparov_karpov: {
-            info: {
-              white: 'Anatoly Karpov',
-              black: 'Garry Kasparov',
-              event: 'World Championship 1984',
-              site: 'Moscow',
-              date: '1984.10.15',
-              result: '1-0', 
-              opening: 'Nimzo-Indian Defense',
-              culture: 'Escola Soviética: Posicional vs Dinâmica'
-            },
-            moves: [
-              { move: 'd4', side: 'white', time: '15:00', eval: '+0.2', ply: 1 },
-              { move: 'Nf6', side: 'black', time: '15:01', eval: '=', ply: 2 },
-              { move: 'c4', side: 'white', time: '15:02', eval: '+0.3', ply: 3 },
-              { move: 'e6', side: 'black', time: '15:03', eval: '+0.2', ply: 4 },
-              { move: 'Nc3', side: 'white', time: '15:04', eval: '+0.3', ply: 5 },
-              { move: 'Bb4', side: 'black', time: '15:06', eval: '+0.1', ply: 6 },
-              { move: 'e3', side: 'white', time: '15:08', eval: '+0.2', ply: 7 },
-              { move: 'O-O', side: 'black', time: '15:10', eval: '+0.3', ply: 8 },
-              { move: 'Bd3', side: 'white', time: '15:13', eval: '+0.4', ply: 9 },
-              { move: 'd5', side: 'black', time: '15:16', eval: '+0.2', ply: 10 }
-            ]
-          },
-          
-          fischer_spassky: {
-            info: {
-              white: 'Robert James Fischer',
-              black: 'Boris Spassky',
-              event: 'World Championship Match',
-              site: 'Reykjavik',
-              date: '1972.07.11',
-              result: '1-0',
-              opening: 'Queen\'s Gambit Declined',
-              culture: 'América vs URSS: Guerra Fria no Tabuleiro'
-            },
-            moves: [
-              { move: 'd4', side: 'white', time: '16:00', eval: '+0.2', ply: 1 },
-              { move: 'Nf6', side: 'black', time: '16:01', eval: '=', ply: 2 },
-              { move: 'c4', side: 'white', time: '16:02', eval: '+0.3', ply: 3 },
-              { move: 'e6', side: 'black', time: '16:03', eval: '+0.2', ply: 4 },
-              { move: 'Nf3', side: 'white', time: '16:04', eval: '+0.3', ply: 5 },
-              { move: 'd5', side: 'black', time: '16:05', eval: '+0.2', ply: 6 },
-              { move: 'Nc3', side: 'white', time: '16:07', eval: '+0.4', ply: 7 },
-              { move: 'Be7', side: 'black', time: '16:09', eval: '+0.3', ply: 8 }
-            ]
-          },
-          
-          polgar_kasparov: {
-            info: {
-              white: 'Judit Polgár',
-              black: 'Garry Kasparov',
-              event: 'Russia vs Rest of World',
-              site: 'Moscow',
-              date: '2002.09.07',
-              result: '1-0',
-              opening: 'Sicilian Defense',
-              culture: 'Revolução Feminina: Quebrando Barreiras'
-            },
-            moves: [
-              { move: 'e4', side: 'white', time: '14:30', eval: '+0.3', ply: 1 },
-              { move: 'c5', side: 'black', time: '14:31', eval: '=', ply: 2 },
-              { move: 'Nf3', side: 'white', time: '14:32', eval: '+0.2', ply: 3 },
-              { move: 'd6', side: 'black', time: '14:33', eval: '+0.1', ply: 4 },
-              { move: 'd4', side: 'white', time: '14:34', eval: '+0.4', ply: 5 },
-              { move: 'cxd4', side: 'black', time: '14:35', eval: '+0.2', ply: 6 },
-              { move: 'Nxd4', side: 'white', time: '14:36', eval: '+0.3', ply: 7 },
-              { move: 'Nf6', side: 'black', time: '14:38', eval: '+0.2', ply: 8 }
-            ]
-          }
-        };
-        
-        const gameCommentary = {
-          capablanca_alekhine: {
-          1: {
-            text: "Capablanca escolhe 1.d4, preferindo posições sólidas e estratégicas. Este seria um dos últimos jogos como Campeão Mundial.",
-            type: "opening",
-            cultural: "Em 1927, o xadrez estava vivenciando uma revolução técnica. Capablanca representava a escola clássica cubana-europeia."
-          },
-          2: {
-            text: "Alekhine responde com a sólida 1...d5. O futuro campeão buscava posições complexas onde sua capacidade de cálculo brilharia.",
-            type: "response",
-            cultural: "A escola russa de xadrez, representada por Alekhine, priorizava o cálculo concreto sobre princípios gerais."
-          },
-          7: {
-            text: "O sistema Bg5 contra a Ortodoxa! Capablanca aplica pressão imediata no cavalo de f6, buscando simplificações favoráveis.",
-            type: "strategy",
-            cultural: "Esta variante foi popularizada pelos mestres austríacos e alemães no início do século XX."
-          },
-          22: {
-            text: "Nxf3+! Alekhine inicia uma sequência tática brilhante, sacrificando a estrutura de peões para ativar suas peças.",
-            type: "tactic",
-            cultural: "Este estilo de jogo dinâmico definiria a era Alekhine (1927-1946) do xadrez mundial."
-          },
-          46: {
-            text: "Re8!! O movimento que mudou a história do xadrez! Alekhine encontra uma manobra profundíssima que Capablanca não havia previsto.",
-            type: "brilliance",
-            cultural: "Este lance é estudado até hoje nas academias de xadrez como exemplo de visão posicional superior."
-          },
-          48: {
-            text: "Re2+! O sacrifício de torre que selou o destino do match. Capablanca, pela primeira vez em sua carreira, foi superado taticamente.",
-            type: "decisive",
-            cultural: "Este momento marcou o fim da era Capablanca e o início do reinado de Alekhine como Campeão Mundial."
-          }
-        }
-      };
-      
-      let currentMoveIndex = 0;
-      let isAnimating = false;
-      let animationSpeed = 2500; // ms por movimento
-      
-      // Gera o tabuleiro ASCII para uma posição específica
-      function generateBoardASCII(ply) {
-        // Simulação simples - em produção, usaríamos Chess.js para gerar posições reais
-        const initialBoard = [
-          ['♜', '♞', '♝', '♛', '♚', '♝', '♞', '♜'],
-          ['♟', '♟', '♟', '♟', '♟', '♟', '♟', '♟'],
-          [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-          [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-          [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-          [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-          ['♙', '♙', '♙', '♙', '♙', '♙', '♙', '♙'],
-          ['♖', '♘', '♗', '♕', '♔', '♗', '♘', '♖']
-        ];
-        
-        // Aplicar movimentos baseado no ply (simplificado)
-        if (ply >= 1) initialBoard[6][3] = ' ', initialBoard[4][3] = '♙'; // d4
-        if (ply >= 2) initialBoard[1][3] = ' ', initialBoard[3][3] = '♟'; // d5
-        if (ply >= 3) initialBoard[6][2] = ' ', initialBoard[4][2] = '♙'; // c4
-        if (ply >= 4) initialBoard[1][4] = ' ', initialBoard[2][4] = '♟'; // e6
-        if (ply >= 5) initialBoard[7][1] = ' ', initialBoard[5][2] = '♘'; // Nc3
-        if (ply >= 6) initialBoard[0][6] = ' ', initialBoard[2][5] = '♞'; // Nf6
-        if (ply >= 7) initialBoard[7][2] = ' ', initialBoard[4][6] = '♗'; // Bg5
-        if (ply >= 8) initialBoard[0][5] = ' ', initialBoard[1][4] = '♝'; // Be7
-        if (ply >= 9) initialBoard[6][4] = ' ', initialBoard[5][4] = '♙'; // e3
-        if (ply >= 10) initialBoard[0][4] = ' ', initialBoard[0][6] = '♚'; // O-O
-        
-        let ascii = '    a   b   c   d   e   f   g   h\n';
-        ascii += '  ┌───┬───┬───┬───┬───┬───┬───┬───┐\n';
-        
-        for (let rank = 0; rank < 8; rank++) {
-          ascii += `${8-rank} │`;
-          for (let file = 0; file < 8; file++) {
-            ascii += ` ${initialBoard[rank][file]} │`;
-          }
-          ascii += ` ${8-rank}\n`;
-          if (rank < 7) {
-            ascii += '  ├───┼───┼───┼───┼───┼───┼───┼───┤\n';
-          }
-        }
-        
-        ascii += '  └───┴───┴───┴───┴───┴───┴───┴───┘\n';
-        ascii += '    a   b   c   d   e   f   g   h';
-        
-        return ascii;
-      }
-      
-      async function displayMove(moveData, index) {
-        const move = completeGame.moves[index];
-        const commentary = completeGame.commentary[index + 1];
-        
-        // Movimento
-        const moveDiv = document.createElement('div');
-        moveDiv.className = 'text-yellow-400 mb-2';
-        moveDiv.innerHTML = `<span class="text-gray-500">[${move.time}]</span> ${move.side === 'white' ? 'Capablanca' : 'Alekhine'} (${move.side === 'white' ? 'Brancas' : 'Pretas'}): ${move.move}`;
-        terminalOutput.appendChild(moveDiv);
-        
-        // Tabuleiro
-        if (index % 4 === 0 || commentary?.type === 'brilliance' || commentary?.type === 'decisive') {
-          const boardDiv = document.createElement('div');
-          boardDiv.innerHTML = `<pre class="text-gray-100 mb-4 text-xs">${generateBoardASCII(move.ply)}</pre>`;
-          terminalOutput.appendChild(boardDiv);
-        }
-        
-        // Análise da IA
-        const analysisDiv = document.createElement('div');
-        analysisDiv.className = 'text-green-400 mb-3';
-        const winProb = parseFloat(move.eval.replace('+', '').replace('=', '0'));
-        const whiteWin = 50 + winProb * 10;
-        const blackWin = 100 - whiteWin;
-        analysisDiv.innerHTML = `> Análise: ${move.eval} | Profundidade: ${Math.min(index + 8, 22)} plies<br>> Probabilidade: Brancas ${whiteWin.toFixed(1)}% | Pretas ${blackWin.toFixed(1)}%`;
-        terminalOutput.appendChild(analysisDiv);
-        
-        // Comentário específico
-        if (commentary) {
-          const commentDiv = document.createElement('div');
-          commentDiv.className = `text-blue-300 italic mb-3 ${commentary.type === 'brilliance' ? 'text-yellow-300 font-bold' : commentary.type === 'decisive' ? 'text-red-300 font-bold' : ''}`;
-          await typeText(commentDiv, `"${commentary.text}"`, 25);
-          terminalOutput.appendChild(commentDiv);
-          
-          if (commentary.cultural) {
-            const culturalDiv = document.createElement('div');
-            culturalDiv.className = 'text-purple-400 mt-2 mb-4 border-l-2 border-purple-400 pl-4';
-            culturalDiv.innerHTML = `<strong>Contexto:</strong> ${commentary.cultural}`;
-            terminalOutput.appendChild(culturalDiv);
-          }
-        }
-        
-        // Momentos especiais
-        if (commentary?.type === 'brilliance') {
-          const specialDiv = document.createElement('div');
-          specialDiv.className = 'text-yellow-300 font-bold mb-3 bg-yellow-900 bg-opacity-20 p-2 rounded border border-yellow-600';
-          specialDiv.innerHTML = '⭐ MOVIMENTO BRILHANTE! A análise moderna confirma: este lance mudou completamente a avaliação da posição.';
-          terminalOutput.appendChild(specialDiv);
-        }
-        
-        if (commentary?.type === 'decisive') {
-          const decisiveDiv = document.createElement('div');
-          decisiveDiv.className = 'text-red-300 font-bold mb-3 bg-red-900 bg-opacity-20 p-2 rounded border border-red-600';
-          decisiveDiv.innerHTML = '💥 LANCE DECISIVO! Capablanca não conseguiu encontrar defesa adequada após esta jogada.';
-          terminalOutput.appendChild(decisiveDiv);
-        }
-        
-        terminalOutput.scrollTop = terminalOutput.scrollHeight;
-      }
-      
-      async function runCompleteGame() {
-        if (isAnimating) return;
-        isAnimating = true;
-        
-        // Header inicial
-        terminalOutput.innerHTML = '';
-        
-        // Comando inicial
-        const cmdDiv = document.createElement('div');
-        cmdDiv.className = 'text-green-400 mb-2';
-        cmdDiv.textContent = '$ aeon-chess replay --historic --players="Capablanca vs Alekhine" --year=1927';
-        terminalOutput.appendChild(cmdDiv);
-        
-        // Info do jogo
-        const infoDiv = document.createElement('div');
-        infoDiv.className = 'text-blue-400 mb-4';
-        infoDiv.innerHTML = `📋 Carregando: ${completeGame.info.event}<br>📅 ${completeGame.info.date} - ${completeGame.info.site}<br>🏆 ${completeGame.info.opening}<br>📊 Resultado: ${completeGame.info.result} (Vitória de Alekhine)`;
-        terminalOutput.appendChild(infoDiv);
-        
-        await new Promise(resolve => setTimeout(resolve, 2000));
-        
-        // Loading engine
-        const loadDiv = document.createElement('div');
-        loadDiv.className = 'text-yellow-400 mb-4';
-        loadDiv.textContent = '⚡ Inicializando engine Stockfish 16 | Profundidade: 22 plies';
-        terminalOutput.appendChild(loadDiv);
-        terminalOutput.scrollTop = terminalOutput.scrollHeight;
-        
-        await new Promise(resolve => setTimeout(resolve, 1500));
-        
-        // Reproduzir movimentos
-        for (let i = 0; i < completeGame.moves.length && isAnimating; i++) {
-          await displayMove(null, i);
-          await new Promise(resolve => setTimeout(resolve, animationSpeed));
-          
-          // Especiais momentos - pause mais longa
-          const commentary = completeGame.commentary[i + 1];
-          if (commentary?.type === 'brilliance' || commentary?.type === 'decisive') {
-            await new Promise(resolve => setTimeout(resolve, 2000));
-          }
-          
-          // Final da partida
-          if (i === completeGame.moves.length - 1) {
-            const finalDiv = document.createElement('div');
-            finalDiv.className = 'text-red-400 font-bold mb-4 bg-red-900 bg-opacity-20 p-3 rounded border border-red-600';
-            finalDiv.innerHTML = '🏆 CAPABLANCA RESIGNA!<br>Alexander Alekhine torna-se o novo Campeão Mundial de Xadrez.<br>Uma era se encerra, outra começa.';
-            terminalOutput.appendChild(finalDiv);
-            
-            const statsDiv = document.createElement('div');
-            statsDiv.className = 'text-purple-400 mt-4 mb-4 border-l-2 border-purple-400 pl-4';
-            statsDiv.innerHTML = '<strong>Estatísticas Finais:</strong><br>• Duração: 2h 59min<br>• Movimentos: 52<br>• Precisão Capablanca: 89.2%<br>• Precisão Alekhine: 94.7%<br>• Momento decisivo: 46...Re8!!';
-            terminalOutput.appendChild(statsDiv);
-            
-            terminalOutput.scrollTop = terminalOutput.scrollHeight;
-          }
-        }
-        
-        // Final message
-        if (isAnimating) {
-          const endDiv = document.createElement('div');
-          endDiv.className = 'text-gray-400 mt-4';
-          endDiv.innerHTML = '📚 Digite "aeon-chess --help" para explorar mais partidas históricas<br><span class="animate-pulse">_</span>';
-          terminalOutput.appendChild(endDiv);
-          
-          setTimeout(() => {
-            if (isAnimating) runCompleteGame();
-          }, 8000);
-        }
-      }
-      
-      function typeText(element, text, speed = 50) {
-        return new Promise((resolve) => {
-          let i = 0;
-          element.innerHTML = '';
-          terminalOutput.appendChild(element);
-          
-          const timer = setInterval(() => {
-            if (i < text.length) {
-              element.innerHTML += text.charAt(i);
-              i++;
-              terminalOutput.scrollTop = terminalOutput.scrollHeight;
-            } else {
-              clearInterval(timer);
-              resolve();
-            }
-          }, speed);
-        });
-      }
-      
-      function stopAnimation() {
-        isAnimating = false;
-      }
-      
-      // Inicia a animação
-      runCompleteGame();
-      
-      // Controles dos botões
-      const continueBtn = document.querySelector('[data-terminal-continue]');
-      if (continueBtn) {
-        continueBtn.addEventListener('click', () => {
-          if (!isAnimating) runCompleteGame();
-        });
-      }
-      
-      // Para a animação se o usuário sair da seção
-      const observer = new IntersectionObserver((entries) => {
-        const entry = entries[0];
-        if (!entry.isIntersecting) {
-          stopAnimation();
-        } else if (!isAnimating) {
-          setTimeout(runCompleteGame, 1000);
-        }
-      });
-      
-      const terminalSection = document.getElementById('terminal-demo');
-      if (terminalSection) {
-        observer.observe(terminalSection);
-      }
-    }
-    
-    // Inicia a animação do terminal quando a página carregar
-    document.addEventListener('DOMContentLoaded', function() {
-      setTimeout(initTerminalAnimation, 2000); // Delay para não conflitar com outras animações
-    });
+    // O novo sistema cultural avançado é auto-inicializado via js/terminal-cultural.js
+    // Todo o código antigo do terminal foi removido
     </script>
   </body>
 </html>

@@ -1,0 +1,13 @@
+{
+  "name": "mayan",
+  "enabled": true,
+  "assets": "assets/cultural/mayan",
+  "configuration": {
+    "pieces": {},
+    "board": {},
+    "audio": {},
+    "visuals": {}
+  },
+  "created_by": "ARKITECT",
+  "timestamp": "2025-08-09T11:35:01.823291"
+}
