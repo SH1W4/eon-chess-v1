@@ -1625,17 +1625,19 @@
       const terminalOutput = document.getElementById('terminal-output');
       if (!terminalOutput) return;
       
-      // Partida completa: Capablanca vs Alekhine, Jogo 11 do Match Mundial 1927
-      const completeGame = {
-        info: {
-          white: 'José Raúl Capablanca',
-          black: 'Alexander Alekhine',
-          event: 'World Championship Match',
-          site: 'Buenos Aires',
-          date: '1927.10.29',
-          result: '0-1',
-          opening: 'Queen\'s Gambit Declined, Orthodox Defense'
-        },
+        // Múltiplas experiências culturais de xadrez
+        const culturalExperiences = {
+          capablanca_alekhine: {
+            info: {
+              white: 'José Raúl Capablanca',
+              black: 'Alexander Alekhine', 
+              event: 'World Championship Match',
+              site: 'Buenos Aires',
+              date: '1927.10.29',
+              result: '0-1',
+              opening: 'Queen\'s Gambit Declined',
+              culture: 'Escola Clássica Cubana vs Escola Dinâmica Russa'
+            },
         moves: [
           // Abertura
           { move: 'd4', side: 'white', time: '14:00', eval: '+0.2', ply: 1 },
@@ -1695,8 +1697,82 @@
           { move: 'Qxd2', side: 'white', time: '16:58', eval: '-1.9', ply: 51 },
           { move: 'Rxd2', side: 'black', time: '16:59', eval: '-2.8', ply: 52 }
           // 0-1 - Capablanca resigna
-        ],
-        commentary: {
+          },
+          
+          kasparov_karpov: {
+            info: {
+              white: 'Anatoly Karpov',
+              black: 'Garry Kasparov',
+              event: 'World Championship 1984',
+              site: 'Moscow',
+              date: '1984.10.15',
+              result: '1-0', 
+              opening: 'Nimzo-Indian Defense',
+              culture: 'Escola Soviética: Posicional vs Dinâmica'
+            },
+            moves: [
+              { move: 'd4', side: 'white', time: '15:00', eval: '+0.2', ply: 1 },
+              { move: 'Nf6', side: 'black', time: '15:01', eval: '=', ply: 2 },
+              { move: 'c4', side: 'white', time: '15:02', eval: '+0.3', ply: 3 },
+              { move: 'e6', side: 'black', time: '15:03', eval: '+0.2', ply: 4 },
+              { move: 'Nc3', side: 'white', time: '15:04', eval: '+0.3', ply: 5 },
+              { move: 'Bb4', side: 'black', time: '15:06', eval: '+0.1', ply: 6 },
+              { move: 'e3', side: 'white', time: '15:08', eval: '+0.2', ply: 7 },
+              { move: 'O-O', side: 'black', time: '15:10', eval: '+0.3', ply: 8 },
+              { move: 'Bd3', side: 'white', time: '15:13', eval: '+0.4', ply: 9 },
+              { move: 'd5', side: 'black', time: '15:16', eval: '+0.2', ply: 10 }
+            ]
+          },
+          
+          fischer_spassky: {
+            info: {
+              white: 'Robert James Fischer',
+              black: 'Boris Spassky',
+              event: 'World Championship Match',
+              site: 'Reykjavik',
+              date: '1972.07.11',
+              result: '1-0',
+              opening: 'Queen\'s Gambit Declined',
+              culture: 'América vs URSS: Guerra Fria no Tabuleiro'
+            },
+            moves: [
+              { move: 'd4', side: 'white', time: '16:00', eval: '+0.2', ply: 1 },
+              { move: 'Nf6', side: 'black', time: '16:01', eval: '=', ply: 2 },
+              { move: 'c4', side: 'white', time: '16:02', eval: '+0.3', ply: 3 },
+              { move: 'e6', side: 'black', time: '16:03', eval: '+0.2', ply: 4 },
+              { move: 'Nf3', side: 'white', time: '16:04', eval: '+0.3', ply: 5 },
+              { move: 'd5', side: 'black', time: '16:05', eval: '+0.2', ply: 6 },
+              { move: 'Nc3', side: 'white', time: '16:07', eval: '+0.4', ply: 7 },
+              { move: 'Be7', side: 'black', time: '16:09', eval: '+0.3', ply: 8 }
+            ]
+          },
+          
+          polgar_kasparov: {
+            info: {
+              white: 'Judit Polgár',
+              black: 'Garry Kasparov',
+              event: 'Russia vs Rest of World',
+              site: 'Moscow',
+              date: '2002.09.07',
+              result: '1-0',
+              opening: 'Sicilian Defense',
+              culture: 'Revolução Feminina: Quebrando Barreiras'
+            },
+            moves: [
+              { move: 'e4', side: 'white', time: '14:30', eval: '+0.3', ply: 1 },
+              { move: 'c5', side: 'black', time: '14:31', eval: '=', ply: 2 },
+              { move: 'Nf3', side: 'white', time: '14:32', eval: '+0.2', ply: 3 },
+              { move: 'd6', side: 'black', time: '14:33', eval: '+0.1', ply: 4 },
+              { move: 'd4', side: 'white', time: '14:34', eval: '+0.4', ply: 5 },
+              { move: 'cxd4', side: 'black', time: '14:35', eval: '+0.2', ply: 6 },
+              { move: 'Nxd4', side: 'white', time: '14:36', eval: '+0.3', ply: 7 },
+              { move: 'Nf6', side: 'black', time: '14:38', eval: '+0.2', ply: 8 }
+            ]
+          }
+        };
+        
+        const gameCommentary = {
+          capablanca_alekhine: {
           1: {
             text: "Capablanca escolhe 1.d4, preferindo posições sólidas e estratégicas. Este seria um dos últimos jogos como Campeão Mundial.",
             type: "opening",

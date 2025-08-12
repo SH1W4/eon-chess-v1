@@ -528,7 +528,7 @@ class Board:
         original_target_piece = self.pieces.get(to_pos)
         # Simula
         self.pieces[to_pos] = piece
-        del self.pieces[from_pos]
+        del self.pieces[resolved_key]
         king_in_check = self._is_king_in_check(piece.color)
         # Reverte
         self.pieces[from_pos] = piece
@@ -705,7 +705,7 @@ class Board:
             return {"success": False, "error": "Nenhum peão para capturar en passant"}
         # Executa: move peão atacante para to_pos e remove o capturado
         self.pieces[to_pos] = piece
-        del self.pieces[from_pos]
+        del self.pieces[resolved_key]
         self.pieces.pop(captured_pos, None)
         piece.has_moved = True
         return {"success": True, "captured": captured_piece}
@@ -727,7 +727,7 @@ class Board:
             
         # Executa a promoção
         self.pieces[to_pos] = Piece(promotion_types[promotion], piece.color)
-        del self.pieces[from_pos]
+        del self.pieces[resolved_key]
         
         return {"success": True}
 
@@ -828,7 +828,7 @@ class Board:
                 
                 # Simula o movimento
                 self.pieces[to_pos] = piece
-                del self.pieces[from_pos]
+                del self.pieces[resolved_key]
                 
                 # Verifica se o rei não está em xeque após o movimento
                 king_safe = not self._is_king_in_check(self.current_turn)
@@ -852,7 +852,7 @@ class Board:
 
     def _generate_possible_moves(self, from_pos: str) -> List[str]:
         """Gera todas as possíveis posições de destino para uma peça."""
-        piece = self.pieces[from_pos]
+        piece = self.pieces[resolved_key]
         possible_moves = []
         
         # Para cada posição no tabuleiro

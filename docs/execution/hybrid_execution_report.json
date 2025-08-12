@@ -1,0 +1,140 @@
+{
+  "execution_summary": {
+    "timestamp": "2025-08-12T16:04:07.338927",
+    "metrics": {
+      "alpha_progress": 0.0,
+      "innovation_progress": 0.0,
+      "overall_progress": 0.0,
+      "tasks_completed": 0,
+      "tasks_failed": 2,
+      "symbiotic_index": 0.0,
+      "resource_balance": 0.6
+    },
+    "total_tasks": 12,
+    "tracks": {
+      "alpha": 5,
+      "innovation": 5,
+      "shared": 2
+    }
+  },
+  "task_details": {
+    "alpha_01": {
+      "name": "Correção bugs críticos",
+      "track": "alpha",
+      "status": "failed",
+      "progress": 0.0,
+      "estimated_hours": 4.0,
+      "duration_minutes": 0,
+      "errors": [
+        "Comando falhou: python3 -m pytest tests/ -x --tb=short\nErro: "
+      ]
+    },
+    "alpha_02": {
+      "name": "Interface web responsiva",
+      "track": "alpha",
+      "status": "pending",
+      "progress": 0.0,
+      "estimated_hours": 8.0,
+      "duration_minutes": 0,
+      "errors": []
+    },
+    "alpha_03": {
+      "name": "Sistema JWT completo",
+      "track": "alpha",
+      "status": "pending",
+      "progress": 0.0,
+      "estimated_hours": 6.0,
+      "duration_minutes": 0,
+      "errors": []
+    },
+    "alpha_04": {
+      "name": "Deploy staging ambiente",
+      "track": "alpha",
+      "status": "pending",
+      "progress": 0.0,
+      "estimated_hours": 3.0,
+      "duration_minutes": 0,
+      "errors": []
+    },
+    "alpha_05": {
+      "name": "3 culturas base implementadas",
+      "track": "alpha",
+      "status": "pending",
+      "progress": 0.0,
+      "estimated_hours": 12.0,
+      "duration_minutes": 0,
+      "errors": []
+    },
+    "innov_01": {
+      "name": "ARKITECT + TaskMesh integração",
+      "track": "innovation",
+      "status": "failed",
+      "progress": 0.0,
+      "estimated_hours": 6.0,
+      "duration_minutes": 0,
+      "errors": [
+        "Comando falhou: python3 scripts/arkitect_taskmesh_integration.py\nErro: /Applications/Xcode.app/Contents/Developer/usr/bin/python3: can't open file '/Users/jx/WORKSPACE/PROJECTS/CHESS/scripts/arkitect_taskmesh_integration.py': [Errno 2] No such file or directory\n"
+      ]
+    },
+    "innov_02": {
+      "name": "Sistema diagnóstico paralelo",
+      "track": "innovation",
+      "status": "pending",
+      "progress": 0.0,
+      "estimated_hours": 8.0,
+      "duration_minutes": 0,
+      "errors": []
+    },
+    "innov_03": {
+      "name": "IA adaptativa avançada protótipo",
+      "track": "innovation",
+      "status": "pending",
+      "progress": 0.0,
+      "estimated_hours": 10.0,
+      "duration_minutes": 0,
+      "errors": []
+    },
+    "innov_04": {
+      "name": "Motor narrativo procedural",
+      "track": "innovation",
+      "status": "pending",
+      "progress": 0.0,
+      "estimated_hours": 12.0,
+      "duration_minutes": 0,
+      "errors": []
+    },
+    "innov_05": {
+      "name": "Auto-refatoração inteligente",
+      "track": "innovation",
+      "status": "pending",
+      "progress": 0.0,
+      "estimated_hours": 15.0,
+      "duration_minutes": 0,
+      "errors": []
+    },
+    "shared_01": {
+      "name": "CI/CD Pipeline completo",
+      "track": "shared",
+      "status": "pending",
+      "progress": 0.0,
+      "estimated_hours": 4.0,
+      "duration_minutes": 0,
+      "errors": []
+    },
+    "shared_02": {
+      "name": "Monitoramento e métricas",
+      "track": "shared",
+      "status": "pending",
+      "progress": 0.0,
+      "estimated_hours": 5.0,
+      "duration_minutes": 0,
+      "errors": []
+    }
+  },
+  "recommendations": [
+    "🔄 Rebalancear recursos entre tracks Alpha e Innovation",
+    "🔧 Investigar e corrigir falhas recorrentes",
+    "⚡ Priorizar conclusão do track Alpha para lançamento",
+    "🚀 Acelerar desenvolvimento de features inovadoras"
+  ]
+}

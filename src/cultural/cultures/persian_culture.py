@@ -1,5 +1,5 @@
 """
-AEON Chess - Samurai Culture
+AEON Chess - Persa Culture
 Auto-generated culture implementation
 """
 
@@ -8,62 +8,62 @@ from dataclasses import dataclass
 from ..base_culture import BaseCulture, CulturalTrait
 
 @dataclass
-class SamuraiCulture(BaseCulture):
-    """Implementação da cultura Samurai"""
+class PersaCulture(BaseCulture):
+    """Implementação da cultura Persa"""
     
     def __init__(self):
         super().__init__(
-            name="Samurai",
-            description="Cultura japonesa baseada em honra, disciplina e estratégia refinada"
+            name="Persa",
+            description="Cultura persa baseada em estratégia elaborada, elegância e sofisticação"
         )
         
         # Características culturais
         self.traits = {
-            "honor": 0.9,
-            "discipline": 0.95,
-            "aggression": 0.6,
-            "patience": 0.9,
-            "tactical": 0.8,
-            "positional": 0.85
+            "honor": 0.8,
+            "discipline": 0.8,
+            "aggression": 0.65,
+            "patience": 0.85,
+            "tactical": 0.75,
+            "positional": 0.9
         }
         
         # Estilo de jogo
         self.play_style = {
-            "opening_preference": "conservative",
-            "midgame_focus": "positional",
-            "endgame_strength": "technique",
-            "risk_tolerance": 0.4,
-            "sacrifice_willingness": 0.7
+            "opening_preference": "classical",
+            "midgame_focus": "strategic",
+            "endgame_strength": "calculation",
+            "risk_tolerance": 0.5,
+            "sacrifice_willingness": 0.6
         }
         
         # Configuração de peças
         self.pieces_config = {
-            "king": {"model": "emperor", "special": "bushido_defense"},
-            "queen": {"model": "shogun", "special": "strategic_vision"},
-            "bishop": {"model": "monk", "special": "distant_wisdom"},
-            "knight": {"model": "samurai", "special": "honor_leap"},
-            "rook": {"model": "castle", "special": "fortress_power"},
-            "pawn": {"model": "ashigaru", "special": "loyal_advance"}
+            "king": {"model": "shah", "special": "royal_decree"},
+            "queen": {"model": "vizier", "special": "court_intrigue"},
+            "bishop": {"model": "mage", "special": "arcane_sight"},
+            "knight": {"model": "immortal", "special": "elite_strike"},
+            "rook": {"model": "citadel", "special": "empire_strength"},
+            "pawn": {"model": "soldier", "special": "disciplined_march"}
         }
         
         # Narrativas contextuais
         self.narratives = {
-            "opening": ["O mestre samurai contempla o campo de batalha com serenidade...", "Com a disciplina de mil anos, a primeira jogada é executada...", "O bushido guia cada movimento, honra acima da vitória..."],
-            "midgame": ["A estratégia samurai se revela, cada peça em harmonia...", "Como folhas de cerejeira ao vento, as peças dançam em formação...", "A paciência do guerreiro aguarda o momento perfeito..."],
-            "endgame": ["Com precisão cirúrgica, o samurai finaliza com honra...", "A técnica ancestral se manifesta nos movimentos finais...", "Vitória com dignidade, derrota com honor - o caminho samurai..."]
+            "opening": ["O xá contempla seu império no tabuleiro de mármore...", "Com a sabedoria de Cyrus, a partida se inicia...", "As pétalas de rosa marcam o início da dança estratégica..."],
+            "midgame": ["A complexa teia persa se desenvolve elegantemente...", "Como um jardim de Isfahan, cada peça tem seu lugar...", "A paciência do deserto aguarda o momento certo..."],
+            "endgame": ["Com a precisão de um relojoeiro, a vitória se aproxima...", "A geometria sagrada se revela nos movimentos finais...", "Elegância e eficiência coroam o triunfo persa..."]
         }
         
         # Configuração visual
         self.theme = {
             "colors": {
-                "primary": "#8B0000",
+                "primary": "#800080",
                 "secondary": "#FFD700",
-                "accent": "#000000"
+                "accent": "#228B22"
             },
             "audio": {
-                "ambient": "japanese_garden.mp3",
-                "move_sound": "bamboo_strike.wav",
-                "capture": "katana_slash.wav"
+                "ambient": "persian_garden.mp3",
+                "move_sound": "silk_rustle.wav",
+                "capture": "scimitar_ring.wav"
             }
         }
     
@@ -119,8 +119,8 @@ class SamuraiCulture(BaseCulture):
         return adaptation
 
 # Instância global da cultura
-samurai_culture = SamuraiCulture()
+persian_culture = PersaCulture()
 
 def get_culture():
-    """Retorna a instância da cultura Samurai"""
-    return samurai_culture
+    """Retorna a instância da cultura Persa"""
+    return persian_culture

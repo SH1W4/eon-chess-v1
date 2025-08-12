@@ -539,6 +539,28 @@ class AdaptiveAI:
                 pass
         
         # Fallback final: se não escolheu, devolve primeiro movimento disponível
+        
+        # Validação extra do movimento
+        if best_move:
+            try:
+                # Testa se o movimento é executável no board atual
+                test_board = Board()
+                test_board.pieces = board.pieces.copy()
+                
+                # Verifica se as posições existem
+                from_key = best_move.from_pos if hasattr(best_move, 'from_pos') else str(best_move).split('-')[0]
+                to_key = best_move.to_pos if hasattr(best_move, 'to_pos') else str(best_move).split('-')[1]
+                
+                # Se o movimento não pode ser executado, busca um alternativo válido
+                if from_key not in test_board.pieces and (from_key not in [str(k) for k in test_board.pieces.keys()]):
+                    valid_moves = self.get_valid_moves(board, self.color)
+                    best_move = valid_moves[0] if valid_moves else None
+                    
+            except Exception as e:
+                # Em caso de erro, busca primeiro movimento válido
+                valid_moves = self.get_valid_moves(board, self.color)
+                best_move = valid_moves[0] if valid_moves else None
+        
         return best_move or (all_moves[0] if all_moves else None)
     
     def _minimax(self, board: Board, depth: int, alpha: float, beta: float, color: Color) -> float:
