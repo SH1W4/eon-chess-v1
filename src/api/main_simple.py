@@ -1,53 +1,22 @@
 #!/usr/bin/env python3
 """
-API REST Principal Simplificada - AEON Chess
-Servidor FastAPI básico para teste inicial
+API REST Simplificada - AEON Chess
+Servidor FastAPI básico para staging
 """
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from contextlib import asynccontextmanager
-from typing import Dict, Any
-from datetime import datetime
-from pydantic import BaseModel
 import logging
-import uuid
 
 # Configurar logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Modelos Pydantic
-class HealthResponse(BaseModel):
-    status: str
-    timestamp: str
-    version: str
-
-class GameRequest(BaseModel):
-    player_name: str
-    cultural_profile: str = "persian"
-    ai_difficulty: str = "adaptive"
-
-class GameResponse(BaseModel):
-    game_id: str
-    status: str
-    message: str
-
-# Lifespan context manager
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    # Startup
-    logger.info("🚀 AEON Chess API starting up...")
-    yield
-    # Shutdown
-    logger.info("👋 AEON Chess API shutting down...")
-
 # Criar aplicação FastAPI
 app = FastAPI(
     title="AEON Chess API",
-    description="Backend API for AEON Chess - Adaptive Chess Engine",
-    version="0.2.1",
-    lifespan=lifespan
+    description="API para o jogo de xadrez AEON",
+    version="1.0.0"
 )
 
 # Configurar CORS
@@ -59,52 +28,35 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Health check endpoint
-@app.get("/health", response_model=HealthResponse)
+# Endpoint de health check
+@app.get("/health")
 async def health_check():
-    """Health check endpoint"""
-    return HealthResponse(
-        status="healthy",
-        timestamp=datetime.now().isoformat(),
-        version="0.2.1"
-    )
-
-# Root endpoint
-@app.get("/")
-async def root():
-    """Root endpoint"""
+    """Endpoint de health check"""
     return {
-        "message": "Welcome to AEON Chess API",
-        "version": "0.2.1",
-        "endpoints": {
-            "health": "/health",
-            "docs": "/docs",
-            "redoc": "/redoc"
-        }
+        "status": "healthy",
+        "service": "aeon-chess-backend",
+        "version": "1.0.0",
+        "timestamp": "2025-08-12T19:52:00Z"
     }
 
-# Create game endpoint
-@app.post("/api/v1/game/create", response_model=GameResponse)
-async def create_game(request: GameRequest):
-    """Create a new game"""
-    game_id = str(uuid.uuid4())
-    
-    logger.info(f"Creating new game {game_id} for player {request.player_name}")
-    
-    return GameResponse(
-        game_id=game_id,
-        status="created",
-        message=f"Game created for {request.player_name} with {request.cultural_profile} profile"
-    )
-
-# Get game endpoint
-@app.get("/api/v1/game/{game_id}")
-async def get_game(game_id: str):
-    """Get game by ID"""
+# Endpoint raiz
+@app.get("/")
+async def root():
+    """Endpoint raiz"""
     return {
-        "game_id": game_id,
-        "status": "active",
-        "message": "Game endpoint placeholder"
+        "message": "AEON Chess Backend API",
+        "version": "1.0.0",
+        "status": "running"
+    }
+
+# Endpoint de métricas para Prometheus
+@app.get("/metrics")
+async def metrics():
+    """Endpoint de métricas básicas"""
+    return {
+        "requests_total": 0,
+        "requests_active": 0,
+        "uptime_seconds": 0
     }
 
 if __name__ == "__main__":

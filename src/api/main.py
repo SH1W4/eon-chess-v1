@@ -11,7 +11,7 @@ from contextlib import asynccontextmanager
 from typing import Dict, List, Optional, Any
 from datetime import datetime, timedelta
 from pydantic import BaseModel
-import jwt
+import PyJWT as jwt
 import json
 import asyncio
 import uuid
