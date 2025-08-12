@@ -114,6 +114,13 @@ CHESS/
 - **Integrações**: NEXUS e ARQUIMAX para análise e validação
 - **Templates**: Sistema expansível para novas culturas
 
+### 🎯 Landing Page
+- **Design Responsivo**: Interface moderna e adaptativa
+- **Lead Scoring Inteligente**: Sistema de pontuação adaptativo (0-100)
+- **Animações Interativas**: Peças de xadrez flutuantes e tabuleiro animado
+- **Modos de Jogo**: Blitz, Rápidas, Clássicas e Puzzles
+- **Tema Escuro**: Paleta de cores otimizada para xadrez
+
 ### 🤖 Arkitect (ARQUIMAX/NEXUS)
 - **Análise Arquitetural**: Monitoramento e evolução contínua do código
 - **Integração Simbiótica**: Adaptação automática às necessidades do projeto
@@ -184,6 +191,17 @@ git clone https://github.com/NEO_SH1W4/CHESS.git
    make up
 
    # Acesse em http://localhost:3000
+   ```
+
+4. Visualize a landing page:
+   ```bash
+   # Acesse o diretório da landing page
+   cd landing-page
+   
+   # Inicie um servidor local
+   python3 -m http.server 8080
+   
+   # Acesse em http://localhost:8080
    ```
 
 ### Desenvolvimento

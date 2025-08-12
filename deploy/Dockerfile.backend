@@ -1,0 +1,74 @@
+# Backend Dockerfile - Otimizado para produção
+ARG PYTHON_VERSION=3.11-alpine
+
+# Stage 1: Build dependencies
+FROM python:${PYTHON_VERSION} AS builder
+
+# Install build dependencies
+RUN apk add --no-cache \
+    gcc \
+    musl-dev \
+    postgresql-dev \
+    python3-dev \
+    libffi-dev \
+    openssl-dev \
+    cargo \
+    build-base
+
+# Create virtual environment
+RUN python -m venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+
+# Copy and install dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir --upgrade pip setuptools wheel && \
+    pip install --no-cache-dir -r requirements.txt
+
+# Stage 2: Runtime
+FROM python:${PYTHON_VERSION}
+
+# Install runtime dependencies only
+RUN apk add --no-cache \
+    postgresql-libs \
+    curl \
+    tzdata && \
+    cp /usr/share/zoneinfo/America/Sao_Paulo /etc/localtime && \
+    echo "America/Sao_Paulo" > /etc/timezone
+
+# Create non-root user
+RUN addgroup -g 1000 aeon && \
+    adduser -D -u 1000 -G aeon aeon
+
+# Copy virtual environment from builder
+COPY --from=builder /opt/venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+
+# Set working directory
+WORKDIR /app
+
+# Copy application code
+COPY --chown=aeon:aeon src/ ./src/
+COPY --chown=aeon:aeon scripts/ ./scripts/
+COPY --chown=aeon:aeon alembic.ini ./
+
+# Create necessary directories
+RUN mkdir -p logs && chown -R aeon:aeon logs
+
+# Switch to non-root user
+USER aeon
+
+# Expose port
+EXPOSE 8000
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
+    CMD curl -f http://localhost:8000/health || exit 1
+
+# Run the application
+CMD ["uvicorn", "src.main:app", \
+     "--host", "0.0.0.0", \
+     "--port", "8000", \
+     "--workers", "2", \
+     "--loop", "uvloop", \
+     "--access-log", \
+     "--log-config", "src/config/logging.json"]

@@ -1,0 +1,153 @@
+version: '3.8'
+
+services:
+  # Nginx - Proxy Reverso e Servidor Web
+  nginx:
+    image: nginx:alpine
+    container_name: aeon-chess-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./certs:/etc/nginx/certs:ro
+      - ./frontend/build:/usr/share/nginx/html:ro
+    depends_on:
+      - backend
+    networks:
+      - aeon-network
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 128M
+
+  # Backend - FastAPI
+  backend:
+    build:
+      context: .
+      dockerfile: ./deploy/Dockerfile.backend
+      args:
+        - PYTHON_VERSION=3.11-alpine
+    container_name: aeon-chess-backend
+    env_file:
+      - .env.production
+    environment:
+      - PYTHONUNBUFFERED=1
+      - PYTHONDONTWRITEBYTECODE=1
+    volumes:
+      - ./src:/app/src:ro
+      - ./logs:/app/logs
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - aeon-network
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # PostgreSQL
+  postgres:
+    image: postgres:14-alpine
+    container_name: aeon-chess-postgres
+    environment:
+      - POSTGRES_USER=aeon_user
+      - POSTGRES_PASSWORD=aeon_secure_pass_2025
+      - POSTGRES_DB=aeon_chess
+      - POSTGRES_INITDB_ARGS=--encoding=UTF8
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./deploy/init-db.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    ports:
+      - "5432:5432"
+    networks:
+      - aeon-network
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 256M
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U aeon_user -d aeon_chess"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    command: >
+      postgres
+      -c shared_buffers=64MB
+      -c effective_cache_size=256MB
+      -c maintenance_work_mem=32MB
+      -c work_mem=4MB
+      -c max_connections=50
+
+  # Redis
+  redis:
+    image: redis:7-alpine
+    container_name: aeon-chess-redis
+    command: >
+      redis-server
+      --maxmemory 64mb
+      --maxmemory-policy allkeys-lru
+      --save 60 1
+      --save 300 10
+      --save 900 100
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+    networks:
+      - aeon-network
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 128M
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Frontend Builder (apenas para build)
+  frontend-builder:
+    build:
+      context: ./frontend
+      dockerfile: ../deploy/Dockerfile.frontend
+      args:
+        - NODE_VERSION=20-alpine
+    container_name: aeon-chess-frontend-builder
+    env_file:
+      - .env.production
+    volumes:
+      - ./frontend/build:/app/build
+    command: echo "Frontend build completo"
+    profiles:
+      - build
+
+networks:
+  aeon-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local

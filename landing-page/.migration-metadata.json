@@ -1,0 +1,19 @@
+{
+  "source": "/Users/jx/Desktop/github_mastery/landing-page",
+  "target": "/Users/jx/WORKSPACE/PROJECTS/CHESS/landing-page",
+  "timestamp": "2025-08-11T21:21:03.637816",
+  "adaptations": {
+    "colors": {
+      "#111827": "#1a1a2e",
+      "#1f2937": "#16213e",
+      "#3b82f6": "#0f4c75",
+      "#60a5fa": "#3282b8",
+      "#9ca3af": "#e8e8e8"
+    },
+    "content_changes": 6,
+    "new_elements": [
+      "chessboard-preview",
+      "game-modes-section"
+    ]
+  }
+}
