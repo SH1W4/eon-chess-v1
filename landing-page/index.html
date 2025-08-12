@@ -524,11 +524,14 @@
           
           <!-- Terminal Controls -->
           <div class="mt-6 flex flex-wrap justify-center gap-4">
-            <button class="px-4 py-2 bg-chess-accent/20 text-chess-accent rounded border border-chess-accent/30 hover:bg-chess-accent/30 transition-all">
-              <i class="fas fa-play mr-2"></i> Continuar Partida
+            <button data-terminal-continue class="px-4 py-2 bg-chess-accent/20 text-chess-accent rounded border border-chess-accent/30 hover:bg-chess-accent/30 transition-all">
+              <i class="fas fa-play mr-2"></i> Continuar Experiência
             </button>
-            <button class="px-4 py-2 bg-gray-700 text-gray-300 rounded hover:bg-gray-600 transition-all">
-              <i class="fas fa-book mr-2"></i> Ver Análise Completa
+            <button onclick="window.aeonTerminal?.switchToExperience('fischer_spassky')" class="px-4 py-2 bg-gray-700 text-gray-300 rounded hover:bg-gray-600 transition-all">
+              <i class="fas fa-flag-usa mr-2"></i> Fischer vs Spassky
+            </button>
+            <button onclick="window.aeonTerminal?.switchToExperience('polgar_kasparov')" class="px-4 py-2 bg-gray-700 text-gray-300 rounded hover:bg-gray-600 transition-all">
+              <i class="fas fa-venus mr-2"></i> Polgár vs Kasparov
             </button>
             <button class="px-4 py-2 bg-gray-700 text-gray-300 rounded hover:bg-gray-600 transition-all">
               <i class="fas fa-terminal mr-2"></i> Instalar CLI
@@ -1197,6 +1200,9 @@
       </div>
     </div>
 
+    <!-- Novo Sistema Cultural Avançado -->
+    <script src="js/terminal-cultural.js"></script>
+    
     <!-- Alpine.js runtime configurado em js/app.js -->
 
     <script>

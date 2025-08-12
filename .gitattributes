@@ -1,6 +1,81 @@
-*.png filter=lfs diff=lfs merge=lfs -text
-*.jpeg filter=lfs diff=lfs merge=lfs -text
-*.webp filter=lfs diff=lfs merge=lfs -text
-*.zip filter=lfs diff=lfs merge=lfs -text
-*.pdf filter=lfs diff=lfs merge=lfs -text
-*.pptx filter=lfs diff=lfs merge=lfs -text
+# AEON Chess - Configuração de Atributos Git para GPT Codex
+# Configurado em 2025-08-12 para otimizar análise de código por IA
+
+# Arquivos binários - LFS e exclusão da análise
+*.png filter=lfs diff=lfs merge=lfs -text binary
+*.jpeg filter=lfs diff=lfs merge=lfs -text binary
+*.jpg filter=lfs diff=lfs merge=lfs -text binary
+*.gif filter=lfs diff=lfs merge=lfs -text binary
+*.webp filter=lfs diff=lfs merge=lfs -text binary
+*.ico filter=lfs diff=lfs merge=lfs -text binary
+*.svg binary
+*.zip filter=lfs diff=lfs merge=lfs -text binary
+*.tar.gz filter=lfs diff=lfs merge=lfs -text binary
+*.pdf filter=lfs diff=lfs merge=lfs -text binary
+*.pptx filter=lfs diff=lfs merge=lfs -text binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.otf binary
+
+# Arquivos de código Python - principais para análise
+*.py text linguist-language=Python
+*.pyx text linguist-language=Python
+
+# Arquivos de configuração e documentação
+*.md text linguist-documentation
+*.rst text linguist-documentation
+*.txt text
+*.json text
+*.yaml text
+*.yml text
+*.toml text
+*.cfg text
+*.ini text
+
+# Arquivos JavaScript/TypeScript para interface
+*.js text linguist-language=JavaScript
+*.jsx text linguist-language=JavaScript
+*.ts text linguist-language=TypeScript
+*.tsx text linguist-language=TypeScript
+
+# Arquivos de template e configuração web
+*.html text
+*.css text
+*.scss text
+
+# Diretórios para análise prioritária do GPT Codex
+src/ linguist-vendored=false
+tests/ linguist-vendored=false
+docs/ linguist-vendored=false
+scripts/ linguist-vendored=false
+
+# Diretórios de dependências - menor prioridade
+node_modules/ linguist-vendored=true
+venv/ linguist-vendored=true
+.venv/ linguist-vendored=true
+__pycache__/ linguist-vendored=true
+*.egg-info/ linguist-vendored=true
+
+# Arquivos gerados - excluir da análise
+dist/ linguist-generated=true
+build/ linguist-generated=true
+*.pyc linguist-generated=true
+*.pyo linguist-generated=true
+coverage.xml linguist-generated=true
+.coverage linguist-generated=true
+
+# Arquivos de configuração de IDE - menor relevância
+.vscode/ linguist-vendored=true
+.idea/ linguist-vendored=true
+*.swp linguist-generated=true
+*.swo linguist-generated=true
+
+# Arquivos especiais do projeto
+README.md linguist-documentation=false
+CONTRIBUTING.md linguist-documentation
+LICENSE linguist-documentation
+
+# Configuração especial para arquivos do ARKITECT/TaskMesh
+scripts/arkitect/* linguist-language=Python
+scripts/taskmesh/* linguist-language=Python
