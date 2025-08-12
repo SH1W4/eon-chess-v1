@@ -272,8 +272,10 @@ class AdaptiveAI:
             # Development evaluation
             if piece.color == Color.WHITE:
                 if piece.position.rank < white_starting_rank[piece.type]:
+                # TODO: REFACTOR - Extract to separate method (Critical nesting level 5)
                     if piece.type == PieceType.PAWN:
                         # Larger bonus for central pawns
+                    # TODO: REFACTOR - Extract to separate method (Critical nesting level 6)
                         if 3 <= piece.position.file <= 6:
                             development_score += 0.4
                         else:
@@ -283,8 +285,10 @@ class AdaptiveAI:
                 development_score += center_value
             else:
                 if piece.position.rank > black_starting_rank[piece.type]:
+                # TODO: REFACTOR - Extract to separate method (Critical nesting level 5)
                     if piece.type == PieceType.PAWN:
                         # Larger bonus for central pawns
+                    # TODO: REFACTOR - Extract to separate method (Critical nesting level 6)
                         if 3 <= piece.position.file <= 6:
                             development_score -= 0.4
                         else:
@@ -321,6 +325,7 @@ class AdaptiveAI:
                 mobility_score += len(moves) * 0.05  # Reduced base mobility weight
                 # Bonus for moves that control important squares
                 for move in moves:
+                # TODO: REFACTOR - Extract to separate method (Critical nesting level 5)
                     if 3 <= move.rank <= 6 and 3 <= move.file <= 6:
                         mobility_score += 0.1  # Center control
                     elif piece.type == PieceType.PAWN and (move.rank == 3 or move.rank == 4):
@@ -329,6 +334,7 @@ class AdaptiveAI:
                 moves = board.get_valid_moves(piece.position)
                 mobility_score -= len(moves) * 0.05
                 for move in moves:
+                # TODO: REFACTOR - Extract to separate method (Critical nesting level 5)
                     if 3 <= move.rank <= 6 and 3 <= move.file <= 6:
                         mobility_score -= 0.1
                     elif piece.type == PieceType.PAWN and (move.rank == 3 or move.rank == 4):
@@ -375,6 +381,7 @@ class AdaptiveAI:
                     move = Move(pos, to_pos, piece)
                     # Check for captures
                     captured = board.get_piece(to_pos)
+                # TODO: REFACTOR - Extract to separate method (Critical nesting level 5)
                     if captured:
                         move.captured_piece = captured
                     all_moves.append(move)
@@ -383,7 +390,9 @@ class AdaptiveAI:
         if not all_moves:
             try:
                 for pos, piece in list(board.pieces.items()):
+                # TODO: REFACTOR - Extract to separate method (Critical nesting level 5)
                     if piece.color == color:
+                    # TODO: REFACTOR - Extract to separate method (Critical nesting level 6)
                         for to_pos in board.get_valid_moves(pos):
                             mv = Move(pos, to_pos, piece)
                             all_moves.append(mv)
@@ -460,6 +469,7 @@ class AdaptiveAI:
                 flags_backup = {}
                 pos_backup = {}
                 try:
+                # TODO: REFACTOR - Extract to separate method (Critical nesting level 5)
                     for p in board.pieces.values():
                         flags_backup[id(p)] = getattr(p, 'has_moved', False)
                         pos_backup[id(p)] = getattr(p, 'position', None)
@@ -467,6 +477,7 @@ class AdaptiveAI:
                     pass
                 # Se não há peça na casa de origem, nem tenta
                 try:
+                # TODO: REFACTOR - Extract to separate method (Critical nesting level 5)
                     if hasattr(board, 'pieces') and board.pieces.get(from_sq) is None:
                         return False
                 except Exception:
@@ -478,10 +489,13 @@ class AdaptiveAI:
                     ok = False
                 # Restore per-piece flags/positions possibly mutated during simulation
                 try:
+                # TODO: REFACTOR - Extract to separate method (Critical nesting level 5)
                     for p in board.pieces.values():
                         pid = id(p)
+                    # TODO: REFACTOR - Extract to separate method (Critical nesting level 6)
                         if pid in flags_backup:
                             p.has_moved = flags_backup[pid]
+                    # TODO: REFACTOR - Extract to separate method (Critical nesting level 6)
                         if pid in pos_backup:
                             p.position = pos_backup[pid]
                 except Exception:
@@ -506,16 +520,19 @@ class AdaptiveAI:
             # Último fallback: tenta um avanço simples de peão válido
             try:
                 for pos, piece in list(board.pieces.items()):
+                # TODO: REFACTOR - Extract to separate method (Critical nesting level 5)
                     try:
                         is_black = (color == Color.BLACK)
                     except Exception:
                         is_black = False
+                # TODO: REFACTOR - Extract to separate method (Critical nesting level 5)
                     if piece.type == PieceType.PAWN and ((is_black and piece.color == Color.BLACK) or (not is_black and piece.color == Color.WHITE)):
                         from_sq = str(pos)
                         file_char = from_sq[0]
                         rank = int(from_sq[1])
                         dir_step = -1 if is_black else 1
                         one_step = f"{file_char}{rank + dir_step}"
+                    # TODO: REFACTOR - Extract to separate method (Critical nesting level 6)
                         if board.pieces.get(one_step) is None and _can_execute(Move(pos, Position.from_algebraic(one_step), piece)):
                             return Move(pos, Position.from_algebraic(one_step), piece)
             except Exception:
@@ -548,11 +565,13 @@ class AdaptiveAI:
             for pos, piece in board.pieces.items():
                 # Garante que a peça tem position configurado
                 if not hasattr(piece, 'position') or piece.position is None:
+                # TODO: REFACTOR - Extract to separate method (Critical nesting level 5)
                     if isinstance(pos, tuple):
                         file_char = chr(ord('a') + pos[0])
                         # NOTA: Board usa rank direto da tupla, sem +1
                         piece.position = Position(file_char, pos[1])
                 if piece.color == color:
+                # TODO: REFACTOR - Extract to separate method (Critical nesting level 5)
                     for to_pos in board.get_valid_moves(pos):
                         moves.append(Move(pos, to_pos, piece))
             
@@ -588,11 +607,13 @@ class AdaptiveAI:
             for pos, piece in board.pieces.items():
                 # Garanta que a peça tem position configurado
                 if not hasattr(piece, 'position') or piece.position is None:
+                # TODO: REFACTOR - Extract to separate method (Critical nesting level 5)
                     if isinstance(pos, tuple):
                         file_char = chr(ord('a') + pos[0])
                         # NOTA: Board usa rank direto da tupla, sem +1
                         piece.position = Position(file_char, pos[1])
                 if piece.color == color:
+                # TODO: REFACTOR - Extract to separate method (Critical nesting level 5)
                     for to_pos in board.get_valid_moves(pos):
                         moves.append(Move(pos, to_pos, piece))
             
@@ -646,6 +667,7 @@ class AdaptiveAI:
                 # Position object - file is already 0-7 index
                 if 2 <= move.to_pos.rank <= 5 and 2 <= move.to_pos.file <= 5:
                     score += 0.3
+                # TODO: REFACTOR - Extract to separate method (Critical nesting level 5)
                     if 3 <= move.to_pos.rank <= 4 and 3 <= move.to_pos.file <= 4:
                         score += 0.2
             elif isinstance(move.to_pos, tuple) and len(move.to_pos) == 2:
@@ -653,6 +675,7 @@ class AdaptiveAI:
                 file_idx, rank = move.to_pos
                 if 2 <= rank <= 5 and 2 <= file_idx <= 5:
                     score += 0.3
+                # TODO: REFACTOR - Extract to separate method (Critical nesting level 5)
                     if 3 <= rank <= 4 and 3 <= file_idx <= 4:
                         score += 0.2
             
@@ -703,6 +726,7 @@ class AdaptiveAI:
                 piece = board.get_piece(to_pos)
                 if piece and piece.type != PieceType.PAWN:
                     # Center control is positional
+                # TODO: REFACTOR - Extract to separate method (Critical nesting level 5)
                     if 3 <= to_pos.rank <= 6 and 3 <= to_pos.file <= 6:
                         positional_moves += 1
                         
@@ -834,13 +858,17 @@ class AdaptiveAI:
                 # Load position tables
                 for k, v in data.get('position_tables', {}).items():
                     piece_type = None
+                # TODO: REFACTOR - Extract to separate method (Critical nesting level 5)
                     if k in ['king_midgame', 'king_endgame']:
                         ai.position_tables[k] = np.array(v)
                     else:
+                    # TODO: REFACTOR - Extract to separate method (Critical nesting level 6)
                         for pt in PieceType:
+                        # TODO: REFACTOR - Extract to separate method (Critical nesting level 7)
                             if str(pt) == k:
                                 piece_type = pt
                                 break
+                    # TODO: REFACTOR - Extract to separate method (Critical nesting level 6)
                         if piece_type:
                             ai.position_tables[piece_type] = np.array(v)
                 
@@ -871,11 +899,14 @@ class AdaptiveAI:
                 # Bonus for controlling center squares
                 for move_pos in valid_moves:
                     # move_pos é uma Position
+                # TODO: REFACTOR - Extract to separate method (Critical nesting level 5)
                     if hasattr(move_pos, 'rank') and hasattr(move_pos, 'file'):
+                    # TODO: REFACTOR - Extract to separate method (Critical nesting level 6)
                         if 3 <= move_pos.rank <= 4 and 3 <= move_pos.file <= 4:
                             mobility_score += 0.05
                     elif isinstance(move_pos, tuple) and len(move_pos) == 2:
                         # Se for uma tupla (rank, file)
+                    # TODO: REFACTOR - Extract to separate method (Critical nesting level 6)
                         if 3 <= move_pos[0] <= 4 and 3 <= move_pos[1] <= 4:
                             mobility_score += 0.05
         return mobility_score
