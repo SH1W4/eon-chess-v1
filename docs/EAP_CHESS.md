@@ -3,7 +3,7 @@
 ## Visão Geral do Escopo
 Implementação de um sistema de xadrez com capacidades simbióticas, adaptativas e culturais, incluindo IA avançada e monitoramento em tempo real.
 
-**PROGRESSO GLOBAL: ✅ 100% CONCLUÍDO**
+**PROGRESSO GLOBAL: 95% - Deploy Local Ativo 🚀**
 
 ## 🎯 MARCO HISTÓRICO
 **Projeto finalizado em tempo recorde: 08/08/2025 17:10 → 09/08/2025 12:08**
@@ -41,13 +41,14 @@ Implementação de um sistema de xadrez com capacidades simbióticas, adaptativa
 - ✅ Personalização por perfil
 - ✅ Base narrativa expandida e integrada
 
-### 5. Interface Web [✅ 100% CONCLUÍDO]
+### 5. Interface Web [95% 🔧]
 - ✅ React + Next.js implementado
 - ✅ Memory leaks corrigidos (ARKITECT)
 - ✅ PWA pronto
 - ✅ Service workers configurados
 - ✅ UI/UX refinada e otimizada
-- ℹ️ Observação: Pastas .next/ indicam build anterior; varrer pendências de TODO no frontend quando possível
+- 🔧 Componentes problemáticos em correção (EvolutionGraph, CircularMetric)
+- ✅ Frontend buildado e servindo via nginx
 
 ### 6. Sistema de Monitoramento [✅ 100% CONCLUÍDO]
 - ✅ Dashboard ARKITECT em tempo real
@@ -337,8 +338,44 @@ Implementação de um sistema de xadrez com capacidades simbióticas, adaptativa
 3. **Integração contínua acelera entrega**
 4. **Monitoramento em tempo real previne problemas**
 
-### Status Final: ✅ 100% CONCLUÍDO — Validado por testes automatizados (incluindo roque e en passant)
+### Status Final: 95% - Core Completo, Deploy Local Ativo
+
+## 🔄 Status do Deploy Local (12/08/2025)
+
+### Ambiente Docker Compose
+- ✅ **PostgreSQL**: Banco de dados rodando e healthy
+- ✅ **Redis**: Cache rodando e healthy
+- ✅ **Backend API**: FastAPI simplificada rodando (falta JWT e integração completa)
+- ✅ **Nginx**: Servidor web servindo frontend e proxy para API
+
+### URLs Disponíveis
+- **Frontend**: http://localhost/
+- **API Docs**: http://localhost/docs
+- **Health Check**: http://localhost/health
+
+### Tarefas Pendentes
+1. **API Backend** (10% restante)
+   - [ ] Implementar autenticação JWT
+   - [ ] Integrar com engine de xadrez
+   - [ ] Implementar WebSocket para jogos em tempo real
+   - [ ] Conectar com sistemas de IA e Cultural
+
+2. **Frontend** (5% restante)
+   - [ ] Corrigir componentes EvolutionGraph e CircularMetric
+   - [ ] Integrar com API completa
+   - [ ] Finalizar PWA e service workers
+
+3. **Testes** (63% pendente)
+   - [ ] Expandir cobertura de testes para 80%+
+   - [ ] Testes de integração frontend/backend
+   - [ ] Testes de performance sob carga
+   - [ ] Testes de segurança
+
+### Scripts de Deploy
+- ✅ `deploy/setup-local.sh`: Configura ambiente local
+- ✅ `deploy/check-local-status.sh`: Verifica status do sistema
+- ✅ Docker Compose configurado e funcional
 
 ---
-*Documento atualizado em: 09/08/2025 15:19*
+*Documento atualizado em: 12/08/2025 02:48*
 *AEON Chess - O futuro do xadrez digital*

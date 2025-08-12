@@ -1,8 +1,40 @@
 # Guia de Desenvolvimento - CHESS (Cultural Heritage & Evolution Strategic System)
 
+## 📊 Status Atual: 95% - Deploy Local Ativo 🚀
+
+### 🔄 Deploy Local (12/08/2025)
+- ✅ Docker Compose configurado e rodando
+- ✅ PostgreSQL e Redis operacionais
+- ✅ Backend API simplificada (FastAPI)
+- ✅ Frontend buildado e servindo via Nginx
+- 🔧 API completa em desenvolvimento (JWT, WebSocket)
+- 🔧 Componentes React problemáticos em correção
+
+### URLs de Desenvolvimento
+- Frontend: http://localhost/
+- API Docs: http://localhost/docs
+- Health Check: http://localhost/health
+
 ## 📊 Estrutura Analítica do Projeto (EAP)
 
-[Seções 1-3 mantidas como estão]
+### 1. Core do Sistema de Xadrez [100%] ✅
+- ✅ Motor de xadrez completo
+- ✅ Movimentos especiais (roque, en passant, promoção)
+- ✅ Detecção de xeque/xeque-mate
+- ✅ Cache de posições (2M+ ops/s)
+- ✅ Testes unitários completos
+
+### 2. IA Adaptativa [100%] ✅
+- ✅ Reconhecimento de padrões
+- ✅ Aprendizado adaptativo com perfis
+- ✅ Processamento paralelo
+- ✅ Integração ARKITECT
+
+### 3. Sistema Cultural [100%] ✅
+- ✅ Múltiplos temas implementados
+- ✅ DOCSYNC hooks configurados
+- ✅ Métricas de cobertura cultural
+- ✅ Interface de visualização
 
 ### 4. Sistema Cultural [80%]
 4.1. Banco de Dados Cultural [85%]
@@ -170,16 +202,55 @@
     - 🔄 Retry logic
     - ⏳ Circuit breaker
 
-#### Próximas Prioridades
-1. Expandir temas culturais além do tema asteca
-2. Implementar hooks do DOCSYNC para Notion
-3. Configurar métricas de cobertura cultural
-4. Desenvolver interface de visualização de temas
-5. Completar integração ARQUIMAX-NEXUS
-6. Implementar circuit breaker para APIs
-7. Otimizar queries do banco de dados
-8. Configurar cache distribuído
-9. Implementar evolução adaptativa
-10. Desenvolver sistema autônomo
+## 🎯 Tarefas Imediatas (Deploy Local)
+
+### Backend API
+1. [ ] Implementar autenticação JWT completa
+2. [ ] Integrar API com engine de xadrez (src/core)
+3. [ ] Implementar WebSocket para jogos em tempo real
+4. [ ] Conectar sistemas de IA e Cultural
+5. [ ] Criar endpoints para salvar/carregar jogos
+
+### Frontend
+1. [ ] Corrigir componentes EvolutionGraph e CircularMetric
+2. [ ] Integrar frontend com API completa
+3. [ ] Implementar fluxo de autenticação
+4. [ ] Finalizar PWA e service workers
+5. [ ] Adicionar testes E2E
+
+### Testes
+1. [ ] Aumentar cobertura para 80%+ (atual: 37%)
+2. [ ] Adicionar testes de integração frontend/backend
+3. [ ] Implementar testes de performance
+4. [ ] Adicionar testes de segurança
+
+## 🛠️ Scripts de Deploy
+
+### Deploy Local
+```bash
+# Setup inicial
+./deploy/setup-local.sh
+
+# Verificar status
+./deploy/check-local-status.sh
+
+# Docker Compose
+docker-compose -f docker-compose.local.yml up -d
+
+# Logs
+docker logs -f aeon-chess-backend
+```
+
+### Arquivos de Configuração
+- `requirements-docker.txt`: Dependências Python para Docker
+- `nginx/conf.d/aeon-chess-local.conf`: Config nginx local
+- `src/api/main_simple.py`: API simplificada temporária
+
+#### Próximas Prioridades (Longo Prazo)
+1. Sistema de torneios online
+2. Análise pós-jogo avançada
+3. Integrações com streaming
+4. Modo espectador
+5. Sistema de ranking global
 
 [resto do documento mantido como está]
