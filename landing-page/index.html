@@ -517,73 +517,8 @@
             </div>
             
             <!-- Terminal Content -->
-            <div class="p-6 font-mono text-sm leading-relaxed max-h-96 overflow-y-auto">
-              <div class="text-green-400 mb-2">$ aeon-chess partida --modo=cultural --jogadores="Capablanca vs Alekhine"</div>
-              <div class="text-gray-300 mb-4">Iniciando partida histórica com narração cultural...</div>
-              
-              <!-- Chess Board in ASCII -->
-              <pre class="text-gray-100 mb-4">    a   b   c   d   e   f   g   h
-  ┌───┬───┬───┬───┬───┬───┬───┬───┐
-8 │ ♜ │ ♞ │ ♝ │ ♛ │ ♚ │ ♝ │ ♞ │ ♜ │ 8
-  ├───┼───┼───┼───┼───┼───┼───┼───┤
-7 │ ♟ │ ♟ │ ♟ │ ♟ │   │ ♟ │ ♟ │ ♟ │ 7
-  ├───┼───┼───┼───┼───┼───┼───┼───┤
-6 │   │   │   │   │   │   │   │   │ 6
-  ├───┼───┼───┼───┼───┼───┼───┼───┤
-5 │   │   │   │   │ ♟ │   │   │   │ 5
-  ├───┼───┼───┼───┼───┼───┼───┼───┤
-4 │   │   │   │   │ ♙ │   │   │   │ 4
-  ├───┼───┼───┼───┼───┼───┼───┼───┤
-3 │   │   │   │   │   │ ♘ │   │   │ 3
-  ├───┼───┼───┼───┼───┼───┼───┼───┤
-2 │ ♙ │ ♙ │ ♙ │ ♙ │   │ ♙ │ ♙ │ ♙ │ 2
-  ├───┼───┼───┼───┼───┼───┼───┼───┤
-1 │ ♖ │ ♘ │ ♗ │ ♕ │ ♔ │ ♗ │   │ ♖ │ 1
-  └───┴───┴───┴───┴───┴───┴───┴───┘
-    a   b   c   d   e   f   g   h</pre>
-              
-              <!-- Game Narration -->
-              <div class="space-y-3">
-                <div class="text-yellow-400">
-                  <span class="text-gray-500">[10:32]</span> Capablanca (Brancas): e2-e4
-                </div>
-                <div class="text-blue-300 italic">
-                  "O Campeão Mundial cubano inicia com o clássico avanço do peão do rei,
-                  uma abertura favorita desde os tempos de Bobby Fischer."
-                </div>
-                
-                <div class="text-yellow-400">
-                  <span class="text-gray-500">[10:33]</span> Alekhine (Pretas): e7-e5
-                </div>
-                <div class="text-blue-300 italic">
-                  "Alekhine responde simetricamente. Esta posição nos remete ao
-                  'Jogo Imortal' de Anderssen contra Kieseritzky em 1851."
-                </div>
-                
-                <div class="text-yellow-400">
-                  <span class="text-gray-500">[10:34]</span> Capablanca: Ng1-f3
-                </div>
-                <div class="text-blue-300 italic">
-                  "O cavalo salta para f3, controlando o centro. Capablanca, conhecido
-                  como a 'Máquina de Xadrez', raramente cometia erros posicionais."
-                </div>
-                
-                <div class="text-green-400 mt-4">
-                  > Análise da IA: +0.3 para as Brancas
-                  > Sugestão: Nc6 desenvolvendo o cavalo (teoria clássica)
-                  > Probabilidade de vitória: Brancas 52.1% | Pretas 47.9%
-                </div>
-                
-                <div class="text-purple-400 mt-4 border-l-2 border-purple-400 pl-4">
-                  <strong>Contexto Cultural:</strong> Esta partida ocorreu em 1927 durante o
-                  Campeonato Mundial em Buenos Aires. O match durou 34 partidas,
-                  sendo considerado um dos mais longos e dramáticos da história.
-                </div>
-                
-                <div class="text-gray-400 mt-4">
-                  <span class="animate-pulse">_</span> Aguardando próximo movimento...
-                </div>
-              </div>
+            <div id="terminal-output" class="p-6 font-mono text-sm leading-relaxed max-h-96 overflow-y-auto">
+              <!-- Conteúdo será gerado dinamicamente pela animação -->
             </div>
           </div>
           
