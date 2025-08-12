@@ -1,0 +1,43 @@
+# Multi-stage build para Frontend React
+FROM node:18-alpine AS base
+
+# Instalar dependências do sistema
+RUN apk add --no-cache libc6-compat
+
+# Definir diretório de trabalho
+WORKDIR /app
+
+# Copiar arquivos de dependências
+COPY package*.json ./
+COPY tsconfig.json ./
+COPY next.config.js ./
+COPY postcss.config.js ./
+COPY tailwind.config.js ./
+
+# Instalar dependências
+RUN npm ci --only=production
+
+# Stage de build
+FROM base AS builder
+
+# Copiar código fonte
+COPY src/ ./src/
+COPY public/ ./public/
+COPY components/ ./components/
+COPY styles/ ./styles/
+
+# Build da aplicação
+RUN npm run build
+
+# Stage de staging
+FROM base AS staging
+
+# Copiar build da aplicação
+COPY --from=builder /app/.next ./.next
+COPY --from=builder /app/public ./public
+
+# Expor porta
+EXPOSE 3000
+
+# Comando de inicialização
+CMD ["npm", "start"]
