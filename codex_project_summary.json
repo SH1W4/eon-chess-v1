@@ -1,0 +1,106 @@
+{
+  "project_info": {
+    "name": "AEON Chess",
+    "version": "v0.3.1-alpha-ready",
+    "repository": "https://github.com/NEO-SH1W4/aeon-chess",
+    "description": "Motor de xadrez avançado com IA adaptativa e elementos culturais",
+    "setup_time": "2025-08-12T16:20:05.524467"
+  },
+  "git_status": {
+    "clean_working_tree": true,
+    "uncommitted_files": [],
+    "current_branch": "main",
+    "commits_ahead": 0,
+    "remote_url": "git@github.com:NEO-SH1W4/aeon-chess.git"
+  },
+  "project_structure": {
+    "total_files": 46228,
+    "python_files": 16109,
+    "typescript_files": 12474,
+    "test_files": 3903,
+    "doc_files": 1244,
+    "config_files": 1257,
+    "directories": [
+      ".arkitect",
+      "temp",
+      "tools",
+      ".pytest_cache",
+      "out",
+      "framework",
+      "config",
+      "deploy",
+      "node_modules",
+      "tests",
+      "workflows",
+      ".cloud",
+      "xadrezmaster.egg-info",
+      "docs",
+      ".next",
+      "dashboard",
+      "integrations",
+      "styles",
+      "components",
+      "test_artifacts",
+      "public",
+      "logs",
+      "certs",
+      ".docsync",
+      "nginx",
+      "examples",
+      "arkitect",
+      "scripts",
+      ".github",
+      "landing-page",
+      "cultural_data",
+      "templates",
+      "venv",
+      ".warp",
+      ".git",
+      "monitoring",
+      ".vscode",
+      "kubernetes",
+      "data",
+      "assets",
+      "pages",
+      ".versions",
+      "reports",
+      "src"
+    ]
+  },
+  "key_features": [
+    "IA Adaptativa com aprendizado evolutivo",
+    "Sistema cultural dinâmico (Samurai, Viking, Persian)",
+    "Simulações quânticas para avaliação de posições",
+    "Interface web Next.js responsiva",
+    "API REST FastAPI documentada",
+    "Automação ARKITECT/TaskMesh/NEXUS",
+    "Pipeline CI/CD completo",
+    "Deploy Docker otimizado"
+  ],
+  "priority_files": [
+    "src/core/board/board.py",
+    "src/ai/adaptive_ai.py",
+    "src/cultural/cultures.py",
+    "src/api/main.py",
+    "tests/",
+    "README_CODEX.md"
+  ],
+  "automation_scripts": [
+    "scripts/arkitect/arkitect_main.py",
+    "scripts/taskmesh/taskmesh_core.py",
+    "scripts/nexus/nexus_connector.py"
+  ],
+  "current_metrics": {
+    "code_quality": "93.5/100",
+    "test_coverage": "77%",
+    "total_tests": 243,
+    "progress": "98%",
+    "technical_debt": "4.2%"
+  },
+  "immediate_priorities": [
+    "Correção dos 23% de testes falhando",
+    "Polimento da interface web",
+    "Documentação API completa",
+    "Preparação para deploy alpha"
+  ]
+}
