@@ -11,7 +11,7 @@ interface SymbioticState {
   phase: 'nucleation' | 'symbiogenesis' | 'emergence' | 'homeostasis';
   hostCapabilities: string[];
   guestCapabilities: string[];
-  updateMetrics: (newMetrics: Partial\u003cSymbioticMetrics\u003e) => void;
+  updateMetrics: (newMetrics: Partial<SymbioticMetrics>) => void;
   setPhase: (phase: SymbioticState['phase']) => void;
   addHostCapability: (capability: string) => void;
   addGuestCapability: (capability: string) => void;
@@ -19,7 +19,7 @@ interface SymbioticState {
   removeGuestCapability: (capability: string) => void;
 }
 
-const useSymbioticStore = create\u003cSymbioticState\u003e((set) => ({
+const useSymbioticStore = create<SymbioticState>((set) => ({
   metrics: {
     symbioticCohesion: 0.85,
     resourceBalance: 0.75,

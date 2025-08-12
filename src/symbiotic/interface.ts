@@ -61,34 +61,34 @@ export interface SymbioticConfig {
 // Interface do sistema simbiótico
 export interface SymbioticSystem {
   // Inicialização
-  init(config: SymbioticConfig): Promise\u003cvoid\u003e;
+  init(config: SymbioticConfig): Promise<void>;
   
   // Gerenciamento de fases
   getCurrentPhase(): SymbioticPhase;
-  transitionToPhase(phase: string): Promise\u003cboolean\u003e;
+  transitionToPhase(phase: string): Promise<boolean>;
   
   // Gerenciamento de capacidades
-  addCapability(capability: SymbioticCapability): Promise\u003cvoid\u003e;
-  removeCapability(name: string): Promise\u003cvoid\u003e;
+  addCapability(capability: SymbioticCapability): Promise<void>;
+  removeCapability(name: string): Promise<void>;
   getCapabilities(): SymbioticCapability[];
   
   // Métricas e monitoramento
   getMetrics(): SymbioticMetrics;
-  updateMetrics(metrics: Partial\u003cSymbioticMetrics\u003e): void;
+  updateMetrics(metrics: Partial<SymbioticMetrics>): void;
   
   // Eventos
   addEventListener(type: SymbioticEventType, handler: (event: SymbioticEvent) => void): void;
   removeEventListener(type: SymbioticEventType, handler: (event: SymbioticEvent) => void): void;
   
   // Evolução e adaptação
-  evolve(): Promise\u003cvoid\u003e;
-  adapt(changes: any): Promise\u003cvoid\u003e;
+  evolve(): Promise<void>;
+  adapt(changes: any): Promise<void>;
   
   // Diagnóstico
-  healthCheck(): Promise\u003c{
+  healthCheck(): Promise<{
     status: 'healthy' | 'degraded' | 'critical';
     issues: string[];
-  }\u003e;
+  }>;
 }
 
 // Implementação concreta do sistema simbiótico
@@ -97,13 +97,13 @@ export class SymbioticSystemImpl implements SymbioticSystem {
   private phase: SymbioticPhase;
   private capabilities: SymbioticCapability[];
   private metrics: SymbioticMetrics;
-  private eventHandlers: Map\u003cSymbioticEventType, ((event: SymbioticEvent) => void)[]>;
+  private eventHandlers: Map<SymbioticEventType, ((event: SymbioticEvent) => void)[]>;
 
   constructor() {
     this.eventHandlers = new Map();
   }
 
-  async init(config: SymbioticConfig): Promise\u003cvoid\u003e {
+  async init(config: SymbioticConfig): Promise<void> {
     this.config = config;
     this.metrics = config.metrics;
     this.capabilities = [];
@@ -122,12 +122,12 @@ export class SymbioticSystemImpl implements SymbioticSystem {
     return this.phase;
   }
 
-  async transitionToPhase(phase: string): Promise\u003cboolean\u003e {
+  async transitionToPhase(phase: string): Promise<boolean> {
     // Implementar lógica de transição de fase
     return true;
   }
 
-  async addCapability(capability: SymbioticCapability): Promise\u003cvoid\u003e {
+  async addCapability(capability: SymbioticCapability): Promise<void> {
     this.capabilities.push(capability);
     this.emitEvent({
       type: 'CAPABILITY_ADDED',
@@ -137,7 +137,7 @@ export class SymbioticSystemImpl implements SymbioticSystem {
     });
   }
 
-  async removeCapability(name: string): Promise\u003cvoid\u003e {
+  async removeCapability(name: string): Promise<void> {
     this.capabilities = this.capabilities.filter(cap => cap.name !== name);
     this.emitEvent({
       type: 'CAPABILITY_REMOVED',
@@ -155,7 +155,7 @@ export class SymbioticSystemImpl implements SymbioticSystem {
     return this.metrics;
   }
 
-  updateMetrics(metrics: Partial\u003cSymbioticMetrics\u003e): void {
+  updateMetrics(metrics: Partial<SymbioticMetrics>): void {
     this.metrics = { ...this.metrics, ...metrics };
     this.emitEvent({
       type: 'METRIC_UPDATE',
@@ -189,7 +189,7 @@ export class SymbioticSystemImpl implements SymbioticSystem {
     }
   }
 
-  async evolve(): Promise\u003cvoid\u003e {
+  async evolve(): Promise<void> {
     if (!this.config.evolutionEnabled) return;
 
     // Implementar lógica de evolução
@@ -201,7 +201,7 @@ export class SymbioticSystemImpl implements SymbioticSystem {
     });
   }
 
-  async adapt(changes: any): Promise\u003cvoid\u003e {
+  async adapt(changes: any): Promise<void> {
     // Implementar lógica de adaptação
     this.emitEvent({
       type: 'STATE_CHANGE',
@@ -211,31 +211,31 @@ export class SymbioticSystemImpl implements SymbioticSystem {
     });
   }
 
-  async healthCheck(): Promise\u003c{
+  async healthCheck(): Promise<{
     status: 'healthy' | 'degraded' | 'critical';
     issues: string[];
-  }\u003e {
+  }> {
     const issues: string[] = [];
     
     // Verificar coesão simbiótica
-    if (this.metrics.symbioticCohesion \u003c this.metrics.thresholds.symbioticCohesion) {
+    if (this.metrics.symbioticCohesion < this.metrics.thresholds.symbioticCohesion) {
       issues.push('Coesão simbiótica abaixo do limite');
     }
     
     // Verificar equilíbrio de recursos
-    if (this.metrics.resourceBalance \u003c this.metrics.thresholds.resourceBalance) {
+    if (this.metrics.resourceBalance < this.metrics.thresholds.resourceBalance) {
       issues.push('Desequilíbrio de recursos detectado');
     }
     
     // Verificar estabilidade emergente
-    if (this.metrics.emergenceStability \u003c this.metrics.thresholds.emergenceStability) {
+    if (this.metrics.emergenceStability < this.metrics.thresholds.emergenceStability) {
       issues.push('Instabilidade emergente detectada');
     }
 
     // Determinar status geral
     let status: 'healthy' | 'degraded' | 'critical' = 'healthy';
-    if (issues.length \u003e 0) {
-      status = issues.length \u003e 2 ? 'critical' : 'degraded';
+    if (issues.length > 0) {
+      status = issues.length > 2 ? 'critical' : 'degraded';
     }
 
     return { status, issues };

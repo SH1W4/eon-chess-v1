@@ -14,14 +14,14 @@ interface AdaptiveState {
   primaryCapabilities: string[];
   secondaryCapabilities: string[];
   setPhase: (phase: AdaptivePhase) => void;
-  updateMetrics: (metrics: Partial\u003cAdaptiveMetrics\u003e) => void;
+  updateMetrics: (metrics: Partial<AdaptiveMetrics>) => void;
   addPrimaryCapability: (capability: string) => void;
   removePrimaryCapability: (capability: string) => void;
   addSecondaryCapability: (capability: string) => void;
   removeSecondaryCapability: (capability: string) => void;
 }
 
-const useAdaptiveStore = create\u003cAdaptiveState\u003e((set) => ({
+const useAdaptiveStore = create<AdaptiveState>((set) => ({
   // Estado inicial
   phase: 'initialization',
   metrics: {

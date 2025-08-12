@@ -1,6 +1,5 @@
 import { create } from 'zustand';
-import { persist, createJSONStorage } from 'zustand/middleware';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { persist } from 'zustand/middleware';
 import { 
   GameState, 
   ChessBoard, 
@@ -225,7 +224,6 @@ export const useGameStore = create<GameStore>()(
     }),
     {
       name: 'xadrezmaster-storage',
-      storage: createJSONStorage(() => AsyncStorage),
       partialize: (state) => ({
         currentUser: state.currentUser,
         aiProfile: state.aiProfile,

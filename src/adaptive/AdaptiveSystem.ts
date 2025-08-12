@@ -25,7 +25,7 @@ export class AdaptiveSystem {
   /**
    * Inicializa o sistema adaptativo
    */
-  async init(config: AdaptiveConfig): Promise\u003cvoid\u003e {
+  async init(config: AdaptiveConfig): Promise<void> {
     // Inicializa o sistema com configurações básicas
     this.store.getState().setPhase('initialization');
     
@@ -38,7 +38,7 @@ export class AdaptiveSystem {
     });
 
     // Configura capacidades iniciais
-    config.coreCapabilities.forEach(cap =\u003e {
+    config.coreCapabilities.forEach(cap => {
       this.store.getState().addPrimaryCapability(cap);
     });
   }
@@ -46,7 +46,7 @@ export class AdaptiveSystem {
   /**
    * Analisa compatibilidade entre sistemas
    */
-  private async analyzeCompatibility(config: AdaptiveConfig): Promise\u003cAdaptiveAnalysis\u003e {
+  private async analyzeCompatibility(config: AdaptiveConfig): Promise<AdaptiveAnalysis> {
     // Simula análise de compatibilidade
     return {
       compatibilityMatrix: [
@@ -66,27 +66,27 @@ export class AdaptiveSystem {
   /**
    * Avança para próxima fase do sistema
    */
-  async evolve(): Promise\u003cboolean\u003e {
+  async evolve(): Promise<boolean> {
     const currentPhase = this.store.getState().phase;
     const metrics = this.store.getState().metrics;
 
     switch (currentPhase) {
       case 'initialization':
-        if (metrics.adaptiveCohesion \u003e= 0.8) {
+        if (metrics.adaptiveCohesion >= 0.8) {
           this.store.getState().setPhase('adaptation');
           return true;
         }
         break;
 
       case 'adaptation':
-        if (metrics.resourceBalance \u003e= 0.7) {
+        if (metrics.resourceBalance >= 0.7) {
           this.store.getState().setPhase('evolution');
           return true;
         }
         break;
 
       case 'evolution':
-        if (metrics.evolutionStability \u003e= 0.9) {
+        if (metrics.evolutionStability >= 0.9) {
           this.store.getState().setPhase('autonomy');
           return true;
         }
@@ -99,7 +99,7 @@ export class AdaptiveSystem {
   /**
    * Monitora sinais vitais do sistema
    */
-  async checkVitals(): Promise\u003cAdaptiveVitals\u003e {
+  async checkVitals(): Promise<AdaptiveVitals> {
     const metrics = this.store.getState().metrics;
 
     return {
@@ -112,32 +112,32 @@ export class AdaptiveSystem {
   /**
    * Recupera sistema de degradação
    */
-  async recover(): Promise\u003cboolean\u003e {
+  async recover(): Promise<boolean> {
     const metrics = this.store.getState().metrics;
 
     // Tenta recuperar métricas degradadas
-    if (metrics.adaptiveCohesion \u003c 0.6) {
+    if (metrics.adaptiveCohesion < 0.6) {
       this.store.getState().updateMetrics({
         adaptiveCohesion: 0.7
       });
     }
 
-    if (metrics.resourceBalance \u003c 0.5) {
+    if (metrics.resourceBalance < 0.5) {
       this.store.getState().updateMetrics({
         resourceBalance: 0.6
       });
     }
 
-    return this.checkVitals().then(vitals =\u003e
-      vitals.adaptiveHealth \u003e= 0.6 \u0026\u0026
-      vitals.resourceBalance \u003e= 0.5
+    return this.checkVitals().then(vitals =>
+      vitals.adaptiveHealth >= 0.6 &&
+      vitals.resourceBalance >= 0.5
     );
   }
 
   /**
    * Adiciona nova capacidade ao sistema
    */
-  async addCapability(capability: string, type: 'primary' | 'secondary'): Promise\u003cvoid\u003e {
+  async addCapability(capability: string, type: 'primary' | 'secondary'): Promise<void> {
     if (type === 'primary') {
       this.store.getState().addPrimaryCapability(capability);
     } else {
@@ -148,7 +148,7 @@ export class AdaptiveSystem {
   /**
    * Remove capacidade do sistema
    */
-  async removeCapability(capability: string, type: 'primary' | 'secondary'): Promise\u003cvoid\u003e {
+  async removeCapability(capability: string, type: 'primary' | 'secondary'): Promise<void> {
     if (type === 'primary') {
       this.store.getState().removePrimaryCapability(capability);
     } else {
