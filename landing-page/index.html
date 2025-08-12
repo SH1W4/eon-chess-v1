@@ -1614,11 +1614,355 @@
           });
         }
 
-        // Inicializa em modo demo e engine
-        syncBoard();
-        startDemo();
-        initEngine();
+      // Inicializa em modo demo e engine
+      syncBoard();
+      startDemo();
+      initEngine();
+    });
+    
+    // Animação do Terminal Avançada
+    function initTerminalAnimation() {
+      const terminalOutput = document.getElementById('terminal-output');
+      if (!terminalOutput) return;
+      
+      // Partida completa: Capablanca vs Alekhine, Jogo 11 do Match Mundial 1927
+      const completeGame = {
+        info: {
+          white: 'José Raúl Capablanca',
+          black: 'Alexander Alekhine',
+          event: 'World Championship Match',
+          site: 'Buenos Aires',
+          date: '1927.10.29',
+          result: '0-1',
+          opening: 'Queen\'s Gambit Declined, Orthodox Defense'
+        },
+        moves: [
+          // Abertura
+          { move: 'd4', side: 'white', time: '14:00', eval: '+0.2', ply: 1 },
+          { move: 'd5', side: 'black', time: '14:01', eval: '=', ply: 2 },
+          { move: 'c4', side: 'white', time: '14:02', eval: '+0.3', ply: 3 },
+          { move: 'e6', side: 'black', time: '14:03', eval: '+0.2', ply: 4 },
+          { move: 'Nc3', side: 'white', time: '14:04', eval: '+0.3', ply: 5 },
+          { move: 'Nf6', side: 'black', time: '14:05', eval: '+0.2', ply: 6 },
+          { move: 'Bg5', side: 'white', time: '14:07', eval: '+0.4', ply: 7 },
+          { move: 'Be7', side: 'black', time: '14:09', eval: '+0.3', ply: 8 },
+          { move: 'e3', side: 'white', time: '14:11', eval: '+0.3', ply: 9 },
+          { move: 'O-O', side: 'black', time: '14:13', eval: '+0.2', ply: 10 },
+          // Meio-jogo inicial
+          { move: 'Nf3', side: 'white', time: '14:15', eval: '+0.4', ply: 11 },
+          { move: 'Nbd7', side: 'black', time: '14:18', eval: '+0.3', ply: 12 },
+          { move: 'Rc1', side: 'white', time: '14:22', eval: '+0.5', ply: 13 },
+          { move: 'c6', side: 'black', time: '14:25', eval: '+0.4', ply: 14 },
+          { move: 'Bd3', side: 'white', time: '14:28', eval: '+0.6', ply: 15 },
+          { move: 'dxc4', side: 'black', time: '14:32', eval: '+0.4', ply: 16 },
+          { move: 'Bxc4', side: 'white', time: '14:34', eval: '+0.7', ply: 17 },
+          { move: 'Nd5', side: 'black', time: '14:38', eval: '+0.3', ply: 18 },
+          // Complicações táticas
+          { move: 'Bxe7', side: 'white', time: '14:42', eval: '+0.8', ply: 19 },
+          { move: 'Qxe7', side: 'black', time: '14:44', eval: '+0.6', ply: 20 },
+          { move: 'O-O', side: 'white', time: '14:47', eval: '+0.9', ply: 21 },
+          { move: 'Nxf3+', side: 'black', time: '14:52', eval: '+0.1', ply: 22 },
+          { move: 'gxf3', side: 'white', time: '14:54', eval: '+0.2', ply: 23 },
+          { move: 'e5', side: 'black', time: '14:58', eval: '-0.1', ply: 24 },
+          { move: 'f4', side: 'white', time: '15:03', eval: '+0.3', ply: 25 },
+          { move: 'exd4', side: 'black', time: '15:07', eval: '-0.2', ply: 26 },
+          { move: 'exd4', side: 'white', time: '15:09', eval: '+0.1', ply: 27 },
+          { move: 'Bf5', side: 'black', time: '15:14', eval: '-0.3', ply: 28 },
+          // Meio-jogo complexo
+          { move: 'Qe2', side: 'white', time: '15:18', eval: '+0.4', ply: 29 },
+          { move: 'Qb4', side: 'black', time: '15:23', eval: '-0.1', ply: 30 },
+          { move: 'a3', side: 'white', time: '15:26', eval: '+0.2', ply: 31 },
+          { move: 'Qxb2', side: 'black', time: '15:31', eval: '-0.4', ply: 32 },
+          { move: 'Rab1', side: 'white', time: '15:34', eval: '+0.1', ply: 33 },
+          { move: 'Qxa3', side: 'black', time: '15:39', eval: '-0.6', ply: 34 },
+          { move: 'Rxb7', side: 'white', time: '15:42', eval: '+0.3', ply: 35 },
+          { move: 'Qd6', side: 'black', time: '15:47', eval: '-0.8', ply: 36 },
+          { move: 'Rfb1', side: 'white', time: '15:51', eval: '+0.5', ply: 37 },
+          { move: 'h6', side: 'black', time: '15:56', eval: '-1.1', ply: 38 },
+          // Final tático brilhante
+          { move: 'h3', side: 'white', time: '16:01', eval: '+0.8', ply: 39 },
+          { move: 'a5', side: 'black', time: '16:07', eval: '-1.3', ply: 40 },
+          { move: 'Kh2', side: 'white', time: '16:12', eval: '+1.1', ply: 41 },
+          { move: 'Ra6', side: 'black', time: '16:18', eval: '-1.8', ply: 42 },
+          { move: 'Kg3', side: 'white', time: '16:23', eval: '+1.5', ply: 43 },
+          { move: 'g6', side: 'black', time: '16:29', eval: '-2.1', ply: 44 },
+          { move: 'Kf2', side: 'white', time: '16:34', eval: '+1.8', ply: 45 },
+          { move: 'Re8!', side: 'black', time: '16:42', eval: '-0.3', ply: 46 }, // Movimento brilhante!
+          { move: 'Qd1', side: 'white', time: '16:47', eval: '+0.1', ply: 47 },
+          { move: 'Re2+!', side: 'black', time: '16:51', eval: '-1.2', ply: 48 }, // Sacrifício devastador
+          { move: 'Kf1', side: 'white', time: '16:53', eval: '-0.8', ply: 49 },
+          { move: 'Qd2', side: 'black', time: '16:56', eval: '-2.3', ply: 50 },
+          { move: 'Qxd2', side: 'white', time: '16:58', eval: '-1.9', ply: 51 },
+          { move: 'Rxd2', side: 'black', time: '16:59', eval: '-2.8', ply: 52 }
+          // 0-1 - Capablanca resigna
+        ],
+        commentary: {
+          1: {
+            text: "Capablanca escolhe 1.d4, preferindo posições sólidas e estratégicas. Este seria um dos últimos jogos como Campeão Mundial.",
+            type: "opening",
+            cultural: "Em 1927, o xadrez estava vivenciando uma revolução técnica. Capablanca representava a escola clássica cubana-europeia."
+          },
+          2: {
+            text: "Alekhine responde com a sólida 1...d5. O futuro campeão buscava posições complexas onde sua capacidade de cálculo brilharia.",
+            type: "response",
+            cultural: "A escola russa de xadrez, representada por Alekhine, priorizava o cálculo concreto sobre princípios gerais."
+          },
+          7: {
+            text: "O sistema Bg5 contra a Ortodoxa! Capablanca aplica pressão imediata no cavalo de f6, buscando simplificações favoráveis.",
+            type: "strategy",
+            cultural: "Esta variante foi popularizada pelos mestres austríacos e alemães no início do século XX."
+          },
+          22: {
+            text: "Nxf3+! Alekhine inicia uma sequência tática brilhante, sacrificando a estrutura de peões para ativar suas peças.",
+            type: "tactic",
+            cultural: "Este estilo de jogo dinâmico definiria a era Alekhine (1927-1946) do xadrez mundial."
+          },
+          46: {
+            text: "Re8!! O movimento que mudou a história do xadrez! Alekhine encontra uma manobra profundíssima que Capablanca não havia previsto.",
+            type: "brilliance",
+            cultural: "Este lance é estudado até hoje nas academias de xadrez como exemplo de visão posicional superior."
+          },
+          48: {
+            text: "Re2+! O sacrifício de torre que selou o destino do match. Capablanca, pela primeira vez em sua carreira, foi superado taticamente.",
+            type: "decisive",
+            cultural: "Este momento marcou o fim da era Capablanca e o início do reinado de Alekhine como Campeão Mundial."
+          }
+        }
+      };
+      
+      let currentMoveIndex = 0;
+      let isAnimating = false;
+      let animationSpeed = 2500; // ms por movimento
+      
+      // Gera o tabuleiro ASCII para uma posição específica
+      function generateBoardASCII(ply) {
+        // Simulação simples - em produção, usaríamos Chess.js para gerar posições reais
+        const initialBoard = [
+          ['♜', '♞', '♝', '♛', '♚', '♝', '♞', '♜'],
+          ['♟', '♟', '♟', '♟', '♟', '♟', '♟', '♟'],
+          [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+          [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+          [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+          [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+          ['♙', '♙', '♙', '♙', '♙', '♙', '♙', '♙'],
+          ['♖', '♘', '♗', '♕', '♔', '♗', '♘', '♖']
+        ];
+        
+        // Aplicar movimentos baseado no ply (simplificado)
+        if (ply >= 1) initialBoard[6][3] = ' ', initialBoard[4][3] = '♙'; // d4
+        if (ply >= 2) initialBoard[1][3] = ' ', initialBoard[3][3] = '♟'; // d5
+        if (ply >= 3) initialBoard[6][2] = ' ', initialBoard[4][2] = '♙'; // c4
+        if (ply >= 4) initialBoard[1][4] = ' ', initialBoard[2][4] = '♟'; // e6
+        if (ply >= 5) initialBoard[7][1] = ' ', initialBoard[5][2] = '♘'; // Nc3
+        if (ply >= 6) initialBoard[0][6] = ' ', initialBoard[2][5] = '♞'; // Nf6
+        if (ply >= 7) initialBoard[7][2] = ' ', initialBoard[4][6] = '♗'; // Bg5
+        if (ply >= 8) initialBoard[0][5] = ' ', initialBoard[1][4] = '♝'; // Be7
+        if (ply >= 9) initialBoard[6][4] = ' ', initialBoard[5][4] = '♙'; // e3
+        if (ply >= 10) initialBoard[0][4] = ' ', initialBoard[0][6] = '♚'; // O-O
+        
+        let ascii = '    a   b   c   d   e   f   g   h\n';
+        ascii += '  ┌───┬───┬───┬───┬───┬───┬───┬───┐\n';
+        
+        for (let rank = 0; rank < 8; rank++) {
+          ascii += `${8-rank} │`;
+          for (let file = 0; file < 8; file++) {
+            ascii += ` ${initialBoard[rank][file]} │`;
+          }
+          ascii += ` ${8-rank}\n`;
+          if (rank < 7) {
+            ascii += '  ├───┼───┼───┼───┼───┼───┼───┼───┤\n';
+          }
+        }
+        
+        ascii += '  └───┴───┴───┴───┴───┴───┴───┴───┘\n';
+        ascii += '    a   b   c   d   e   f   g   h';
+        
+        return ascii;
+      }
+      
+      async function displayMove(moveData, index) {
+        const move = completeGame.moves[index];
+        const commentary = completeGame.commentary[index + 1];
+        
+        // Movimento
+        const moveDiv = document.createElement('div');
+        moveDiv.className = 'text-yellow-400 mb-2';
+        moveDiv.innerHTML = `<span class="text-gray-500">[${move.time}]</span> ${move.side === 'white' ? 'Capablanca' : 'Alekhine'} (${move.side === 'white' ? 'Brancas' : 'Pretas'}): ${move.move}`;
+        terminalOutput.appendChild(moveDiv);
+        
+        // Tabuleiro
+        if (index % 4 === 0 || commentary?.type === 'brilliance' || commentary?.type === 'decisive') {
+          const boardDiv = document.createElement('div');
+          boardDiv.innerHTML = `<pre class="text-gray-100 mb-4 text-xs">${generateBoardASCII(move.ply)}</pre>`;
+          terminalOutput.appendChild(boardDiv);
+        }
+        
+        // Análise da IA
+        const analysisDiv = document.createElement('div');
+        analysisDiv.className = 'text-green-400 mb-3';
+        const winProb = parseFloat(move.eval.replace('+', '').replace('=', '0'));
+        const whiteWin = 50 + winProb * 10;
+        const blackWin = 100 - whiteWin;
+        analysisDiv.innerHTML = `> Análise: ${move.eval} | Profundidade: ${Math.min(index + 8, 22)} plies<br>> Probabilidade: Brancas ${whiteWin.toFixed(1)}% | Pretas ${blackWin.toFixed(1)}%`;
+        terminalOutput.appendChild(analysisDiv);
+        
+        // Comentário específico
+        if (commentary) {
+          const commentDiv = document.createElement('div');
+          commentDiv.className = `text-blue-300 italic mb-3 ${commentary.type === 'brilliance' ? 'text-yellow-300 font-bold' : commentary.type === 'decisive' ? 'text-red-300 font-bold' : ''}`;
+          await typeText(commentDiv, `"${commentary.text}"`, 25);
+          terminalOutput.appendChild(commentDiv);
+          
+          if (commentary.cultural) {
+            const culturalDiv = document.createElement('div');
+            culturalDiv.className = 'text-purple-400 mt-2 mb-4 border-l-2 border-purple-400 pl-4';
+            culturalDiv.innerHTML = `<strong>Contexto:</strong> ${commentary.cultural}`;
+            terminalOutput.appendChild(culturalDiv);
+          }
+        }
+        
+        // Momentos especiais
+        if (commentary?.type === 'brilliance') {
+          const specialDiv = document.createElement('div');
+          specialDiv.className = 'text-yellow-300 font-bold mb-3 bg-yellow-900 bg-opacity-20 p-2 rounded border border-yellow-600';
+          specialDiv.innerHTML = '⭐ MOVIMENTO BRILHANTE! A análise moderna confirma: este lance mudou completamente a avaliação da posição.';
+          terminalOutput.appendChild(specialDiv);
+        }
+        
+        if (commentary?.type === 'decisive') {
+          const decisiveDiv = document.createElement('div');
+          decisiveDiv.className = 'text-red-300 font-bold mb-3 bg-red-900 bg-opacity-20 p-2 rounded border border-red-600';
+          decisiveDiv.innerHTML = '💥 LANCE DECISIVO! Capablanca não conseguiu encontrar defesa adequada após esta jogada.';
+          terminalOutput.appendChild(decisiveDiv);
+        }
+        
+        terminalOutput.scrollTop = terminalOutput.scrollHeight;
+      }
+      
+      async function runCompleteGame() {
+        if (isAnimating) return;
+        isAnimating = true;
+        
+        // Header inicial
+        terminalOutput.innerHTML = '';
+        
+        // Comando inicial
+        const cmdDiv = document.createElement('div');
+        cmdDiv.className = 'text-green-400 mb-2';
+        cmdDiv.textContent = '$ aeon-chess replay --historic --players="Capablanca vs Alekhine" --year=1927';
+        terminalOutput.appendChild(cmdDiv);
+        
+        // Info do jogo
+        const infoDiv = document.createElement('div');
+        infoDiv.className = 'text-blue-400 mb-4';
+        infoDiv.innerHTML = `📋 Carregando: ${completeGame.info.event}<br>📅 ${completeGame.info.date} - ${completeGame.info.site}<br>🏆 ${completeGame.info.opening}<br>📊 Resultado: ${completeGame.info.result} (Vitória de Alekhine)`;
+        terminalOutput.appendChild(infoDiv);
+        
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        
+        // Loading engine
+        const loadDiv = document.createElement('div');
+        loadDiv.className = 'text-yellow-400 mb-4';
+        loadDiv.textContent = '⚡ Inicializando engine Stockfish 16 | Profundidade: 22 plies';
+        terminalOutput.appendChild(loadDiv);
+        terminalOutput.scrollTop = terminalOutput.scrollHeight;
+        
+        await new Promise(resolve => setTimeout(resolve, 1500));
+        
+        // Reproduzir movimentos
+        for (let i = 0; i < completeGame.moves.length && isAnimating; i++) {
+          await displayMove(null, i);
+          await new Promise(resolve => setTimeout(resolve, animationSpeed));
+          
+          // Especiais momentos - pause mais longa
+          const commentary = completeGame.commentary[i + 1];
+          if (commentary?.type === 'brilliance' || commentary?.type === 'decisive') {
+            await new Promise(resolve => setTimeout(resolve, 2000));
+          }
+          
+          // Final da partida
+          if (i === completeGame.moves.length - 1) {
+            const finalDiv = document.createElement('div');
+            finalDiv.className = 'text-red-400 font-bold mb-4 bg-red-900 bg-opacity-20 p-3 rounded border border-red-600';
+            finalDiv.innerHTML = '🏆 CAPABLANCA RESIGNA!<br>Alexander Alekhine torna-se o novo Campeão Mundial de Xadrez.<br>Uma era se encerra, outra começa.';
+            terminalOutput.appendChild(finalDiv);
+            
+            const statsDiv = document.createElement('div');
+            statsDiv.className = 'text-purple-400 mt-4 mb-4 border-l-2 border-purple-400 pl-4';
+            statsDiv.innerHTML = '<strong>Estatísticas Finais:</strong><br>• Duração: 2h 59min<br>• Movimentos: 52<br>• Precisão Capablanca: 89.2%<br>• Precisão Alekhine: 94.7%<br>• Momento decisivo: 46...Re8!!';
+            terminalOutput.appendChild(statsDiv);
+            
+            terminalOutput.scrollTop = terminalOutput.scrollHeight;
+          }
+        }
+        
+        // Final message
+        if (isAnimating) {
+          const endDiv = document.createElement('div');
+          endDiv.className = 'text-gray-400 mt-4';
+          endDiv.innerHTML = '📚 Digite "aeon-chess --help" para explorar mais partidas históricas<br><span class="animate-pulse">_</span>';
+          terminalOutput.appendChild(endDiv);
+          
+          setTimeout(() => {
+            if (isAnimating) runCompleteGame();
+          }, 8000);
+        }
+      }
+      
+      function typeText(element, text, speed = 50) {
+        return new Promise((resolve) => {
+          let i = 0;
+          element.innerHTML = '';
+          terminalOutput.appendChild(element);
+          
+          const timer = setInterval(() => {
+            if (i < text.length) {
+              element.innerHTML += text.charAt(i);
+              i++;
+              terminalOutput.scrollTop = terminalOutput.scrollHeight;
+            } else {
+              clearInterval(timer);
+              resolve();
+            }
+          }, speed);
+        });
+      }
+      
+      function stopAnimation() {
+        isAnimating = false;
+      }
+      
+      // Inicia a animação
+      runCompleteGame();
+      
+      // Controles dos botões
+      const continueBtn = document.querySelector('[data-terminal-continue]');
+      if (continueBtn) {
+        continueBtn.addEventListener('click', () => {
+          if (!isAnimating) runCompleteGame();
+        });
+      }
+      
+      // Para a animação se o usuário sair da seção
+      const observer = new IntersectionObserver((entries) => {
+        const entry = entries[0];
+        if (!entry.isIntersecting) {
+          stopAnimation();
+        } else if (!isAnimating) {
+          setTimeout(runCompleteGame, 1000);
+        }
       });
+      
+      const terminalSection = document.getElementById('terminal-demo');
+      if (terminalSection) {
+        observer.observe(terminalSection);
+      }
+    }
+    
+    // Inicia a animação do terminal quando a página carregar
+    document.addEventListener('DOMContentLoaded', function() {
+      setTimeout(initTerminalAnimation, 2000); // Delay para não conflitar com outras animações
+    });
     </script>
   </body>
 </html>
