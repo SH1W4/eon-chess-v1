@@ -1,0 +1,77 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: aeon-chess-config
+  namespace: aeon-chess
+  labels:
+    app: aeon-chess
+    component: config
+data:
+  # Frontend Configuration
+  REACT_APP_API_URL: "https://api.aeonchess.com"
+  REACT_APP_ENVIRONMENT: "production"
+  REACT_APP_SENTRY_DSN: "https://your-sentry-dsn.ingest.sentry.io/123456"
+  REACT_APP_GA_TRACKING_ID: "GA-XXXXXXXXX"
+  
+  # Backend Configuration
+  ENVIRONMENT: "production"
+  LOG_LEVEL: "INFO"
+  CORS_ORIGINS: "https://aeonchess.com,https://www.aeonchess.com"
+  RATE_LIMIT_PER_MINUTE: "100"
+  
+  # Database Configuration
+  DB_HOST: "aeon-chess-postgres"
+  DB_PORT: "5432"
+  DB_NAME: "aeon_chess_production"
+  DB_SSL_MODE: "require"
+  
+  # Redis Configuration
+  REDIS_HOST: "aeon-chess-redis"
+  REDIS_PORT: "6379"
+  REDIS_DB: "0"
+  
+  # Monitoring Configuration
+  PROMETHEUS_ENABLED: "true"
+  GRAFANA_ENABLED: "true"
+  METRICS_PORT: "9090"
+  
+  # Security Configuration
+  JWT_EXPIRATION: "24h"
+  PASSWORD_MIN_LENGTH: "8"
+  SESSION_TIMEOUT: "3600"
+  
+  # Performance Configuration
+  WORKER_PROCESSES: "4"
+  MAX_CONNECTIONS: "1000"
+  KEEP_ALIVE_TIMEOUT: "65"
+  
+  # Cache Configuration
+  CACHE_TTL: "3600"
+  CACHE_MAX_SIZE: "100MB"
+  CACHE_STRATEGY: "lru"
+  
+  # Backup Configuration
+  BACKUP_SCHEDULE: "0 2 * * *"
+  BACKUP_RETENTION_DAYS: "30"
+  BACKUP_STORAGE: "s3"
+  
+  # SSL Configuration
+  SSL_ENABLED: "true"
+  SSL_CERT_PATH: "/etc/ssl/certs/fullchain.pem"
+  SSL_KEY_PATH: "/etc/ssl/private/privkey.pem"
+  
+  # Load Balancer Configuration
+  LB_ALGORITHM: "round_robin"
+  LB_HEALTH_CHECK_PATH: "/health"
+  LB_HEALTH_CHECK_INTERVAL: "30s"
+  
+  # Auto-scaling Configuration
+  HPA_MIN_REPLICAS: "3"
+  HPA_MAX_REPLICAS: "10"
+  HPA_TARGET_CPU: "70"
+  HPA_TARGET_MEMORY: "80"
+  
+  # Blue-Green Deployment Configuration
+  BLUEGREEN_ENABLED: "true"
+  BLUEGREEN_SWITCH_THRESHOLD: "95"
+  BLUEGREEN_ROLLBACK_THRESHOLD: "5"
