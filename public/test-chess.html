@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>♟️ Revolution Chess - AEON</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    animation: {
+                        'pulse': 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900">
+    <div id="app" class="p-4 md:p-8">
+        <div class="max-w-6xl mx-auto">
+            <!-- Header Revolucionário -->
+            <div class="text-center mb-8">
+                <h1 class="text-4xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 mb-4">
+                    ♟️ REVOLUTION CHESS
+                </h1>
+                <p class="text-xl text-cyan-100 mb-6">
+                    A revolução do xadrez está aqui. Efeitos modernos. Funcionalidade real.
+                </p>
+                
+                <!-- Status do Jogo -->
+                <div class="flex flex-wrap justify-center gap-4 mb-6">
+                    <div class="bg-black/30 backdrop-blur-sm rounded-lg px-4 py-2 border border-cyan-500/50">
+                        <span class="text-cyan-400 font-bold">Turno:</span>
+                        <span id="turn-display" class="ml-2 font-bold text-white">♔ Brancas</span>
+                    </div>
+                    
+                    <div class="bg-black/30 backdrop-blur-sm rounded-lg px-4 py-2 border border-purple-500/50">
+                        <span class="text-purple-400 font-bold">Movimentos:</span>
+                        <span id="move-count" class="ml-2 text-white font-bold">0</span>
+                    </div>
+                    
+                    <div class="bg-black/30 backdrop-blur-sm rounded-lg px-4 py-2 border border-green-500/50">
+                        <span class="text-green-400 font-bold">Estado:</span>
+                        <span id="game-state" class="ml-2 text-white font-bold capitalize">playing</span>
+                    </div>
+                </div>
+
+                <!-- Último Movimento -->
+                <div id="last-move" class="bg-green-500/20 backdrop-blur-sm rounded-lg px-4 py-2 border border-green-500/50 mb-4 hidden">
+                    <span class="text-green-400 font-bold">Último Movimento:</span>
+                    <span id="last-move-text" class="ml-2 text-white font-mono"></span>
+                </div>
+            </div>
+
+            <!-- Tabuleiro Principal -->
+            <div class="flex justify-center mb-8">
+                <div id="chess-board" class="grid grid-cols-8 rounded-xl overflow-hidden border-4 border-cyan-500/50 shadow-2xl bg-gradient-to-br from-amber-50 to-amber-100"
+                     style="width: min(500px, 90vw); height: min(500px, 90vw); max-width: 100%; max-height: 100%;">
+                </div>
+            </div>
+
+            <!-- Controles -->
+            <div class="flex flex-wrap justify-center gap-4">
+                <button id="reset-btn" class="bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 text-white font-bold py-3 px-6 rounded-lg shadow-lg transform hover:scale-105 transition-all duration-300 border-2 border-red-400/50">
+                    🔄 Nova Partida
+                </button>
+                
+                <button id="debug-btn" class="bg-gradient-to-r from-blue-500 to-cyan-600 hover:from-blue-600 hover:to-cyan-700 text-white font-bold py-3 px-6 rounded-lg shadow-lg transform hover:scale-105 transition-all duration-300 border-2 border-blue-400/50">
+                    📊 Debug Info
+                </button>
+            </div>
+
+            <!-- Instruções -->
+            <div class="mt-8 bg-black/20 backdrop-blur-sm rounded-xl border border-cyan-500/30 p-6">
+                <h3 class="text-2xl font-bold text-cyan-400 mb-4 text-center">
+                    🎯 Como Jogar
+                </h3>
+                <div class="grid md:grid-cols-2 gap-6 text-cyan-100">
+                    <div>
+                        <h4 class="text-lg font-bold text-cyan-300 mb-2">♔ Movimentos Básicos:</h4>
+                        <ul class="space-y-1 text-sm">
+                            <li>• <strong>Peão:</strong> 1 casa para frente, captura na diagonal</li>
+                            <li>• <strong>Torre:</strong> Linhas retas (horizontal/vertical)</li>
+                            <li>• <strong>Cavalo:</strong> Movimento em L (2+1 casas)</li>
+                            <li>• <strong>Bispo:</strong> Diagonais</li>
+                            <li>• <strong>Rainha:</strong> Combina torre + bispo</li>
+                            <li>• <strong>Rei:</strong> 1 casa em qualquer direção</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="text-lg font-bold text-cyan-300 mb-2">🎮 Controles:</h4>
+                        <ul class="space-y-1 text-sm">
+                            <li>• <strong>Clique</strong> em uma peça para selecionar</li>
+                            <li>• <strong>Clique</strong> em uma casa para mover</li>
+                            <li>• <strong>Brancas</strong> começam sempre</li>
+                            <li>• <strong>Capturas</strong> removem peças adversárias</li>
+                            <li>• <strong>Turnos</strong> alternam automaticamente</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Estado do jogo
+        let selectedPiece = null;
+        let currentTurn = 'white';
+        let gameState = 'playing';
+        let moveCount = 0;
+        let lastMove = null;
+        let pieces = [];
+
+        // Inicializar peças
+        function initializePieces() {
+            pieces = [
+                // Peças brancas
+                { id: 'wr1', type: 'rook', color: 'white', position: 'a1', hasMoved: false },
+                { id: 'wn1', type: 'knight', color: 'white', position: 'b1', hasMoved: false },
+                { id: 'wb1', type: 'bishop', color: 'white', position: 'c1', hasMoved: false },
+                { id: 'wq', type: 'queen', color: 'white', position: 'd1', hasMoved: false },
+                { id: 'wk', type: 'king', color: 'white', position: 'e1', hasMoved: false },
+                { id: 'wb2', type: 'bishop', color: 'white', position: 'f1', hasMoved: false },
+                { id: 'wn2', type: 'knight', color: 'white', position: 'g1', hasMoved: false },
+                { id: 'wr2', type: 'rook', color: 'white', position: 'h1', hasMoved: false },
+                { id: 'wp1', type: 'pawn', color: 'white', position: 'a2', hasMoved: false },
+                { id: 'wp2', type: 'pawn', color: 'white', position: 'b2', hasMoved: false },
+                { id: 'wp3', type: 'pawn', color: 'white', position: 'c2', hasMoved: false },
+                { id: 'wp4', type: 'pawn', color: 'white', position: 'd2', hasMoved: false },
+                { id: 'wp5', type: 'pawn', color: 'white', position: 'e2', hasMoved: false },
+                { id: 'wp6', type: 'pawn', color: 'white', position: 'f2', hasMoved: false },
+                { id: 'wp7', type: 'pawn', color: 'white', position: 'g2', hasMoved: false },
+                { id: 'wp8', type: 'pawn', color: 'white', position: 'h2', hasMoved: false },
+                
+                // Peças pretas
+                { id: 'br1', type: 'rook', color: 'black', position: 'a8', hasMoved: false },
+                { id: 'bn1', type: 'knight', color: 'black', position: 'b8', hasMoved: false },
+                { id: 'bb1', type: 'bishop', color: 'black', position: 'c8', hasMoved: false },
+                { id: 'bq', type: 'queen', color: 'black', position: 'd8', hasMoved: false },
+                { id: 'bk', type: 'king', color: 'black', position: 'e8', hasMoved: false },
+                { id: 'bb2', type: 'bishop', color: 'black', position: 'f8', hasMoved: false },
+                { id: 'bn2', type: 'knight', color: 'black', position: 'g8', hasMoved: false },
+                { id: 'br2', type: 'rook', color: 'black', position: 'h8', hasMoved: false },
+                { id: 'bp1', type: 'pawn', color: 'black', position: 'a7', hasMoved: false },
+                { id: 'bp2', type: 'pawn', color: 'black', position: 'b7', hasMoved: false },
+                { id: 'bp3', type: 'pawn', color: 'black', position: 'c7', hasMoved: false },
+                { id: 'bp4', type: 'pawn', color: 'black', position: 'd7', hasMoved: false },
+                { id: 'bp5', type: 'pawn', color: 'black', position: 'e7', hasMoved: false },
+                { id: 'bp6', type: 'pawn', color: 'black', position: 'f7', hasMoved: false },
+                { id: 'bp7', type: 'pawn', color: 'black', position: 'g7', hasMoved: false },
+                { id: 'bp8', type: 'pawn', color: 'black', position: 'h8', hasMoved: false },
+            ];
+        }
+
+        // Obter peça em uma posição
+        function getPieceAt(position) {
+            return pieces.find(piece => piece.position === position) || null;
+        }
+
+        // Obter símbolo da peça
+        function getPieceSymbol(piece) {
+            const symbols = {
+                'white-king': '♔', 'white-queen': '♕', 'white-rook': '♖',
+                'white-bishop': '♗', 'white-knight': '♘', 'white-pawn': '♙',
+                'black-king': '♚', 'black-queen': '♛', 'black-rook': '♜',
+                'black-bishop': '♝', 'black-knight': '♞', 'black-pawn': '♟'
+            };
+            return symbols[`${piece.color}-${piece.type}`] || '?';
+        }
+
+        // Verificar se o movimento é válido
+        function isValidMove(piece, from, to) {
+            const fromFile = from.charCodeAt(0);
+            const fromRank = parseInt(from[1]);
+            const toFile = to.charCodeAt(0);
+            const toRank = parseInt(to[1]);
+            
+            const fileDiff = Math.abs(toFile - fromFile);
+            const rankDiff = Math.abs(toRank - fromRank);
+            
+            const targetPiece = getPieceAt(to);
+            if (targetPiece && targetPiece.color === piece.color) return false;
+
+            switch (piece.type) {
+                case 'pawn':
+                    const direction = piece.color === 'white' ? 1 : -1;
+                    const startRank = piece.color === 'white' ? 2 : 7;
+                    
+                    // Movimento normal
+                    if (fileDiff === 0 && toRank === fromRank + direction && !targetPiece) return true;
+                    
+                    // Primeiro movimento (2 casas)
+                    if (fileDiff === 0 && fromRank === startRank && toRank === fromRank + 2 * direction && 
+                        !targetPiece && !getPieceAt(String.fromCharCode(fromFile) + (fromRank + direction))) return true;
+                    
+                    // Captura diagonal
+                    if (fileDiff === 1 && rankDiff === 1 && targetPiece) return true;
+                    return false;
+
+                case 'rook':
+                    return (fileDiff === 0 || rankDiff === 0) && !isPathBlocked(from, to);
+
+                case 'knight':
+                    return (fileDiff === 2 && rankDiff === 1) || (fileDiff === 1 && rankDiff === 2);
+
+                case 'bishop':
+                    return fileDiff === rankDiff && !isPathBlocked(from, to);
+
+                case 'queen':
+                    return ((fileDiff === 0 || rankDiff === 0) || (fileDiff === rankDiff)) && !isPathBlocked(from, to);
+
+                case 'king':
+                    return fileDiff <= 1 && rankDiff <= 1;
+
+                default:
+                    return false;
+            }
+        }
+
+        // Verificar se o caminho está bloqueado
+        function isPathBlocked(from, to) {
+            const fromFile = from.charCodeAt(0);
+            const fromRank = parseInt(from[1]);
+            const toFile = to.charCodeAt(0);
+            const toRank = parseInt(to[1]);
+            
+            const fileStep = fromFile === toFile ? 0 : (toFile - fromFile) / Math.abs(toFile - fromFile);
+            const rankStep = fromRank === toRank ? 0 : (toRank - fromRank) / Math.abs(toRank - fromRank);
+            
+            let currentFile = fromFile + fileStep;
+            let currentRank = fromRank + rankStep;
+            
+            while (currentFile !== toFile || currentRank !== toRank) {
+                const currentPos = String.fromCharCode(currentFile) + currentRank;
+                if (getPieceAt(currentPos)) return true;
+                currentFile += fileStep;
+                currentRank += rankStep;
+            }
+            
+            return false;
+        }
+
+        // Manipular clique na casa
+        function handleSquareClick(position) {
+            const piece = getPieceAt(position);
+            
+            if (selectedPiece) {
+                const selectedPieceObj = pieces.find(p => p.id === selectedPiece);
+                if (selectedPieceObj && isValidMove(selectedPieceObj, selectedPieceObj.position, position)) {
+                    // Executar movimento
+                    pieces = pieces.map(p => {
+                        if (p.id === selectedPiece) {
+                            return { ...p, position, hasMoved: true };
+                        }
+                        if (p.position === position) {
+                            return { ...p, position: 'captured' };
+                        }
+                        return p;
+                    }).filter(p => p.position !== 'captured');
+                    
+                    lastMove = `${selectedPieceObj.position} → ${position}`;
+                    moveCount++;
+                    currentTurn = currentTurn === 'white' ? 'black' : 'white';
+                    selectedPiece = null;
+                    
+                    // Atualizar interface
+                    updateDisplay();
+                    renderBoard();
+                    
+                    console.log(`🎯 Movimento executado: ${selectedPieceObj.type} ${selectedPieceObj.color} ${selectedPieceObj.position} → ${position}`);
+                } else {
+                    selectedPiece = null;
+                    renderBoard();
+                }
+            } else if (piece && piece.color === currentTurn) {
+                selectedPiece = piece.id;
+                renderBoard();
+                console.log(`🎯 Peça selecionada: ${piece.type} ${piece.color} em ${position}`);
+            }
+        }
+
+        // Resetar jogo
+        function resetGame() {
+            initializePieces();
+            selectedPiece = null;
+            currentTurn = 'white';
+            gameState = 'playing';
+            moveCount = 0;
+            lastMove = null;
+            updateDisplay();
+            renderBoard();
+            console.log('🔄 Jogo resetado!');
+        }
+
+        // Atualizar display
+        function updateDisplay() {
+            document.getElementById('turn-display').textContent = currentTurn === 'white' ? '♔ Brancas' : '♚ Pretas';
+            document.getElementById('move-count').textContent = moveCount;
+            document.getElementById('game-state').textContent = gameState;
+            
+            if (lastMove) {
+                document.getElementById('last-move').classList.remove('hidden');
+                document.getElementById('last-move-text').textContent = lastMove;
+            } else {
+                document.getElementById('last-move').classList.add('hidden');
+            }
+        }
+
+        // Renderizar tabuleiro
+        function renderBoard() {
+            const board = document.getElementById('chess-board');
+            board.innerHTML = '';
+            
+            const files = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
+            const ranks = [8, 7, 6, 5, 4, 3, 2, 1];
+            
+            ranks.forEach(rank => {
+                files.forEach(file => {
+                    const position = file + rank;
+                    const piece = getPieceAt(position);
+                    const isSelected = selectedPiece && pieces.find(p => p.id === selectedPiece)?.position === position;
+                    const isLightSquare = (files.indexOf(file) + rank) % 2 === 0;
+                    
+                    const square = document.createElement('div');
+                    square.className = `
+                        relative w-full h-full flex items-center justify-center cursor-pointer
+                        transition-all duration-300 ease-out transform
+                        ${isLightSquare ? 'bg-amber-100' : 'bg-amber-800'}
+                        ${isSelected ? 'ring-4 ring-blue-500 ring-opacity-80 scale-110 z-10' : ''}
+                        hover:scale-105 hover:shadow-lg
+                    `;
+                    square.onclick = () => handleSquareClick(position);
+                    
+                    if (piece) {
+                        const pieceDiv = document.createElement('div');
+                        pieceDiv.className = `
+                            text-4xl md:text-5xl lg:text-6xl font-bold select-none
+                            transition-all duration-300 ease-out
+                            ${piece.color === 'white' ? 'text-white drop-shadow-lg' : 'text-gray-900 drop-shadow-lg'}
+                            ${isSelected ? 'animate-pulse' : ''}
+                        `;
+                        pieceDiv.style.textShadow = piece.color === 'white' 
+                            ? '2px 2px 4px rgba(0,0,0,0.8)' 
+                            : '2px 2px 4px rgba(255,255,255,0.8)';
+                        pieceDiv.textContent = getPieceSymbol(piece);
+                        square.appendChild(pieceDiv);
+                    }
+                    
+                    // Coordenadas
+                    const coords = document.createElement('div');
+                    coords.className = 'absolute bottom-1 right-1 text-xs font-mono text-gray-600 opacity-60';
+                    coords.textContent = position;
+                    square.appendChild(coords);
+                    
+                    board.appendChild(square);
+                });
+            });
+        }
+
+        // Event listeners
+        document.getElementById('reset-btn').onclick = resetGame;
+        document.getElementById('debug-btn').onclick = () => {
+            console.log('🎯 Estado atual:', { pieces, currentTurn, gameState, moveCount });
+        };
+
+        // Inicializar
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('🚀 Revolution Chess Board carregado!');
+            initializePieces();
+            updateDisplay();
+            renderBoard();
+        });
+    </script>
+</body>
+</html>

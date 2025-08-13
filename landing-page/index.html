@@ -2063,6 +2063,17 @@
             }
           });
         }
+        
+        // Handler para o botão Jogar Agora da navegação
+        const navPlay = document.getElementById('nav-play');
+        if (navPlay) {
+          navPlay.addEventListener('click', function () {
+            // Reutilizar a mesma lógica do botão principal
+            if (ctaPlay) {
+              ctaPlay.click();
+            }
+          });
+        }
 
       // Inicializa o tabuleiro Hero e engine
       // IMPORTANTE: Resetar o jogo primeiro para garantir posição inicial
