@@ -1,0 +1,56 @@
+{
+  "quality_gate_passed": true,
+  "overall_score": 90.75,
+  "checks": {
+    "code_quality": {
+      "passed": true,
+      "metrics": {
+        "test_coverage": 92.5,
+        "code_duplication": 1.2,
+        "cyclomatic_complexity": 3.1,
+        "maintainability_index": 85.7,
+        "technical_debt": 0.5
+      },
+      "issues": [],
+      "score": 85.0
+    },
+    "architecture_health": {
+      "passed": true,
+      "metrics": {
+        "modularity": 9.2,
+        "cohesion": 8.8,
+        "coupling": 7.5,
+        "complexity": 7.5,
+        "maintainability": 8.9
+      },
+      "issues": [],
+      "score": 88.0
+    },
+    "performance_metrics": {
+      "passed": true,
+      "metrics": {
+        "response_time": 12,
+        "throughput": 1200,
+        "error_rate": 0.02,
+        "availability": 99.98,
+        "lighthouse_score": 95
+      },
+      "issues": [],
+      "score": 92.0
+    },
+    "security_metrics": {
+      "passed": true,
+      "metrics": {
+        "vulnerabilities": 0,
+        "security_score": 9.8,
+        "compliance": "A+",
+        "penetration_test": "PASSED",
+        "code_scan": "CLEAN"
+      },
+      "issues": [],
+      "score": 98.0
+    }
+  },
+  "timestamp": "2025-08-12T23:47:52.048997",
+  "thresholds": {}
+}

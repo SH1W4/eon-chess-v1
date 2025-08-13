@@ -204,6 +204,45 @@
         border-radius: 0.5rem;
         overflow: hidden;
       }
+      
+      /* Chess move highlights */
+      .highlight-move {
+        position: relative;
+      }
+      
+      .highlight-move::before {
+        content: '';
+        position: absolute;
+        inset: 30%;
+        background: rgba(59, 130, 246, 0.5);
+        border-radius: 50%;
+        pointer-events: none;
+      }
+      
+      .highlight-capture {
+        position: relative;
+      }
+      
+      .highlight-capture::before {
+        content: '';
+        position: absolute;
+        inset: 10%;
+        border: 3px solid rgba(239, 68, 68, 0.7);
+        border-radius: 50%;
+        pointer-events: none;
+      }
+      
+      .highlight-selected {
+        position: relative;
+      }
+      
+      .highlight-selected::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: rgba(212, 175, 55, 0.3);
+        pointer-events: none;
+      }
     </style>
   
         <style>
@@ -325,7 +364,7 @@
             <a href="#planos" style="color: var(--text-secondary);" class="hover:text-blue-400 transition-colors">
               Planos
             </a>
-            <button class="btn-primary">
+            <button id="nav-play" class="btn-primary">
               <i class="fas fa-play mr-2"></i>
               Jogar Agora
             </button>
@@ -1753,11 +1792,117 @@
           };
         }
 
+        // Variáveis para controle de destaque de movimentos
+        let selectedSquare = null;
+        let highlightedMoves = [];
+        
+        // Função para limpar destaques
+        function clearHighlights() {
+          highlightedMoves.forEach(square => {
+            const element = board.querySelector(`[square="${square}"]`);
+            if (element) {
+              element.classList.remove('highlight-move', 'highlight-capture');
+            }
+          });
+          highlightedMoves = [];
+          if (selectedSquare) {
+            const element = board.querySelector(`[square="${selectedSquare}"]`);
+            if (element) {
+              element.classList.remove('highlight-selected');
+            }
+            selectedSquare = null;
+          }
+        }
+        
+        // Função para destacar movimentos possíveis
+        function highlightPossibleMoves(square) {
+          clearHighlights();
+          
+          // Destacar quadrado selecionado
+          selectedSquare = square;
+          const selectedElement = board.querySelector(`[square="${square}"]`);
+          if (selectedElement) {
+            selectedElement.classList.add('highlight-selected');
+          }
+          
+          // Obter movimentos possíveis
+          const moves = game.moves({ square: square, verbose: true });
+          
+          moves.forEach(move => {
+            const targetElement = board.querySelector(`[square="${move.to}"]`);
+            if (targetElement) {
+              highlightedMoves.push(move.to);
+              if (move.captured) {
+                targetElement.classList.add('highlight-capture');
+              } else {
+                targetElement.classList.add('highlight-move');
+              }
+            }
+          });
+        }
+        
+        // Click handler para selecionar peças
+        board.addEventListener('click', function (e) {
+          const square = e.target.getAttribute('square');
+          if (!square) return;
+          
+          const piece = game.get(square);
+          const turn = game.turn();
+          
+          // Se clicou em uma peça do jogador da vez
+          if (piece && piece.color === turn) {
+            // Se é a vez do humano no modo vs IA
+            if (humanVsAI && turn === 'w') {
+              highlightPossibleMoves(square);
+            }
+            // Se não está em modo vs IA (modo demo ou exploração)
+            else if (!humanVsAI) {
+              highlightPossibleMoves(square);
+            }
+          }
+          // Se clicou em um quadrado destacado (movimento possível)
+          else if (selectedSquare && highlightedMoves.includes(square)) {
+            // Executar o movimento
+            const move = game.move({ from: selectedSquare, to: square, promotion: 'q' });
+            if (move) {
+              clearHighlights();
+              
+              // Analisar movimento do jogador (somente em modo demonstrativo)
+              if (humanVsAI) {
+                analyzePlayerMove(move, game.fen(), game.fen());
+              }
+              
+              setTimeout(() => {
+                syncBoard();
+                updateStatus();
+                if (humanVsAI && !game.game_over()) {
+                  // Resposta da IA após pequeno delay
+                  setTimeout(() => {
+                    aiMoveWithNarration();
+                  }, 400);
+                } else if (game.game_over() && humanVsAI && movesAnalyzed >= 8) {
+                  // Gerar recomendação final após partida demonstrativa
+                  setTimeout(() => {
+                    const recommendation = generateAIRecommendation();
+                    showIntelligentRecommendation(recommendation);
+                  }, 2000);
+                }
+              }, 100);
+            }
+          }
+          // Se clicou em outro lugar, limpar destaques
+          else {
+            clearHighlights();
+          }
+        });
+        
         // Drop handler correto para chessboard-element
         board.addEventListener('drop', function (e) {
           const detail = e.detail || {};
           const from = detail.source;
           const to = detail.target;
+          
+          clearHighlights(); // Limpar destaques ao arrastar
           
           // Validar movimento com chess.js
           try {
@@ -1920,8 +2065,11 @@
         }
 
       // Inicializa o tabuleiro Hero e engine
+      // IMPORTANTE: Resetar o jogo primeiro para garantir posição inicial
+      game.reset();
       syncBoard();
       updateStatus();
+      setNarration('Clique em uma peça para ver os movimentos possíveis, ou clique em "Jogar Agora" para jogar contra a IA.');
       initEngine();
     });
     

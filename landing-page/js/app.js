@@ -239,5 +239,17 @@ document.addEventListener('alpine:init', () => {
         // Inicializar funcionalidades de xadrez
         document.addEventListener('DOMContentLoaded', () => {
             new ChessFeatures();
+            
+            // Adicionar handler para o botão Jogar Agora da navegação
+            const navPlayBtn = document.getElementById('nav-play');
+            if (navPlayBtn) {
+                navPlayBtn.addEventListener('click', function() {
+                    // Reutilizar a mesma lógica do botão principal
+                    const ctaPlay = document.getElementById('cta-play');
+                    if (ctaPlay) {
+                        ctaPlay.click();
+                    }
+                });
+            }
         });
         

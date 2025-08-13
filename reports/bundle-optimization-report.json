@@ -1,9 +1,9 @@
 {
   "currentBundle": {
-    "totalSize": 826,
-    "chunkCount": 11,
-    "largestChunk": 246,
-    "analysisDate": "2025-08-13T00:23:09.285Z"
+    "totalSize": 1240,
+    "chunkCount": 14,
+    "largestChunk": 118,
+    "analysisDate": "2025-08-13T01:36:27.570Z"
   },
   "codeSplitting": {
     "status": "implemented",
@@ -97,7 +97,7 @@
   },
   "summary": {
     "totalOptimizations": 7,
-    "timestamp": "2025-08-13T00:23:09.294Z",
+    "timestamp": "2025-08-13T01:36:27.574Z",
     "status": "completed"
   }
 }

@@ -2,7 +2,7 @@
 
 ## 📋 Resumo Executivo
 
-**Data:** 2025-08-13T00:23:09.294Z  
+**Data:** 2025-08-13T01:36:27.574Z  
 **Status:** completed  
 **Total de Otimizações:** 7  
 
@@ -62,10 +62,10 @@
 ## 📈 Bundle Atual
 
 
-- **Tamanho Total:** 826 KB
-- **Número de Chunks:** 11
-- **Maior Chunk:** 246 KB
-- **Data da Análise:** 2025-08-13T00:23:09.285Z
+- **Tamanho Total:** 1240 KB
+- **Número de Chunks:** 14
+- **Maior Chunk:** 118 KB
+- **Data da Análise:** 2025-08-13T01:36:27.570Z
 
 
 ## 🔍 Próximos Passos
