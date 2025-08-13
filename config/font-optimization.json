@@ -1,0 +1,18 @@
+{
+  "preload": true,
+  "display": "swap",
+  "fallback": "system-ui",
+  "subsets": [
+    "latin",
+    "latin-ext"
+  ],
+  "formats": [
+    "woff2",
+    "woff"
+  ],
+  "optimization": {
+    "removeUnused": true,
+    "subset": true,
+    "hinting": false
+  }
+}

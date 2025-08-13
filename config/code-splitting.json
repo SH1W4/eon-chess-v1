@@ -1,0 +1,45 @@
+{
+  "strategy": "dynamic-imports",
+  "chunks": {
+    "vendor": [
+      "react",
+      "react-dom",
+      "next"
+    ],
+    "utils": [
+      "lodash",
+      "date-fns",
+      "axios"
+    ],
+    "components": [
+      "@/components"
+    ],
+    "pages": [
+      "@/pages"
+    ],
+    "hooks": [
+      "@/hooks"
+    ]
+  },
+  "optimization": {
+    "splitChunks": {
+      "chunks": "all",
+      "minSize": 20000,
+      "maxSize": 244000,
+      "cacheGroups": {
+        "vendor": {
+          "test": {},
+          "name": "vendors",
+          "priority": 10,
+          "chunks": "all"
+        },
+        "common": {
+          "name": "common",
+          "minChunks": 2,
+          "priority": 5,
+          "reuseExistingChunk": true
+        }
+      }
+    }
+  }
+}

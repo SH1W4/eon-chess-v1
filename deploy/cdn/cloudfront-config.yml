@@ -2,7 +2,7 @@
 # This configuration optimizes content delivery globally
 
 AWSTemplateFormatVersion: '2010-09-09'
-Description: 'CloudFront CDN Distribution for Aeon Chess'
+Description: 'CloudFront CDN Configuration for AEON Chess'
 
 Parameters:
   DomainName:
@@ -17,7 +17,7 @@ Parameters:
   OriginDomainName:
     Type: String
     Default: 'aeonchess.com'
-    Description: 'Origin domain for the distribution'
+    Description: 'Origin domain name for the application'
 
 Resources:
   # CloudFront Distribution
@@ -25,9 +25,9 @@ Resources:
     Type: AWS::CloudFront::Distribution
     Properties:
       DistributionConfig:
-        Comment: 'Aeon Chess CDN Distribution'
+        Comment: 'AEON Chess CDN Distribution'
         Enabled: true
-        DefaultRootObject: 'index.html'
+        DefaultRootObject: index.html
         
         # Origins
         Origins:
@@ -37,29 +37,20 @@ Resources:
               HTTPPort: 80
               HTTPSPort: 443
               OriginProtocolPolicy: 'https-only'
-              OriginSSLProtocols: ['TLSv1.2', 'TLSv1.3']
-            CustomHeaders:
-              - HeaderName: 'X-Origin-Environment'
-                HeaderValue: 'production'
+              OriginSSLProtocols: ['TLSv1.2']
           
           - Id: 'APIOrigin'
-            DomainName: 'api.aeonchess.com'
+            DomainName: !Sub 'api.${DomainName}'
             CustomOriginConfig:
               HTTPPort: 80
               HTTPSPort: 443
               OriginProtocolPolicy: 'https-only'
-              OriginSSLProtocols: ['TLSv1.2', 'TLSv1.3']
-            CustomHeaders:
-              - HeaderName: 'X-Origin-Environment'
-                HeaderValue: 'production'
+              OriginSSLProtocols: ['TLSv1.2']
           
           - Id: 'StaticAssetsOrigin'
-            DomainName: 'static.aeonchess.com'
+            DomainName: !Sub 'static.${DomainName}'
             S3OriginConfig:
               OriginAccessIdentity: !Ref CloudFrontOriginAccessIdentity
-            CustomHeaders:
-              - HeaderName: 'X-Origin-Environment'
-                HeaderValue: 'production'
         
         # Default Cache Behavior
         DefaultCacheBehavior:
@@ -69,132 +60,116 @@ Resources:
           CachedMethods: ['GET', 'HEAD']
           Compress: true
           
-          # Cache Policy
-          CachePolicyId: '4135ea2d-6df8-44a3-9df3-4b5a84be39ad' # Managed-CachingOptimized
+          # Cache Settings
+          MinTTL: 0
+          DefaultTTL: 86400  # 24 hours
+          MaxTTL: 31536000   # 1 year
           
-          # Origin Request Policy
-          OriginRequestPolicyId: 'b689b0a8-53d0-40ab-baf2-68738e2966ac' # Managed-CORS-S3Origin
-          
-          # Response Headers Policy
-          ResponseHeadersPolicyId: '67f7725c-6f97-4210-82d7-5512b31e9d03' # Managed-SecurityHeadersPolicy
+          # Headers to cache
+          ForwardedValues:
+            QueryString: false
+            Cookies:
+              Forward: 'none'
+            Headers:
+              - 'Accept'
+              - 'Accept-Language'
+              - 'Accept-Encoding'
+              - 'User-Agent'
+              - 'Referer'
         
-        # Cache Behaviors for Different Content Types
+        # API Cache Behavior
         CacheBehaviors:
-          # API Routes
           - PathPattern: '/api/*'
             TargetOriginId: 'APIOrigin'
             ViewerProtocolPolicy: 'redirect-to-https'
-            AllowedMethods: ['GET', 'POST', 'PUT', 'DELETE', 'HEAD', 'OPTIONS']
+            AllowedMethods: ['GET', 'HEAD', 'POST', 'PUT', 'DELETE', 'OPTIONS']
             CachedMethods: ['GET', 'HEAD']
             Compress: true
-            CachePolicyId: '4135ea2d-6df8-44a3-9df3-4b5a84be39ad'
-            OriginRequestPolicyId: 'b689b0a8-53d0-40ab-baf2-68738e2966ac'
-            ResponseHeadersPolicyId: '67f7725c-6f97-4210-82d7-5512b31e9d03'
+            
+            # API specific cache settings
+            MinTTL: 0
+            DefaultTTL: 300    # 5 minutes
+            MaxTTL: 3600       # 1 hour
+            
+            ForwardedValues:
+              QueryString: true
+              Cookies:
+                Forward: 'all'
+              Headers:
+                - 'Authorization'
+                - 'Content-Type'
+                - 'Accept'
+                - 'User-Agent'
           
-          # Static Assets
-          - PathPattern: '/static/*'
+          - PathPattern: '/_next/*'
             TargetOriginId: 'StaticAssetsOrigin'
             ViewerProtocolPolicy: 'redirect-to-https'
             AllowedMethods: ['GET', 'HEAD', 'OPTIONS']
             CachedMethods: ['GET', 'HEAD']
             Compress: true
-            CachePolicyId: '658327ea-f89d-4fab-a63d-7e886ee39dcf' # Managed-CachingDisabled
-            OriginRequestPolicyId: 'b689b0a8-53d0-40ab-baf2-68738e2966ac'
-            ResponseHeadersPolicyId: '67f7725c-6f97-4210-82d7-5512b31e9d03'
-          
-          # Images
-          - PathPattern: '/images/*'
-            TargetOriginId: 'StaticAssetsOrigin'
-            ViewerProtocolPolicy: 'redirect-to-https'
-            AllowedMethods: ['GET', 'HEAD', 'OPTIONS']
-            CachedMethods: ['GET', 'HEAD']
-            Compress: true
-            CachePolicyId: '4135ea2d-6df8-44a3-9df3-4b5a84be39ad'
-            OriginRequestPolicyId: 'b689b0a8-53d0-40ab-baf2-68738e2966ac'
-            ResponseHeadersPolicyId: '67f7725c-6f97-4210-82d7-5512b31e9d03'
-          
-          # JavaScript and CSS
-          - PathPattern: '/*.js'
-            TargetOriginId: 'StaticAssetsOrigin'
-            ViewerProtocolPolicy: 'redirect-to-https'
-            AllowedMethods: ['GET', 'HEAD', 'OPTIONS']
-            CachedMethods: ['GET', 'HEAD']
-            Compress: true
-            CachePolicyId: '4135ea2d-6df8-44a3-9df3-4b5a84be39ad'
-            OriginRequestPolicyId: 'b689b0a8-53d0-40ab-baf2-68738e2966ac'
-            ResponseHeadersPolicyId: '67f7725c-6f97-4210-82d7-5512b31e9d03'
-          
-          - PathPattern: '/*.css'
-            TargetOriginId: 'StaticAssetsOrigin'
-            ViewerProtocolPolicy: 'redirect-to-https'
-            AllowedMethods: ['GET', 'HEAD', 'OPTIONS']
-            CachedMethods: ['GET', 'HEAD']
-            Compress: true
-            CachePolicyId: '4135ea2d-6df8-44a3-9df3-4b5a84be39ad'
-            OriginRequestPolicyId: 'b689b0a8-53d0-40ab-baf2-68738e2966ac'
-            ResponseHeadersPolicyId: '67f7725c-6f97-4210-82d7-5512b31e9d03'
+            
+            # Static assets cache settings
+            MinTTL: 0
+            DefaultTTL: 31536000  # 1 year
+            MaxTTL: 31536000      # 1 year
+            
+            ForwardedValues:
+              QueryString: false
+              Cookies:
+                Forward: 'none'
+              Headers:
+                - 'Accept'
+                - 'Accept-Language'
+                - 'Accept-Encoding'
+                - 'User-Agent'
         
-        # Aliases
-        Aliases:
-          - !Ref DomainName
-          - "www.${DomainName}"
-          - "api.${DomainName}"
-          - "static.${DomainName}"
+        # Custom Error Responses
+        CustomErrorResponses:
+          - ErrorCode: 404
+            ResponseCode: '200'
+            ResponsePagePath: '/index.html'
+            ErrorCachingMinTTL: 300
+          
+          - ErrorCode: 403
+            ResponseCode: '200'
+            ResponsePagePath: '/index.html'
+            ErrorCachingMinTTL: 300
         
-        # SSL Certificate
+        # SSL Configuration
         ViewerCertificate:
           AcmCertificateArn: !Ref CertificateArn
           SslSupportMethod: 'sni-only'
           MinimumProtocolVersion: 'TLSv1.2_2021'
         
-        # Error Pages
-        CustomErrorResponses:
-          - ErrorCode: 403
-            ResponseCode: '200'
-            ResponsePagePath: '/index.html'
-            ErrorCachingMinTTL: 300
-          - ErrorCode: 404
-            ResponseCode: '200'
-            ResponsePagePath: '/index.html'
-            ErrorCachingMinTTL: 300
-        
         # Price Class
-        PriceClass: 'PriceClass_100' # Use only North America and Europe
+        PriceClass: 'PriceClass_100'  # Use only North America and Europe
         
         # Logging
         Logging:
-          Bucket: !Sub '${DomainName}-cloudfront-logs.s3.amazonaws.com'
-          IncludeCookies: false
+          Bucket: !Sub '${DomainName}-logs.s3.amazonaws.com'
           Prefix: 'cloudfront/'
+          IncludeCookies: false
         
-        # Web ACL (Security)
+        # Web ACL
         WebACLId: !Ref CloudFrontWebACL
-        
-        # Default Root Object
-        DefaultRootObject: 'index.html'
-        
-        # HTTP Version
-        HttpVersion: 'http2'
-        
-        # IPV6
-        IPV6Enabled: true
 
   # CloudFront Origin Access Identity
   CloudFrontOriginAccessIdentity:
     Type: AWS::CloudFront::CloudFrontOriginAccessIdentity
     Properties:
       CloudFrontOriginAccessIdentityConfig:
-        Comment: 'OAI for Aeon Chess Static Assets'
+        Comment: 'OAI for AEON Chess S3 bucket access'
 
-  # WAF Web ACL for Security
+  # WAF Web ACL
   CloudFrontWebACL:
     Type: AWS::WAFv2::WebACL
     Properties:
-      Name: 'aeon-chess-web-acl'
-      Description: 'Web ACL for Aeon Chess CloudFront distribution'
+      Name: 'AEON-Chess-WebACL'
+      Description: 'WAF Web ACL for AEON Chess CDN'
       Scope: 'CLOUDFRONT'
       DefaultAction:
         Allow: {}
+      
       Rules:
         # Rate Limiting Rule
         - Name: 'RateLimitRule'
@@ -210,7 +185,7 @@ Resources:
             CloudWatchMetricsEnabled: true
             MetricName: 'RateLimitRule'
         
-        # SQL Injection Rule
+        # SQL Injection Protection
         - Name: 'SQLInjectionRule'
           Priority: 2
           Statement:
@@ -224,7 +199,7 @@ Resources:
             CloudWatchMetricsEnabled: true
             MetricName: 'SQLInjectionRule'
         
-        # XSS Rule
+        # XSS Protection
         - Name: 'XSSRule'
           Priority: 3
           Statement:
@@ -238,8 +213,8 @@ Resources:
             CloudWatchMetricsEnabled: true
             MetricName: 'XSSRule'
         
-        # Bad Bot Rule
-        - Name: 'BadBotRule'
+        # Bot Control
+        - Name: 'BotControlRule'
           Priority: 4
           Statement:
             ManagedRuleGroupStatement:
@@ -250,28 +225,28 @@ Resources:
           VisibilityConfig:
             SampledRequestsEnabled: true
             CloudWatchMetricsEnabled: true
-            MetricName: 'BadBotRule'
+            MetricName: 'BotControlRule'
       
       VisibilityConfig:
         SampledRequestsEnabled: true
         CloudWatchMetricsEnabled: true
-        MetricName: 'AeonChessWebACL'
+        MetricName: 'AEONChessWebACL'
 
 Outputs:
-  CloudFrontDistributionId:
+  DistributionId:
     Description: 'CloudFront Distribution ID'
     Value: !Ref CloudFrontDistribution
     Export:
       Name: !Sub '${AWS::StackName}-DistributionId'
   
-  CloudFrontDomainName:
+  DistributionDomainName:
     Description: 'CloudFront Distribution Domain Name'
     Value: !GetAtt CloudFrontDistribution.DomainName
     Export:
-      Name: !Sub '${AWS::StackName}-DomainName'
+      Name: !Sub '${AWS::StackName}-DistributionDomainName'
   
-  CloudFrontOriginAccessIdentity:
+  OriginAccessIdentity:
     Description: 'CloudFront Origin Access Identity'
     Value: !Ref CloudFrontOriginAccessIdentity
     Export:
-      Name: !Sub '${AWS::StackName}-OAI'
+      Name: !Sub '${AWS::StackName}-OriginAccessIdentity'

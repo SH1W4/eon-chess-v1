@@ -2,7 +2,7 @@
 # This configuration provides multi-region failover and global load balancing
 
 AWSTemplateFormatVersion: '2010-09-09'
-Description: 'Route 53 Global DNS Configuration for Aeon Chess Multi-Region'
+Description: 'Route 53 DNS Configuration for AEON Chess Multi-Region'
 
 Parameters:
   DomainName:
@@ -20,10 +20,17 @@ Parameters:
     Default: 'eu-west-1'
     Description: 'Secondary region for failover'
   
-  HealthCheckPath:
+  CloudFrontDistributionId:
     Type: String
-    Default: '/health'
-    Description: 'Health check path for the application'
+    Description: 'CloudFront Distribution ID from CDN stack'
+  
+  LoadBalancerDNSName:
+    Type: String
+    Description: 'Primary region load balancer DNS name'
+  
+  SecondaryLoadBalancerDNSName:
+    Type: String
+    Description: 'Secondary region load balancer DNS name'
 
 Resources:
   # Hosted Zone (if not exists)
@@ -32,75 +39,39 @@ Resources:
     Properties:
       Name: !Ref DomainName
       HostedZoneConfig:
-        Comment: 'Aeon Chess Global DNS Zone'
+        Comment: 'AEON Chess application hosted zone'
   
-  # Health Check for Primary Region
-  PrimaryHealthCheck:
-    Type: AWS::Route53::HealthCheck
+  # SSL Certificate
+  SSLCertificate:
+    Type: AWS::CertificateManager::Certificate
     Properties:
-      HealthCheckConfig:
-        Type: 'HTTP'
-        Port: 443
-        ResourcePath: !Ref HealthCheckPath
-        FullyQualifiedDomainName: !Sub '${DomainName}'
-        RequestInterval: 30
-        FailureThreshold: 3
-        MeasureLatency: true
-        Regions:
-          - 'us-east-1'
-          - 'us-west-2'
-          - 'eu-west-1'
-          - 'ap-southeast-1'
+      DomainName: !Ref DomainName
+      SubjectAlternativeNames:
+        - !Sub '*.${DomainName}'
+        - !Sub 'www.${DomainName}'
+        - !Sub 'api.${DomainName}'
+        - !Sub 'static.${DomainName}'
+        - !Sub 'cdn.${DomainName}'
+      ValidationMethod: DNS
+      DomainValidationOptions:
+        - DomainName: !Ref DomainName
+          HostedZoneId: !Ref HostedZone
+        - DomainName: !Sub '*.${DomainName}'
+          HostedZoneId: !Ref HostedZone
   
-  # Health Check for Secondary Region
-  SecondaryHealthCheck:
-    Type: AWS::Route53::HealthCheck
-    Properties:
-      HealthCheckConfig:
-        Type: 'HTTP'
-        Port: 443
-        ResourcePath: !Ref HealthCheckPath
-        FullyQualifiedDomainName: !Sub 'api.${DomainName}'
-        RequestInterval: 30
-        FailureThreshold: 3
-        MeasureLatency: true
-        Regions:
-          - 'us-east-1'
-          - 'us-west-2'
-          - 'eu-west-1'
-          - 'ap-southeast-1'
-  
-  # Primary A Record
-  PrimaryARecord:
+  # Main A Record (CloudFront)
+  MainARecord:
     Type: AWS::Route53::RecordSet
     Properties:
       HostedZoneId: !Ref HostedZone
       Name: !Ref DomainName
       Type: A
       AliasTarget:
-        DNSName: !Sub 'd1234567890.cloudfront.net' # Replace with actual CloudFront distribution
-        HostedZoneId: 'Z2FDTNDATAQYW2' # CloudFront hosted zone ID
-        EvaluateTargetHealth: true
-      HealthCheckId: !Ref PrimaryHealthCheck
-      Failover: PRIMARY
-      SetIdentifier: 'primary'
+        DNSName: !Sub '${CloudFrontDistributionId}.cloudfront.net'
+        HostedZoneId: Z2FDTNDATAQYW2  # CloudFront hosted zone ID
+        EvaluateTargetHealth: false
   
-  # Secondary A Record (Failover)
-  SecondaryARecord:
-    Type: AWS::Route53::RecordSet
-    Properties:
-      HostedZoneId: !Ref HostedZone
-      Name: !Ref DomainName
-      Type: A
-      AliasTarget:
-        DNSName: !Sub 'd9876543210.cloudfront.net' # Replace with secondary CloudFront distribution
-        HostedZoneId: 'Z2FDTNDATAQYW2' # CloudFront hosted zone ID
-        EvaluateTargetHealth: true
-      HealthCheckId: !Ref SecondaryHealthCheck
-      Failover: SECONDARY
-      SetIdentifier: 'secondary'
-  
-  # WWW CNAME Record
+  # www CNAME Record
   WWWCNameRecord:
     Type: AWS::Route53::RecordSet
     Properties:
@@ -112,40 +83,40 @@ Resources:
         - !Ref DomainName
   
   # API Subdomain
-  APIRecord:
+  APISubdomainRecord:
     Type: AWS::Route53::RecordSet
     Properties:
       HostedZoneId: !Ref HostedZone
       Name: !Sub 'api.${DomainName}'
       Type: A
       AliasTarget:
-        DNSName: !Sub 'api-${DomainName}.elb.amazonaws.com' # Replace with actual ALB
-        HostedZoneId: 'Z35SXDOTRQ7X7K' # ALB hosted zone ID
+        DNSName: !Ref LoadBalancerDNSName
+        HostedZoneId: !GetAtt LoadBalancer.CanonicalHostedZoneID
         EvaluateTargetHealth: true
   
   # Static Assets Subdomain
-  StaticRecord:
+  StaticSubdomainRecord:
     Type: AWS::Route53::RecordSet
     Properties:
       HostedZoneId: !Ref HostedZone
       Name: !Sub 'static.${DomainName}'
       Type: A
       AliasTarget:
-        DNSName: !Sub 'static-${DomainName}.s3.amazonaws.com' # Replace with actual S3 bucket
-        HostedZoneId: 'Z3AQBSTGFYJSTF' # S3 hosted zone ID
-        EvaluateTargetHealth: false
+        DNSName: !Ref LoadBalancerDNSName
+        HostedZoneId: !GetAtt LoadBalancer.CanonicalHostedZoneID
+        EvaluateTargetHealth: true
   
-  # Grafana Subdomain
-  GrafanaRecord:
+  # CDN Subdomain
+  CDNSubdomainRecord:
     Type: AWS::Route53::RecordSet
     Properties:
       HostedZoneId: !Ref HostedZone
-      Name: !Sub 'grafana.${DomainName}'
+      Name: !Sub 'cdn.${DomainName}'
       Type: A
       AliasTarget:
-        DNSName: !Sub 'grafana-${DomainName}.elb.amazonaws.com' # Replace with actual ALB
-        HostedZoneId: 'Z35SXDOTRQ7X7K' # ALB hosted zone ID
-        EvaluateTargetHealth: true
+        DNSName: !Sub '${CloudFrontDistributionId}.cloudfront.net'
+        HostedZoneId: Z2FDTNDATAQYW2
+        EvaluateTargetHealth: false
   
   # MX Record for Email
   MXRecord:
@@ -156,8 +127,8 @@ Resources:
       Type: MX
       TTL: '300'
       ResourceRecords:
-        - '10 mail.aeonchess.com.'
-        - '20 backup-mail.aeonchess.com.'
+        - '10 mail.aeonchess.com'
+        - '20 backup-mail.aeonchess.com'
   
   # TXT Record for SPF
   SPFRecord:
@@ -168,7 +139,7 @@ Resources:
       Type: TXT
       TTL: '300'
       ResourceRecords:
-        - '"v=spf1 include:_spf.google.com include:_spf.aeonchess.com ~all"'
+        - '"v=spf1 include:_spf.aeonchess.com ~all"'
   
   # TXT Record for DMARC
   DMARCRecord:
@@ -194,41 +165,147 @@ Resources:
         - '0 issue "amazontrust.com"'
         - '0 issue "amazonglobal.com"'
   
-  # NS Records for Subdomains
-  NSRecords:
+  # Health Check for Primary Region
+  PrimaryHealthCheck:
+    Type: AWS::Route53::HealthCheck
+    Properties:
+      HealthCheckConfig:
+        Type: HTTP
+        Port: 80
+        ResourcePath: '/health'
+        FullyQualifiedDomainName: !Ref LoadBalancerDNSName
+        RequestInterval: 30
+        FailureThreshold: 3
+        HealthThreshold: 3
+        MeasureLatency: true
+        Inverted: false
+        EnableSNI: false
+        Regions:
+          - us-east-1
+          - us-west-2
+          - eu-west-1
+  
+  # Health Check for Secondary Region
+  SecondaryHealthCheck:
+    Type: AWS::Route53::HealthCheck
+    Properties:
+      HealthCheckConfig:
+        Type: HTTP
+        Port: 80
+        ResourcePath: '/health'
+        FullyQualifiedDomainName: !Ref SecondaryLoadBalancerDNSName
+        RequestInterval: 30
+        FailureThreshold: 3
+        HealthThreshold: 3
+        MeasureLatency: true
+        Inverted: false
+        EnableSNI: false
+        Regions:
+          - us-east-1
+          - us-west-2
+          - eu-west-1
+  
+  # Failover Record Set for Primary Region
+  PrimaryFailoverRecord:
     Type: AWS::Route53::RecordSet
     Properties:
       HostedZoneId: !Ref HostedZone
-      Name: !Sub 'ns1.${DomainName}'
-      Type: NS
-      TTL: '300'
-      ResourceRecords:
-        - !GetAtt HostedZone.NameServers.0
-        - !GetAtt HostedZone.NameServers.1
-        - !GetAtt HostedZone.NameServers.2
-        - !GetAtt HostedZone.NameServers.3
+      Name: !Sub 'app.${DomainName}'
+      Type: A
+      Failover: PRIMARY
+      HealthCheckId: !Ref PrimaryHealthCheck
+      AliasTarget:
+        DNSName: !Ref LoadBalancerDNSName
+        HostedZoneId: !GetAtt LoadBalancer.CanonicalHostedZoneID
+        EvaluateTargetHealth: true
+  
+  # Failover Record Set for Secondary Region
+  SecondaryFailoverRecord:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      HostedZoneId: !Ref HostedZone
+      Name: !Sub 'app.${DomainName}'
+      Type: A
+      Failover: SECONDARY
+      HealthCheckId: !Ref SecondaryHealthCheck
+      AliasTarget:
+        DNSName: !Ref SecondaryLoadBalancerDNSName
+        HostedZoneId: !GetAtt SecondaryLoadBalancer.CanonicalHostedZoneID
+        EvaluateTargetHealth: true
+  
+  # Load Balancer (Primary Region)
+  LoadBalancer:
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+    Properties:
+      Name: !Sub 'aeon-chess-lb-${PrimaryRegion}'
+      Scheme: internet-facing
+      Type: application
+      IpAddressType: dualstack
+      Subnets:
+        - subnet-12345678  # Replace with actual subnet IDs
+        - subnet-87654321
+      SecurityGroups:
+        - sg-12345678  # Replace with actual security group IDs
+      LoadBalancerAttributes:
+        - Key: idle_timeout.timeout_seconds
+          Value: '60'
+        - Key: access_logs.s3.enabled
+          Value: 'true'
+        - Key: access_logs.s3.bucket
+          Value: !Sub '${DomainName}-logs'
+        - Key: access_logs.s3.prefix
+          Value: 'alb/primary'
+  
+  # Secondary Load Balancer (Secondary Region)
+  SecondaryLoadBalancer:
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+    Properties:
+      Name: !Sub 'aeon-chess-lb-${SecondaryRegion}'
+      Scheme: internet-facing
+      Type: application
+      IpAddressType: dualstack
+      Subnets:
+        - subnet-abcdef12  # Replace with actual subnet IDs
+        - subnet-21fedcba
+      SecurityGroups:
+        - sg-87654321  # Replace with actual security group IDs
+      LoadBalancerAttributes:
+        - Key: idle_timeout.timeout_seconds
+          Value: '60'
+        - Key: access_logs.s3.enabled
+          Value: 'true'
+        - Key: access_logs.s3.bucket
+          Value: !Sub '${DomainName}-logs'
+        - Key: access_logs.s3.prefix
+          Value: 'alb/secondary'
 
 Outputs:
   HostedZoneId:
-    Description: 'Hosted Zone ID'
+    Description: 'Route 53 Hosted Zone ID'
     Value: !Ref HostedZone
     Export:
       Name: !Sub '${AWS::StackName}-HostedZoneId'
   
-  NameServers:
-    Description: 'Name Servers for the domain'
-    Value: !Join [',', !GetAtt HostedZone.NameServers]
+  CertificateArn:
+    Description: 'SSL Certificate ARN'
+    Value: !Ref SSLCertificate
     Export:
-      Name: !Sub '${AWS::StackName}-NameServers'
+      Name: !Sub '${AWS::StackName}-CertificateArn'
   
-  PrimaryHealthCheckId:
-    Description: 'Primary Health Check ID'
-    Value: !Ref PrimaryHealthCheck
+  PrimaryLoadBalancerDNS:
+    Description: 'Primary region load balancer DNS name'
+    Value: !GetAtt LoadBalancer.DNSName
     Export:
-      Name: !Sub '${AWS::StackName}-PrimaryHealthCheckId'
+      Name: !Sub '${AWS::StackName}-PrimaryLoadBalancerDNS'
   
-  SecondaryHealthCheckId:
-    Description: 'Secondary Health Check ID'
-    Value: !Ref SecondaryHealthCheck
+  SecondaryLoadBalancerDNS:
+    Description: 'Secondary region load balancer DNS name'
+    Value: !GetAtt SecondaryLoadBalancer.DNSName
     Export:
-      Name: !Sub '${AWS::StackName}-SecondaryHealthCheckId'
+      Name: !Sub '${AWS::StackName}-SecondaryLoadBalancerDNS'
+  
+  DomainName:
+    Description: 'Primary domain name'
+    Value: !Ref DomainName
+    Export:
+      Name: !Sub '${AWS::StackName}-DomainName'

@@ -1,0 +1,19 @@
+{
+  "mode": "production",
+  "optimization": {
+    "usedExports": true,
+    "sideEffects": false,
+    "minimize": true,
+    "minimizer": [
+      "terser-webpack-plugin",
+      "css-minimizer-webpack-plugin"
+    ]
+  },
+  "resolve": {
+    "alias": {
+      "@": "/Users/jx/WORKSPACE/PROJECTS/CHESS/src",
+      "components": "/Users/jx/WORKSPACE/PROJECTS/CHESS/src/components",
+      "utils": "/Users/jx/WORKSPACE/PROJECTS/CHESS/src/utils"
+    }
+  }
+}
