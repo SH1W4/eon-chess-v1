@@ -1,5 +1,0 @@
-NAME                           IMAGE                        COMMAND                  SERVICE              CREATED              STATUS              PORTS
-staging-aeon-chess-backend-1   staging-aeon-chess-backend   "uvicorn src.api.mai…"   aeon-chess-backend   About a minute ago   Up About a minute   0.0.0.0:8000->8000/tcp, [::]:8000->8000/tcp
-staging-grafana-1              grafana/grafana:latest       "/run.sh"                grafana              About a minute ago   Up About a minute   0.0.0.0:3001->3000/tcp, [::]:3001->3000/tcp
-staging-prometheus-1           prom/prometheus:latest       "/bin/prometheus --c…"   prometheus           About a minute ago   Up About a minute   0.0.0.0:9090->9090/tcp, [::]:9090->9090/tcp
-staging-redis-1                redis:7-alpine               "docker-entrypoint.s…"   redis                About a minute ago   Up About a minute   0.0.0.0:6379->6379/tcp, [::]:6379->6379/tcp

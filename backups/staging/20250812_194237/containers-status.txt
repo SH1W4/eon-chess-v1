@@ -1,4 +1,0 @@
-NAME                   IMAGE                    COMMAND                  SERVICE      CREATED          STATUS          PORTS
-staging-grafana-1      grafana/grafana:latest   "/run.sh"                grafana      31 seconds ago   Up 29 seconds   0.0.0.0:3001->3000/tcp, [::]:3001->3000/tcp
-staging-prometheus-1   prom/prometheus:latest   "/bin/prometheus --c…"   prometheus   32 seconds ago   Up 29 seconds   0.0.0.0:9090->9090/tcp, [::]:9090->9090/tcp
-staging-redis-1        redis:7-alpine           "docker-entrypoint.s…"   redis        32 seconds ago   Up 29 seconds   0.0.0.0:6379->6379/tcp, [::]:6379->6379/tcp

@@ -1,9 +1,0 @@
-pytest>=8.4.0
-pytest-asyncio>=1.1.0
-pytest-cov>=6.2.0
-pytest-xdist>=3.5.0  # Para execução paralela
-pytest-benchmark>=4.0.0  # Para benchmarks
-pytest-timeout>=2.2.0  # Para timeout em testes
-coverage>=7.5.0
-selenium>=4.11.2
-webdriver-manager>=4.0.0

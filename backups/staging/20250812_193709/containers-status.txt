@@ -1,2 +1,0 @@
-NAME              IMAGE            COMMAND                  SERVICE   CREATED          STATUS          PORTS
-staging-redis-1   redis:7-alpine   "docker-entrypoint.s…"   redis     38 seconds ago   Up 36 seconds   0.0.0.0:6379->6379/tcp, [::]:6379->6379/tcp
