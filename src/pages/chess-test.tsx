@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
-import UltraChessBoard from '../components/UltraChessBoard';
+import ARKITECTChessBoard from '../components/ARKITECTChessBoard';
 
 const ChessTestPage: React.FC = () => {
   const [debugInfo, setDebugInfo] = useState<string[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [arkitectEnabled, setArkitectEnabled] = useState(true);
 
   useEffect(() => {
     setIsLoaded(true);
-    setDebugInfo(prev => [...prev, 'Página carregada']);
+    setDebugInfo(prev => [...prev, '🧠 Página ARKITECT carregada']);
   }, []);
 
   const addDebugInfo = (info: string) => {
@@ -16,46 +17,68 @@ const ChessTestPage: React.FC = () => {
     setDebugInfo(prev => [...prev, `${new Date().toLocaleTimeString()}: ${info}`]);
   };
 
+  const toggleARKITECT = () => {
+    setArkitectEnabled(prev => !prev);
+    addDebugInfo(`🧠 ARKITECT ${!arkitectEnabled ? 'habilitado' : 'desabilitado'} via controle externo`);
+  };
+
   return (
     <>
       <Head>
-        <title>Teste - Tabuleiro Funcional</title>
-        <meta name="description" content="Teste direto do tabuleiro de xadrez funcional" />
+        <title>Teste ARKITECT - Tabuleiro Inteligente</title>
+        <meta name="description" content="Teste do tabuleiro de xadrez com ARKITECT integrado" />
       </Head>
 
       <div className="min-h-screen bg-gradient-to-br from-emerald-900 to-emerald-700 p-8">
         <div className="max-w-6xl mx-auto">
           <h1 className="text-4xl font-bold text-white mb-8 text-center">
-            🧪 Teste Direto - Tabuleiro Funcional
+            🧠 Teste ARKITECT - Tabuleiro Inteligente
           </h1>
           
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {/* Tabuleiro */}
+            {/* Tabuleiro ARKITECT */}
             <div className="bg-emerald-800/30 backdrop-blur-sm rounded-xl border border-emerald-600/50 p-6">
               <h2 className="text-2xl font-bold text-white mb-4">
-                ♟️ UltraChessBoard - Teste Direto
+                🧠 ARKITECT ChessBoard - Sistema Inteligente
               </h2>
               <p className="text-emerald-100 mb-4">
-                Esta é uma página de teste direta para verificar se o tabuleiro funcional está funcionando.
+                Tabuleiro com análise inteligente em tempo real, conselhos estratégicos e monitoramento de performance.
               </p>
               
               <div className="flex justify-center items-center h-[500px] bg-emerald-800/20 rounded-xl border border-emerald-600/30 p-4">
-                {isLoaded && <UltraChessBoard onDebug={addDebugInfo} />}
+                {isLoaded && <ARKITECTChessBoard onDebug={addDebugInfo} enableARKITECT={arkitectEnabled} />}
               </div>
             </div>
 
             {/* Debug Info */}
             <div className="bg-emerald-800/30 backdrop-blur-sm rounded-xl border border-emerald-600/50 p-6">
               <h3 className="text-xl font-bold text-white mb-4">
-                🐛 Debug Info
+                🐛 Debug Info - ARKITECT
               </h3>
               
-              {/* Teste de clique simples */}
+              {/* Controles ARKITECT */}
               <div className="mb-4 p-4 bg-blue-900/30 rounded-lg">
+                <h4 className="text-lg font-semibold text-white mb-2">🧠 Controles ARKITECT</h4>
+                <button
+                  onClick={toggleARKITECT}
+                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg mr-2"
+                >
+                  {arkitectEnabled ? 'Desabilitar' : 'Habilitar'} ARKITECT
+                </button>
+                <button
+                  onClick={() => addDebugInfo(`Status ARKITECT: ${arkitectEnabled ? 'ATIVO' : 'INATIVO'}`)}
+                  className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg"
+                >
+                  Status
+                </button>
+              </div>
+              
+              {/* Teste de clique simples */}
+              <div className="mb-4 p-4 bg-purple-900/30 rounded-lg">
                 <h4 className="text-lg font-semibold text-white mb-2">🧪 Teste de Clique</h4>
                 <button
                   onClick={() => addDebugInfo('Teste de clique funcionando!')}
-                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg mr-2"
+                  className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg mr-2"
                 >
                   Teste Clique
                 </button>
@@ -68,7 +91,7 @@ const ChessTestPage: React.FC = () => {
               </div>
               
               {/* Teste de tabuleiro simples */}
-              <div className="mb-4 p-4 bg-purple-900/30 rounded-lg">
+              <div className="mb-4 p-4 bg-orange-900/30 rounded-lg">
                 <h4 className="text-lg font-semibold text-white mb-2">♟️ Teste de Tabuleiro Simples</h4>
                 <div 
                   style={{
@@ -109,7 +132,7 @@ const ChessTestPage: React.FC = () => {
                 ))}
                 {debugInfo.length === 0 && (
                   <div className="text-gray-400 text-sm">
-                    Aguardando eventos...
+                    Aguardando eventos ARKITECT...
                   </div>
                 )}
               </div>
@@ -124,7 +147,7 @@ const ChessTestPage: React.FC = () => {
 
           <div className="bg-emerald-800/30 backdrop-blur-sm rounded-xl border border-emerald-600/50 p-6 mt-8">
             <h3 className="text-xl font-bold text-white mb-4">
-              📋 Instruções de Teste
+              📋 Instruções de Teste - ARKITECT
             </h3>
             <ul className="text-emerald-100 space-y-2">
               <li>✅ Clique em uma peça branca (brancas começam)</li>
@@ -133,7 +156,25 @@ const ChessTestPage: React.FC = () => {
               <li>✅ O turno deve alternar para as pretas</li>
               <li>✅ Teste capturar peças adversárias</li>
               <li>✅ Use o botão "🔄 Nova Partida" para resetar</li>
+              <li>🧠 Verifique a análise ARKITECT em tempo real</li>
+              <li>🧠 Teste habilitar/desabilitar o ARKITECT</li>
+              <li>🧠 Use "🧠 Analisar ARKITECT" para análise manual</li>
               <li>🐛 Verifique os logs de debug ao lado</li>
+            </ul>
+          </div>
+
+          <div className="bg-blue-900/30 backdrop-blur-sm rounded-xl border border-blue-600/50 p-6 mt-8">
+            <h3 className="text-xl font-bold text-white mb-4">
+              🧠 Funcionalidades ARKITECT
+            </h3>
+            <ul className="text-blue-100 space-y-2">
+              <li>🔬 <strong>Análise Automática:</strong> Avaliação de posição em tempo real</li>
+              <li>🎯 <strong>Conselhos Estratégicos:</strong> Sugestões baseadas na posição atual</li>
+              <li>⚡ <strong>Monitoramento de Performance:</strong> Tempo de resposta e eficiência</li>
+              <li>📊 <strong>Métricas de Qualidade:</strong> Avaliação de movimentos</li>
+              <li>🔍 <strong>Detecção de Oportunidades:</strong> Identificação de vantagens táticas</li>
+              <li>🔄 <strong>Análise Pós-Movimento:</strong> Avaliação após cada jogada</li>
+              <li>🎮 <strong>Controle Manual:</strong> Habilitação/desabilitação do sistema</li>
             </ul>
           </div>
         </div>
