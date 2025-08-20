@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste de Consolidação - Tabuleiro 1</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Alpine.js -->
+    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <!-- Chessboard and Chess.js -->
+    <script type="module" src="https://unpkg.com/chessboard-element?module"></script>
+    <script src="https://unpkg.com/chess.js@1.0.0/dist/chess.min.js"></script>
+
+    <style>
+        body {
+            background: #0a0a0a;
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .test-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .status-panel {
+            background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .status-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #333;
+        }
+
+        .status-item:last-child {
+            border-bottom: none;
+        }
+
+        .status-value {
+            font-weight: 600;
+        }
+
+        .status-ok {
+            color: #10b981;
+        }
+
+        .status-error {
+            color: #ef4444;
+        }
+
+        .status-warning {
+            color: #f59e0b;
+        }
+
+        .test-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .test-btn {
+            padding: 10px 16px;
+            background: #333;
+            border: 1px solid #444;
+            border-radius: 6px;
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .test-btn:hover {
+            background: #444;
+            border-color: #555;
+        }
+
+        .test-btn.active {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            border-color: #3b82f6;
+        }
+
+        .log-container {
+            background: #0f0f0f;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 16px;
+            height: 300px;
+            overflow-y: auto;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 12px;
+        }
+
+        .log-entry {
+            margin-bottom: 4px;
+            padding: 2px 0;
+        }
+
+        .log-info {
+            color: #3b82f6;
+        }
+
+        .log-success {
+            color: #10b981;
+        }
+
+        .log-warning {
+            color: #f59e0b;
+        }
+
+        .log-error {
+            color: #ef4444;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="test-container">
+        <h1 class="text-3xl font-bold mb-6">🎯 Teste de Consolidação - Tabuleiro 1</h1>
+
+        <!-- Status Panel -->
+        <div class="status-panel">
+            <h2 class="text-xl font-semibold mb-4">Status dos Sistemas</h2>
+            <div id="status-content">
+                <div class="status-item">
+                    <span>Tabuleiro:</span>
+                    <span id="board-status" class="status-value status-warning">Verificando...</span>
+                </div>
+                <div class="status-item">
+                    <span>Base de Dados Pro:</span>
+                    <span id="database-status" class="status-value status-warning">Verificando...</span>
+                </div>
+                <div class="status-item">
+                    <span>Sistema ARKITECT:</span>
+                    <span id="arkitect-status" class="status-value status-warning">Verificando...</span>
+                </div>
+                <div class="status-item">
+                    <span>Consolidação:</span>
+                    <span id="consolidation-status" class="status-value status-warning">Verificando...</span>
+                </div>
+                <div class="status-item">
+                    <span>Posição Atual:</span>
+                    <span id="position-status" class="status-value">Nenhuma</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Test Buttons -->
+        <div class="test-buttons">
+            <button class="test-btn" onclick="testBoard()">
+                <i class="fas fa-chess-board mr-2"></i>Testar Tabuleiro
+            </button>
+            <button class="test-btn" onclick="testDatabase()">
+                <i class="fas fa-database mr-2"></i>Testar Base de Dados
+            </button>
+            <button class="test-btn" onclick="testArkitect()">
+                <i class="fas fa-eye mr-2"></i>Testar ARKITECT
+            </button>
+            <button class="test-btn" onclick="testConsolidation()">
+                <i class="fas fa-cogs mr-2"></i>Testar Consolidação
+            </button>
+            <button class="test-btn" onclick="loadRandomPosition()">
+                <i class="fas fa-random mr-2"></i>Carregar Posição
+            </button>
+            <button class="test-btn" onclick="toggleDemo()">
+                <i class="fas fa-play mr-2"></i>Toggle Demo
+            </button>
+            <button class="test-btn" onclick="clearLog()">
+                <i class="fas fa-trash mr-2"></i>Limpar Log
+            </button>
+        </div>
+
+        <!-- Chess Board -->
+        <div class="bg-gradient-to-br from-[#1a1a1a] to-[#0f0f0f] border border-[#2a2a2a] rounded-2xl p-8 shadow-2xl mb-6">
+            <div class="text-center mb-6">
+                <h3 class="text-2xl font-bold text-white mb-2">
+                    <i class="fas fa-chess mr-3 text-blue-500"></i>
+                    Tabuleiro 1 - Consolidação
+                </h3>
+                <p class="text-gray-400">Sistema unificado com base de dados Pro e efeito ARKITECT</p>
+            </div>
+
+            <div class="hero-chess-board flex justify-center">
+                <chess-board id="aeon-board" position="start" draggable-pieces=""></chess-board>
+            </div>
+        </div>
+
+        <!-- Log -->
+        <div class="status-panel">
+            <h2 class="text-xl font-semibold mb-4">Log de Testes</h2>
+            <div id="log-container" class="log-container">
+                <div class="log-entry log-info">🎯 Iniciando teste de consolidação...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/chess-board.js"></script>
+    <script src="js/board-initializer.js"></script>
+    <script src="js/chess-pro-database.js"></script>
+    <script src="js/arkitect-simple-solution.js"></script>
+    <script src="js/chess-board-consolidation.js"></script>
+
+    <script>
+        // Log function
+        function log(message, type = 'info') {
+            const logContainer = document.getElementById('log-container');
+            const logEntry = document.createElement('div');
+            logEntry.className = `log-entry log-${type}`;
+            logEntry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            logContainer.appendChild(logEntry);
+            logContainer.scrollTop = logContainer.scrollHeight;
+        }
+
+        // Clear log
+        function clearLog() {
+            document.getElementById('log-container').innerHTML = '<div class="log-entry log-info">🎯 Log limpo...</div>';
+        }
+
+        // Update status
+        function updateStatus(elementId, status, type = 'ok') {
+            const element = document.getElementById(elementId);
+            element.textContent = status;
+            element.className = `status-value status-${type}`;
+        }
+
+        // Test functions
+        function testBoard() {
+            log('🧪 Testando tabuleiro...', 'info');
+
+            const board = document.querySelector('#aeon-board');
+            if (board && board.querySelector('.chess-board-wrapper')) {
+                updateStatus('board-status', '✅ Funcionando', 'ok');
+                log('✅ Tabuleiro funcionando corretamente', 'success');
+            } else {
+                updateStatus('board-status', '❌ Não encontrado', 'error');
+                log('❌ Tabuleiro não encontrado ou não inicializado', 'error');
+            }
+        }
+
+        function testDatabase() {
+            log('🧪 Testando base de dados...', 'info');
+
+            if (window.chessProDB) {
+                const stats = window.chessProDB.getStatistics();
+                updateStatus('database-status', `✅ ${stats.totalPositions} posições`, 'ok');
+                log(`✅ Base de dados conectada: ${stats.totalPositions} posições`, 'success');
+                log(`📊 Categorias: ${Object.keys(stats.categories).join(', ')}`, 'info');
+            } else {
+                updateStatus('database-status', '❌ Não encontrada', 'error');
+                log('❌ Base de dados não encontrada', 'error');
+            }
+        }
+
+        function testArkitect() {
+            log('🧪 Testando sistema ARKITECT...', 'info');
+
+            if (window.arkitectSolution) {
+                const status = window.arkitectSolution.getStatus();
+                updateStatus('arkitect-status', `✅ ${status.isActive ? 'Ativo' : 'Inativo'}`, 'ok');
+                log(`✅ Sistema ARKITECT: ${status.name} v${status.version}`, 'success');
+                log(`📊 Status: ${status.isActive ? 'Ativo' : 'Inativo'}`, 'info');
+            } else {
+                updateStatus('arkitect-status', '❌ Não encontrado', 'error');
+                log('❌ Sistema ARKITECT não encontrado', 'error');
+            }
+        }
+
+        function testConsolidation() {
+            log('🧪 Testando consolidação...', 'info');
+
+            if (window.chessBoardConsolidation) {
+                const status = window.chessBoardConsolidation.getStatus();
+                updateStatus('consolidation-status', `✅ ${status.autoDemo ? 'Demo Ativo' : 'Pronto'}`, 'ok');
+                log(`✅ Consolidação: ${status.name} v${status.version}`, 'success');
+                log(`📊 Demo: ${status.autoDemo ? 'Ativo' : 'Inativo'}, ARKITECT: ${status.arkitectActive ? 'Ativo' : 'Inativo'}`, 'info');
+            } else {
+                updateStatus('consolidation-status', '❌ Não encontrada', 'error');
+                log('❌ Sistema de consolidação não encontrado', 'error');
+            }
+        }
+
+        function loadRandomPosition() {
+            log('🧪 Carregando posição aleatória...', 'info');
+
+            if (window.chessBoardConsolidation) {
+                window.chessBoardConsolidation.loadRandomPosition();
+                const status = window.chessBoardConsolidation.getStatus();
+                updateStatus('position-status', status.currentPosition);
+                log(`✅ Posição carregada: ${status.currentPosition}`, 'success');
+            } else {
+                log('❌ Sistema de consolidação não disponível', 'error');
+            }
+        }
+
+        function toggleDemo() {
+            log('🧪 Alternando demonstração automática...', 'info');
+
+            if (window.chessBoardConsolidation) {
+                window.chessBoardConsolidation.toggleAutoDemo();
+                const status = window.chessBoardConsolidation.getStatus();
+                updateStatus('consolidation-status', `✅ ${status.autoDemo ? 'Demo Ativo' : 'Pronto'}`, 'ok');
+                log(`✅ Demo ${status.autoDemo ? 'iniciado' : 'parado'}`, 'success');
+            } else {
+                log('❌ Sistema de consolidação não disponível', 'error');
+            }
+        }
+
+        // Auto-test on load
+        document.addEventListener('DOMContentLoaded', () => {
+            log('🎯 Página carregada, aguardando sistemas...', 'info');
+
+            setTimeout(() => {
+                testBoard();
+                testDatabase();
+                testArkitect();
+                testConsolidation();
+
+                log('🎯 Teste automático concluído', 'success');
+            }, 2000);
+        });
+
+        // Global functions for console testing
+        window.testBoard = testBoard;
+        window.testDatabase = testDatabase;
+        window.testArkitect = testArkitect;
+        window.testConsolidation = testConsolidation;
+        window.loadRandomPosition = loadRandomPosition;
+        window.toggleDemo = toggleDemo;
+        window.clearLog = clearLog;
+    </script>
+</body>
+
+</html>

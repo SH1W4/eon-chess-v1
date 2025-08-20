@@ -1,0 +1,623 @@
+/**
+ * 🏛️ Historical Battles Design System - AEON CHESS
+ * Sistema de design profundo para análise narrativa de jogos históricos
+ * Cores estudadas para representar cada batalha e época
+ * 
+ * @author AEON CHESS Team
+ * @version 1.0.0
+ * @date Janeiro 2025
+ */
+
+/* ===============================
+   🎨 PALETA DE CORES HISTÓRICAS
+   =============================== */
+
+:root {
+    /* 🏛️ Era Clássica - Bobby Fischer vs Boris Spassky (1972) */
+    --fischer-primary: #1a365d;
+    /* Azul Guerra Fria */
+    --fischer-secondary: #2d3748;
+    /* Cinza Reykjavik */
+    --fischer-accent: #e53e3e;
+    /* Vermelho USSR */
+    --fischer-complement: #3182ce;
+    /* Azul USA */
+    --fischer-text: #f7fafc;
+    /* Branco Islândia */
+    --fischer-bg: linear-gradient(135deg, #1a365d 0%, #2c5282 50%, #2d3748 100%);
+
+    /* ⚔️ Era Medieval - Immortal Game (1851) */
+    --immortal-primary: #744210;
+    /* Ouro Medieval */
+    --immortal-secondary: #553c0c;
+    /* Bronze Antigo */
+    --immortal-accent: #d69e2e;
+    /* Dourado Nobre */
+    --immortal-complement: #975a16;
+    /* Cobre */
+    --immortal-text: #faf5ff;
+    /* Pergaminho */
+    --immortal-bg: linear-gradient(135deg, #744210 0%, #975a16 50%, #553c0c 100%);
+
+    /* 🎭 Era Romântica - Paul Morphy (1858) */
+    --romantic-primary: #553c9a;
+    /* Púrpura Real */
+    --romantic-secondary: #322659;
+    /* Violeta Profundo */
+    --romantic-accent: #d6f5d6;
+    /* Verde Pálido */
+    --romantic-complement: #9f7aea;
+    /* Lilás */
+    --romantic-text: #f4f4f5;
+    /* Marfim */
+    --romantic-bg: linear-gradient(135deg, #553c9a 0%, #7c3aed 50%, #322659 100%);
+
+    /* 🏰 Era Hipermoderna - Capablanca vs Marshall (1909) */
+    --hypermodern-primary: #2d3748;
+    /* Grafite */
+    --hypermodern-secondary: #1a202c;
+    /* Carvão */
+    --hypermodern-accent: #48bb78;
+    /* Verde Moderno */
+    --hypermodern-complement: #38a169;
+    /* Esmeralda */
+    --hypermodern-text: #e2e8f0;
+    /* Prata */
+    --hypermodern-bg: linear-gradient(135deg, #2d3748 0%, #4a5568 50%, #1a202c 100%);
+
+    /* 🔥 Era Soviética - Kasparov vs Karpov (1984) */
+    --soviet-primary: #c53030;
+    /* Vermelho Soviético */
+    --soviet-secondary: #822727;
+    /* Bordeaux */
+    --soviet-accent: #ffd700;
+    /* Ouro Comunista */
+    --soviet-complement: #e53e3e;
+    /* Escarlate */
+    --soviet-text: #f7fafc;
+    /* Branco Neve */
+    --soviet-bg: linear-gradient(135deg, #c53030 0%, #e53e3e 50%, #822727 100%);
+
+    /* 💎 Era Moderna - Carlsen vs Anand (2013) */
+    --modern-primary: #065f46;
+    /* Verde Escandinavo */
+    --modern-secondary: #047857;
+    /* Turquesa */
+    --modern-accent: #06d6a0;
+    /* Mint */
+    --modern-complement: #10b981;
+    /* Jade */
+    --modern-text: #f0fdfa;
+    /* Gelo */
+    --modern-bg: linear-gradient(135deg, #065f46 0%, #059669 50%, #047857 100%);
+
+    /* 🌟 Era Digital - Deep Blue vs Kasparov (1997) */
+    --digital-primary: #1e3a8a;
+    /* Azul Digital */
+    --digital-secondary: #1e40af;
+    /* Cibernético */
+    --digital-accent: #00ffff;
+    /* Cyan Eletrônico */
+    --digital-complement: #3b82f6;
+    /* Azul Tecnológico */
+    --digital-text: #f8fafc;
+    /* Branco Digital */
+    --digital-bg: linear-gradient(135deg, #1e3a8a 0%, #2563eb 50%, #1e40af 100%);
+}
+
+/* ===============================
+   🎭 TEMAS ESPECÍFICOS POR BATALHA
+   =============================== */
+
+/* Fischer vs Spassky - Guerra Fria */
+.battle-fischer {
+    --primary: var(--fischer-primary);
+    --secondary: var(--fischer-secondary);
+    --accent: var(--fischer-accent);
+    --complement: var(--fischer-complement);
+    --text: var(--fischer-text);
+    background: var(--fischer-bg);
+}
+
+.battle-fischer .battle-card {
+    background: linear-gradient(145deg,
+            rgba(26, 54, 93, 0.9) 0%,
+            rgba(44, 82, 130, 0.8) 50%,
+            rgba(45, 55, 72, 0.9) 100%);
+    border: 1px solid rgba(49, 130, 206, 0.3);
+    box-shadow:
+        0 8px 32px rgba(26, 54, 93, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.battle-fischer .player-white {
+    background: linear-gradient(135deg, #3182ce, #2c5282);
+    color: white;
+}
+
+.battle-fischer .player-black {
+    background: linear-gradient(135deg, #e53e3e, #c53030);
+    color: white;
+}
+
+/* Immortal Game - Medieval */
+.battle-immortal {
+    --primary: var(--immortal-primary);
+    --secondary: var(--immortal-secondary);
+    --accent: var(--immortal-accent);
+    --complement: var(--immortal-complement);
+    --text: var(--immortal-text);
+    background: var(--immortal-bg);
+}
+
+.battle-immortal .battle-card {
+    background: linear-gradient(145deg,
+            rgba(116, 66, 16, 0.9) 0%,
+            rgba(151, 90, 22, 0.8) 50%,
+            rgba(85, 60, 12, 0.9) 100%);
+    border: 1px solid rgba(214, 158, 46, 0.4);
+    box-shadow:
+        0 12px 40px rgba(116, 66, 16, 0.5),
+        inset 0 2px 0 rgba(255, 215, 0, 0.2);
+}
+
+.battle-immortal .ornament {
+    color: var(--immortal-accent);
+    text-shadow: 0 0 10px rgba(214, 158, 46, 0.5);
+}
+
+/* Paul Morphy - Romântico */
+.battle-romantic {
+    --primary: var(--romantic-primary);
+    --secondary: var(--romantic-secondary);
+    --accent: var(--romantic-accent);
+    --complement: var(--romantic-complement);
+    --text: var(--romantic-text);
+    background: var(--romantic-bg);
+}
+
+.battle-romantic .battle-card {
+    background: linear-gradient(145deg,
+            rgba(85, 60, 154, 0.9) 0%,
+            rgba(124, 58, 237, 0.8) 50%,
+            rgba(50, 38, 89, 0.9) 100%);
+    border: 1px solid rgba(159, 122, 234, 0.4);
+    box-shadow:
+        0 10px 35px rgba(85, 60, 154, 0.6),
+        inset 0 1px 0 rgba(214, 245, 214, 0.1);
+}
+
+/* Capablanca vs Marshall - Hipermoderno */
+.battle-hypermodern {
+    --primary: var(--hypermodern-primary);
+    --secondary: var(--hypermodern-secondary);
+    --accent: var(--hypermodern-accent);
+    --complement: var(--hypermodern-complement);
+    --text: var(--hypermodern-text);
+    background: var(--hypermodern-bg);
+}
+
+.battle-hypermodern .battle-card {
+    background: linear-gradient(145deg,
+            rgba(45, 55, 72, 0.95) 0%,
+            rgba(74, 85, 104, 0.9) 50%,
+            rgba(26, 32, 44, 0.95) 100%);
+    border: 1px solid rgba(72, 187, 120, 0.3);
+    box-shadow:
+        0 6px 30px rgba(45, 55, 72, 0.4),
+        inset 0 1px 0 rgba(72, 187, 120, 0.2);
+}
+
+/* Kasparov vs Karpov - Soviético */
+.battle-soviet {
+    --primary: var(--soviet-primary);
+    --secondary: var(--soviet-secondary);
+    --accent: var(--soviet-accent);
+    --complement: var(--soviet-complement);
+    --text: var(--soviet-text);
+    background: var(--soviet-bg);
+}
+
+.battle-soviet .battle-card {
+    background: linear-gradient(145deg,
+            rgba(197, 48, 48, 0.9) 0%,
+            rgba(229, 62, 62, 0.8) 50%,
+            rgba(130, 39, 39, 0.9) 100%);
+    border: 1px solid rgba(255, 215, 0, 0.5);
+    box-shadow:
+        0 8px 32px rgba(197, 48, 48, 0.5),
+        inset 0 2px 0 rgba(255, 215, 0, 0.3);
+}
+
+.battle-soviet .star {
+    color: var(--soviet-accent);
+    text-shadow: 0 0 15px rgba(255, 215, 0, 0.8);
+}
+
+/* Carlsen vs Anand - Moderno */
+.battle-modern {
+    --primary: var(--modern-primary);
+    --secondary: var(--modern-secondary);
+    --accent: var(--modern-accent);
+    --complement: var(--modern-complement);
+    --text: var(--modern-text);
+    background: var(--modern-bg);
+}
+
+.battle-modern .battle-card {
+    background: linear-gradient(145deg,
+            rgba(6, 95, 70, 0.9) 0%,
+            rgba(5, 150, 105, 0.8) 50%,
+            rgba(4, 120, 87, 0.9) 100%);
+    border: 1px solid rgba(6, 214, 160, 0.4);
+    box-shadow:
+        0 8px 30px rgba(6, 95, 70, 0.4),
+        inset 0 1px 0 rgba(16, 185, 129, 0.3);
+}
+
+/* Deep Blue vs Kasparov - Digital */
+.battle-digital {
+    --primary: var(--digital-primary);
+    --secondary: var(--digital-secondary);
+    --accent: var(--digital-accent);
+    --complement: var(--digital-complement);
+    --text: var(--digital-text);
+    background: var(--digital-bg);
+}
+
+.battle-digital .battle-card {
+    background: linear-gradient(145deg,
+            rgba(30, 58, 138, 0.9) 0%,
+            rgba(37, 99, 235, 0.8) 50%,
+            rgba(30, 64, 175, 0.9) 100%);
+    border: 1px solid rgba(0, 255, 255, 0.5);
+    box-shadow:
+        0 10px 40px rgba(30, 58, 138, 0.6),
+        inset 0 2px 0 rgba(0, 255, 255, 0.2);
+}
+
+.battle-digital .circuit {
+    color: var(--digital-accent);
+    text-shadow: 0 0 20px rgba(0, 255, 255, 0.8);
+    animation: digitalPulse 2s ease-in-out infinite;
+}
+
+/* ===============================
+   🎨 COMPONENTES VISUAIS
+   =============================== */
+
+/* Cards de Batalha */
+.battle-card {
+    border-radius: 16px;
+    padding: 24px;
+    margin: 16px 0;
+    backdrop-filter: blur(20px);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.battle-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg,
+            transparent 0%,
+            rgba(255, 255, 255, 0.4) 50%,
+            transparent 100%);
+}
+
+.battle-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow:
+        0 20px 60px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+/* Títulos das Batalhas */
+.battle-title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+    background: linear-gradient(135deg,
+            var(--accent) 0%,
+            var(--complement) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.battle-subtitle {
+    font-size: 1.1rem;
+    opacity: 0.9;
+    margin-bottom: 16px;
+    color: var(--text);
+}
+
+.battle-year {
+    display: inline-block;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--accent);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Players */
+.battle-players {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 20px 0;
+}
+
+.player-card {
+    padding: 16px;
+    border-radius: 12px;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+}
+
+.player-name {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.player-country {
+    font-size: 0.875rem;
+    opacity: 0.8;
+}
+
+/* Move Analysis */
+.move-analysis {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 12px;
+    padding: 16px;
+    margin: 16px 0;
+    border-left: 4px solid var(--accent);
+}
+
+.move-number {
+    color: var(--accent);
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+
+.move-notation {
+    font-family: 'Courier New', monospace;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 4px 8px;
+    border-radius: 6px;
+    display: inline-block;
+    margin: 0 8px;
+}
+
+.move-narrative {
+    margin-top: 12px;
+    line-height: 1.6;
+    color: var(--text);
+}
+
+.move-evaluation {
+    display: inline-block;
+    background: var(--accent);
+    color: var(--primary);
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-left: 8px;
+}
+
+/* ===============================
+   🎭 ANIMAÇÕES ESPECÍFICAS
+   =============================== */
+
+@keyframes digitalPulse {
+
+    0%,
+    100% {
+        opacity: 1;
+        text-shadow: 0 0 20px rgba(0, 255, 255, 0.8);
+    }
+
+    50% {
+        opacity: 0.7;
+        text-shadow: 0 0 30px rgba(0, 255, 255, 1);
+    }
+}
+
+@keyframes medievalGlow {
+
+    0%,
+    100% {
+        text-shadow: 0 0 10px rgba(214, 158, 46, 0.5);
+    }
+
+    50% {
+        text-shadow: 0 0 20px rgba(214, 158, 46, 0.8);
+    }
+}
+
+@keyframes sovietStar {
+
+    0%,
+    100% {
+        transform: rotate(0deg) scale(1);
+        text-shadow: 0 0 15px rgba(255, 215, 0, 0.8);
+    }
+
+    50% {
+        transform: rotate(180deg) scale(1.1);
+        text-shadow: 0 0 25px rgba(255, 215, 0, 1);
+    }
+}
+
+/* ===============================
+   📱 RESPONSIVIDADE HISTÓRICA
+   =============================== */
+
+@media (max-width: 768px) {
+    .battle-players {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .battle-title {
+        font-size: 1.5rem;
+    }
+
+    .battle-card {
+        padding: 16px;
+        margin: 12px 0;
+    }
+}
+
+/* ===============================
+   🎮 BOTÕES DAS BATALHAS
+   =============================== */
+
+/* Battle Controls - Botões com cores específicas */
+.battle-controls {
+    display: flex;
+    gap: 16px;
+    margin-top: 24px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.btn-battle-action {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    min-width: 160px;
+    backdrop-filter: blur(10px);
+}
+
+.btn-battle-action::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+}
+
+.btn-battle-action:hover::before {
+    left: 100%;
+}
+
+.btn-battle-action:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+/* Botões específicos por batalha */
+.battle-fischer .btn-battle-action {
+    background: linear-gradient(135deg, var(--fischer-complement), var(--fischer-accent));
+    color: white;
+    border: 1px solid rgba(49, 130, 206, 0.5);
+}
+
+.battle-fischer .btn-battle-action:hover {
+    box-shadow: 0 8px 25px rgba(49, 130, 206, 0.4);
+}
+
+.battle-immortal .btn-battle-action {
+    background: linear-gradient(135deg, var(--immortal-accent), var(--immortal-complement));
+    color: var(--immortal-secondary);
+    border: 1px solid rgba(214, 158, 46, 0.6);
+}
+
+.battle-immortal .btn-battle-action:hover {
+    box-shadow: 0 8px 25px rgba(214, 158, 46, 0.5);
+}
+
+.battle-romantic .btn-battle-action {
+    background: linear-gradient(135deg, var(--romantic-complement), var(--romantic-accent));
+    color: var(--romantic-primary);
+    border: 1px solid rgba(159, 122, 234, 0.5);
+}
+
+.battle-romantic .btn-battle-action:hover {
+    box-shadow: 0 8px 25px rgba(159, 122, 234, 0.4);
+}
+
+.battle-hypermodern .btn-battle-action {
+    background: linear-gradient(135deg, var(--hypermodern-accent), var(--hypermodern-complement));
+    color: white;
+    border: 1px solid rgba(72, 187, 120, 0.5);
+}
+
+.battle-hypermodern .btn-battle-action:hover {
+    box-shadow: 0 8px 25px rgba(72, 187, 120, 0.4);
+}
+
+.battle-soviet .btn-battle-action {
+    background: linear-gradient(135deg, var(--soviet-accent), var(--soviet-complement));
+    color: var(--soviet-secondary);
+    border: 1px solid rgba(255, 215, 0, 0.6);
+}
+
+.battle-soviet .btn-battle-action:hover {
+    box-shadow: 0 8px 25px rgba(255, 215, 0, 0.5);
+}
+
+.battle-modern .btn-battle-action {
+    background: linear-gradient(135deg, var(--modern-accent), var(--modern-complement));
+    color: var(--modern-primary);
+    border: 1px solid rgba(6, 214, 160, 0.5);
+}
+
+.battle-modern .btn-battle-action:hover {
+    box-shadow: 0 8px 25px rgba(6, 214, 160, 0.4);
+}
+
+.battle-digital .btn-battle-action {
+    background: linear-gradient(135deg, var(--digital-accent), var(--digital-complement));
+    color: white;
+    border: 1px solid rgba(0, 255, 255, 0.6);
+}
+
+.battle-digital .btn-battle-action:hover {
+    box-shadow: 0 8px 25px rgba(0, 255, 255, 0.5);
+}
+
+@media (max-width: 480px) {
+    .battle-title {
+        font-size: 1.25rem;
+    }
+
+    .battle-card {
+        padding: 12px;
+    }
+
+    .move-analysis {
+        padding: 12px;
+    }
+
+    .battle-controls {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .btn-battle-action {
+        min-width: 100%;
+    }
+}

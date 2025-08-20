@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧪 Teste Vite - Sistema Moderno da IA</title>
+    <link rel="stylesheet" href="css/modern-design-system.css">
+    <link rel="stylesheet" href="css/force-dark-theme.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #1a1a1a;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+
+        .test-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #2a2a2a;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .test-button {
+            background: #00ffff;
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px;
+            font-size: 16px;
+        }
+
+        .test-button:hover {
+            background: #00cccc;
+        }
+
+        .log-area {
+            background: #000;
+            color: #00ff88;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+            font-family: monospace;
+            height: 400px;
+            overflow-y: auto;
+            border: 1px solid #00ffff;
+        }
+
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .status.success {
+            background: rgba(0, 255, 0, 0.2);
+            color: #00ff00;
+            border: 1px solid #00ff00;
+        }
+
+        .status.error {
+            background: rgba(255, 0, 0, 0.2);
+            color: #ff0000;
+            border: 1px solid #ff0000;
+        }
+
+        .status.info {
+            background: rgba(0, 255, 255, 0.2);
+            color: #00ffff;
+            border: 1px solid #00ffff;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="test-container">
+        <h1>🧪 Teste Vite - Sistema Moderno da IA</h1>
+
+        <div class="status info">
+            🚀 Sistema de teste para verificar o funcionamento do Vite e do novo sistema da IA
+        </div>
+
+        <div>
+            <button class="test-button" onclick="testVite()">🚀 Testar Vite</button>
+            <button class="test-button" onclick="testAISystem()">🧠 Testar IA</button>
+            <button class="test-button" onclick="testTerminal()">🖥️ Testar Terminal</button>
+            <button class="test-button" onclick="clearLog()">🗑️ Limpar Log</button>
+        </div>
+
+        <div class="log-area" id="logArea">
+            <div>🚀 Sistema de teste iniciado...</div>
+            <div>📝 Clique em "Testar Vite" para verificar se o Vite está funcionando</div>
+        </div>
+    </div>
+
+    <script type="module">
+        import './js/ai-system-modern.js';
+        
+        function log(message, type = 'info') {
+            const logArea = document.getElementById('logArea');
+            const logEntry = document.createElement('div');
+            logEntry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            logArea.appendChild(logEntry);
+            logArea.scrollTop = logArea.scrollHeight;
+        }
+        
+        function clearLog() {
+            document.getElementById('logArea').innerHTML = '<div>🗑️ Log limpo</div>';
+        }
+        
+        function testVite() {
+            log('🚀 Testando Vite...');
+            
+            try {
+                // Verificar se o módulo foi carregado
+                if (window.ModernAISystem) {
+                    log('✅ Vite funcionando! ModernAISystem carregado com sucesso');
+                    log('🔍 Classe disponível:', window.ModernAISystem.name);
+                    log('🔍 Configuração disponível:', window.AI_CONFIG);
+                } else {
+                    log('❌ Vite não está funcionando - ModernAISystem não encontrado');
+                }
+                
+                // Verificar se o sistema foi inicializado
+                if (window.aiSystem) {
+                    log('✅ Sistema da IA inicializado:', window.aiSystem.isInitialized);
+                } else {
+                    log('⚠️ Sistema da IA ainda não foi inicializado');
+                }
+                
+            } catch (error) {
+                log(`❌ Erro no teste Vite: ${error.message}`);
+            }
+        }
+        
+        function testAISystem() {
+            log('🧠 Testando Sistema da IA...');
+            
+            try {
+                if (window.aiSystem) {
+                    log('✅ Sistema da IA encontrado');
+                    log('🔍 Inicializado:', window.aiSystem.isInitialized);
+                    log('🔍 Terminal criado:', window.aiSystem.terminal.element !== null);
+                    log('🔍 Botão FAB:', window.aiSystem.fabButton !== null);
+                    
+                    // Testar funcionalidades
+                    if (window.aiSystem.terminal) {
+                        log('🔍 Terminal disponível para teste');
+                    }
+                    
+                } else {
+                    log('❌ Sistema da IA não encontrado');
+                    log('💡 Tente aguardar mais tempo ou verificar o console');
+                }
+                
+            } catch (error) {
+                log(`❌ Erro no teste da IA: ${error.message}`);
+            }
+        }
+        
+        function testTerminal() {
+            log('🖥️ Testando Terminal...');
+            
+            try {
+                if (window.aiSystem && window.aiSystem.terminal) {
+                    log('✅ Terminal encontrado, testando abertura...');
+                    
+                    // Testar abertura do terminal
+                    window.aiSystem.terminal.open();
+                    log('🔍 Terminal aberto com sucesso!');
+                    
+                    // Adicionar mensagem de teste
+                    setTimeout(() => {
+                        window.aiSystem.terminal.addMessage('Mensagem de teste do sistema!', 'success');
+                        log('🔍 Mensagem de teste adicionada ao terminal');
+                    }, 500);
+                    
+                } else {
+                    log('❌ Terminal não disponível');
+                }
+                
+            } catch (error) {
+                log(`❌ Erro no teste do terminal: ${error.message}`);
+            }
+        }
+        
+        // Disponibilizar funções globalmente
+        window.testVite = testVite;
+        window.testAISystem = testAISystem;
+        window.testTerminal = testTerminal;
+        window.clearLog = clearLog;
+        
+        // Verificar carregamento automático
+        window.addEventListener('load', () => {
+            log('📱 Página carregada, verificando sistema...');
+            
+            setTimeout(() => {
+                if (window.aiSystem) {
+                    log('✅ Sistema da IA carregado automaticamente!');
+                } else {
+                    log('⚠️ Sistema da IA não foi carregado automaticamente');
+                }
+            }, 2000);
+        });
+        
+        log('✅ Script de teste carregado com sucesso!');
+    </script>
+</body>
+
+</html>

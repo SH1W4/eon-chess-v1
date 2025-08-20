@@ -44,6 +44,7 @@ htmlcov/
 *.tmp
 *.temp
 backup_*/
+temp/
 
 # API keys and secrets
 secrets.json

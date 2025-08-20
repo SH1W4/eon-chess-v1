@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug - Sistemas dos Tabuleiros</title>
+    <style>
+        body {
+            background: #1a1a1a;
+            color: white;
+            font-family: 'Courier New', monospace;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .debug-section {
+            background: #2a2a2a;
+            margin: 20px 0;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #3b82f6;
+        }
+
+        .status-ok {
+            color: #10b981;
+        }
+
+        .status-error {
+            color: #ef4444;
+        }
+
+        .status-warning {
+            color: #f59e0b;
+        }
+
+        button {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 5px;
+        }
+
+        button:hover {
+            background: #2563eb;
+        }
+
+        .log-output {
+            background: #0a0a0a;
+            padding: 15px;
+            border-radius: 6px;
+            max-height: 300px;
+            overflow-y: auto;
+            font-size: 12px;
+            margin-top: 10px;
+        }
+
+        h1 {
+            color: #3b82f6;
+        }
+
+        h2 {
+            color: #10b981;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>🔧 Debug - Sistemas dos Tabuleiros</h1>
+
+    <div class="debug-section">
+        <h2>📋 Status dos Sistemas</h2>
+        <div id="systems-status">Carregando...</div>
+        <button onclick="checkAllSystems()">🔄 Atualizar Status</button>
+    </div>
+
+    <div class="debug-section">
+        <h2>🏗️ ARKITECT</h2>
+        <div id="arkitect-status">Carregando...</div>
+        <button onclick="testArkitect()">🧪 Testar ARKITECT</button>
+        <button onclick="startArkitect()">▶️ Iniciar</button>
+        <button onclick="stopArkitect()">⏹️ Parar</button>
+    </div>
+
+    <div class="debug-section">
+        <h2>🎯 Tabuleiros</h2>
+        <div id="boards-status">Carregando...</div>
+        <button onclick="checkBoards()">🔄 Verificar Tabuleiros</button>
+        <button onclick="initBoards()">🚀 Reinicializar</button>
+    </div>
+
+    <div class="debug-section">
+        <h2>🧠 Smart Chess Board</h2>
+        <div id="smart-board-status">Carregando...</div>
+        <button onclick="checkSmartBoard()">🔄 Verificar</button>
+        <button onclick="testSmartBoard()">🧪 Testar</button>
+    </div>
+
+    <div class="debug-section">
+        <h2>📊 Database</h2>
+        <div id="database-status">Carregando...</div>
+        <button onclick="checkDatabase()">🔄 Verificar Database</button>
+        <button onclick="testDatabase()">🧪 Testar Conexão</button>
+    </div>
+
+    <div class="debug-section">
+        <h2>📝 Console Logs</h2>
+        <div id="console-logs" class="log-output"></div>
+        <button onclick="clearLogs()">🗑️ Limpar Logs</button>
+    </div>
+
+    <script>
+        // Interceptar console.log para mostrar na página
+        const originalLog = console.log;
+        const originalError = console.error;
+        const originalWarn = console.warn;
+
+        let logs = [];
+
+        function addLog(type, message) {
+            const timestamp = new Date().toLocaleTimeString();
+            logs.push({
+                type,
+                message,
+                timestamp
+            });
+            updateLogsDisplay();
+        }
+
+        console.log = function(...args) {
+            originalLog.apply(console, args);
+            addLog('log', args.join(' '));
+        };
+
+        console.error = function(...args) {
+            originalError.apply(console, args);
+            addLog('error', args.join(' '));
+        };
+
+        console.warn = function(...args) {
+            originalWarn.apply(console, args);
+            addLog('warn', args.join(' '));
+        };
+
+        function updateLogsDisplay() {
+            const logsDiv = document.getElementById('console-logs');
+            const recentLogs = logs.slice(-50); // Mostrar apenas os 50 mais recentes
+
+            logsDiv.innerHTML = recentLogs.map(log => {
+                let className = 'status-ok';
+                if (log.type === 'error') className = 'status-error';
+                if (log.type === 'warn') className = 'status-warning';
+
+                return `<div class="${className}">[${log.timestamp}] ${log.message}</div>`;
+            }).join('');
+
+            logsDiv.scrollTop = logsDiv.scrollHeight;
+        }
+
+        function clearLogs() {
+            logs = [];
+            updateLogsDisplay();
+        }
+
+        function checkAllSystems() {
+            console.log('🔧 Verificando todos os sistemas...');
+
+            const systems = {
+                'ChessBoard': window.ChessBoard ? '✅' : '❌',
+                'BoardInitializer': window.boardInitializer ? '✅' : '❌',
+                'ARKITECT': window.arkitectSolution ? '✅' : '❌',
+                'Smart Chess Board': window.smartChessBoard ? '✅' : '❌',
+                'Chess Pro Database': window.chessProDB ? '✅' : '❌',
+                'Historical Battles': window.historicalBattlesUI ? '✅' : '❌'
+            };
+
+            let html = '<table style="width: 100%; border-collapse: collapse;">';
+            for (const [name, status] of Object.entries(systems)) {
+                const statusClass = status === '✅' ? 'status-ok' : 'status-error';
+                html += `<tr><td style="padding: 5px; border-bottom: 1px solid #444;">${name}</td><td class="${statusClass}" style="padding: 5px; border-bottom: 1px solid #444;">${status}</td></tr>`;
+            }
+            html += '</table>';
+
+            document.getElementById('systems-status').innerHTML = html;
+        }
+
+        function testArkitect() {
+            if (window.arkitectSolution) {
+                const status = window.arkitectSolution.getStatus();
+                document.getElementById('arkitect-status').innerHTML = `
+                    <pre>${JSON.stringify(status, null, 2)}</pre>
+                `;
+                window.arkitectSolution.test();
+            } else {
+                document.getElementById('arkitect-status').innerHTML = '<span class="status-error">ARKITECT não encontrado</span>';
+            }
+        }
+
+        function startArkitect() {
+            if (window.startArkitect) {
+                window.startArkitect();
+            }
+        }
+
+        function stopArkitect() {
+            if (window.stopArkitect) {
+                window.stopArkitect();
+            }
+        }
+
+        function checkBoards() {
+            if (window.boardInitializer) {
+                const boards = window.boardInitializer.getAllBoards();
+                let html = `<p>Total de tabuleiros: ${boards.length}</p>`;
+
+                // Verificar elementos chess-board
+                const chessBoardElements = document.querySelectorAll('chess-board');
+                html += `<p>Elementos chess-board encontrados: ${chessBoardElements.length}</p>`;
+
+                chessBoardElements.forEach((element, index) => {
+                    const hasWrapper = element.querySelector('.chess-board-wrapper');
+                    const statusClass = hasWrapper ? 'status-ok' : 'status-error';
+                    const status = hasWrapper ? '✅ Inicializado' : '❌ Não inicializado';
+                    html += `<div class="${statusClass}">Chess-board ${index + 1} (${element.id || 'sem ID'}): ${status}</div>`;
+                });
+
+                document.getElementById('boards-status').innerHTML = html;
+            } else {
+                document.getElementById('boards-status').innerHTML = '<span class="status-error">BoardInitializer não encontrado</span>';
+            }
+        }
+
+        function initBoards() {
+            if (window.boardInitializer) {
+                window.boardInitializer.initializeAllBoards();
+                setTimeout(checkBoards, 1000);
+            }
+        }
+
+        function checkSmartBoard() {
+            if (window.smartChessBoard) {
+                const status = window.smartChessBoard.getStatus();
+                document.getElementById('smart-board-status').innerHTML = `
+                    <pre>${JSON.stringify(status, null, 2)}</pre>
+                `;
+            } else {
+                document.getElementById('smart-board-status').innerHTML = '<span class="status-error">Smart Chess Board não encontrado</span>';
+            }
+        }
+
+        function testSmartBoard() {
+            if (window.smartChessBoard) {
+                window.smartChessBoard.toggleAutoDemo();
+            }
+        }
+
+        function checkDatabase() {
+            if (window.chessProDB) {
+                const stats = window.chessProDB.getStatistics();
+                document.getElementById('database-status').innerHTML = `
+                    <pre>${JSON.stringify(stats, null, 2)}</pre>
+                `;
+            } else {
+                document.getElementById('database-status').innerHTML = '<span class="status-error">Chess Pro Database não encontrado</span>';
+            }
+        }
+
+        function testDatabase() {
+            if (window.chessProDB) {
+                const randomPosition = window.chessProDB.getRandomPosition();
+                console.log('🎲 Posição aleatória:', randomPosition);
+            }
+        }
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🔧 Debug page carregada');
+
+            setTimeout(() => {
+                checkAllSystems();
+                checkBoards();
+
+                if (window.arkitectSolution) {
+                    testArkitect();
+                }
+
+                if (window.smartChessBoard) {
+                    checkSmartBoard();
+                }
+
+                if (window.chessProDB) {
+                    checkDatabase();
+                }
+            }, 2000);
+        });
+    </script>
+
+    <!-- Carregar os mesmos scripts que o index.html -->
+    <script src="https://unpkg.com/chess.js@1.0.0/dist/chess.min.js"></script>
+    <script src="js/chess-board.js"></script>
+    <script src="js/board-initializer.js"></script>
+    <script src="js/chess-pro-database.js"></script>
+    <script src="js/smart-chess-board.js"></script>
+    <script src="js/arkitect-simple-solution.js"></script>
+    <script src="js/historical-battles-ui-system.js"></script>
+</body>
+
+</html>

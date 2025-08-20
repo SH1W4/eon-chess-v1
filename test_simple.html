@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧪 Teste Simples do Sistema</title>
+    <style>
+        body {
+            background: #171717;
+            color: white;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .test-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #1a1a1a;
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #333;
+        }
+
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            background: #222;
+            border-radius: 8px;
+            border-left: 4px solid #00ff00;
+        }
+
+        .test-button {
+            background: linear-gradient(45deg, #00ff00, #00ffff);
+            color: black;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            font-weight: bold;
+        }
+
+        .test-button:hover {
+            transform: scale(1.05);
+        }
+
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            font-family: monospace;
+        }
+
+        .status.success {
+            background: #004400;
+            border: 1px solid #00ff00;
+        }
+
+        .status.error {
+            background: #440000;
+            border: 1px solid #ff0000;
+        }
+
+        .status.info {
+            background: #004444;
+            border: 1px solid #00ffff;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="test-container">
+        <h1>🧪 Teste Simples do Sistema</h1>
+
+        <div class="test-section">
+            <h3>📚 Teste da Base de Dados Pro</h3>
+            <button class="test-button" onclick="testDatabase()">📚 Testar Base</button>
+            <div id="database-status" class="status info">
+                Aguardando teste...
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h3>🧠 Teste do Sistema de Análise</h3>
+            <button class="test-button" onclick="testAnalysis()">🔍 Testar Análise</button>
+            <div id="analysis-status" class="status info">
+                Aguardando teste...
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h3>🎨 Teste dos Efeitos Visuais</h3>
+            <button class="test-button" onclick="testEffects()">🎨 Testar Efeitos</button>
+            <div id="effects-status" class="status info">
+                Aguardando teste...
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h3>🔍 Logs do Sistema</h3>
+            <div id="system-logs" class="status info" style="max-height: 200px; overflow-y: auto;">
+                Aguardando logs...
+            </div>
+            <button class="test-button" onclick="clearLogs()">🧹 Limpar Logs</button>
+        </div>
+    </div>
+
+    <!-- Carregar scripts na ordem correta -->
+    <script src="js/chess-pro-database.js"></script>
+    <script src="js/chess-pro-integration.js"></script>
+    <script src="js/python-effects-integration.js"></script>
+
+    <script>
+        // Sistema de logs
+        function log(message, type = 'info') {
+            const logsDiv = document.getElementById('system-logs');
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = document.createElement('div');
+            logEntry.innerHTML = `[${timestamp}] ${message}`;
+            logEntry.className = `status ${type}`;
+            logsDiv.appendChild(logEntry);
+            logsDiv.scrollTop = logsDiv.scrollHeight;
+            console.log(`[${type.toUpperCase()}] ${message}`);
+        }
+
+        function clearLogs() {
+            document.getElementById('system-logs').innerHTML = 'Logs limpos...';
+        }
+
+        // Testar base de dados
+        function testDatabase() {
+            log('📚 Testando base de dados Pro...', 'info');
+            const statusDiv = document.getElementById('database-status');
+
+            if (window.chessProDB) {
+                try {
+                    const stats = window.chessProDB.getStatistics();
+                    statusDiv.innerHTML = `
+                        <strong>✅ Base de Dados Ativa</strong><br>
+                        Total de Posições: ${stats.totalPositions}<br>
+                        Categorias: ${stats.totalCategories}<br>
+                        Detalhes: ${JSON.stringify(stats.categories)}
+                    `;
+                    statusDiv.className = 'status success';
+                    log('✅ Base de dados Pro funcionando', 'success');
+                    log(`📊 Estatísticas: ${JSON.stringify(stats)}`, 'info');
+                } catch (error) {
+                    statusDiv.innerHTML = `<strong>❌ Erro na Base de Dados</strong><br>${error.message}`;
+                    statusDiv.className = 'status error';
+                    log(`❌ Erro na base de dados: ${error.message}`, 'error');
+                }
+            } else {
+                statusDiv.innerHTML = '<strong>❌ Base de Dados Não Encontrada</strong>';
+                statusDiv.className = 'status error';
+                log('❌ Base de dados Pro não encontrada', 'error');
+            }
+        }
+
+        // Testar sistema de análise
+        function testAnalysis() {
+            log('🔍 Testando sistema de análise...', 'info');
+            const statusDiv = document.getElementById('analysis-status');
+
+            if (window.pythonEffects) {
+                try {
+                    const status = window.pythonEffects.getStatus();
+                    statusDiv.innerHTML = `
+                        <strong>✅ Sistema de Análise Ativo</strong><br>
+                        Tabuleiro: ${status.chessBoard}<br>
+                        Efeitos: ${status.effectsActive ? '🟢 Ativos' : '🔴 Inativos'}<br>
+                        Análise: ${status.analysisMode}<br>
+                        Base Pro: ${status.proDatabase}<br>
+                        Padrões: ${status.patternsDetected}<br>
+                        Movimentos: ${status.movesPredicted}
+                    `;
+                    statusDiv.className = 'status success';
+                    log('✅ Sistema de análise funcionando', 'success');
+                    log(`📊 Status: ${JSON.stringify(status)}`, 'info');
+                } catch (error) {
+                    statusDiv.innerHTML = `<strong>❌ Erro no Sistema de Análise</strong><br>${error.message}`;
+                    statusDiv.className = 'status error';
+                    log(`❌ Erro no sistema de análise: ${error.message}`, 'error');
+                }
+            } else {
+                statusDiv.innerHTML = '<strong>❌ Sistema de Análise Não Encontrado</strong>';
+                statusDiv.className = 'status error';
+                log('❌ Sistema de análise não encontrado', 'error');
+            }
+        }
+
+        // Testar efeitos visuais
+        function testEffects() {
+            log('🎨 Testando efeitos visuais...', 'info');
+            const statusDiv = document.getElementById('effects-status');
+
+            if (window.pythonEffects) {
+                try {
+                    // Testar efeitos
+                    window.pythonEffects.testEffects();
+
+                    statusDiv.innerHTML = `
+                        <strong>✅ Efeitos Visuais Testados</strong><br>
+                        Sistema ativo e funcionando<br>
+                        Verifique o console para detalhes
+                    `;
+                    statusDiv.className = 'status success';
+                    log('✅ Efeitos visuais testados com sucesso', 'success');
+                } catch (error) {
+                    statusDiv.innerHTML = `<strong>❌ Erro nos Efeitos Visuais</strong><br>${error.message}`;
+                    statusDiv.className = 'status error';
+                    log(`❌ Erro nos efeitos visuais: ${error.message}`, 'error');
+                }
+            } else {
+                statusDiv.innerHTML = '<strong>❌ Sistema de Efeitos Não Encontrado</strong>';
+                statusDiv.className = 'status error';
+                log('❌ Sistema de efeitos não encontrado', 'error');
+            }
+        }
+
+        // Verificar inicialização
+        function checkInitialization() {
+            log('🔍 Verificando inicialização...', 'info');
+
+            // Verificar base de dados
+            if (window.chessProDB) {
+                log('✅ Base de dados Pro inicializada', 'success');
+            } else {
+                log('❌ Base de dados Pro não inicializada', 'error');
+            }
+
+            // Verificar sistema de análise
+            if (window.pythonEffects) {
+                log('✅ Sistema de análise inicializado', 'success');
+            } else {
+                log('❌ Sistema de análise não inicializado', 'error');
+            }
+
+            // Verificar integração
+            if (window.chessProIntegration) {
+                log('✅ Integração Pro inicializada', 'success');
+            } else {
+                log('❌ Integração Pro não inicializada', 'error');
+            }
+        }
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', function() {
+            log('🚀 Página de teste carregada', 'success');
+
+            // Aguardar scripts carregarem
+            setTimeout(() => {
+                checkInitialization();
+
+                // Testar base de dados automaticamente
+                setTimeout(() => {
+                    testDatabase();
+                }, 1000);
+            }, 2000);
+        });
+
+        // Monitorar mudanças
+        setInterval(() => {
+            if (window.pythonEffects && window.pythonEffects.getStatus) {
+                const status = window.pythonEffects.getStatus();
+                if (status.effectsActive) {
+                    log('🟢 Sistema de efeitos ativo', 'success');
+                }
+            }
+        }, 5000);
+    </script>
+</body>
+
+</html>

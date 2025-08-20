@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste de Conexão - Base de Dados Pro</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <!-- Chessboard and Chess.js -->
+    <script type="module" src="https://unpkg.com/chessboard-element?module"></script>
+    <script src="https://unpkg.com/chess.js@1.0.0/dist/chess.min.js"></script>
+
+    <style>
+        body {
+            background: #0a0a0a;
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .test-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .status-panel {
+            background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .status-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #333;
+        }
+
+        .status-item:last-child {
+            border-bottom: none;
+        }
+
+        .status-value {
+            font-weight: 600;
+        }
+
+        .status-ok {
+            color: #10b981;
+        }
+
+        .status-error {
+            color: #ef4444;
+        }
+
+        .status-warning {
+            color: #f59e0b;
+        }
+
+        .test-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .test-btn {
+            padding: 10px 16px;
+            background: #333;
+            border: 1px solid #444;
+            border-radius: 6px;
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .test-btn:hover {
+            background: #444;
+            border-color: #555;
+        }
+
+        .test-btn.active {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            border-color: #3b82f6;
+        }
+
+        .log-container {
+            background: #0f0f0f;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 16px;
+            height: 400px;
+            overflow-y: auto;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 12px;
+        }
+
+        .log-entry {
+            margin-bottom: 4px;
+            padding: 2px 0;
+        }
+
+        .log-info {
+            color: #3b82f6;
+        }
+
+        .log-success {
+            color: #10b981;
+        }
+
+        .log-warning {
+            color: #f59e0b;
+        }
+
+        .log-error {
+            color: #ef4444;
+        }
+
+        .position-display {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 20px;
+        }
+
+        .position-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="test-container">
+        <h1 class="text-3xl font-bold mb-6">🔗 Teste de Conexão - Base de Dados Pro</h1>
+
+        <!-- Status Panel -->
+        <div class="status-panel">
+            <h2 class="text-xl font-semibold mb-4">Status da Conexão</h2>
+            <div id="status-content">
+                <div class="status-item">
+                    <span>Base de Dados Pro:</span>
+                    <span id="database-status" class="status-value status-warning">Verificando...</span>
+                </div>
+                <div class="status-item">
+                    <span>Smart Chess Board:</span>
+                    <span id="smart-status" class="status-value status-warning">Verificando...</span>
+                </div>
+                <div class="status-item">
+                    <span>Posições Carregadas:</span>
+                    <span id="positions-status" class="status-value">-</span>
+                </div>
+                <div class="status-item">
+                    <span>Automação Ativa:</span>
+                    <span id="automation-status" class="status-value">-</span>
+                </div>
+                <div class="status-item">
+                    <span>Categoria Atual:</span>
+                    <span id="category-status" class="status-value">-</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Test Buttons -->
+        <div class="test-buttons">
+            <button class="test-btn" onclick="testDatabase()">
+                <i class="fas fa-database mr-2"></i>Testar Base de Dados
+            </button>
+            <button class="test-btn" onclick="testSmartBoard()">
+                <i class="fas fa-brain mr-2"></i>Testar Smart Board
+            </button>
+            <button class="test-btn" onclick="testPositions()">
+                <i class="fas fa-chess mr-2"></i>Testar Posições
+            </button>
+            <button class="test-btn" onclick="testAutomation()">
+                <i class="fas fa-play mr-2"></i>Testar Automação
+            </button>
+            <button class="test-btn" onclick="fixConnection()">
+                <i class="fas fa-wrench mr-2"></i>Corrigir Conexão
+            </button>
+            <button class="test-btn" onclick="clearLog()">
+                <i class="fas fa-trash mr-2"></i>Limpar Log
+            </button>
+        </div>
+
+        <!-- Position Display -->
+        <div class="position-display">
+            <h3 class="text-lg font-semibold mb-4">Posição Atual</h3>
+            <div class="position-info">
+                <div>
+                    <strong>Nome:</strong> <span id="current-position-name">-</span><br>
+                    <strong>Categoria:</strong> <span id="current-position-category">-</span><br>
+                    <strong>FEN:</strong> <span id="current-position-fen">-</span>
+                </div>
+                <div>
+                    <strong>Temas:</strong> <span id="current-position-themes">-</span><br>
+                    <strong>Nível:</strong> <span id="current-position-level">-</span><br>
+                    <strong>Análise:</strong> <span id="current-position-analysis">-</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chess Board -->
+        <div class="bg-gradient-to-br from-[#1a1a1a] to-[#0f0f0f] border border-[#2a2a2a] rounded-2xl p-8 shadow-2xl mb-6">
+            <div class="text-center mb-6">
+                <h3 class="text-2xl font-bold text-white mb-2">
+                    <i class="fas fa-chess mr-3 text-blue-500"></i>
+                    Tabuleiro de Teste
+                </h3>
+                <p class="text-gray-400">Verificação da conexão entre base de dados e automação</p>
+            </div>
+
+            <div class="hero-chess-board flex justify-center">
+                <chess-board id="aeon-board" position="start" draggable-pieces=""></chess-board>
+            </div>
+        </div>
+
+        <!-- Log -->
+        <div class="status-panel">
+            <h2 class="text-xl font-semibold mb-4">Log de Testes</h2>
+            <div id="log-container" class="log-container">
+                <div class="log-entry log-info">🔗 Iniciando teste de conexão...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/chess-board.js"></script>
+    <script src="js/board-initializer.js"></script>
+    <script src="js/chess-pro-database.js"></script>
+    <script src="js/arkitect-simple-solution.js"></script>
+    <script src="js/smart-chess-board.js"></script>
+    <script src="js/smart-chess-board-debug.js"></script>
+
+    <script>
+        // Log function
+        function log(message, type = 'info') {
+            const logContainer = document.getElementById('log-container');
+            const logEntry = document.createElement('div');
+            logEntry.className = `log-entry log-${type}`;
+            logEntry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            logContainer.appendChild(logEntry);
+            logContainer.scrollTop = logContainer.scrollHeight;
+        }
+
+        // Clear log
+        function clearLog() {
+            document.getElementById('log-container').innerHTML = '<div class="log-entry log-info">🔗 Log limpo...</div>';
+        }
+
+        // Update status
+        function updateStatus(elementId, status, type = 'ok') {
+            const element = document.getElementById(elementId);
+            element.textContent = status;
+            element.className = `status-value status-${type}`;
+        }
+
+        // Update position display
+        function updatePositionDisplay(position) {
+            if (position) {
+                document.getElementById('current-position-name').textContent = position.name || 'Sem nome';
+                document.getElementById('current-position-category').textContent = position.category || 'Sem categoria';
+                document.getElementById('current-position-fen').textContent = position.fen || 'Sem FEN';
+                document.getElementById('current-position-themes').textContent = position.themes ? position.themes.join(', ') : 'Sem temas';
+                document.getElementById('current-position-level').textContent = position.level || 'Sem nível';
+                document.getElementById('current-position-analysis').textContent = position.aiNotes || 'Sem análise';
+            } else {
+                document.getElementById('current-position-name').textContent = '-';
+                document.getElementById('current-position-category').textContent = '-';
+                document.getElementById('current-position-fen').textContent = '-';
+                document.getElementById('current-position-themes').textContent = '-';
+                document.getElementById('current-position-level').textContent = '-';
+                document.getElementById('current-position-analysis').textContent = '-';
+            }
+        }
+
+        // Test functions
+        function testDatabase() {
+            log('🧪 Testando base de dados...', 'info');
+
+            if (window.chessProDB) {
+                try {
+                    const stats = window.chessProDB.getStatistics();
+                    updateStatus('database-status', `✅ ${stats.totalPositions} posições`, 'ok');
+                    log(`✅ Base de dados conectada: ${stats.totalPositions} posições`, 'success');
+                    log(`📊 Categorias: ${Object.keys(stats.categories).join(', ')}`, 'info');
+
+                    // Testar categorias específicas
+                    const categories = ['openings', 'tacticalPatterns', 'classicEndgames', 'historicalPositions', 'grandmasterGames'];
+                    categories.forEach(category => {
+                        if (window.chessProDB[category]) {
+                            const catData = window.chessProDB[category];
+                            log(`📊 ${category}: ${catData.total} posições`, 'info');
+                        } else {
+                            log(`❌ Categoria ${category} não encontrada`, 'error');
+                        }
+                    });
+                } catch (error) {
+                    updateStatus('database-status', '❌ Erro', 'error');
+                    log(`❌ Erro ao testar base de dados: ${error.message}`, 'error');
+                }
+            } else {
+                updateStatus('database-status', '❌ Não encontrada', 'error');
+                log('❌ Base de dados não encontrada', 'error');
+            }
+        }
+
+        function testSmartBoard() {
+            log('🧪 Testando Smart Chess Board...', 'info');
+
+            if (window.smartChessBoard) {
+                try {
+                    const status = window.smartChessBoard.getStatus();
+                    updateStatus('smart-status', `✅ ${status.name} v${status.version}`, 'ok');
+                    updateStatus('positions-status', `${status.totalPositions} posições`);
+                    updateStatus('automation-status', status.autoDemo ? 'Ativo' : 'Inativo');
+                    updateStatus('category-status', status.currentCategory);
+
+                    log(`✅ Smart Chess Board: ${status.name} v${status.version}`, 'success');
+                    log(`📊 Total de posições: ${status.totalPositions}`, 'info');
+                    log(`📊 Categoria atual: ${status.currentCategory}`, 'info');
+                    log(`📊 Demo automático: ${status.autoDemo ? 'Ativo' : 'Inativo'}`, 'info');
+
+                    // Atualizar display da posição
+                    if (status.currentPosition && status.currentPosition !== 'Nenhuma') {
+                        updatePositionDisplay(status.currentPosition);
+                    }
+                } catch (error) {
+                    updateStatus('smart-status', '❌ Erro', 'error');
+                    log(`❌ Erro ao testar Smart Board: ${error.message}`, 'error');
+                }
+            } else {
+                updateStatus('smart-status', '❌ Não encontrado', 'error');
+                log('❌ Smart Chess Board não encontrado', 'error');
+            }
+        }
+
+        function testPositions() {
+            log('🧪 Testando carregamento de posições...', 'info');
+
+            if (window.smartChessBoard) {
+                // Testar carregamento de posições
+                const categories = ['openings', 'tacticalPatterns', 'classicEndgames'];
+
+                categories.forEach((category, index) => {
+                    setTimeout(() => {
+                        window.smartChessBoard.changeCategory(category);
+                        const status = window.smartChessBoard.getStatus();
+                        log(`✅ Categoria ${category}: ${status.totalPositions} posições carregadas`, 'success');
+
+                        if (status.totalPositions > 0) {
+                            // Carregar primeira posição
+                            window.smartChessBoard.loadCurrentPosition();
+                            log(`✅ Primeira posição de ${category} carregada`, 'success');
+                        }
+                    }, index * 1000);
+                });
+            } else {
+                log('❌ Smart Chess Board não disponível', 'error');
+            }
+        }
+
+        function testAutomation() {
+            log('🧪 Testando automação...', 'info');
+
+            if (window.smartChessBoard) {
+                const status = window.smartChessBoard.getStatus();
+
+                if (status.totalPositions > 0) {
+                    if (status.autoDemo) {
+                        window.smartChessBoard.stopAutoDemo();
+                        log('✅ Automação parada para teste', 'success');
+                    } else {
+                        window.smartChessBoard.startAutoDemo();
+                        log('✅ Automação iniciada para teste', 'success');
+                    }
+
+                    updateStatus('automation-status', status.autoDemo ? 'Inativo' : 'Ativo');
+                } else {
+                    log('❌ Nenhuma posição disponível para automação', 'error');
+                }
+            } else {
+                log('❌ Smart Chess Board não disponível', 'error');
+            }
+        }
+
+        function fixConnection() {
+            log('🔧 Corrigindo conexão...', 'info');
+
+            if (window.smartChessBoardDebug) {
+                window.smartChessBoardDebug.fixDatabaseConnection();
+                log('🔧 Correção de conexão aplicada', 'success');
+
+                setTimeout(() => {
+                    window.smartChessBoardDebug.fixAutomation();
+                    log('🔧 Correção de automação aplicada', 'success');
+                }, 2000);
+            } else {
+                log('❌ Sistema de debug não disponível', 'error');
+            }
+        }
+
+        // Auto-test on load
+        document.addEventListener('DOMContentLoaded', () => {
+            log('🔗 Página carregada, aguardando sistemas...', 'info');
+
+            setTimeout(() => {
+                testDatabase();
+                testSmartBoard();
+                log('🔗 Teste automático concluído', 'success');
+            }, 3000);
+        });
+
+        // Global functions for console testing
+        window.testDatabase = testDatabase;
+        window.testSmartBoard = testSmartBoard;
+        window.testPositions = testPositions;
+        window.testAutomation = testAutomation;
+        window.fixConnection = fixConnection;
+        window.clearLog = clearLog;
+    </script>
+</body>
+
+</html>

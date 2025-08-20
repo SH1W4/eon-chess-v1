@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎯 Teste Final do Sistema</title>
+    <style>
+        body {
+            background: #171717;
+            color: white;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .test-container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #1a1a1a;
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #333;
+        }
+
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            background: #222;
+            border-radius: 8px;
+            border-left: 4px solid #00ff00;
+        }
+
+        .test-button {
+            background: linear-gradient(45deg, #00ff00, #00ffff);
+            color: black;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            font-weight: bold;
+        }
+
+        .test-button:hover {
+            transform: scale(1.05);
+        }
+
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            font-family: monospace;
+        }
+
+        .status.success {
+            background: #004400;
+            border: 1px solid #00ff00;
+        }
+
+        .status.error {
+            background: #440000;
+            border: 1px solid #ff0000;
+        }
+
+        .status.info {
+            background: #004444;
+            border: 1px solid #00ffff;
+        }
+
+        .chess-board-container {
+            width: 400px;
+            height: 400px;
+            margin: 20px auto;
+            background: #333;
+            border: 2px solid #666;
+            border-radius: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .chess-board {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, #8B4513, #DEB887);
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            grid-template-rows: repeat(8, 1fr);
+        }
+
+        .chess-square {
+            border: 1px solid #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .chess-square.white {
+            background: #DEB887;
+        }
+
+        .chess-square.black {
+            background: #8B4513;
+        }
+
+        .effects-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        .log-container {
+            max-height: 300px;
+            overflow-y: auto;
+            background: #000;
+            padding: 10px;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 12px;
+        }
+
+        .fix-section {
+            background: #2a1a1a;
+            border-left: 4px solid #ff6600;
+        }
+
+        .fix-button {
+            background: linear-gradient(45deg, #ff6600, #ffaa00);
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="test-container">
+        <h1>🎯 Teste Final do Sistema</h1>
+
+        <div class="test-section fix-section">
+            <h3>🔧 Sistema de Correção Automática</h3>
+            <button class="test-button fix-button" onclick="applySystemFix()">🔧 Aplicar Correções</button>
+            <button class="test-button fix-button" onclick="reinitializeAll()">🔄 Reinicializar Tudo</button>
+            <button class="test-button fix-button" onclick="checkSystemStatus()">📊 Verificar Status</button>
+            <div id="fix-status" class="status info">
+                Aguardando correções...
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h3>📚 Teste da Base de Dados Pro</h3>
+            <button class="test-button" onclick="testDatabase()">📚 Testar Base</button>
+            <div id="database-status" class="status info">
+                Aguardando teste...
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h3>🧠 Teste do Sistema de Análise</h3>
+            <button class="test-button" onclick="testAnalysis()">🔍 Testar Análise</button>
+            <button class="test-button" onclick="testEffects()">🎨 Testar Efeitos</button>
+            <div id="analysis-status" class="status info">
+                Aguardando teste...
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h3>🎯 Tabuleiro de Teste</h3>
+            <div class="chess-board-container">
+                <div class="chess-board" id="test-board">
+                    <!-- Tabuleiro será gerado dinamicamente -->
+                </div>
+                <div id="effects-overlay" class="effects-overlay"></div>
+            </div>
+            <button class="test-button" onclick="generateTestBoard()">♟️ Gerar Tabuleiro</button>
+        </div>
+
+        <div class="test-section">
+            <h3>🔍 Logs do Sistema</h3>
+            <div id="system-logs" class="log-container">
+                Aguardando logs...
+            </div>
+            <button class="test-button" onclick="clearLogs()">🧹 Limpar Logs</button>
+        </div>
+    </div>
+
+    <!-- Carregar scripts na ordem correta -->
+    <script src="js/chess-pro-database.js"></script>
+    <script src="js/chess-pro-integration.js"></script>
+    <script src="js/python-effects-integration.js"></script>
+    <script src="js/system-fix.js"></script>
+
+    <script>
+        // Sistema de logs
+        function log(message, type = 'info') {
+            const logsDiv = document.getElementById('system-logs');
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = document.createElement('div');
+            logEntry.innerHTML = `[${timestamp}] ${message}`;
+            logEntry.className = `status ${type}`;
+            logsDiv.appendChild(logEntry);
+            logsDiv.scrollTop = logsDiv.scrollHeight;
+            console.log(`[${type.toUpperCase()}] ${message}`);
+        }
+
+        function clearLogs() {
+            document.getElementById('system-logs').innerHTML = 'Logs limpos...';
+        }
+
+        // Gerar tabuleiro de teste
+        function generateTestBoard() {
+            const board = document.getElementById('test-board');
+            board.innerHTML = '';
+
+            for (let row = 0; row < 8; row++) {
+                for (let col = 0; col < 8; col++) {
+                    const square = document.createElement('div');
+                    square.className = `chess-square ${(row + col) % 2 === 0 ? 'white' : 'black'}`;
+
+                    // Adicionar peças de exemplo
+                    if (row === 0) {
+                        const pieces = ['♜', '♞', '♝', '♛', '♚', '♝', '♞', '♜'];
+                        square.textContent = pieces[col];
+                    } else if (row === 1) {
+                        square.textContent = '♟';
+                    } else if (row === 6) {
+                        square.textContent = '♙';
+                    } else if (row === 7) {
+                        const pieces = ['♖', '♘', '♗', '♕', '♔', '♗', '♘', '♖'];
+                        square.textContent = pieces[col];
+                    }
+
+                    board.appendChild(square);
+                }
+            }
+
+            log('✅ Tabuleiro de teste gerado', 'success');
+        }
+
+        // Aplicar correções do sistema
+        async function applySystemFix() {
+            log('🔧 Aplicando correções do sistema...', 'info');
+            const statusDiv = document.getElementById('fix-status');
+
+            try {
+                if (window.applySystemFix) {
+                    await window.applySystemFix('all');
+                    statusDiv.innerHTML = '<strong>✅ Correções aplicadas com sucesso</strong>';
+                    statusDiv.className = 'status success';
+                    log('✅ Correções aplicadas com sucesso', 'success');
+                } else {
+                    throw new Error('Função applySystemFix não disponível');
+                }
+            } catch (error) {
+                statusDiv.innerHTML = `<strong>❌ Erro ao aplicar correções</strong><br>${error.message}`;
+                statusDiv.className = 'status error';
+                log(`❌ Erro ao aplicar correções: ${error.message}`, 'error');
+            }
+        }
+
+        // Reinicializar tudo
+        async function reinitializeAll() {
+            log('🔄 Reinicializando todos os sistemas...', 'info');
+            const statusDiv = document.getElementById('fix-status');
+
+            try {
+                if (window.systemFix) {
+                    await window.systemFix.reinitializeAll();
+                    statusDiv.innerHTML = '<strong>✅ Todos os sistemas reinicializados</strong>';
+                    statusDiv.className = 'status success';
+                    log('✅ Todos os sistemas reinicializados', 'success');
+                } else {
+                    throw new Error('Sistema de correção não disponível');
+                }
+            } catch (error) {
+                statusDiv.innerHTML = `<strong>❌ Erro ao reinicializar</strong><br>${error.message}`;
+                statusDiv.className = 'status error';
+                log(`❌ Erro ao reinicializar: ${error.message}`, 'error');
+            }
+        }
+
+        // Verificar status do sistema
+        function checkSystemStatus() {
+            log('📊 Verificando status do sistema...', 'info');
+            const statusDiv = document.getElementById('fix-status');
+
+            try {
+                if (window.getSystemStatus) {
+                    const status = window.getSystemStatus();
+                    statusDiv.innerHTML = `
+                        <strong>📊 Status do Sistema</strong><br>
+                        Base Pro: ${status.proDatabase ? '✅' : '❌'}<br>
+                        Análise: ${status.analysisSystem ? '✅' : '❌'}<br>
+                        Integração: ${status.integration ? '✅' : '❌'}<br>
+                        Correções: ${status.fixesApplied.length}<br>
+                        Timestamp: ${status.timestamp}
+                    `;
+                    statusDiv.className = 'status success';
+                    log('✅ Status verificado com sucesso', 'success');
+                    log(`📊 Detalhes: ${JSON.stringify(status)}`, 'info');
+                } else {
+                    throw new Error('Função getSystemStatus não disponível');
+                }
+            } catch (error) {
+                statusDiv.innerHTML = `<strong>❌ Erro ao verificar status</strong><br>${error.message}`;
+                statusDiv.className = 'status error';
+                log(`❌ Erro ao verificar status: ${error.message}`, 'error');
+            }
+        }
+
+        // Testar base de dados
+        function testDatabase() {
+            log('📚 Testando base de dados Pro...', 'info');
+            const statusDiv = document.getElementById('database-status');
+
+            if (window.chessProDB) {
+                try {
+                    const stats = window.chessProDB.getStatistics();
+                    statusDiv.innerHTML = `
+                        <strong>✅ Base de Dados Ativa</strong><br>
+                        Total de Posições: ${stats.totalPositions}<br>
+                        Categorias: ${stats.totalCategories}<br>
+                        Detalhes: ${JSON.stringify(stats.categories)}
+                    `;
+                    statusDiv.className = 'status success';
+                    log('✅ Base de dados Pro funcionando', 'success');
+                    log(`📊 Estatísticas: ${JSON.stringify(stats)}`, 'info');
+                } catch (error) {
+                    statusDiv.innerHTML = `<strong>❌ Erro na Base de Dados</strong><br>${error.message}`;
+                    statusDiv.className = 'status error';
+                    log(`❌ Erro na base de dados: ${error.message}`, 'error');
+                }
+            } else {
+                statusDiv.innerHTML = '<strong>❌ Base de Dados Não Encontrada</strong>';
+                statusDiv.className = 'status error';
+                log('❌ Base de dados Pro não encontrada', 'error');
+            }
+        }
+
+        // Testar sistema de análise
+        function testAnalysis() {
+            log('🔍 Testando sistema de análise...', 'info');
+            const statusDiv = document.getElementById('analysis-status');
+
+            if (window.pythonEffects) {
+                try {
+                    const status = window.pythonEffects.getStatus();
+                    statusDiv.innerHTML = `
+                        <strong>✅ Sistema de Análise Ativo</strong><br>
+                        Tabuleiro: ${status.chessBoard}<br>
+                        Efeitos: ${status.effectsActive ? '🟢 Ativos' : '🔴 Inativos'}<br>
+                        Análise: ${status.analysisMode}<br>
+                        Base Pro: ${status.proDatabase}<br>
+                        Padrões: ${status.patternsDetected}<br>
+                        Movimentos: ${status.movesPredicted}
+                    `;
+                    statusDiv.className = 'status success';
+                    log('✅ Sistema de análise funcionando', 'success');
+                    log(`📊 Status: ${JSON.stringify(status)}`, 'info');
+                } catch (error) {
+                    statusDiv.innerHTML = `<strong>❌ Erro no Sistema de Análise</strong><br>${error.message}`;
+                    statusDiv.className = 'status error';
+                    log(`❌ Erro no sistema de análise: ${error.message}`, 'error');
+                }
+            } else {
+                statusDiv.innerHTML = '<strong>❌ Sistema de Análise Não Encontrado</strong>';
+                statusDiv.className = 'status error';
+                log('❌ Sistema de análise não encontrado', 'error');
+            }
+        }
+
+        // Testar efeitos visuais
+        function testEffects() {
+            log('🎨 Testando efeitos visuais...', 'info');
+
+            if (window.pythonEffects) {
+                try {
+                    // Testar efeitos
+                    window.pythonEffects.testEffects();
+                    log('✅ Efeitos visuais testados com sucesso', 'success');
+                } catch (error) {
+                    log(`❌ Erro nos efeitos visuais: ${error.message}`, 'error');
+                }
+            } else {
+                log('❌ Sistema de efeitos não encontrado', 'error');
+            }
+        }
+
+        // Verificar inicialização
+        function checkInitialization() {
+            log('🔍 Verificando inicialização...', 'info');
+
+            // Verificar se os scripts foram carregados
+            const scripts = [
+                'chess-pro-database.js',
+                'chess-pro-integration.js',
+                'python-effects-integration.js',
+                'system-fix.js'
+            ];
+
+            scripts.forEach(script => {
+                const scriptElement = document.querySelector(`script[src*="${script}"]`);
+                if (scriptElement) {
+                    log(`✅ Script ${script} carregado`, 'success');
+                } else {
+                    log(`❌ Script ${script} não encontrado`, 'error');
+                }
+            });
+
+            // Verificar variáveis globais
+            setTimeout(() => {
+                if (window.chessProDB) {
+                    log('✅ window.chessProDB disponível', 'success');
+                } else {
+                    log('❌ window.chessProDB não disponível', 'error');
+                }
+
+                if (window.pythonEffects) {
+                    log('✅ window.pythonEffects disponível', 'success');
+                } else {
+                    log('❌ window.pythonEffects não disponível', 'error');
+                }
+
+                if (window.systemFix) {
+                    log('✅ window.systemFix disponível', 'success');
+                } else {
+                    log('❌ window.systemFix não disponível', 'error');
+                }
+            }, 2000);
+        }
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', function() {
+            log('🚀 Página de teste final carregada', 'success');
+            generateTestBoard();
+
+            // Verificar inicialização após um delay
+            setTimeout(() => {
+                checkInitialization();
+
+                // Aplicar correções automaticamente
+                setTimeout(() => {
+                    log('🔧 Aplicando correções automáticas...', 'info');
+                    if (window.applySystemFix) {
+                        window.applySystemFix('all');
+                    }
+                }, 3000);
+            }, 2000);
+        });
+
+        // Monitorar mudanças
+        setInterval(() => {
+            if (window.pythonEffects && window.pythonEffects.getStatus) {
+                const status = window.pythonEffects.getStatus();
+                if (status.effectsActive) {
+                    log('🟢 Sistema de efeitos ativo', 'success');
+                }
+            }
+        }, 5000);
+    </script>
+</body>
+
+</html>

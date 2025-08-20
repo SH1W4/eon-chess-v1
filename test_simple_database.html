@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧪 Teste Simples da Base de Dados</title>
+    <style>
+        body {
+            background: #171717;
+            color: white;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .test-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #1a1a1a;
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #333;
+        }
+
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            font-family: monospace;
+        }
+
+        .status.success {
+            background: #004400;
+            border: 1px solid #00ff00;
+        }
+
+        .status.error {
+            background: #440000;
+            border: 1px solid #ff0000;
+        }
+
+        .status.info {
+            background: #004444;
+            border: 1px solid #00ffff;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="test-container">
+        <h1>🧪 Teste Simples da Base de Dados</h1>
+
+        <div id="test-results">
+            <div class="status info">Aguardando teste...</div>
+        </div>
+
+        <div id="console-output" class="status info" style="margin-top: 20px;">
+            <strong>Console Output:</strong><br>
+            <div id="console-content">Aguardando...</div>
+        </div>
+    </div>
+
+    <!-- Carregar apenas a base de dados -->
+    <script src="js/chess-pro-database.js"></script>
+
+    <script>
+        // Função para adicionar output ao console visual
+        function addConsoleOutput(message, type = 'info') {
+            const consoleContent = document.getElementById('console-content');
+            const timestamp = new Date().toLocaleTimeString();
+            const outputLine = document.createElement('div');
+            outputLine.innerHTML = `[${timestamp}] ${message}`;
+            consoleContent.appendChild(outputLine);
+        }
+
+        // Função para atualizar resultados
+        function updateResults(message, type = 'info') {
+            const resultsDiv = document.getElementById('test-results');
+            resultsDiv.innerHTML = `<div class="status ${type}">${message}</div>`;
+        }
+
+        // Teste principal
+        function runTest() {
+            console.log('🧪 Iniciando teste da base de dados...');
+            addConsoleOutput('🧪 Iniciando teste da base de dados...');
+
+            try {
+                // Verificar se a classe existe
+                if (typeof ChessProDatabase === 'undefined') {
+                    throw new Error('Classe ChessProDatabase não encontrada');
+                }
+                console.log('✅ Classe ChessProDatabase encontrada');
+                addConsoleOutput('✅ Classe ChessProDatabase encontrada');
+
+                // Verificar se foi adicionada ao window
+                if (typeof window.ChessProDatabase === 'undefined') {
+                    throw new Error('Classe não foi adicionada ao window');
+                }
+                console.log('✅ Classe adicionada ao window');
+                addConsoleOutput('✅ Classe adicionada ao window');
+
+                // Verificar se a instância foi criada
+                if (typeof window.chessProDB === 'undefined') {
+                    throw new Error('Instância chessProDB não foi criada');
+                }
+                console.log('✅ Instância chessProDB criada');
+                addConsoleOutput('✅ Instância chessProDB criada');
+
+                // Verificar se a instância tem os métodos necessários
+                if (typeof window.chessProDB.getStatistics !== 'function') {
+                    throw new Error('Método getStatistics não encontrado');
+                }
+                console.log('✅ Método getStatistics encontrado');
+                addConsoleOutput('✅ Método getStatistics encontrado');
+
+                // Testar o método getStatistics
+                const stats = window.chessProDB.getStatistics();
+                console.log('📊 Estatísticas obtidas:', stats);
+                addConsoleOutput(`📊 Estatísticas obtidas: ${JSON.stringify(stats)}`);
+
+                // Verificar se as estatísticas fazem sentido
+                if (stats.totalPositions <= 0) {
+                    throw new Error('Total de posições inválido');
+                }
+                console.log('✅ Total de posições válido:', stats.totalPositions);
+                addConsoleOutput(`✅ Total de posições válido: ${stats.totalPositions}`);
+
+                // Sucesso
+                updateResults(`
+                    <strong>✅ Base de Dados Funcionando!</strong><br>
+                    Total de Posições: ${stats.totalPositions}<br>
+                    Categorias: ${stats.totalCategories}<br>
+                    Status: Ativa e operacional
+                `, 'success');
+
+                console.log('🎉 Teste concluído com sucesso!');
+                addConsoleOutput('🎉 Teste concluído com sucesso!');
+
+            } catch (error) {
+                console.error('❌ Erro no teste:', error);
+                addConsoleOutput(`❌ Erro no teste: ${error.message}`);
+
+                updateResults(`
+                    <strong>❌ Erro na Base de Dados</strong><br>
+                    Erro: ${error.message}<br>
+                    Stack: ${error.stack}
+                `, 'error');
+            }
+        }
+
+        // Executar teste quando a página carregar
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 Página carregada, aguardando scripts...');
+            addConsoleOutput('🚀 Página carregada, aguardando scripts...');
+
+            // Aguardar um pouco para os scripts carregarem
+            setTimeout(() => {
+                console.log('🔍 Executando teste...');
+                addConsoleOutput('🔍 Executando teste...');
+                runTest();
+            }, 1000);
+        });
+
+        // Verificação adicional
+        window.addEventListener('load', function() {
+            console.log('📚 Página totalmente carregada');
+            addConsoleOutput('📚 Página totalmente carregada');
+        });
+    </script>
+</body>
+
+</html>

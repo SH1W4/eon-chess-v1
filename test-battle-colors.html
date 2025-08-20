@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste - Cores das Batalhas</title>
+    <link rel="stylesheet" href="css/battle-colors-emergency-fix.css">
+    <style>
+        body {
+            background: #1a1a1a;
+            color: white;
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #333;
+            border-radius: 8px;
+        }
+
+        .battle-card {
+            background: #2a2a2a;
+            padding: 20px;
+            margin: 10px 0;
+            border-radius: 8px;
+        }
+
+        .battle-controls {
+            display: flex;
+            gap: 16px;
+            margin-top: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        h1,
+        h2 {
+            color: #3182ce;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>🧪 Teste - Cores das Batalhas Históricas</h1>
+
+    <div class="test-section">
+        <h2>🎯 Teste 1: CSS Direto</h2>
+        <div class="battle-controls">
+            <button class="btn-battle-action">Iniciar Análise</button>
+            <button class="btn-battle-action">Ver Movimentos</button>
+            <button class="btn-battle-action">IA Professor</button>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>🎯 Teste 2: Com Classes de Batalha</h2>
+        <div class="battle-fischer">
+            <div class="battle-controls">
+                <button class="btn-battle-action">Iniciar Análise</button>
+                <button class="btn-battle-action">Ver Movimentos</button>
+                <button class="btn-battle-action">IA Professor</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>🎯 Teste 3: Com ID battle-details</h2>
+        <div id="battle-details">
+            <div class="battle-controls">
+                <button class="btn-battle-action">Iniciar Análise</button>
+                <button class="btn-battle-action">Ver Movimentos</button>
+                <button class="btn-battle-action">IA Professor</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>🎯 Teste 4: Diferentes Batalhas</h2>
+        <div class="battle-immortal">
+            <div class="battle-controls">
+                <button class="btn-battle-action">Iniciar Análise</button>
+                <button class="btn-battle-action">Ver Movimentos</button>
+                <button class="btn-battle-action">IA Professor</button>
+            </div>
+        </div>
+
+        <div class="battle-romantic">
+            <div class="battle-controls">
+                <button class="btn-battle-action">Iniciar Análise</button>
+                <button class="btn-battle-action">Ver Movimentos</button>
+                <button class="btn-battle-action">IA Professor</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>🔍 Status do Sistema</h2>
+        <div id="status">
+            <p>Verificando sistema...</p>
+        </div>
+    </div>
+
+    <script>
+        // Verificar se o CSS está sendo aplicado
+        function checkButtonColors() {
+            const buttons = document.querySelectorAll('.btn-battle-action');
+            const status = document.getElementById('status');
+
+            let coloredButtons = 0;
+            let totalButtons = buttons.length;
+
+            buttons.forEach((button, index) => {
+                const computedStyle = window.getComputedStyle(button);
+                const background = computedStyle.background;
+                const color = computedStyle.color;
+
+                console.log(`Botão ${index + 1}:`, {
+                    background: background,
+                    color: color,
+                    element: button
+                });
+
+                if (background && background !== 'rgba(0, 0, 0, 0)' &&
+                    background !== 'none' &&
+                    color && color !== 'rgba(0, 0, 0, 0)') {
+                    coloredButtons++;
+                    button.style.outline = '2px solid green';
+                } else {
+                    button.style.outline = '2px solid red';
+                }
+            });
+
+            status.innerHTML = `
+                <h3>Resultado da Verificação:</h3>
+                <p>✅ Botões com cores: ${coloredButtons}/${totalButtons}</p>
+                <p>❌ Botões sem cores: ${totalButtons - coloredButtons}/${totalButtons}</p>
+                <p><strong>Status:</strong> ${coloredButtons === totalButtons ? 'SUCESSO' : 'FALHA'}</p>
+            `;
+        }
+
+        // Verificar após carregamento
+        window.addEventListener('load', () => {
+            setTimeout(checkButtonColors, 500);
+        });
+
+        // Verificar novamente após 2 segundos
+        setTimeout(checkButtonColors, 2000);
+    </script>
+</body>
+
+</html>

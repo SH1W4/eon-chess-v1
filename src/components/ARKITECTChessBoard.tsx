@@ -1,20 +1,39 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 
-interface ChessPiece {
-  type: 'pawn' | 'rook' | 'knight' | 'bishop' | 'queen' | 'king';
-  color: 'white' | 'black';
-  position: string;
-}
-
 interface ARKITECTChessBoardProps {
   onDebug?: (info: string) => void;
   enableARKITECT?: boolean;
 }
 
+interface ChessPiece {
+  type: 'pawn' | 'rook' | 'knight' | 'bishop' | 'queen' | 'king';
+  color: 'white' | 'black';
+}
+
+interface ChessPosition {
+  row: number;
+  col: number;
+}
+
+interface ChessMove {
+  from: ChessPosition;
+  to: ChessPosition;
+  piece: ChessPiece;
+  captured?: ChessPiece;
+}
+
+interface GameState {
+  board: (ChessPiece | null)[][];
+  currentTurn: 'white' | 'black';
+  selectedPiece: ChessPosition | null;
+  moveCount: number;
+  gameStatus: 'playing' | 'check' | 'checkmate' | 'stalemate';
+}
+
 interface ARKITECTAnalysis {
-  moveQuality: number;
+  materialCount: { white: number; black: number };
   tacticalOpportunities: string[];
-  strategicAdvice: string;
+  strategicAdvice: string[];
   performanceMetrics: {
     responseTime: number;
     accuracy: number;
@@ -23,481 +42,426 @@ interface ARKITECTAnalysis {
 }
 
 const ARKITECTChessBoard: React.FC<ARKITECTChessBoardProps> = ({ 
-  onDebug, 
-  enableARKITECT = true 
+  onDebug = () => {}, 
+  enableARKITECT = false 
 }) => {
-  const [selectedPiece, setSelectedPiece] = useState<string | null>(null);
-  const [currentTurn, setCurrentTurn] = useState<'white' | 'black'>('white');
-  const [gameState, setGameState] = useState<'playing' | 'check' | 'checkmate' | 'stalemate'>('playing');
-  const [moveCount, setMoveCount] = useState(0);
-  const [arkitectAnalysis, setArkitectAnalysis] = useState<ARKITECTAnalysis | null>(null);
+  const [gameState, setGameState] = useState<GameState>({
+    board: initializeBoard(),
+    currentTurn: 'white',
+    selectedPiece: null,
+    moveCount: 0,
+    gameStatus: 'playing'
+  });
+
+  const [arkitectAnalysis, setArkitectAnalysis] = useState<ARKITECTAnalysis>({
+    materialCount: { white: 16, black: 16 },
+    tacticalOpportunities: [],
+    strategicAdvice: [],
+    performanceMetrics: {
+      responseTime: 0,
+      accuracy: 0,
+      efficiency: 0
+    }
+  });
+
   const [arkitectEnabled, setArkitectEnabled] = useState(enableARKITECT);
-  
-  const [pieces, setPieces] = useState<ChessPiece[]>([
-    // Peças brancas
-    { type: 'rook', color: 'white', position: 'a1' },
-    { type: 'knight', color: 'white', position: 'b1' },
-    { type: 'bishop', color: 'white', position: 'c1' },
-    { type: 'queen', color: 'white', position: 'd1' },
-    { type: 'king', color: 'white', position: 'e1' },
-    { type: 'bishop', color: 'white', position: 'f1' },
-    { type: 'knight', color: 'white', position: 'g1' },
-    { type: 'rook', color: 'white', position: 'h1' },
-    { type: 'pawn', color: 'white', position: 'a2' },
-    { type: 'pawn', color: 'white', position: 'b2' },
-    { type: 'pawn', color: 'white', position: 'c2' },
-    { type: 'pawn', color: 'white', position: 'd2' },
-    { type: 'pawn', color: 'white', position: 'e2' },
-    { type: 'pawn', color: 'white', position: 'f2' },
-    { type: 'pawn', color: 'white', position: 'g2' },
-    { type: 'pawn', color: 'white', position: 'h2' },
 
-    // Peças pretas
-    { type: 'rook', color: 'black', position: 'a8' },
-    { type: 'knight', color: 'black', position: 'b8' },
-    { type: 'bishop', color: 'black', position: 'c8' },
-    { type: 'queen', color: 'black', position: 'd8' },
-    { type: 'king', color: 'black', position: 'e8' },
-    { type: 'bishop', color: 'black', position: 'f8' },
-    { type: 'knight', color: 'black', position: 'g8' },
-    { type: 'rook', color: 'black', position: 'h8' },
-    { type: 'pawn', color: 'black', position: 'a7' },
-    { type: 'pawn', color: 'black', position: 'b7' },
-    { type: 'pawn', color: 'black', position: 'c7' },
-    { type: 'pawn', color: 'black', position: 'd7' },
-    { type: 'pawn', color: 'black', position: 'e7' },
-    { type: 'pawn', color: 'black', position: 'f7' },
-    { type: 'pawn', color: 'black', position: 'g7' },
-    { type: 'pawn', color: 'black', position: 'h7' },
-  ]);
-
-  const debug = useCallback((info: string) => {
-    console.log(`[ARKITECTChessBoard] ${info}`);
-    onDebug?.(info);
+  // Debug helper
+  const debug = useCallback((message: string) => {
+    onDebug(`ARKITECT: ${message}`);
   }, [onDebug]);
 
-  // ARKITECT Analysis Engine
-  const analyzePosition = useCallback((currentPieces: ChessPiece[], turn: 'white' | 'black'): ARKITECTAnalysis => {
+  // ARKITECT Analysis function
+  const analyzePosition = useCallback((board: (ChessPiece | null)[][], turn: 'white' | 'black') => {
     const startTime = performance.now();
     
-    // Análise tática
-    const tacticalOpportunities: string[] = [];
-    const materialCount = { white: 0, black: 0 };
+    // Material count
+    let whiteMaterial = 0;
+    let blackMaterial = 0;
     
-    currentPieces.forEach(piece => {
-      const value = piece.type === 'pawn' ? 1 : 
-                   piece.type === 'knight' || piece.type === 'bishop' ? 3 :
-                   piece.type === 'rook' ? 5 : 
-                   piece.type === 'queen' ? 9 : 0;
-      
-      if (piece.color === 'white') materialCount.white += value;
-      else materialCount.black += value;
-    });
-
-    // Detectar oportunidades táticas
-    if (materialCount.white > materialCount.black + 2) {
-      tacticalOpportunities.push('Vantagem material para brancas');
-    }
-    if (materialCount.black > materialCount.white + 2) {
-      tacticalOpportunities.push('Vantagem material para pretas');
+    for (let row = 0; row < 8; row++) {
+      for (let col = 0; col < 8; col++) {
+        const piece = board[row][col];
+        if (piece) {
+          const value = getPieceValue(piece.type);
+          if (piece.color === 'white') {
+            whiteMaterial += value;
+          } else {
+            blackMaterial += value;
+          }
+        }
+      }
     }
 
-    // Análise estratégica
-    const strategicAdvice = materialCount.white > materialCount.black ? 
-      'Brancas devem capitalizar vantagem material' :
-      materialCount.black > materialCount.white ?
-      'Pretas devem capitalizar vantagem material' :
-      'Posição equilibrada, focar no desenvolvimento';
+    // Tactical opportunities
+    const opportunities = [];
+    if (whiteMaterial > blackMaterial + 2) {
+      opportunities.push('Brancas têm vantagem material significativa');
+    }
+    if (blackMaterial > whiteMaterial + 2) {
+      opportunities.push('Pretas têm vantagem material significativa');
+    }
 
-    const responseTime = performance.now() - startTime;
+    // Strategic advice
+    const advice = [];
+    if (turn === 'white' && whiteMaterial > blackMaterial) {
+      advice.push('Mantenha a pressão com a vantagem material');
+    } else if (turn === 'black' && blackMaterial > whiteMaterial) {
+      advice.push('Explore a vantagem material com movimentos precisos');
+    } else {
+      advice.push('Posição equilibrada - foque no desenvolvimento');
+    }
+
+    const endTime = performance.now();
+    const responseTime = endTime - startTime;
 
     return {
-      moveQuality: Math.min(100, Math.max(0, 50 + (materialCount.white - materialCount.black) * 5)),
-      tacticalOpportunities,
-      strategicAdvice,
+      materialCount: { white: whiteMaterial, black: blackMaterial },
+      tacticalOpportunities: opportunities,
+      strategicAdvice: advice,
       performanceMetrics: {
-        responseTime,
-        accuracy: 85 + Math.random() * 10,
-        efficiency: 90 + Math.random() * 5
+        responseTime: Math.round(responseTime * 100) / 100,
+        accuracy: Math.random() * 20 + 80, // 80-100%
+        efficiency: Math.random() * 10 + 90 // 90-100%
       }
     };
   }, []);
 
-  // ARKITECT Performance Monitoring
-  const arkitectMonitor = useMemo(() => ({
-    startAnalysis: () => {
-      debug('🔬 ARKITECT iniciando análise...');
-      const analysis = analyzePosition(pieces, currentTurn);
-      setArkitectAnalysis(analysis);
-      debug(`📊 ARKITECT análise completa: ${analysis.performanceMetrics.responseTime.toFixed(2)}ms`);
-      return analysis;
-    },
+  // ARKITECT Monitor
+  const arkitectMonitor = useMemo(() => {
+    if (!arkitectEnabled) return null;
     
-    getPerformanceReport: () => {
-      if (!arkitectAnalysis) return null;
-      return {
-        responseTime: arkitectAnalysis.performanceMetrics.responseTime,
-        accuracy: arkitectAnalysis.performanceMetrics.accuracy,
-        efficiency: arkitectAnalysis.performanceMetrics.efficiency,
-        moveQuality: arkitectAnalysis.moveQuality
-      };
-    }
-  }), [analyzePosition, pieces, currentTurn, arkitectAnalysis, debug]);
+    return (
+      <div className="bg-gradient-to-r from-blue-900/20 to-purple-900/20 rounded-lg p-4 border border-blue-400/30 mb-4">
+        <h3 className="text-lg font-semibold text-blue-300 mb-3 flex items-center">
+          🧠 Análise ARKITECT
+        </h3>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {/* Material Count */}
+          <div className="bg-black/20 rounded-lg p-3">
+            <h4 className="text-sm font-medium text-gray-300 mb-2">Material</h4>
+            <div className="space-y-1">
+              <div className="flex justify-between text-sm">
+                <span className="text-white">Brancas:</span>
+                <span className="text-green-400">{arkitectAnalysis.materialCount.white}</span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span className="text-white">Pretas:</span>
+                <span className="text-red-400">{arkitectAnalysis.materialCount.black}</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Performance Metrics */}
+          <div className="bg-black/20 rounded-lg p-3">
+            <h4 className="text-sm font-medium text-gray-300 mb-2">Performance</h4>
+            <div className="space-y-1">
+              <div className="flex justify-between text-sm">
+                <span className="text-gray-400">Tempo:</span>
+                <span className="text-cyan-400">{arkitectAnalysis.performanceMetrics.responseTime}ms</span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span className="text-gray-400">Acurácia:</span>
+                <span className="text-yellow-400">{arkitectAnalysis.performanceMetrics.accuracy.toFixed(1)}%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Strategic Advice */}
+        {arkitectAnalysis.strategicAdvice.length > 0 && (
+          <div className="mt-3 bg-green-900/20 rounded-lg p-3 border border-green-400/30">
+            <h4 className="text-sm font-medium text-green-300 mb-2">💡 Conselho Estratégico</h4>
+            <p className="text-sm text-green-200">{arkitectAnalysis.strategicAdvice[0]}</p>
+          </div>
+        )}
+
+        {/* Tactical Opportunities */}
+        {arkitectAnalysis.tacticalOpportunities.length > 0 && (
+          <div className="mt-3 bg-orange-900/20 rounded-lg p-3 border border-orange-400/30">
+            <h4 className="text-sm font-medium text-orange-300 mb-2">🎯 Oportunidades Táticas</h4>
+            <p className="text-sm text-orange-200">{arkitectAnalysis.tacticalOpportunities[0]}</p>
+          </div>
+        )}
+      </div>
+    );
+  }, [arkitectEnabled, arkitectAnalysis]);
 
   useEffect(() => {
-    debug('🧠 ARKITECT ChessBoard montado');
+    debug('ARKITECT ChessBoard montado');
     debug(`ARKITECT habilitado: ${arkitectEnabled}`);
-    
+  }, [debug, arkitectEnabled]);
+
+  useEffect(() => {
+    setArkitectEnabled(enableARKITECT);
+  }, [enableARKITECT]);
+
+  useEffect(() => {
     if (arkitectEnabled) {
-      // Análise inicial do ARKITECT
-      setTimeout(() => {
-        const analysis = arkitectMonitor.startAnalysis();
-        debug(`🎯 ARKITECT análise inicial: ${analysis.strategicAdvice}`);
-      }, 1000);
+      const analysis = analyzePosition(gameState.board, gameState.currentTurn);
+      setArkitectAnalysis(analysis);
+      debug(`Análise ARKITECT executada - Tempo: ${analysis.performanceMetrics.responseTime}ms`);
     }
-  }, [arkitectEnabled, arkitectMonitor, debug]);
+  }, [gameState.board, gameState.currentTurn, arkitectEnabled, analyzePosition, debug]);
 
-  const getPieceAt = useCallback((position: string): ChessPiece | null => {
-    return pieces.find(piece => piece.position === position) || null;
-  }, [pieces]);
-
-  const getPieceSymbol = useCallback((piece: ChessPiece): string => {
-    const symbols = {
-      white: { king: '♔', queen: '♕', rook: '♖', bishop: '♗', knight: '♘', pawn: '♙' },
-      black: { king: '♚', queen: '♛', rook: '♜', bishop: '♝', knight: '♞', pawn: '♟' }
-    };
-    return symbols[piece.color][piece.type];
-  }, []);
-
-  const handleSquareClick = useCallback((position: string) => {
+  const handleSquareClick = useCallback((row: number, col: number) => {
     try {
-      const piece = getPieceAt(position);
+      debug(`Clique em ${String.fromCharCode(97 + col)}${8 - row}`);
       
-      debug(`🎯 Clique em ${position}, peça: ${piece ? `${piece.color} ${piece.type}` : 'nenhuma'}`);
+      const piece = gameState.board[row][col];
       
-      if (selectedPiece) {
-        // Executar movimento
-        const movingPiece = getPieceAt(selectedPiece);
-        if (movingPiece) {
-          debug(`♟️ Movendo ${movingPiece.type} de ${selectedPiece} para ${position}`);
-          
-          const newPieces = pieces.map(p => {
-            if (p.position === selectedPiece) {
-              return { ...p, position };
-            }
-            if (p.position === position) {
-              return null; // Captura
-            }
-            return p;
-          }).filter(Boolean) as ChessPiece[];
-
-          setPieces(newPieces);
-          setCurrentTurn(currentTurn === 'white' ? 'black' : 'white');
-          setMoveCount(prev => prev + 1);
-          setSelectedPiece(null);
-          
-          // ARKITECT análise pós-movimento
-          if (arkitectEnabled) {
-            setTimeout(() => {
-              const analysis = arkitectMonitor.startAnalysis();
-              debug(`🧠 ARKITECT após movimento: ${analysis.strategicAdvice}`);
-            }, 100);
-          }
-          
-          debug(`✅ Movimento executado. Turno: ${currentTurn === 'white' ? 'black' : 'white'}, Movimento: ${moveCount + 1}`);
-        }
-      } else if (piece && piece.color === currentTurn) {
-        // Selecionar peça
-        setSelectedPiece(position);
-        debug(`🎯 Peça selecionada: ${piece.color} ${piece.type} em ${position}`);
+      // Se uma peça já está selecionada, tentar mover
+      if (gameState.selectedPiece) {
+        const from = gameState.selectedPiece;
+        const to = { row, col };
         
-        // ARKITECT análise de seleção
-        if (arkitectEnabled) {
-          const analysis = analyzePosition(pieces, currentTurn);
-          debug(`🧠 ARKITECT análise de seleção: ${analysis.tacticalOpportunities.join(', ')}`);
+        // Verificar se é um movimento válido (simplificado)
+        if (isValidMove(from, to, gameState.board)) {
+          const newBoard = [...gameState.board.map(row => [...row])];
+          const movedPiece = newBoard[from.row][from.col];
+          
+          if (movedPiece) {
+            newBoard[to.row][to.col] = movedPiece;
+            newBoard[from.row][from.col] = null;
+            
+            setGameState(prev => ({
+              ...prev,
+              board: newBoard,
+              currentTurn: prev.currentTurn === 'white' ? 'black' : 'white',
+              selectedPiece: null,
+              moveCount: prev.moveCount + 1
+            }));
+            
+            debug(`Movimento executado: ${String.fromCharCode(97 + from.col)}${8 - from.row} → ${String.fromCharCode(97 + col)}${8 - row}`);
+          }
+        } else {
+          debug('Movimento inválido');
         }
-      } else if (piece && piece.color !== currentTurn) {
-        debug(`⚠️ Tentativa de selecionar peça adversária: ${piece.color} ${piece.type}`);
-      } else {
-        debug(`🔍 Clique em casa vazia: ${position}`);
+        
+        setGameState(prev => ({ ...prev, selectedPiece: null }));
+      }
+      // Se nenhuma peça está selecionada e clicou em uma peça da cor correta
+      else if (piece && piece.color === gameState.currentTurn) {
+        setGameState(prev => ({ ...prev, selectedPiece: { row, col } }));
+        debug(`Peça selecionada: ${piece.type} ${piece.color} em ${String.fromCharCode(97 + col)}${8 - row}`);
       }
     } catch (error) {
-      debug(`❌ Erro no handleSquareClick: ${error}`);
-      console.error('Erro no handleSquareClick:', error);
+      debug(`Erro no clique: ${error}`);
     }
-  }, [selectedPiece, pieces, currentTurn, moveCount, getPieceAt, debug, arkitectEnabled, arkitectMonitor, analyzePosition]);
+  }, [gameState, debug]);
 
   const resetGame = useCallback(() => {
-    debug('🔄 Resetando jogo');
-    setSelectedPiece(null);
-    setCurrentTurn('white');
-    setGameState('playing');
-    setMoveCount(0);
-    setArkitectAnalysis(null);
-    setPieces([
-      // Peças brancas
-      { type: 'rook', color: 'white', position: 'a1' }, { type: 'knight', color: 'white', position: 'b1' },
-      { type: 'bishop', color: 'white', position: 'c1' }, { type: 'queen', color: 'white', position: 'd1' },
-      { type: 'king', color: 'white', position: 'e1' }, { type: 'bishop', color: 'white', position: 'f1' },
-      { type: 'knight', color: 'white', position: 'g1' }, { type: 'rook', color: 'white', position: 'h1' },
-      { type: 'pawn', color: 'white', position: 'a2' }, { type: 'pawn', color: 'white', position: 'b2' },
-      { type: 'pawn', color: 'white', position: 'c2' }, { type: 'pawn', color: 'white', position: 'd2' },
-      { type: 'pawn', color: 'white', position: 'e2' }, { type: 'pawn', color: 'white', position: 'f2' },
-      { type: 'pawn', color: 'white', position: 'g2' }, { type: 'pawn', color: 'white', position: 'h2' },
+    setGameState({
+      board: initializeBoard(),
+      currentTurn: 'white',
+      selectedPiece: null,
+      moveCount: 0,
+      gameStatus: 'playing'
+    });
+    debug('Nova partida iniciada');
+  }, [debug]);
 
-      // Peças pretas
-      { type: 'rook', color: 'black', position: 'a8' }, { type: 'knight', color: 'black', position: 'b8' },
-      { type: 'bishop', color: 'black', position: 'c8' }, { type: 'queen', color: 'black', position: 'd8' },
-      { type: 'king', color: 'black', position: 'e8' }, { type: 'bishop', color: 'black', position: 'f8' },
-      { type: 'knight', color: 'black', position: 'g8' }, { type: 'rook', color: 'black', position: 'h8' },
-      { type: 'pawn', color: 'black', position: 'a7' }, { type: 'pawn', color: 'black', position: 'b7' },
-      { type: 'pawn', color: 'black', position: 'c7' }, { type: 'pawn', color: 'black', position: 'd7' },
-      { type: 'pawn', color: 'black', position: 'e7' }, { type: 'pawn', color: 'black', position: 'f7' },
-      { type: 'pawn', color: 'black', position: 'g7' }, { type: 'pawn', color: 'black', position: 'h7' },
-    ]);
+  const getSquareClass = (row: number, col: number) => {
+    const isLight = (row + col) % 2 === 0;
+    const isSelected = gameState.selectedPiece?.row === row && gameState.selectedPiece?.col === col;
     
-    if (arkitectEnabled) {
-      setTimeout(() => {
-        const analysis = arkitectMonitor.startAnalysis();
-        debug(`🧠 ARKITECT após reset: ${analysis.strategicAdvice}`);
-      }, 100);
+    let baseClass = `w-12 h-12 flex items-center justify-center text-lg font-bold cursor-pointer transition-all duration-200 relative ${
+      isLight ? 'bg-amber-100 text-amber-800' : 'bg-amber-800 text-amber-100'
+    }`;
+    
+    if (isSelected) {
+      baseClass += ' ring-2 ring-blue-500 ring-opacity-75 bg-blue-400/30';
     }
     
-    debug('✅ Jogo resetado com sucesso');
-  }, [debug, arkitectEnabled, arkitectMonitor]);
+    return baseClass;
+  };
 
-  const toggleARKITECT = useCallback(() => {
-    setArkitectEnabled(prev => !prev);
-    debug(`🧠 ARKITECT ${!arkitectEnabled ? 'habilitado' : 'desabilitado'}`);
-  }, [arkitectEnabled, debug]);
-
-  const squares = [];
-  for (let rank = 7; rank >= 0; rank--) {
-    for (let file = 0; file < 8; file++) {
-      const position = `${String.fromCharCode(97 + file)}${rank + 1}`;
-      const piece = getPieceAt(position);
-      const isLightSquare = (file + rank) % 2 === 0;
-      const isSelected = selectedPiece === position;
-
-      squares.push(
-        <div
-          key={position}
-          style={{
-            width: '100%',
-            height: '100%',
-            backgroundColor: isLightSquare ? '#fef3c7' : '#92400e',
-            border: isSelected ? '4px solid #3b82f6' : '1px solid #000',
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            position: 'relative'
-          }}
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            debug(`🎯 Clique detectado em ${position}`);
-            handleSquareClick(position);
-          }}
-          data-position={position}
-          data-piece={piece ? `${piece.color}-${piece.type}` : 'empty'}
-          data-testid={`square-${position}`}
-        >
-          {piece && (
-            <div style={{ fontSize: '2rem', userSelect: 'none' }}>
-              {getPieceSymbol(piece)}
-            </div>
-          )}
-          <div style={{
-            position: 'absolute',
-            bottom: '2px',
-            right: '2px',
-            fontSize: '0.75rem',
-            color: '#dc2626',
-            fontWeight: 'bold'
-          }}>
-            {position}
-          </div>
-        </div>
-      );
-    }
-  }
+  const getPieceSymbol = (piece: ChessPiece) => {
+    const symbols = {
+      king: '♔',
+      queen: '♕',
+      rook: '♖',
+      bishop: '♗',
+      knight: '♘',
+      pawn: '♙'
+    };
+    return piece.color === 'white' ? symbols[piece.type] : symbols[piece.type].replace('♔', '♚').replace('♕', '♛').replace('♖', '♜').replace('♗', '♝').replace('♘', '♞').replace('♙', '♟');
+  };
 
   return (
-    <div 
-      style={{
-        position: 'relative',
-        width: '100%',
-        height: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        border: '2px solid #ef4444'
-      }}
-    >
-      {/* ARKITECT Status */}
-      <div style={{
-        position: 'absolute',
-        top: '-60px',
-        left: '0',
-        right: '0',
-        textAlign: 'center'
-      }}>
-        <div style={{
-          display: 'inline-block',
-          padding: '8px 16px',
-          borderRadius: '8px',
-          color: arkitectEnabled ? '#fff' : '#000',
-          backgroundColor: arkitectEnabled ? '#059669' : '#e5e7eb',
-          fontWeight: 'bold',
-          marginRight: '10px'
-        }}>
-          🧠 ARKITECT: {arkitectEnabled ? 'ATIVO' : 'INATIVO'}
-        </div>
-        <button
-          onClick={toggleARKITECT}
-          style={{
-            backgroundColor: arkitectEnabled ? '#dc2626' : '#059669',
-            color: '#fff',
-            padding: '8px 16px',
-            borderRadius: '8px',
-            border: 'none',
-            cursor: 'pointer',
-            fontWeight: 'bold'
-          }}
-        >
-          {arkitectEnabled ? 'Desabilitar' : 'Habilitar'} ARKITECT
-        </button>
-      </div>
-      
-      <div 
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(8, 1fr)',
-          borderRadius: '6px',
-          overflow: 'hidden',
-          border: '4px solid #065f46',
-          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
-          backgroundColor: '#fef3c7',
-          width: 'min(400px, 80vw)',
-          height: 'min(400px, 80vw)',
-          maxWidth: '100%',
-          maxHeight: '100%'
-        }}
-        data-testid="arkitect-chess-board"
-      >
-        {squares}
-      </div>
-      
-      {/* Indicador de turno */}
-      <div style={{
-        position: 'absolute',
-        top: '-32px',
-        left: '0',
-        right: '0',
-        textAlign: 'center'
-      }}>
-        <div style={{
-          display: 'inline-block',
-          padding: '8px 16px',
-          borderRadius: '8px',
-          color: currentTurn === 'white' ? '#000' : '#fff',
-          backgroundColor: currentTurn === 'white' ? '#fff' : '#000',
-          fontWeight: 'bold'
-        }}>
-          Vez das {currentTurn === 'white' ? 'Brancas' : 'Pretas'}
+    <div className="arkitect-chess-board">
+      {/* ARKITECT Status Indicator */}
+      <div className="flex items-center justify-center mb-4">
+        <div className={`flex items-center space-x-2 px-3 py-1 rounded-full text-sm font-medium ${
+          arkitectEnabled 
+            ? 'bg-green-500/20 border border-green-400/50 text-green-300' 
+            : 'bg-gray-500/20 border border-gray-400/50 text-gray-300'
+        }`}>
+          <div className={`w-2 h-2 rounded-full ${
+            arkitectEnabled ? 'bg-green-400 animate-pulse' : 'bg-gray-400'
+          }`}></div>
+          <span>ARKITECT {arkitectEnabled ? 'ATIVO' : 'INATIVO'}</span>
         </div>
       </div>
 
-      {/* Controles */}
-      <div style={{
-        position: 'absolute',
-        bottom: '-48px',
-        left: '0',
-        right: '0',
-        textAlign: 'center'
-      }}>
-        <button
-          onClick={resetGame}
-          style={{
-            backgroundColor: '#059669',
-            color: '#fff',
-            fontWeight: '500',
-            borderRadius: '8px',
-            padding: '8px 16px',
-            border: 'none',
-            cursor: 'pointer',
-            marginRight: '10px'
-          }}
-        >
-          🔄 Nova Partida
-        </button>
-        <button
-          onClick={() => arkitectMonitor.startAnalysis()}
-          style={{
-            backgroundColor: '#3b82f6',
-            color: '#fff',
-            fontWeight: '500',
-            borderRadius: '8px',
-            padding: '8px 16px',
-            border: 'none',
-            cursor: 'pointer'
-          }}
-        >
-          🧠 Analisar ARKITECT
-        </button>
-        <div style={{
-          fontSize: '0.875rem',
-          color: '#d1fae5',
-          marginTop: '8px'
-        }}>
-          Movimentos: {moveCount}
+      {/* Turn Indicator */}
+      <div className="text-center mb-4">
+        <div className={`inline-flex items-center space-x-2 px-4 py-2 rounded-lg ${
+          gameState.currentTurn === 'white' 
+            ? 'bg-white/10 border border-white/30' 
+            : 'bg-black/10 border border-black/30'
+        }`}>
+          <div className={`w-3 h-3 rounded-full ${
+            gameState.currentTurn === 'white' ? 'bg-white' : 'bg-black'
+          }`}></div>
+          <span className="font-medium">
+            Vez das {gameState.currentTurn === 'white' ? 'Brancas' : 'Pretas'}
+          </span>
         </div>
       </div>
-      
+
       {/* ARKITECT Analysis Display */}
-      {arkitectAnalysis && arkitectEnabled && (
-        <div style={{
-          position: 'absolute',
-          top: '0',
-          right: '0',
-          backgroundColor: 'rgba(0, 0, 0, 0.9)',
-          color: '#fff',
-          fontSize: '12px',
-          padding: '12px',
-          borderRadius: '4px',
-          maxWidth: '300px',
-          minWidth: '250px'
-        }}>
-          <div style={{ fontWeight: 'bold', marginBottom: '8px', color: '#10b981' }}>
-            🧠 ARKITECT Analysis
+      {arkitectMonitor}
+
+      {/* Chess Board Container - Design inspirado na landing page */}
+      <div className="flex justify-center mb-6">
+        <div className="relative">
+          {/* Ranks labels (1-8) on the left */}
+          <div className="absolute left-0 top-0 bottom-0 flex flex-col justify-between text-xs text-gray-400 font-medium -ml-6">
+            {Array.from({ length: 8 }, (_, i) => (
+              <div key={i} className="w-4 h-12 flex items-center justify-center">
+                {8 - i}
+              </div>
+            ))}
           </div>
-          <div style={{ marginBottom: '4px' }}>
-            <strong>Qualidade:</strong> {arkitectAnalysis.moveQuality.toFixed(1)}%
+          
+          {/* Files labels (a-h) on the bottom */}
+          <div className="absolute bottom-0 left-0 right-0 flex justify-between text-xs text-gray-400 font-medium -mb-6">
+            {Array.from({ length: 8 }, (_, i) => (
+              <div key={i} className="w-12 h-4 flex items-center justify-center">
+                {String.fromCharCode(97 + i)}
+              </div>
+            ))}
           </div>
-          <div style={{ marginBottom: '4px' }}>
-            <strong>Conselho:</strong> {arkitectAnalysis.strategicAdvice}
-          </div>
-          {arkitectAnalysis.tacticalOpportunities.length > 0 && (
-            <div style={{ marginBottom: '4px' }}>
-              <strong>Oportunidades:</strong>
-              <ul style={{ margin: '4px 0', paddingLeft: '16px' }}>
-                {arkitectAnalysis.tacticalOpportunities.map((opp, i) => (
-                  <li key={i} style={{ fontSize: '11px' }}>{opp}</li>
-                ))}
-              </ul>
+
+          {/* Main Chess Board */}
+          <div className="bg-gradient-to-br from-amber-50 to-amber-100 p-4 rounded-lg shadow-lg border border-amber-200">
+            <div className="grid grid-cols-8 gap-0 border-2 border-amber-900 rounded overflow-hidden">
+              {gameState.board.map((row, rowIndex) =>
+                row.map((piece, colIndex) => (
+                  <div
+                    key={`${rowIndex}-${colIndex}`}
+                    className={getSquareClass(rowIndex, colIndex)}
+                    onClick={() => handleSquareClick(rowIndex, colIndex)}
+                    data-position={`${String.fromCharCode(97 + colIndex)}${8 - rowIndex}`}
+                    data-testid={`square-${rowIndex}-${colIndex}`}
+                  >
+                    {piece && (
+                      <span className="text-2xl drop-shadow-sm">
+                        {getPieceSymbol(piece)}
+                      </span>
+                    )}
+                  </div>
+                ))
+              )}
             </div>
-          )}
-          <div style={{ marginTop: '8px', fontSize: '11px', color: '#9ca3af' }}>
-            <div>⏱️ {arkitectAnalysis.performanceMetrics.responseTime.toFixed(1)}ms</div>
-            <div>🎯 {arkitectAnalysis.performanceMetrics.accuracy.toFixed(1)}% acurácia</div>
-            <div>⚡ {arkitectAnalysis.performanceMetrics.efficiency.toFixed(1)}% eficiência</div>
           </div>
         </div>
-      )}
+      </div>
+
+      {/* Game Controls - Estilo da landing page */}
+      <div className="flex justify-center space-x-4 mb-4">
+        <button
+          onClick={resetGame}
+          className="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg font-medium transition-colors duration-200 flex items-center space-x-2"
+        >
+          <span>↻</span>
+          <span>Reset</span>
+        </button>
+        <button
+          onClick={() => {
+            if (arkitectEnabled) {
+              const analysis = analyzePosition(gameState.board, gameState.currentTurn);
+              setArkitectAnalysis(analysis);
+              debug('Análise ARKITECT manual executada');
+            }
+          }}
+          className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors duration-200 flex items-center space-x-2"
+        >
+          <span>🧠</span>
+          <span>Analisar</span>
+        </button>
+      </div>
+
+      {/* Move Counter */}
+      <div className="text-center text-sm text-gray-500">
+        Movimentos: {gameState.moveCount}
+      </div>
     </div>
   );
 };
+
+// Helper functions
+function initializeBoard(): (ChessPiece | null)[][] {
+  const board = Array(8).fill(null).map(() => Array(8).fill(null));
+  
+  // Setup pieces
+  const setupRow = (row: number, color: 'white' | 'black') => {
+    const pieces: ChessPiece[] = [
+      { type: 'rook', color },
+      { type: 'knight', color },
+      { type: 'bishop', color },
+      { type: 'queen', color },
+      { type: 'king', color },
+      { type: 'bishop', color },
+      { type: 'knight', color },
+      { type: 'rook', color }
+    ];
+    
+    pieces.forEach((piece, col) => {
+      board[row][col] = piece;
+    });
+  };
+  
+  // Setup pawns for white
+  for (let col = 0; col < 8; col++) {
+    board[6][col] = { type: 'pawn', color: 'white' };
+  }
+  
+  // Setup pawns for black
+  for (let col = 0; col < 8; col++) {
+    board[1][col] = { type: 'pawn', color: 'black' };
+  }
+  
+  setupRow(7, 'white');
+  setupRow(0, 'black');
+  
+  return board;
+}
+
+function getPieceValue(type: ChessPiece['type']): number {
+  const values = {
+    pawn: 1,
+    knight: 3,
+    bishop: 3,
+    rook: 5,
+    queen: 9,
+    king: 0
+  };
+  return values[type];
+}
+
+function isValidMove(from: ChessPosition, to: ChessPosition, board: (ChessPiece | null)[][]): boolean {
+  // Simplified validation - in a real implementation, this would be much more complex
+  const piece = board[from.row][from.col];
+  const target = board[to.row][to.col];
+  
+  if (!piece) return false;
+  if (target && target.color === piece.color) return false;
+  
+  // Basic validation - allow most moves for testing
+  return true;
+}
 
 export default ARKITECTChessBoard;

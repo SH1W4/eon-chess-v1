@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste do Terminal CHESS OS</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #1a1a1a;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+
+        .test-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #2a2a2a;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .test-button {
+            background: #00ffff;
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px;
+            font-size: 16px;
+        }
+
+        .test-button:hover {
+            background: #00cccc;
+        }
+
+        .log-area {
+            background: #000;
+            color: #00ff88;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+            font-family: monospace;
+            height: 300px;
+            overflow-y: auto;
+            border: 1px solid #00ffff;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="test-container">
+        <h1>🧪 Teste do Terminal CHESS OS</h1>
+
+        <div>
+            <button class="test-button" onclick="testTerminal()">🔍 Testar Terminal</button>
+            <button class="test-button" onclick="clearLog()">🗑️ Limpar Log</button>
+            <button class="test-button" onclick="checkElements()">🔍 Verificar Elementos</button>
+        </div>
+
+        <div class="log-area" id="logArea">
+            <div>🚀 Sistema de teste iniciado...</div>
+            <div>📝 Clique em "Testar Terminal" para iniciar o teste</div>
+        </div>
+    </div>
+
+    <script>
+        function log(message) {
+            const logArea = document.getElementById('logArea');
+            const logEntry = document.createElement('div');
+            logEntry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            logArea.appendChild(logEntry);
+            logArea.scrollTop = logArea.scrollHeight;
+        }
+
+        function clearLog() {
+            document.getElementById('logArea').innerHTML = '<div>🗑️ Log limpo</div>';
+        }
+
+        function checkElements() {
+            log('🔍 Verificando elementos do DOM...');
+            log(`Body: ${document.body ? '✅ Existe' : '❌ Não existe'}`);
+            log(`Hero board: ${document.querySelector('.hero-chess-board') ? '✅ Encontrado' : '❌ Não encontrado'}`);
+            log(`AEON board: ${document.querySelector('#aeon-board') ? '✅ Encontrado' : '❌ Não encontrado'}`);
+        }
+
+        function testTerminal() {
+            log('🚀 Iniciando teste do terminal...');
+
+            try {
+                // Carregar o script do terminal
+                const script = document.createElement('script');
+                script.src = 'js/ai-facial-recognition-style.js';
+                script.onload = () => {
+                    log('✅ Script carregado com sucesso');
+                    log('🔍 Verificando se a classe foi criada...');
+
+                    if (window.AIFacialRecognitionStyle) {
+                        log('✅ Classe AIFacialRecognitionStyle encontrada');
+                        log('🚀 Criando instância...');
+
+                        try {
+                            const aiSystem = new window.AIFacialRecognitionStyle();
+                            log('✅ Instância criada com sucesso');
+                            log('🔍 Verificando elementos...');
+
+                            setTimeout(() => {
+                                if (aiSystem.elements.terminalContent) {
+                                    log('✅ Terminal criado com sucesso!');
+                                    log('🎯 Terminal deve estar visível no canto superior direito');
+                                } else {
+                                    log('❌ Terminal não foi criado');
+                                }
+                            }, 2000);
+
+                        } catch (error) {
+                            log(`❌ Erro ao criar instância: ${error.message}`);
+                        }
+                    } else {
+                        log('❌ Classe AIFacialRecognitionStyle não encontrada');
+                    }
+                };
+
+                script.onerror = () => {
+                    log('❌ Erro ao carregar script');
+                };
+
+                document.head.appendChild(script);
+
+            } catch (error) {
+                log(`❌ Erro no teste: ${error.message}`);
+            }
+        }
+
+        // Verificar elementos ao carregar
+        window.addEventListener('load', () => {
+            log('📱 Página carregada, verificando elementos...');
+            checkElements();
+        });
+    </script>
+</body>

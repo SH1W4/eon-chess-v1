@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste de Ativação ARKITECT</title>
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            background: #000;
+            color: #00ff00;
+            padding: 20px;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #00ff00;
+            padding-bottom: 20px;
+        }
+
+        .control-panel {
+            background: rgba(0, 255, 0, 0.1);
+            border: 1px solid #00ff00;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .button {
+            background: #00ff00;
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+        }
+
+        .button:hover {
+            background: #00ffff;
+        }
+
+        .button:disabled {
+            background: #666;
+            cursor: not-allowed;
+        }
+
+        .status {
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid #00ff00;
+            border-radius: 4px;
+            padding: 15px;
+            margin: 10px 0;
+            font-size: 12px;
+        }
+
+        .log {
+            background: #000;
+            border: 1px solid #00ff00;
+            border-radius: 4px;
+            padding: 15px;
+            height: 300px;
+            overflow-y: auto;
+            font-size: 11px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .log-line {
+            margin: 2px 0;
+            padding: 2px 0;
+        }
+
+        .error {
+            color: #ff0000;
+        }
+
+        .success {
+            color: #00ff00;
+        }
+
+        .warning {
+            color: #ffff00;
+        }
+
+        .info {
+            color: #00ffff;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏗️ ARKITECT - Teste de Ativação</h1>
+            <p>Sistema de Esquadrinhamento de Tabuleiro de Xadrez</p>
+        </div>
+
+        <div class="control-panel">
+            <h3>🎮 Painel de Controle</h3>
+            <button class="button" onclick="startSystem()">▶️ INICIAR SISTEMA</button>
+            <button class="button" onclick="stopSystem()">⏹️ PARAR SISTEMA</button>
+            <button class="button" onclick="testSystem()">🧪 TESTAR ANÁLISE</button>
+            <button class="button" onclick="checkStatus()">📊 VER STATUS</button>
+            <button class="button" onclick="forceActivation()">⚡ FORÇAR ATIVAÇÃO</button>
+            <button class="button" onclick="forceStart()">🚀 FORÇAR INÍCIO</button>
+            <button class="button" onclick="debugSystem()">🔍 DEBUG SISTEMA</button>
+            <button class="button" onclick="clearLog()">🗑️ LIMPAR LOG</button>
+        </div>
+
+        <div class="status" id="status">
+            <h3>📊 Status do Sistema</h3>
+            <div id="statusContent">Aguardando inicialização...</div>
+        </div>
+
+        <div class="log" id="log">
+            <div class="log-line info">🚀 Sistema de teste ARKITECT carregado</div>
+            <div class="log-line info">⏳ Aguardando comandos...</div>
+        </div>
+    </div>
+
+    <script>
+        // Função para adicionar logs
+        function addLog(message, type = 'info') {
+            const log = document.getElementById('log');
+            const logLine = document.createElement('div');
+            logLine.className = `log-line ${type}`;
+            logLine.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            log.appendChild(logLine);
+            log.scrollTop = log.scrollHeight;
+        }
+
+        // Função para atualizar status
+        function updateStatus(status) {
+            const statusContent = document.getElementById('statusContent');
+            statusContent.innerHTML = `
+                <div><strong>Nome:</strong> ${status.name || 'N/A'}</div>
+                <div><strong>Versão:</strong> ${status.version || 'N/A'}</div>
+                <div><strong>Status:</strong> ${status.isActive ? '🟢 ATIVO' : '🔴 INATIVO'}</div>
+                <div><strong>Tabuleiro:</strong> ${status.board || 'N/A'}</div>
+                <div><strong>Base Pro:</strong> ${status.proDatabase || 'N/A'}</div>
+                <div><strong>Timestamp:</strong> ${status.timestamp || 'N/A'}</div>
+            `;
+        }
+
+        // Função para iniciar sistema
+        function startSystem() {
+            addLog('▶️ Tentando iniciar sistema ARKITECT...', 'info');
+
+            if (window.startArkitect) {
+                window.startArkitect();
+                addLog('✅ Função startArkitect() chamada', 'success');
+
+                setTimeout(() => {
+                    checkStatus();
+                }, 1000);
+            } else {
+                addLog('❌ Função startArkitect() não encontrada', 'error');
+            }
+        }
+
+        // Função para parar sistema
+        function stopSystem() {
+            addLog('⏹️ Tentando parar sistema ARKITECT...', 'info');
+
+            if (window.stopArkitect) {
+                window.stopArkitect();
+                addLog('✅ Função stopArkitect() chamada', 'success');
+
+                setTimeout(() => {
+                    checkStatus();
+                }, 1000);
+            } else {
+                addLog('❌ Função stopArkitect() não encontrada', 'error');
+            }
+        }
+
+        // Função para testar sistema
+        function testSystem() {
+            addLog('🧪 Tentando testar sistema ARKITECT...', 'info');
+
+            if (window.testArkitect) {
+                window.testArkitect();
+                addLog('✅ Função testArkitect() chamada', 'success');
+            } else {
+                addLog('❌ Função testArkitect() não encontrada', 'error');
+            }
+        }
+
+        // Função para verificar status
+        function checkStatus() {
+            addLog('📊 Verificando status do sistema...', 'info');
+
+            if (window.getArkitectStatus) {
+                const status = window.getArkitectStatus();
+                updateStatus(status);
+                addLog('✅ Status obtido com sucesso', 'success');
+                addLog(`📋 Status: ${JSON.stringify(status, null, 2)}`, 'info');
+            } else {
+                addLog('❌ Função getArkitectStatus() não encontrada', 'error');
+            }
+        }
+
+        // Função para forçar ativação
+        function forceActivation() {
+            addLog('⚡ Forçando ativação do sistema...', 'warning');
+
+            // Verificar se o objeto existe
+            if (window.arkitectSolution) {
+                addLog('✅ Objeto arkitectSolution encontrado', 'success');
+
+                // Forçar inicialização
+                if (window.arkitectSolution.initialize) {
+                    window.arkitectSolution.initialize();
+                    addLog('✅ Método initialize() chamado', 'success');
+                }
+
+                // Forçar ativação
+                if (window.arkitectSolution.start) {
+                    window.arkitectSolution.start();
+                    addLog('✅ Método start() chamado', 'success');
+                }
+
+                setTimeout(() => {
+                    checkStatus();
+                }, 2000);
+            } else {
+                addLog('❌ Objeto arkitectSolution não encontrado', 'error');
+                addLog('🔍 Tentando criar nova instância...', 'warning');
+
+                // Tentar criar nova instância
+                if (typeof ArkitectSimpleSolution !== 'undefined') {
+                    window.arkitectSolution = new ArkitectSimpleSolution();
+                    addLog('✅ Nova instância criada', 'success');
+
+                    setTimeout(() => {
+                        if (window.arkitectSolution.start) {
+                            window.arkitectSolution.start();
+                            addLog('✅ Sistema ativado manualmente', 'success');
+                        }
+                    }, 1000);
+                } else {
+                    addLog('❌ Classe ArkitectSimpleSolution não encontrada', 'error');
+                }
+            }
+        }
+
+        // Função para forçar início
+        function forceStart() {
+            addLog('🚀 Forçando início do sistema...', 'warning');
+
+            if (window.forceArkitectStart) {
+                window.forceArkitectStart();
+                addLog('✅ Função forceArkitectStart() chamada', 'success');
+
+                setTimeout(() => {
+                    checkStatus();
+                }, 3000);
+            } else {
+                addLog('❌ Função forceArkitectStart() não encontrada', 'error');
+            }
+        }
+
+        // Função para debug do sistema
+        function debugSystem() {
+            addLog('🔍 Executando debug do sistema...', 'warning');
+
+            if (window.debugArkitect) {
+                window.debugArkitect();
+                addLog('✅ Função debugArkitect() chamada - verifique o console', 'success');
+            } else {
+                addLog('❌ Função debugArkitect() não encontrada', 'error');
+            }
+        }
+
+        // Função para limpar log
+        function clearLog() {
+            const log = document.getElementById('log');
+            log.innerHTML = '<div class="log-line info">🗑️ Log limpo</div>';
+        }
+
+        // Verificar status inicial
+        setTimeout(() => {
+            addLog('🔍 Verificando status inicial...', 'info');
+            checkStatus();
+        }, 2000);
+
+        // Verificar status periodicamente
+        setInterval(() => {
+            if (window.arkitectSolution && window.arkitectSolution.isActive) {
+                addLog('🔄 Sistema ativo - verificando status...', 'info');
+                checkStatus();
+            }
+        }, 10000);
+    </script>
+
+    <!-- Carregar scripts necessários -->
+    <script src="js/chess-pro-database.js"></script>
+    <script src="js/chess-pro-integration.js"></script>
+    <script src="js/arkitect-simple-solution.js"></script>
+</body>
+
+</html>

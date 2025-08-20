@@ -1,0 +1,34 @@
+# 🎯 Chess Visual Effects Engine - Dependências Python
+# Sistema avançado de efeitos visuais para xadrez
+
+# Visão Computacional e Processamento de Imagem
+opencv-python>=4.8.0
+Pillow>=10.0.0
+numpy>=1.24.0
+scipy>=1.11.0
+
+# Machine Learning e Deep Learning
+torch>=2.0.0
+torchvision>=0.15.0
+scikit-learn>=1.3.0
+
+# Análise de Dados e Visualização
+matplotlib>=3.7.0
+networkx>=3.1
+
+# Xadrez e Engines
+python-chess>=1.10.0
+
+# Processamento Assíncrono
+asyncio-mqtt>=0.11.0
+
+# Logging e Configuração
+python-json-logger>=2.0.0
+
+# Desenvolvimento e Testes
+pytest>=7.4.0
+black>=23.0.0
+flake8>=6.0.0
+
+# Opcional - Para GPU acceleration
+# torch-cuda>=2.0.0  # Descomente se tiver GPU NVIDIA

@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎯 Teste do Primeiro Tabuleiro - ARKITECT</title>
+    <style>
+        body {
+            background: #171717;
+            color: white;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .test-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: #1a1a1a;
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #333;
+        }
+
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            background: #222;
+            border-radius: 8px;
+            border-left: 4px solid #00ff00;
+        }
+
+        .test-button {
+            background: linear-gradient(45deg, #00ff00, #00ffff);
+            color: black;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            font-weight: bold;
+        }
+
+        .test-button:hover {
+            transform: scale(1.05);
+        }
+
+        .arkitect-button {
+            background: linear-gradient(45deg, #ff6600, #ffaa00);
+            color: white;
+        }
+
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            font-family: monospace;
+        }
+
+        .status.success {
+            background: #004400;
+            border: 1px solid #00ff00;
+        }
+
+        .status.error {
+            background: #440000;
+            border: 1px solid #ff0000;
+        }
+
+        .status.info {
+            background: #004444;
+            border: 1px solid #00ffff;
+        }
+
+        .chess-board-container {
+            width: 400px;
+            height: 400px;
+            margin: 20px auto;
+            background: #333;
+            border: 2px solid #666;
+            border-radius: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .chess-board {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, #8B4513, #DEB887);
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            grid-template-rows: repeat(8, 1fr);
+        }
+
+        .chess-square {
+            border: 1px solid #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .chess-square.white {
+            background: #DEB887;
+        }
+
+        .chess-square.black {
+            background: #8B4513;
+        }
+
+        .log-container {
+            max-height: 300px;
+            overflow-y: auto;
+            background: #000;
+            padding: 10px;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 12px;
+        }
+
+        .arkitect-indicators {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 1000;
+            pointer-events: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="test-container">
+        <h1>🎯 Teste do Primeiro Tabuleiro - ARKITECT</h1>
+
+        <div class="test-section">
+            <h3>🏗️ Sistema ARKITECT</h3>
+            <button class="test-button arkitect-button" onclick="startArkitect()">🚀 Iniciar ARKITECT</button>
+            <button class="test-button arkitect-button" onclick="stopArkitect()">⏹️ Parar ARKITECT</button>
+            <button class="test-button arkitect-button" onclick="testArkitect()">🧪 Testar ARKITECT</button>
+            <button class="test-button" onclick="checkArkitectStatus()">📊 Status ARKITECT</button>
+            <div id="arkitect-status" class="status info">
+                Aguardando teste...
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h3>📚 Base de Dados Pro</h3>
+            <button class="test-button" onclick="testProDatabase()">📚 Testar Base Pro</button>
+            <div id="database-status" class="status info">
+                Aguardando teste...
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h3>🎯 Tabuleiro de Teste</h3>
+            <div class="chess-board-container">
+                <div class="chess-board" id="test-board">
+                    <!-- Tabuleiro será gerado dinamicamente -->
+                </div>
+                <div class="arkitect-indicators" id="arkitect-indicators">
+                    <!-- Indicadores ARKITECT aparecerão aqui -->
+                </div>
+            </div>
+            <button class="test-button" onclick="generateTestBoard()">♟️ Gerar Tabuleiro</button>
+            <button class="test-button" onclick="simulateArkitectAnalysis()">🎯 Simular Análise ARKITECT</button>
+        </div>
+
+        <div class="test-section">
+            <h3>🔍 Logs do Sistema</h3>
+            <div id="system-logs" class="log-container">
+                Aguardando logs...
+            </div>
+            <button class="test-button" onclick="clearLogs()">🧹 Limpar Logs</button>
+        </div>
+    </div>
+
+    <!-- Carregar scripts na ordem correta -->
+    <script src="js/chess-pro-database.js"></script>
+    <script src="js/chess-pro-integration.js"></script>
+    <script src="js/python-effects-integration.js"></script>
+    <script src="js/system-fix.js"></script>
+    <script src="js/arkitect-simple-solution.js"></script>
+
+    <script>
+        // Sistema de logs
+        function log(message, type = 'info') {
+            const logsDiv = document.getElementById('system-logs');
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = document.createElement('div');
+            logEntry.innerHTML = `[${timestamp}] ${message}`;
+            logEntry.className = `status ${type}`;
+            logsDiv.appendChild(logEntry);
+            logsDiv.scrollTop = logsDiv.scrollHeight;
+            console.log(`[${type.toUpperCase()}] ${message}`);
+        }
+
+        function clearLogs() {
+            document.getElementById('system-logs').innerHTML = 'Logs limpos...';
+        }
+
+        // Gerar tabuleiro de teste
+        function generateTestBoard() {
+            const board = document.getElementById('test-board');
+            board.innerHTML = '';
+
+            for (let row = 0; row < 8; row++) {
+                for (let col = 0; col < 8; col++) {
+                    const square = document.createElement('div');
+                    square.className = `chess-square ${(row + col) % 2 === 0 ? 'white' : 'black'}`;
+
+                    // Adicionar peças de exemplo
+                    if (row === 0) {
+                        const pieces = ['♜', '♞', '♝', '♛', '♚', '♝', '♞', '♜'];
+                        square.textContent = pieces[col];
+                    } else if (row === 1) {
+                        square.textContent = '♟';
+                    } else if (row === 6) {
+                        square.textContent = '♙';
+                    } else if (row === 7) {
+                        const pieces = ['♖', '♘', '♗', '♕', '♔', '♗', '♘', '♖'];
+                        square.textContent = pieces[col];
+                    }
+
+                    board.appendChild(square);
+                }
+            }
+
+            log('✅ Tabuleiro de teste gerado', 'success');
+        }
+
+        // Funções ARKITECT
+        function startArkitect() {
+            log('🚀 Iniciando sistema ARKITECT...', 'info');
+
+            if (window.startArkitect) {
+                window.startArkitect();
+                log('✅ Sistema ARKITECT iniciado', 'success');
+
+                // Atualizar status
+                setTimeout(() => {
+                    checkArkitectStatus();
+                }, 1000);
+            } else {
+                log('❌ Função startArkitect não disponível', 'error');
+            }
+        }
+
+        function stopArkitect() {
+            log('⏹️ Parando sistema ARKITECT...', 'info');
+
+            if (window.stopArkitect) {
+                window.stopArkitect();
+                log('✅ Sistema ARKITECT parado', 'success');
+
+                // Atualizar status
+                setTimeout(() => {
+                    checkArkitectStatus();
+                }, 1000);
+            } else {
+                log('❌ Função stopArkitect não disponível', 'error');
+            }
+        }
+
+        function testArkitect() {
+            log('🧪 Testando sistema ARKITECT...', 'info');
+
+            if (window.testArkitect) {
+                window.testArkitect();
+                log('✅ Teste ARKITECT executado', 'success');
+            } else {
+                log('❌ Função testArkitect não disponível', 'error');
+            }
+        }
+
+        function checkArkitectStatus() {
+            log('📊 Verificando status ARKITECT...', 'info');
+            const statusDiv = document.getElementById('arkitect-status');
+
+            if (window.getArkitectStatus) {
+                try {
+                    const status = window.getArkitectStatus();
+                    statusDiv.innerHTML = `
+                        <strong>📊 Status ARKITECT</strong><br>
+                        Nome: ${status.name || 'N/A'}<br>
+                        Versão: ${status.version || 'N/A'}<br>
+                        Ativo: ${status.isActive ? '🟢 Sim' : '🔴 Não'}<br>
+                        Tabuleiro: ${status.board || 'N/A'}<br>
+                        Base Pro: ${status.proDatabase || 'N/A'}<br>
+                        Timestamp: ${status.timestamp || 'N/A'}
+                    `;
+                    statusDiv.className = 'status success';
+                    log('✅ Status ARKITECT verificado', 'success');
+                    log(`📊 Detalhes: ${JSON.stringify(status)}`, 'info');
+                } catch (error) {
+                    statusDiv.innerHTML = `<strong>❌ Erro ao verificar status</strong><br>${error.message}`;
+                    statusDiv.className = 'status error';
+                    log(`❌ Erro ao verificar status: ${error.message}`, 'error');
+                }
+            } else {
+                statusDiv.innerHTML = '<strong>❌ Função getArkitectStatus não disponível</strong>';
+                statusDiv.className = 'status error';
+                log('❌ Função getArkitectStatus não disponível', 'error');
+            }
+        }
+
+        // Testar base de dados Pro
+        function testProDatabase() {
+            log('📚 Testando base de dados Pro...', 'info');
+            const statusDiv = document.getElementById('database-status');
+
+            if (window.chessProDB) {
+                try {
+                    const stats = window.chessProDB.getStatistics();
+                    statusDiv.innerHTML = `
+                        <strong>✅ Base de Dados Ativa</strong><br>
+                        Total de Posições: ${stats.totalPositions}<br>
+                        Categorias: ${stats.totalCategories}<br>
+                        Detalhes: ${JSON.stringify(stats.categories)}
+                    `;
+                    statusDiv.className = 'status success';
+                    log('✅ Base de dados Pro funcionando', 'success');
+                    log(`📊 Estatísticas: ${JSON.stringify(stats)}`, 'info');
+                } catch (error) {
+                    statusDiv.innerHTML = `<strong>❌ Erro na Base de Dados</strong><br>${error.message}`;
+                    statusDiv.className = 'status error';
+                    log(`❌ Erro na base de dados: ${error.message}`, 'error');
+                }
+            } else {
+                statusDiv.innerHTML = '<strong>❌ Base de Dados Não Encontrada</strong>';
+                statusDiv.className = 'status error';
+                log('❌ Base de dados Pro não encontrada', 'error');
+            }
+        }
+
+        // Simular análise ARKITECT
+        function simulateArkitectAnalysis() {
+            log('🎯 Simulando análise ARKITECT...', 'info');
+
+            if (window.arkitectSolution) {
+                try {
+                    // Simular análise
+                    window.arkitectSolution.performAnalysis();
+                    log('✅ Análise ARKITECT simulada', 'success');
+                } catch (error) {
+                    log(`❌ Erro ao simular análise: ${error.message}`, 'error');
+                }
+            } else {
+                log('❌ Sistema ARKITECT não disponível', 'error');
+            }
+        }
+
+        // Verificar inicialização
+        function checkInitialization() {
+            log('🔍 Verificando inicialização...', 'info');
+
+            // Verificar se os scripts foram carregados
+            const scripts = [
+                'chess-pro-database.js',
+                'chess-pro-integration.js',
+                'python-effects-integration.js',
+                'system-fix.js',
+                'arkitect-simple-solution.js'
+            ];
+
+            scripts.forEach(script => {
+                const scriptElement = document.querySelector(`script[src*="${script}"]`);
+                if (scriptElement) {
+                    log(`✅ Script ${script} carregado`, 'success');
+                } else {
+                    log(`❌ Script ${script} não encontrado`, 'error');
+                }
+            });
+
+            // Verificar variáveis globais
+            setTimeout(() => {
+                if (window.chessProDB) {
+                    log('✅ window.chessProDB disponível', 'success');
+                } else {
+                    log('❌ window.chessProDB não disponível', 'error');
+                }
+
+                if (window.arkitectSolution) {
+                    log('✅ window.arkitectSolution disponível', 'success');
+                } else {
+                    log('❌ window.arkitectSolution não disponível', 'error');
+                }
+
+                if (window.startArkitect) {
+                    log('✅ window.startArkitect disponível', 'success');
+                } else {
+                    log('❌ window.startArkitect não disponível', 'error');
+                }
+            }, 2000);
+        }
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', function() {
+            log('🚀 Página de teste do primeiro tabuleiro carregada', 'success');
+            generateTestBoard();
+
+            // Verificar inicialização após um delay
+            setTimeout(() => {
+                checkInitialization();
+
+                // Testar base de dados automaticamente
+                setTimeout(() => {
+                    testProDatabase();
+                }, 1000);
+            }, 2000);
+        });
+
+        // Monitorar mudanças
+        setInterval(() => {
+            if (window.arkitectSolution && window.arkitectSolution.getStatus) {
+                const status = window.arkitectSolution.getStatus();
+                if (status.isActive) {
+                    log('🟢 Sistema ARKITECT ativo', 'success');
+                }
+            }
+        }, 5000);
+    </script>
+</body>
+
+</html>

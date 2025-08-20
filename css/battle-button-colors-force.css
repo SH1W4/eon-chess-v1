@@ -1,0 +1,241 @@
+/**
+ * 🎨 Force Battle Button Colors - AEON CHESS
+ * CSS para forçar a aplicação correta das cores dos botões das batalhas
+ * 
+ * @author AEON CHESS Team
+ * @version 1.0.0
+ * @date Janeiro 2025
+ */
+
+/* ===============================
+   🎨 CORES FORÇADAS DOS BOTÕES
+   =============================== */
+
+/* Botões base com estilo garantido */
+.btn-battle-action {
+    padding: 12px 24px !important;
+    border: none !important;
+    border-radius: 12px !important;
+    font-weight: 600 !important;
+    font-size: 1rem !important;
+    cursor: pointer !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    position: relative !important;
+    overflow: hidden !important;
+    min-width: 160px !important;
+    backdrop-filter: blur(10px) !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-decoration: none !important;
+    outline: none !important;
+}
+
+/* Efeito shimmer */
+.btn-battle-action::before {
+    content: '' !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: -100% !important;
+    width: 100% !important;
+    height: 100% !important;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent) !important;
+    transition: left 0.5s !important;
+    z-index: 1 !important;
+}
+
+.btn-battle-action:hover::before {
+    left: 100% !important;
+}
+
+.btn-battle-action:hover {
+    transform: translateY(-2px) !important;
+}
+
+/* Fischer vs Spassky - Guerra Fria */
+.battle-fischer .btn-battle-action,
+[class*="battle-fischer"] .btn-battle-action {
+    background: linear-gradient(135deg, #3182ce, #e53e3e) !important;
+    color: white !important;
+    border: 1px solid rgba(49, 130, 206, 0.5) !important;
+    box-shadow: 0 4px 15px rgba(49, 130, 206, 0.4) !important;
+}
+
+.battle-fischer .btn-battle-action:hover,
+[class*="battle-fischer"] .btn-battle-action:hover {
+    box-shadow: 0 8px 25px rgba(49, 130, 206, 0.6) !important;
+}
+
+/* Jogo Imortal - Medieval */
+.battle-immortal .btn-battle-action,
+[class*="battle-immortal"] .btn-battle-action {
+    background: linear-gradient(135deg, #d69e2e, #975a16) !important;
+    color: #553c0c !important;
+    border: 1px solid rgba(214, 158, 46, 0.6) !important;
+    box-shadow: 0 4px 15px rgba(214, 158, 46, 0.5) !important;
+}
+
+.battle-immortal .btn-battle-action:hover,
+[class*="battle-immortal"] .btn-battle-action:hover {
+    box-shadow: 0 8px 25px rgba(214, 158, 46, 0.7) !important;
+}
+
+/* Morphy - Romântico */
+.battle-romantic .btn-battle-action,
+[class*="battle-romantic"] .btn-battle-action {
+    background: linear-gradient(135deg, #9f7aea, #d6f5d6) !important;
+    color: #553c9a !important;
+    border: 1px solid rgba(159, 122, 234, 0.5) !important;
+    box-shadow: 0 4px 15px rgba(159, 122, 234, 0.4) !important;
+}
+
+.battle-romantic .btn-battle-action:hover,
+[class*="battle-romantic"] .btn-battle-action:hover {
+    box-shadow: 0 8px 25px rgba(159, 122, 234, 0.6) !important;
+}
+
+/* Capablanca - Hipermoderno */
+.battle-hypermodern .btn-battle-action,
+[class*="battle-hypermodern"] .btn-battle-action {
+    background: linear-gradient(135deg, #48bb78, #38a169) !important;
+    color: white !important;
+    border: 1px solid rgba(72, 187, 120, 0.5) !important;
+    box-shadow: 0 4px 15px rgba(72, 187, 120, 0.4) !important;
+}
+
+.battle-hypermodern .btn-battle-action:hover,
+[class*="battle-hypermodern"] .btn-battle-action:hover {
+    box-shadow: 0 8px 25px rgba(72, 187, 120, 0.6) !important;
+}
+
+/* Kasparov vs Karpov - Soviético */
+.battle-soviet .btn-battle-action,
+[class*="battle-soviet"] .btn-battle-action {
+    background: linear-gradient(135deg, #ffd700, #e53e3e) !important;
+    color: #822727 !important;
+    border: 1px solid rgba(255, 215, 0, 0.6) !important;
+    box-shadow: 0 4px 15px rgba(255, 215, 0, 0.5) !important;
+}
+
+.battle-soviet .btn-battle-action:hover,
+[class*="battle-soviet"] .btn-battle-action:hover {
+    box-shadow: 0 8px 25px rgba(255, 215, 0, 0.7) !important;
+}
+
+/* Carlsen vs Anand - Moderno */
+.battle-modern .btn-battle-action,
+[class*="battle-modern"] .btn-battle-action {
+    background: linear-gradient(135deg, #06d6a0, #10b981) !important;
+    color: #065f46 !important;
+    border: 1px solid rgba(6, 214, 160, 0.5) !important;
+    box-shadow: 0 4px 15px rgba(6, 214, 160, 0.4) !important;
+}
+
+.battle-modern .btn-battle-action:hover,
+[class*="battle-modern"] .btn-battle-action:hover {
+    box-shadow: 0 8px 25px rgba(6, 214, 160, 0.6) !important;
+}
+
+/* Deep Blue vs Kasparov - Digital */
+.battle-digital .btn-battle-action,
+[class*="battle-digital"] .btn-battle-action {
+    background: linear-gradient(135deg, #00ffff, #3b82f6) !important;
+    color: white !important;
+    border: 1px solid rgba(0, 255, 255, 0.6) !important;
+    box-shadow: 0 4px 15px rgba(0, 255, 255, 0.5) !important;
+}
+
+.battle-digital .btn-battle-action:hover,
+[class*="battle-digital"] .btn-battle-action:hover {
+    box-shadow: 0 8px 25px rgba(0, 255, 255, 0.7) !important;
+}
+
+/* ===============================
+   🔧 FALLBACKS E CORREÇÕES
+   =============================== */
+
+/* Fallback para botões que não têm classe específica */
+.btn-battle-action:not([style*="background"]) {
+    background: linear-gradient(135deg, #3b82f6, #2563eb) !important;
+    color: white !important;
+    border: 1px solid rgba(59, 130, 246, 0.5) !important;
+    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4) !important;
+}
+
+/* Garantir que os ícones sejam visíveis */
+.btn-battle-action i {
+    margin-right: 8px !important;
+    position: relative !important;
+    z-index: 2 !important;
+}
+
+/* Container dos botões */
+.battle-controls {
+    display: flex !important;
+    gap: 16px !important;
+    margin-top: 24px !important;
+    justify-content: center !important;
+    flex-wrap: wrap !important;
+}
+
+/* ===============================
+   📱 RESPONSIVIDADE
+   =============================== */
+
+@media (max-width: 768px) {
+    .battle-controls {
+        flex-direction: column !important;
+        gap: 12px !important;
+    }
+
+    .btn-battle-action {
+        min-width: 100% !important;
+        margin: 0 !important;
+    }
+}
+
+/* ===============================
+   🎯 ESTADOS ESPECIAIS
+   =============================== */
+
+.btn-battle-action:focus {
+    outline: 2px solid rgba(59, 130, 246, 0.5) !important;
+    outline-offset: 2px !important;
+}
+
+.btn-battle-action:active {
+    transform: translateY(0) scale(0.98) !important;
+}
+
+.btn-battle-action:disabled {
+    opacity: 0.6 !important;
+    cursor: not-allowed !important;
+    transform: none !important;
+}
+
+/* ===============================
+   🛠️ DEBUG E IDENTIFICAÇÃO
+   =============================== */
+
+/* Para debug - destaca botões sem cores */
+.btn-battle-action[style*="background: rgb(0, 0, 0)"],
+.btn-battle-action[style*="background: black"],
+.btn-battle-action:not([style*="background"]):not([class*="battle-"]) {
+    border: 2px dashed red !important;
+    background: linear-gradient(135deg, #ef4444, #dc2626) !important;
+    color: white !important;
+}
+
+.btn-battle-action[style*="background: rgb(0, 0, 0)"]:before,
+.btn-battle-action[style*="background: black"]:before {
+    content: "⚠️ SEM COR" !important;
+    position: absolute !important;
+    top: -20px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    background: red !important;
+    color: white !important;
+    padding: 2px 6px !important;
+    font-size: 10px !important;
+    border-radius: 4px !important;
+    z-index: 1000 !important;

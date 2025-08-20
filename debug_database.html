@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🐛 Debug da Base de Dados</title>
+    <style>
+        body {
+            background: #171717;
+            color: white;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .debug-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: #1a1a1a;
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #333;
+        }
+
+        .debug-section {
+            margin: 20px 0;
+            padding: 15px;
+            background: #222;
+            border-radius: 8px;
+            border-left: 4px solid #00ff00;
+        }
+
+        .debug-button {
+            background: linear-gradient(45deg, #00ff00, #00ffff);
+            color: black;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            font-weight: bold;
+        }
+
+        .debug-button:hover {
+            transform: scale(1.05);
+        }
+
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            font-family: monospace;
+        }
+
+        .status.success {
+            background: #004400;
+            border: 1px solid #00ff00;
+        }
+
+        .status.error {
+            background: #440000;
+            border: 1px solid #ff0000;
+        }
+
+        .status.info {
+            background: #004444;
+            border: 1px solid #00ffff;
+        }
+
+        .log-container {
+            max-height: 300px;
+            overflow-y: auto;
+            background: #000;
+            padding: 10px;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 12px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="debug-container">
+        <h1>🐛 Debug da Base de Dados Pro</h1>
+
+        <div class="debug-section">
+            <h3>📚 Verificação da Base de Dados</h3>
+            <button class="debug-button" onclick="checkDatabase()">📚 Verificar Base</button>
+            <button class="debug-button" onclick="forceDatabaseInit()">🚀 Forçar Inicialização</button>
+            <button class="debug-button" onclick="checkScripts()">🔍 Verificar Scripts</button>
+            <div id="database-status" class="status info">
+                Aguardando verificação...
+            </div>
+        </div>
+
+        <div class="debug-section">
+            <h3>🔍 Verificação de Scripts</h3>
+            <div id="scripts-status" class="status info">
+                Aguardando verificação...
+            </div>
+        </div>
+
+        <div class="debug-section">
+            <h3>🌐 Verificação de Variáveis Globais</h3>
+            <div id="globals-status" class="status info">
+                Aguardando verificação...
+            </div>
+        </div>
+
+        <div class="debug-section">
+            <h3>🔍 Logs do Sistema</h3>
+            <div id="system-logs" class="log-container">
+                Aguardando logs...
+            </div>
+            <button class="debug-button" onclick="clearLogs()">🧹 Limpar Logs</button>
+        </div>
+    </div>
+
+    <!-- Carregar APENAS a base de dados primeiro -->
+    <script src="js/chess-pro-database.js"></script>
+
+    <script>
+        // Sistema de logs
+        function log(message, type = 'info') {
+            const logsDiv = document.getElementById('system-logs');
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = document.createElement('div');
+            logEntry.innerHTML = `[${timestamp}] ${message}`;
+            logEntry.className = `status ${type}`;
+            logsDiv.appendChild(logEntry);
+            logsDiv.scrollTop = logsDiv.scrollHeight;
+            console.log(`[${type.toUpperCase()}] ${message}`);
+        }
+
+        function clearLogs() {
+            document.getElementById('system-logs').innerHTML = 'Logs limpos...';
+        }
+
+        // Verificar base de dados
+        function checkDatabase() {
+            log('📚 Verificando base de dados...', 'info');
+            const statusDiv = document.getElementById('database-status');
+
+            if (window.chessProDB) {
+                try {
+                    const stats = window.chessProDB.getStatistics();
+                    statusDiv.innerHTML = `
+                        <strong>✅ Base de Dados Ativa</strong><br>
+                        Total de Posições: ${stats.totalPositions}<br>
+                        Categorias: ${stats.totalCategories}<br>
+                        Detalhes: ${JSON.stringify(stats.categories)}
+                    `;
+                    statusDiv.className = 'status success';
+                    log('✅ Base de dados Pro funcionando', 'success');
+                    log(`📊 Estatísticas: ${JSON.stringify(stats)}`, 'info');
+                } catch (error) {
+                    statusDiv.innerHTML = `<strong>❌ Erro na Base de Dados</strong><br>${error.message}`;
+                    statusDiv.className = 'status error';
+                    log(`❌ Erro na base de dados: ${error.message}`, 'error');
+                }
+            } else {
+                statusDiv.innerHTML = '<strong>❌ Base de Dados Não Encontrada</strong>';
+                statusDiv.className = 'status error';
+                log('❌ Base de dados Pro não encontrada', 'error');
+            }
+        }
+
+        // Forçar inicialização da base de dados
+        function forceDatabaseInit() {
+            log('🚀 Forçando inicialização da base de dados...', 'info');
+
+            if (window.ChessProDatabase) {
+                try {
+                    window.chessProDB = new window.ChessProDatabase();
+                    log('✅ Base de dados criada manualmente', 'success');
+
+                    // Verificar novamente
+                    setTimeout(() => {
+                        checkDatabase();
+                    }, 500);
+                } catch (error) {
+                    log(`❌ Erro ao criar base de dados: ${error.message}`, 'error');
+                }
+            } else {
+                log('❌ Classe ChessProDatabase não encontrada', 'error');
+            }
+        }
+
+        // Verificar scripts
+        function checkScripts() {
+            log('🔍 Verificando scripts...', 'info');
+            const statusDiv = document.getElementById('scripts-status');
+
+            const scripts = [
+                'chess-pro-database.js'
+            ];
+
+            const loadedScripts = [];
+            const missingScripts = [];
+
+            scripts.forEach(script => {
+                const scriptElement = document.querySelector(`script[src*="${script}"]`);
+                if (scriptElement) {
+                    loadedScripts.push(script);
+                    log(`✅ Script ${script} carregado`, 'success');
+                } else {
+                    missingScripts.push(script);
+                    log(`❌ Script ${script} não encontrado`, 'error');
+                }
+            });
+
+            if (loadedScripts.length === scripts.length) {
+                statusDiv.innerHTML = '<strong>✅ Todos os scripts carregados</strong>';
+                statusDiv.className = 'status success';
+            } else {
+                statusDiv.innerHTML = `<strong>❌ Scripts faltando</strong><br>Carregados: ${loadedScripts.join(', ')}<br>Faltando: ${missingScripts.join(', ')}`;
+                statusDiv.className = 'status error';
+            }
+        }
+
+        // Verificar variáveis globais
+        function checkGlobals() {
+            log('🌐 Verificando variáveis globais...', 'info');
+            const statusDiv = document.getElementById('globals-status');
+
+            const globals = [
+                'ChessProDatabase',
+                'chessProDB'
+            ];
+
+            const availableGlobals = [];
+            const missingGlobals = [];
+
+            globals.forEach(globalName => {
+                if (window[globalName]) {
+                    availableGlobals.push(globalName);
+                    log(`✅ Variável global ${globalName} disponível`, 'success');
+                } else {
+                    missingGlobals.push(globalName);
+                    log(`❌ Variável global ${globalName} não disponível`, 'error');
+                }
+            });
+
+            if (availableGlobals.length === globals.length) {
+                statusDiv.innerHTML = '<strong>✅ Todas as variáveis globais disponíveis</strong>';
+                statusDiv.className = 'status success';
+            } else {
+                statusDiv.innerHTML = `<strong>❌ Variáveis globais faltando</strong><br>Disponíveis: ${availableGlobals.join(', ')}<br>Faltando: ${missingGlobals.join(', ')}`;
+                statusDiv.className = 'status error';
+            }
+        }
+
+        // Verificar inicialização
+        function checkInitialization() {
+            log('🔍 Verificando inicialização...', 'info');
+
+            // Verificar se a base de dados foi inicializada
+            if (window.chessProDB) {
+                log('✅ Base de dados inicializada automaticamente', 'success');
+            } else {
+                log('❌ Base de dados não inicializada automaticamente', 'error');
+
+                // Verificar se a classe existe
+                if (window.ChessProDatabase) {
+                    log('✅ Classe ChessProDatabase encontrada', 'success');
+                    log('🔧 Tentando inicialização manual...', 'info');
+
+                    try {
+                        window.chessProDB = new window.ChessProDatabase();
+                        log('✅ Base de dados inicializada manualmente', 'success');
+                    } catch (error) {
+                        log(`❌ Erro na inicialização manual: ${error.message}`, 'error');
+                    }
+                } else {
+                    log('❌ Classe ChessProDatabase não encontrada', 'error');
+                }
+            }
+        }
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', function() {
+            log('🚀 Página de debug carregada', 'success');
+
+            // Verificar scripts primeiro
+            setTimeout(() => {
+                checkScripts();
+            }, 500);
+
+            // Verificar variáveis globais
+            setTimeout(() => {
+                checkGlobals();
+            }, 1000);
+
+            // Verificar inicialização
+            setTimeout(() => {
+                checkInitialization();
+                checkDatabase();
+            }, 2000);
+        });
+
+        // Verificação periódica
+        setInterval(() => {
+            if (!window.chessProDB) {
+                log('⚠️ Base de dados ainda não disponível, tentando novamente...', 'info');
+                checkInitialization();
+            }
+        }, 5000);
+    </script>
+</body>
+
+</html>

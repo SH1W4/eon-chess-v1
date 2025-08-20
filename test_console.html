@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔍 Teste de Console - ARKITECT</title>
+    <style>
+        body {
+            background: #171717;
+            color: white;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .test-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #1a1a1a;
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #333;
+        }
+
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            background: #222;
+            border-radius: 8px;
+            border-left: 4px solid #00ff00;
+        }
+
+        .test-button {
+            background: linear-gradient(45deg, #00ff00, #00ffff);
+            color: black;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            font-weight: bold;
+        }
+
+        .test-button:hover {
+            transform: scale(1.05);
+        }
+
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            font-family: monospace;
+        }
+
+        .status.success {
+            background: #004400;
+            border: 1px solid #00ff00;
+        }
+
+        .status.error {
+            background: #440000;
+            border: 1px solid #ff0000;
+        }
+
+        .status.info {
+            background: #004444;
+            border: 1px solid #00ffff;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="test-container">
+        <h1>🔍 Teste de Console - ARKITECT</h1>
+
+        <div class="test-section">
+            <h3>🧪 Testes de Console</h3>
+            <button class="test-button" onclick="testConsole()">🔍 Testar Console</button>
+            <button class="test-button" onclick="testGlobalFunctions()">🌐 Testar Funções Globais</button>
+            <button class="test-button" onclick="testArkitectSystem()">🏗️ Testar Sistema ARKITECT</button>
+            <div id="console-status" class="status info">
+                Aguardando teste...
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h3>📋 Instruções</h3>
+            <p>1. Abra o Console do navegador (F12 → Console)</p>
+            <p>2. Clique nos botões de teste</p>
+            <p>3. Verifique as mensagens no console</p>
+            <p>4. Reporte qualquer erro encontrado</p>
+        </div>
+
+        <div class="test-section">
+            <h3>🔍 Logs do Sistema</h3>
+            <div id="system-logs" class="log-container" style="max-height: 200px; overflow-y: auto; background: #000; padding: 10px; border-radius: 5px; font-family: monospace; font-size: 12px;">
+                Aguardando logs...
+            </div>
+            <button class="test-button" onclick="clearLogs()">🧹 Limpar Logs</button>
+        </div>
+    </div>
+
+    <!-- Carregar scripts na ordem correta -->
+    <script src="js/chess-pro-database.js"></script>
+    <script src="js/chess-pro-integration.js"></script>
+    <script src="js/python-effects-integration.js"></script>
+    <script src="js/system-fix.js"></script>
+    <script src="js/arkitect-simple-solution.js"></script>
+
+    <script>
+        // Sistema de logs
+        function log(message, type = 'info') {
+            const logsDiv = document.getElementById('system-logs');
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = document.createElement('div');
+            logEntry.innerHTML = `[${timestamp}] ${message}`;
+            logEntry.className = `status ${type}`;
+            logsDiv.appendChild(logEntry);
+            logsDiv.scrollTop = logsDiv.scrollHeight;
+            console.log(`[${type.toUpperCase()}] ${message}`);
+        }
+
+        function clearLogs() {
+            document.getElementById('system-logs').innerHTML = 'Logs limpos...';
+        }
+
+        // Testar console
+        function testConsole() {
+            log('🔍 Testando console...', 'info');
+            const statusDiv = document.getElementById('console-status');
+
+            try {
+                // Testar console.log
+                console.log('🧪 Teste de console.log funcionando');
+                console.warn('⚠️ Teste de console.warn funcionando');
+                console.error('❌ Teste de console.error funcionando');
+
+                statusDiv.innerHTML = '<strong>✅ Console funcionando</strong><br>Verifique o console do navegador (F12)';
+                statusDiv.className = 'status success';
+                log('✅ Console funcionando', 'success');
+            } catch (error) {
+                statusDiv.innerHTML = `<strong>❌ Erro no console</strong><br>${error.message}`;
+                statusDiv.className = 'status error';
+                log(`❌ Erro no console: ${error.message}`, 'error');
+            }
+        }
+
+        // Testar funções globais
+        function testGlobalFunctions() {
+            log('🌐 Testando funções globais...', 'info');
+            const statusDiv = document.getElementById('console-status');
+
+            const functions = [
+                'startArkitect',
+                'stopArkitect',
+                'testArkitect',
+                'getArkitectStatus'
+            ];
+
+            const availableFunctions = [];
+            const missingFunctions = [];
+
+            functions.forEach(funcName => {
+                if (window[funcName]) {
+                    availableFunctions.push(funcName);
+                    log(`✅ Função ${funcName} disponível`, 'success');
+                } else {
+                    missingFunctions.push(funcName);
+                    log(`❌ Função ${funcName} não disponível`, 'error');
+                }
+            });
+
+            if (availableFunctions.length === functions.length) {
+                statusDiv.innerHTML = '<strong>✅ Todas as funções globais disponíveis</strong>';
+                statusDiv.className = 'status success';
+                log('✅ Todas as funções globais disponíveis', 'success');
+            } else {
+                statusDiv.innerHTML = `<strong>⚠️ Algumas funções não disponíveis</strong><br>Disponíveis: ${availableFunctions.join(', ')}<br>Faltando: ${missingFunctions.join(', ')}`;
+                statusDiv.className = 'status error';
+                log(`⚠️ Funções disponíveis: ${availableFunctions.join(', ')}`, 'info');
+                log(`❌ Funções faltando: ${missingFunctions.join(', ')}`, 'error');
+            }
+        }
+
+        // Testar sistema ARKITECT
+        function testArkitectSystem() {
+            log('🏗️ Testando sistema ARKITECT...', 'info');
+            const statusDiv = document.getElementById('console-status');
+
+            if (window.arkitectSolution) {
+                try {
+                    const status = window.arkitectSolution.getStatus();
+                    statusDiv.innerHTML = `
+                        <strong>✅ Sistema ARKITECT funcionando</strong><br>
+                        Nome: ${status.name}<br>
+                        Versão: ${status.version}<br>
+                        Ativo: ${status.isActive ? '🟢 Sim' : '🔴 Não'}
+                    `;
+                    statusDiv.className = 'status success';
+                    log('✅ Sistema ARKITECT funcionando', 'success');
+                    log(`📊 Status: ${JSON.stringify(status)}`, 'info');
+                } catch (error) {
+                    statusDiv.innerHTML = `<strong>❌ Erro no sistema ARKITECT</strong><br>${error.message}`;
+                    statusDiv.className = 'status error';
+                    log(`❌ Erro no sistema ARKITECT: ${error.message}`, 'error');
+                }
+            } else {
+                statusDiv.innerHTML = '<strong>❌ Sistema ARKITECT não encontrado</strong>';
+                statusDiv.className = 'status error';
+                log('❌ Sistema ARKITECT não encontrado', 'error');
+            }
+        }
+
+        // Verificar inicialização
+        function checkInitialization() {
+            log('🔍 Verificando inicialização...', 'info');
+
+            // Verificar variáveis globais
+            setTimeout(() => {
+                if (window.chessProDB) {
+                    log('✅ window.chessProDB disponível', 'success');
+                } else {
+                    log('❌ window.chessProDB não disponível', 'error');
+                }
+
+                if (window.arkitectSolution) {
+                    log('✅ window.arkitectSolution disponível', 'success');
+                } else {
+                    log('❌ window.arkitectSolution não disponível', 'error');
+                }
+
+                if (window.startArkitect) {
+                    log('✅ window.startArkitect disponível', 'success');
+                } else {
+                    log('❌ window.startArkitect não disponível', 'error');
+                }
+            }, 2000);
+        }
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', function() {
+            log('🚀 Página de teste de console carregada', 'success');
+
+            // Verificar inicialização após um delay
+            setTimeout(() => {
+                checkInitialization();
+            }, 2000);
+        });
+
+        // Teste automático após carregamento
+        setTimeout(() => {
+            testConsole();
+            testGlobalFunctions();
+            testArkitectSystem();
+        }, 3000);
+    </script>
+</body>
+
+</html>
