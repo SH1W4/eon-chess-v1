@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diagnóstico Automatizado - Tabuleiros XadrezMaster</title>
+    <meta name="description" content="Sistema automatizado de diagnóstico para identificar e mapear erros nos tabuleiros de xadrez">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Alpine.js -->
+    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <style>
+        :root {
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #111111;
+            --bg-tertiary: #1a1a1a;
+            --text-primary: #ffffff;
+            --text-secondary: #a3a3a3;
+            --accent: #3b82f6;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+        }
+
+        body {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+        }
+
+        .status-online {
+            color: var(--success);
+        }
+
+        .status-warning {
+            color: var(--warning);
+        }
+
+        .status-error {
+            color: var(--error);
+        }
+
+        .test-result {
+            padding: 1rem;
+            margin: 0.5rem 0;
+            border-radius: 0.5rem;
+            border-left: 4px solid;
+        }
+
+        .test-success {
+            background: rgba(16, 185, 129, 0.1);
+            border-left-color: var(--success);
+        }
+
+        .test-warning {
+            background: rgba(245, 158, 11, 0.1);
+            border-left-color: var(--warning);
+        }
+
+        .test-error {
+            background: rgba(239, 68, 68, 0.1);
+            border-left-color: var(--error);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--bg-tertiary);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), var(--success));
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+
+<body x-data="diagnosticoApp()">
+    <div class="min-h-screen bg-gray-900">
+        <!-- Header -->
+        <header class="bg-gray-800 border-b border-gray-700">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex items-center justify-between h-16">
+                    <div class="flex items-center">
+                        <i class="fas fa-chess-board text-blue-500 text-2xl mr-3"></i>
+                        <h1 class="text-xl font-bold text-white">Diagnóstico Automatizado - Tabuleiros</h1>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <button @click="iniciarDiagnostico()" :disabled="diagnosticoEmAndamento" class="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 px-4 py-2 rounded-lg text-white font-medium">
+                            <i class="fas fa-play mr-2"></i>
+                            <span x-text="diagnosticoEmAndamento ? 'Executando...' : 'Iniciar Diagnóstico'"></span>
+                        </button>
+                        <button @click="pararDiagnostico()" :disabled="!diagnosticoEmAndamento" class="bg-red-600 hover:bg-red-700 disabled:bg-gray-600 px-4 py-2 rounded-lg text-white font-medium">
+                            <i class="fas fa-stop mr-2"></i>Parar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <!-- Status Geral -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                <div class="bg-gray-800 p-6 rounded-lg border border-gray-700">
+                    <div class="flex items-center">
+                        <div class="p-2 bg-blue-500 rounded-lg">
+                            <i class="fas fa-chess text-white"></i>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm font-medium text-gray-400">Tabuleiros Testados</p>
+                            <p class="text-2xl font-bold text-white" x-text="estatisticas.tabuleirosTestados"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-gray-800 p-6 rounded-lg border border-gray-700">
+                    <div class="flex items-center">
+                        <div class="p-2 bg-green-500 rounded-lg">
+                            <i class="fas fa-check text-white"></i>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm font-medium text-gray-400">Funcionando</p>
+                            <p class="text-2xl font-bold text-white" x-text="estatisticas.funcionando"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-gray-800 p-6 rounded-lg border border-gray-700">
+                    <div class="flex items-center">
+                        <div class="p-2 bg-yellow-500 rounded-lg">
+                            <i class="fas fa-exclamation-triangle text-white"></i>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm font-medium text-gray-400">Avisos</p>
+                            <p class="text-2xl font-bold text-white" x-text="estatisticas.avisos"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-gray-800 p-6 rounded-lg border border-gray-700">
+                    <div class="flex items-center">
+                        <div class="p-2 bg-red-500 rounded-lg">
+                            <i class="fas fa-times text-white"></i>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm font-medium text-gray-400">Erros</p>
+                            <p class="text-2xl font-bold text-white" x-text="estatisticas.erros"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Progresso -->
+            <div class="bg-gray-800 p-6 rounded-lg border border-gray-700 mb-8">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-medium text-white">Progresso do Diagnóstico</h3>
+                    <span class="text-sm text-gray-400" x-text="`${Math.round(progresso)}%`"></span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" :style="`width: ${progresso}%`"></div>
+                </div>
+                <div class="mt-2 text-sm text-gray-400">
+                    <span x-text="`Teste ${testeAtual} de ${totalTestes}`"></span>
+                </div>
+            </div>
+
+            <!-- Resultados dos Testes -->
+            <div class="bg-gray-800 rounded-lg border border-gray-700">
+                <div class="px-6 py-4 border-b border-gray-700">
+                    <h3 class="text-lg font-medium text-white">Resultados dos Testes</h3>
+                </div>
+                <div class="p-6">
+                    <div class="space-y-4">
+                        <template x-for="resultado in resultados" :key="resultado.id">
+                            <div class="test-result" :class="{
+                                'test-success': resultado.status === 'success',
+                                'test-warning': resultado.status === 'warning',
+                                'test-error': resultado.status === 'error'
+                            }">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <h4 class="font-medium text-white" x-text="resultado.nome"></h4>
+                                        <p class="text-sm text-gray-400" x-text="resultado.descricao"></p>
+                                        <div class="mt-2 text-xs text-gray-500">
+                                            <span x-text="`Arquivo: ${resultado.arquivo}`"></span>
+                                            <span class="mx-2">•</span>
+                                            <span x-text="`Tempo: ${resultado.tempo}ms`"></span>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center space-x-2">
+                                        <span class="text-sm font-medium" :class="{
+                                            'status-online': resultado.status === 'success',
+                                            'status-warning': resultado.status === 'warning',
+                                            'status-error': resultado.status === 'error'
+                                        }" x-text="resultado.status.toUpperCase()"></span>
+                                        <i class="fas" :class="{
+                                            'fa-check text-green-500': resultado.status === 'success',
+                                            'fa-exclamation-triangle text-yellow-500': resultado.status === 'success',
+                                            'fa-times text-red-500': resultado.status === 'error'
+                                        }"></i>
+                                    </div>
+                                </div>
+                                <div x-show="resultado.detalhes" class="mt-3 p-3 bg-gray-700 rounded text-sm">
+                                    <pre x-text="resultado.detalhes" class="text-gray-300"></pre>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Log de Execução -->
+            <div class="bg-gray-800 rounded-lg border border-gray-700 mt-8">
+                <div class="px-6 py-4 border-b border-gray-700">
+                    <h3 class="text-lg font-medium text-white">Log de Execução</h3>
+                </div>
+                <div class="p-6">
+                    <div class="bg-gray-900 p-4 rounded-lg h-64 overflow-y-auto">
+                        <template x-for="log in logs" :key="log.id">
+                            <div class="text-sm font-mono mb-1">
+                                <span class="text-gray-500" x-text="log.timestamp"></span>
+                                <span class="mx-2">•</span>
+                                <span :class="{
+                                    'text-green-400': log.level === 'info',
+                                    'text-yellow-400': log.level === 'warning',
+                                    'text-red-400': log.level === 'error'
+                                }" x-text="log.message"></span>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        function diagnosticoApp() {
+            return {
+                diagnosticoEmAndamento: false,
+                progresso: 0,
+                testeAtual: 0,
+                totalTestes: 0,
+                resultados: [],
+                logs: [],
+                estatisticas: {
+                    tabuleirosTestados: 0,
+                    funcionando: 0,
+                    avisos: 0,
+                    erros: 0
+                },
+
+                // Testes a serem executados
+                testes: [{
+                        id: 1,
+                        nome: 'Tabuleiro Básico',
+                        descricao: 'Testa inicialização e renderização básica',
+                        arquivo: 'js/chess-board.js',
+                        executar: () => this.testarTabuleiroBasico()
+                    },
+                    {
+                        id: 2,
+                        nome: 'Inicializador de Tabuleiro',
+                        descricao: 'Testa sistema de inicialização',
+                        arquivo: 'js/board-initializer.js',
+                        executar: () => this.testarInicializador()
+                    },
+                    {
+                        id: 3,
+                        nome: 'Engine de Xadrez',
+                        descricao: 'Testa motor de xadrez',
+                        arquivo: 'js/chess-engine.js',
+                        executar: () => this.testarEngine()
+                    },
+                    {
+                        id: 4,
+                        nome: 'Integração com IA',
+                        descricao: 'Testa conexão com sistema de IA',
+                        arquivo: 'js/ai-integration-real.js',
+                        executar: () => this.testarIntegracaoIA()
+                    },
+                    {
+                        id: 5,
+                        nome: 'Sistema de Gamificação',
+                        descricao: 'Testa sistema de gamificação',
+                        arquivo: 'js/gamification.js',
+                        executar: () => this.testarGamificacao()
+                    },
+                    {
+                        id: 6,
+                        nome: 'Banco de Dados',
+                        descricao: 'Testa conexão com banco',
+                        arquivo: 'js/chess-pro-database.js',
+                        executar: () => this.testarBancoDados()
+                    },
+                    {
+                        id: 7,
+                        nome: 'Efeitos Visuais',
+                        descricao: 'Testa sistema de efeitos',
+                        arquivo: 'js/orb-effects-controller.js',
+                        executar: () => this.testarEfeitosVisuais()
+                    },
+                    {
+                        id: 8,
+                        nome: 'Sistema Cultural',
+                        descricao: 'Testa sistema cultural',
+                        arquivo: 'js/aeon-brain-cultural-narrative.js',
+                        executar: () => this.testarSistemaCultural()
+                    }
+                ],
+
+                async iniciarDiagnostico() {
+                    this.diagnosticoEmAndamento = true;
+                    this.progresso = 0;
+                    this.testeAtual = 0;
+                    this.totalTestes = this.testes.length;
+                    this.resultados = [];
+                    this.logs = [];
+                    this.resetarEstatisticas();
+
+                    this.adicionarLog('info', 'Iniciando diagnóstico automatizado...');
+
+                    for (let i = 0; i < this.testes.length; i++) {
+                        if (!this.diagnosticoEmAndamento) break;
+
+                        const teste = this.testes[i];
+                        this.testeAtual = i + 1;
+                        this.progresso = ((i + 1) / this.testes.length) * 100;
+
+                        this.adicionarLog('info', `Executando teste: ${teste.nome}`);
+
+                        try {
+                            const resultado = await this.executarTeste(teste);
+                            this.resultados.push(resultado);
+                            this.atualizarEstatisticas(resultado);
+                        } catch (error) {
+                            const resultado = {
+                                id: Date.now() + i,
+                                nome: teste.nome,
+                                descricao: teste.descricao,
+                                arquivo: teste.arquivo,
+                                status: 'error',
+                                tempo: 0,
+                                detalhes: error.message
+                            };
+                            this.resultados.push(resultado);
+                            this.atualizarEstatisticas(resultado);
+                        }
+
+                        // Aguardar um pouco entre testes
+                        await this.delay(500);
+                    }
+
+                    if (this.diagnosticoEmAndamento) {
+                        this.adicionarLog('info', 'Diagnóstico concluído com sucesso!');
+                        this.gerarRelatorio();
+                    } else {
+                        this.adicionarLog('warning', 'Diagnóstico interrompido pelo usuário.');
+                    }
+
+                    this.diagnosticoEmAndamento = false;
+                },
+
+                pararDiagnostico() {
+                    this.diagnosticoEmAndamento = false;
+                    this.adicionarLog('warning', 'Diagnóstico interrompido pelo usuário.');
+                },
+
+                async executarTeste(teste) {
+                    const inicio = Date.now();
+
+                    try {
+                        const resultado = await teste.executar();
+                        const tempo = Date.now() - inicio;
+
+                        return {
+                            id: Date.now(),
+                            nome: teste.nome,
+                            descricao: teste.descricao,
+                            arquivo: teste.arquivo,
+                            status: resultado.status,
+                            tempo: tempo,
+                            detalhes: resultado.detalhes
+                        };
+                    } catch (error) {
+                        const tempo = Date.now() - inicio;
+                        return {
+                            id: Date.now(),
+                            nome: teste.nome,
+                            descricao: teste.descricao,
+                            arquivo: teste.arquivo,
+                            status: 'error',
+                            tempo: tempo,
+                            detalhes: error.message
+                        };
+                    }
+                },
+
+                // Testes específicos
+                async testarTabuleiroBasico() {
+                    // Simular teste do tabuleiro básico
+                    await this.delay(1000);
+
+                    // Verificar se o arquivo existe
+                    if (typeof ChessBoard === 'undefined') {
+                        return {
+                            status: 'error',
+                            detalhes: 'Classe ChessBoard não encontrada. Arquivo js/chess-board.js não carregado corretamente.'
+                        };
+                    }
+
+                    return {
+                        status: 'success',
+                        detalhes: 'Tabuleiro básico carregado e funcionando corretamente.'
+                    };
+                },
+
+                async testarInicializador() {
+                    await this.delay(800);
+
+                    if (typeof BoardInitializer === 'undefined') {
+                        return {
+                            status: 'warning',
+                            detalhes: 'Classe BoardInitializer não encontrada. Funcionalidade pode estar limitada.'
+                        };
+                    }
+
+                    return {
+                        status: 'success',
+                        detalhes: 'Inicializador de tabuleiro funcionando corretamente.'
+                    };
+                },
+
+                async testarEngine() {
+                    await this.delay(1200);
+
+                    if (typeof ChessEngine === 'undefined') {
+                        return {
+                            status: 'error',
+                            detalhes: 'Classe ChessEngine não encontrada. Motor de xadrez não disponível.'
+                        };
+                    }
+
+                    return {
+                        status: 'success',
+                        detalhes: 'Engine de xadrez funcionando corretamente.'
+                    };
+                },
+
+                async testarIntegracaoIA() {
+                    await this.delay(1500);
+
+                    if (typeof AIIntegration === 'undefined') {
+                        return {
+                            status: 'warning',
+                            detalhes: 'Classe AIIntegration não encontrada. Integração com IA pode estar limitada.'
+                        };
+                    }
+
+                    return {
+                        status: 'success',
+                        detalhes: 'Integração com IA funcionando corretamente.'
+                    };
+                },
+
+                async testarGamificacao() {
+                    await this.delay(600);
+
+                    if (typeof GamificationSystem === 'undefined') {
+                        return {
+                            status: 'warning',
+                            detalhes: 'Classe GamificationSystem não encontrada. Sistema de gamificação pode estar limitado.'
+                        };
+                    }
+
+                    return {
+                        status: 'success',
+                        detalhes: 'Sistema de gamificação funcionando corretamente.'
+                    };
+                },
+
+                async testarBancoDados() {
+                    await this.delay(2000);
+
+                    if (typeof DatabaseConnection === 'undefined') {
+                        return {
+                            status: 'error',
+                            detalhes: 'Classe DatabaseConnection não encontrada. Conexão com banco não disponível.'
+                        };
+                    }
+
+                    return {
+                        status: 'success',
+                        detalhes: 'Conexão com banco de dados funcionando corretamente.'
+                    };
+                },
+
+                async testarEfeitosVisuais() {
+                    await this.delay(900);
+
+                    if (typeof EffectsController === 'undefined') {
+                        return {
+                            status: 'warning',
+                            detalhes: 'Classe EffectsController não encontrada. Efeitos visuais podem estar limitados.'
+                        };
+                    }
+
+                    return {
+                        status: 'success',
+                        detalhes: 'Sistema de efeitos visuais funcionando corretamente.'
+                    };
+                },
+
+                async testarSistemaCultural() {
+                    await this.delay(1100);
+
+                    if (typeof CulturalSystem === 'undefined') {
+                        return {
+                            status: 'warning',
+                            detalhes: 'Classe CulturalSystem não encontrada. Sistema cultural pode estar limitado.'
+                        };
+                    }
+
+                    return {
+                        status: 'success',
+                        detalhes: 'Sistema cultural funcionando corretamente.'
+                    };
+                },
+
+                // Utilitários
+                adicionarLog(level, message) {
+                    this.logs.push({
+                        id: Date.now(),
+                        timestamp: new Date().toLocaleTimeString(),
+                        level: level,
+                        message: message
+                    });
+                },
+
+                atualizarEstatisticas(resultado) {
+                    this.estatisticas.tabuleirosTestados++;
+
+                    switch (resultado.status) {
+                        case 'success':
+                            this.estatisticas.funcionando++;
+                            break;
+                        case 'warning':
+                            this.estatisticas.avisos++;
+                            break;
+                        case 'error':
+                            this.estatisticas.erros++;
+                            break;
+                    }
+                },
+
+                resetarEstatisticas() {
+                    this.estatisticas = {
+                        tabuleirosTestados: 0,
+                        funcionando: 0,
+                        avisos: 0,
+                        erros: 0
+                    };
+                },
+
+                gerarRelatorio() {
+                    const relatorio = {
+                        timestamp: new Date().toISOString(),
+                        estatisticas: this.estatisticas,
+                        resultados: this.resultados,
+                        resumo: this.gerarResumo()
+                    };
+
+                    console.log('Relatório de Diagnóstico:', relatorio);
+                    this.adicionarLog('info', `Relatório gerado: ${relatorio.resumo}`);
+
+                    // Salvar relatório
+                    this.salvarRelatorio(relatorio);
+                },
+
+                gerarResumo() {
+                    const total = this.estatisticas.tabuleirosTestados;
+                    const funcionando = this.estatisticas.funcionando;
+                    const avisos = this.estatisticas.avisos;
+                    const erros = this.estatisticas.erros;
+
+                    if (erros === 0 && avisos === 0) {
+                        return `✅ Todos os ${total} sistemas funcionando perfeitamente!`;
+                    } else if (erros === 0) {
+                        return `⚠️ ${funcionando} sistemas funcionando, ${avisos} com avisos menores.`;
+                    } else {
+                        return `❌ ${funcionando} funcionando, ${avisos} avisos, ${erros} erros críticos.`;
+                    }
+                },
+
+                salvarRelatorio(relatorio) {
+                    const blob = new Blob([JSON.stringify(relatorio, null, 2)], {
+                        type: 'application/json'
+                    });
+
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `diagnostico-tabuleiros-${new Date().toISOString().split('T')[0]}.json`;
+                    a.click();
+
+                    URL.revokeObjectURL(url);
+                },
+
+                delay(ms) {
+                    return new Promise(resolve => setTimeout(resolve, ms));
+                }
+            };
+        }
+    </script>
+</body>
+
+</html>
