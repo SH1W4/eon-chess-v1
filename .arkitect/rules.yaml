@@ -1,0 +1,166 @@
+project:
+  name: "AEON Chess"
+  version: "1.0.1"
+  rules_version: "1.0.0"
+
+rules:
+  structure:
+    # Regras para estrutura de diretórios
+    directories:
+      - path: "/src"
+        required: true
+        contains:
+          - "ai"
+          - "core"
+          - "cultural"
+          - "quantum"
+          - "traditional"
+      
+      - path: "/web"
+        required: true
+        contains:
+          - "components"
+          - "pages"
+          - "styles"
+          - "utils"
+      
+      - path: "/docs"
+        required: true
+        contains:
+          - "technical"
+          - "deployment"
+          - "features"
+          - "improvements"
+          - "releases"
+
+    # Regras para arquivos
+    files:
+      documentation:
+        - pattern: "*.md"
+          location: "/docs/{category}"
+          require_metadata:
+            - title
+            - date
+            - category
+            - status
+      
+      source:
+        - pattern: "aeon-brain-*.js"
+          location: "/src/ai"
+          dependencies:
+            - "/src/core"
+            - "/src/quantum"
+        
+        - pattern: "chess-*.js"
+          location: "/src/core"
+          
+        - pattern: "cultural-*.js"
+          location: "/src/cultural"
+          dependencies:
+            - "/src/ai"
+            - "/src/traditional"
+
+  dependencies:
+    # Regras de dependência entre módulos
+    modules:
+      ai_engine:
+        requires:
+          - core_engine
+          - quantum_system
+        forbidden:
+          - direct_database_access
+      
+      cultural_system:
+        requires:
+          - ai_engine
+          - traditional_system
+        forbidden:
+          - direct_quantum_access
+      
+      web_interface:
+        requires:
+          - core_engine
+        forbidden:
+          - direct_ai_access
+          - direct_database_access
+
+  naming:
+    # Convenções de nomenclatura
+    files:
+      documentation:
+        pattern: "^[A-Z][A-Za-z0-9_]*\\.md$"
+        message: "Documentation files must start with uppercase and use snake_case"
+      
+      source:
+        pattern: "^[a-z][a-z0-9-]*\\.js$"
+        message: "Source files must start with lowercase and use kebab-case"
+      
+      styles:
+        pattern: "^[a-z][a-z0-9-]*\\.css$"
+        message: "Style files must start with lowercase and use kebab-case"
+
+  content:
+    # Regras para conteúdo dos arquivos
+    documentation:
+      required_sections:
+        - title
+        - description
+        - status
+      forbidden_terms:
+        - "TODO"
+        - "FIXME"
+        - "hack"
+    
+    source:
+      required_headers:
+        - copyright
+        - version
+      forbidden_patterns:
+        - "console.log"
+        - "debugger"
+        - "TODO"
+
+validation:
+  # Pontos de validação
+  triggers:
+    - on_file_change
+    - on_commit
+    - on_push
+    - manual
+
+  actions:
+    on_violation:
+      - log_error
+      - notify_developer
+      - block_commit
+
+monitoring:
+  # Monitoramento contínuo
+  metrics:
+    - structure_compliance
+    - naming_convention_adherence
+    - dependency_validation
+    - content_rules_compliance
+
+  reporting:
+    format: "markdown"
+    location: "/docs/reports"
+    frequency: "on_change"
+
+integration:
+  # Integração com outras ferramentas
+  taskmash:
+    enabled: true
+    validate_on_task: true
+  
+  docsync:
+    enabled: true
+    validate_docs: true
+
+  git:
+    enabled: true
+    hooks:
+      pre_commit:
+        - validate_structure
+        - validate_naming
+        - validate_content

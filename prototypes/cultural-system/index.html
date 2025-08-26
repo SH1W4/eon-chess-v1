@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema Cultural - Protótipo XadrezMaster</title>
+    <meta name="description" content="Protótipo do sistema cultural narrativo do XadrezMaster">
+    <link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Alpine.js -->
+    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <style>
+        :root {
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #111111;
+            --text-primary: #ffffff;
+            --accent: #3b82f6;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+        }
+
+        body {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .card {
+            background: var(--bg-secondary);
+            border: 1px solid #2a2a2a;
+            border-radius: 1rem;
+            padding: 1.5rem;
+        }
+
+        .story-card {
+            background: var(--bg-secondary);
+            border: 1px solid #2a2a2a;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .story-card:hover {
+            border-color: var(--warning);
+            transform: translateY(-2px);
+        }
+
+        .story-card.active {
+            border-color: var(--warning);
+            background: rgba(245, 158, 11, 0.1);
+        }
+
+        .character-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .narrative-text {
+            line-height: 1.8;
+            font-size: 1.1rem;
+            text-align: justify;
+        }
+
+        .choice-button {
+            background: var(--bg-secondary);
+            border: 1px solid #2a2a2a;
+            border-radius: 0.5rem;
+            padding: 0.75rem 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+        }
+
+        .choice-button:hover {
+            border-color: var(--warning);
+            background: rgba(245, 158, 11, 0.1);
+        }
+
+        .emotion-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 0.5rem;
+        }
+
+        .emotion-joy {
+            background: #10b981;
+        }
+
+        .emotion-anger {
+            background: #ef4444;
+        }
+
+        .emotion-sadness {
+            background: #3b82f6;
+        }
+
+        .emotion-fear {
+            background: #8b5cf6;
+        }
+
+        .emotion-surprise {
+            background: #f59e0b;
+        }
+    </style>
+</head>
+
+<body x-data="culturalSystemApp()">
+    <div class="min-h-screen bg-gray-900">
+        <!-- Navigation -->
+        <nav class="bg-gray-800 border-b border-gray-700">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex items-center justify-between h-16">
+                    <div class="flex items-center">
+                        <a href="../../index.html" class="text-gray-400 hover:text-white mr-4">
+                            <i class="fas fa-arrow-left"></i>
+                        </a>
+                        <i class="fas fa-book text-yellow-500 text-2xl mr-3"></i>
+                        <h1 class="text-xl font-bold">Sistema Cultural - Protótipo</h1>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <span class="text-sm text-green-500">
+                            <i class="fas fa-circle text-xs mr-2"></i>Narrativa Ativa
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <!-- Header -->
+            <div class="text-center mb-12">
+                <h1 class="text-4xl font-bold mb-4">
+                    Sistema <span class="gradient-text">Cultural Narrativo</span>
+                </h1>
+                <p class="text-xl text-gray-400 max-w-3xl mx-auto">
+                    Demonstração do poder real do storytelling adaptativo com personagens culturais,
+                    narrativas dinâmicas e análise emocional em tempo real.
+                </p>
+            </div>
+
+            <div class="grid lg:grid-cols-3 gap-8">
+                <!-- Main Story Area -->
+                <div class="lg:col-span-2 space-y-6">
+                    <!-- Current Story -->
+                    <div class="card">
+                        <div class="flex items-center mb-6">
+                            <div class="character-avatar mr-4">
+                                <i :class="currentCharacter.icon"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-semibold" x-text="currentCharacter.name"></h3>
+                                <p class="text-gray-400" x-text="currentCharacter.description"></p>
+                            </div>
+                        </div>
+
+                        <div class="narrative-text mb-6" x-text="currentStory.text"></div>
+
+                        <div class="flex items-center justify-between text-sm text-gray-400 mb-4">
+                            <span>Emoção: <span class="font-medium" x-text="currentStory.emotion"></span></span>
+                            <span>Capítulo: <span class="font-medium" x-text="currentStory.chapter"></span></span>
+                        </div>
+
+                        <div class="w-full bg-gray-700 rounded-full h-2 mb-4">
+                            <div class="bg-gradient-to-r from-yellow-500 to-orange-500 h-2 rounded-full" :style="`width: ${currentStory.progress}%`"></div>
+                        </div>
+
+                        <div class="text-center text-sm text-gray-400">
+                            Progresso: <span x-text="currentStory.progress + '%'"></span>
+                        </div>
+                    </div>
+
+                    <!-- Story Choices -->
+                    <div class="card" x-show="currentStory.choices && currentStory.choices.length > 0">
+                        <h3 class="text-lg font-semibold mb-4 flex items-center">
+                            <i class="fas fa-route text-yellow-500 mr-3"></i>
+                            Escolhas da Narrativa
+                        </h3>
+                        <div class="space-y-3">
+                            <template x-for="(choice, index) in currentStory.choices" :key="index">
+                                <button @click="makeChoice(index)" class="choice-button w-full">
+                                    <div class="flex items-center">
+                                        <span class="emotion-indicator" :class="`emotion-${choice.emotion}`"></span>
+                                        <span x-text="choice.text"></span>
+                                    </div>
+                                </button>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sidebar -->
+                <div class="space-y-6">
+                    <!-- Characters -->
+                    <div class="card">
+                        <h3 class="text-lg font-semibold mb-4 flex items-center">
+                            <i class="fas fa-users text-yellow-500 mr-3"></i>
+                            Personagens Culturais
+                        </h3>
+                        <div class="space-y-3">
+                            <template x-for="character in characters" :key="character.id">
+                                <div class="story-card" :class="{ 'active': currentCharacter.id === character.id }" @click="selectCharacter(character.id)">
+                                    <div class="flex items-center">
+                                        <div class="character-avatar mr-3">
+                                            <i :class="character.icon"></i>
+                                        </div>
+                                        <div class="flex-1">
+                                            <h4 class="font-medium" x-text="character.name"></h4>
+                                            <p class="text-sm text-gray-400" x-text="character.culture"></p>
+                                        </div>
+                                        <div class="text-right">
+                                            <div class="text-sm font-medium" x-text="character.level"></div>
+                                            <div class="text-xs text-gray-400" x-text="character.style"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+
+                    <!-- Story Themes -->
+                    <div class="card">
+                        <h3 class="text-lg font-semibold mb-4 flex items-center">
+                            <i class="fas fa-palette text-yellow-500 mr-3"></i>
+                            Temas Narrativos
+                        </h3>
+                        <div class="space-y-3">
+                            <template x-for="theme in storyThemes" :key="theme.id">
+                                <div class="flex items-center justify-between p-2 bg-gray-800 rounded">
+                                    <div class="flex items-center">
+                                        <span class="emotion-indicator" :class="`emotion-${theme.emotion}`"></span>
+                                        <span class="text-sm" x-text="theme.name"></span>
+                                    </div>
+                                    <span class="text-sm font-medium" x-text="theme.intensity + '%'"></span>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+
+                    <!-- Cultural Analysis -->
+                    <div class="card">
+                        <h3 class="text-lg font-semibold mb-4 flex items-center">
+                            <i class="fas fa-chart-pie text-yellow-500 mr-3"></i>
+                            Análise Cultural
+                        </h3>
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm text-gray-400">Autenticidade</span>
+                                <span class="font-medium" x-text="analysis.authenticity + '%'"></span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm text-gray-400">Complexidade</span>
+                                <span class="font-medium" x-text="analysis.complexity + '%'"></span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm text-gray-400">Engajamento</span>
+                                <span class="font-medium" x-text="analysis.engagement + '%'"></span>
+                            </div>
+                            <div class="w-full bg-gray-700 rounded-full h-2">
+                                <div class="bg-gradient-to-r from-yellow-500 to-orange-500 h-2 rounded-full" :style="`width: ${analysis.overall}%`"></div>
+                            </div>
+                            <div class="text-center text-sm text-gray-400">
+                                Qualidade Geral: <span x-text="analysis.overall + '%'"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Story History -->
+            <div class="mt-12">
+                <h2 class="text-2xl font-bold text-center mb-8">Histórico da Narrativa</h2>
+                <div class="card">
+                    <div class="space-y-4 max-h-64 overflow-y-auto">
+                        <template x-for="(entry, index) in storyHistory" :key="index">
+                            <div class="flex items-start space-x-4 p-3 bg-gray-800 rounded">
+                                <div class="character-avatar flex-shrink-0">
+                                    <i :class="entry.character.icon"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <span class="font-medium" x-text="entry.character.name"></span>
+                                        <span class="text-sm text-gray-400" x-text="entry.timestamp"></span>
+                                    </div>
+                                    <p class="text-sm text-gray-300" x-text="entry.text"></p>
+                                    <div class="flex items-center mt-2">
+                                        <span class="emotion-indicator" :class="`emotion-${entry.emotion}`"></span>
+                                        <span class="text-xs text-gray-400" x-text="entry.emotion"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        function culturalSystemApp() {
+            return {
+                currentCharacter: null,
+                currentStory: {
+                    text: '',
+                    emotion: 'joy',
+                    chapter: 1,
+                    progress: 0,
+                    choices: []
+                },
+                analysis: {
+                    authenticity: 87,
+                    complexity: 92,
+                    engagement: 89,
+                    overall: 89
+                },
+                characters: [{
+                        id: 'aztec',
+                        name: 'Quetzalcoatl',
+                        description: 'Deus serpente emplumada da sabedoria',
+                        culture: 'Asteca',
+                        level: 'Divino',
+                        style: 'Sábio',
+                        icon: 'fas fa-dragon'
+                    },
+                    {
+                        id: 'nordic',
+                        name: 'Odin',
+                        description: 'Pai dos deuses nórdicos',
+                        culture: 'Nórdica',
+                        level: 'Divino',
+                        style: 'Estratégico',
+                        icon: 'fas fa-crown'
+                    },
+                    {
+                        id: 'egyptian',
+                        name: 'Thoth',
+                        description: 'Deus da sabedoria e escrita',
+                        culture: 'Egípcia',
+                        level: 'Divino',
+                        style: 'Intelectual',
+                        icon: 'fas fa-feather-alt'
+                    },
+                    {
+                        id: 'chinese',
+                        name: 'Confúcio',
+                        description: 'Filósofo e mestre chinês',
+                        culture: 'Chinesa',
+                        level: 'Sábio',
+                        style: 'Filosófico',
+                        icon: 'fas fa-user-graduate'
+                    }
+                ],
+                storyThemes: [{
+                        id: 1,
+                        name: 'Sabedoria Ancestral',
+                        emotion: 'joy',
+                        intensity: 85
+                    },
+                    {
+                        id: 2,
+                        name: 'Conflito Épico',
+                        emotion: 'anger',
+                        intensity: 72
+                    },
+                    {
+                        id: 3,
+                        name: 'Mistério Sagrado',
+                        emotion: 'fear',
+                        intensity: 68
+                    },
+                    {
+                        id: 4,
+                        name: 'Harmonia Universal',
+                        emotion: 'joy',
+                        intensity: 91
+                    }
+                ],
+                storyHistory: [],
+
+                init() {
+                    this.selectCharacter('aztec');
+                    this.generateStory();
+                    this.startStoryUpdate();
+                },
+
+                selectCharacter(characterId) {
+                    this.currentCharacter = this.characters.find(c => c.id === characterId);
+                    this.generateStory();
+                },
+
+                generateStory() {
+                    const stories = {
+                        aztec: [{
+                            text: "Em meio às pirâmides douradas de Tenochtitlán, Quetzalcoatl observa o tabuleiro sagrado. 'Cada movimento é uma dança cósmica, jovem guerreiro. A sabedoria dos antigos flui através das peças como o sangue sagrado dos sacrifícios.'",
+                            emotion: 'joy',
+                            chapter: 1,
+                            progress: 25,
+                            choices: [{
+                                    text: "Aceitar a sabedoria ancestral",
+                                    emotion: 'joy'
+                                },
+                                {
+                                    text: "Questionar os métodos antigos",
+                                    emotion: 'surprise'
+                                },
+                                {
+                                    text: "Buscar conhecimento mais profundo",
+                                    emotion: 'fear'
+                                }
+                            ]
+                        }],
+                        nordic: [{
+                            text: "Odin, o Pai de Todos, contempla o tabuleiro com seus olhos que veem através do tempo. 'A estratégia é a arma mais poderosa, filho de Midgard. Cada jogada pode mudar o destino dos nove mundos.'",
+                            emotion: 'surprise',
+                            chapter: 1,
+                            progress: 30,
+                            choices: [{
+                                    text: "Aceitar o desafio dos deuses",
+                                    emotion: 'joy'
+                                },
+                                {
+                                    text: "Temer a ira de Odin",
+                                    emotion: 'fear'
+                                },
+                                {
+                                    text: "Buscar conhecimento das runas",
+                                    emotion: 'surprise'
+                                }
+                            ]
+                        }],
+                        egyptian: [{
+                            text: "Thoth, o escriba dos deuses, traça símbolos sagrados no ar. 'O conhecimento é eterno como as pirâmides, aprendiz. Cada movimento no tabuleiro é um hieróglifo que conta uma história milenar.'",
+                            emotion: 'joy',
+                            chapter: 1,
+                            progress: 20,
+                            choices: [{
+                                    text: "Estudar os hieróglifos sagrados",
+                                    emotion: 'joy'
+                                },
+                                {
+                                    text: "Decifrar os mistérios antigos",
+                                    emotion: 'fear'
+                                },
+                                {
+                                    text: "Honrar a sabedoria de Thoth",
+                                    emotion: 'surprise'
+                                }
+                            ]
+                        }],
+                        chinese: [{
+                            text: "Confúcio sorri com a sabedoria de milhares de anos. 'O caminho do meio é a verdadeira estratégia, discípulo. Nem muito agressivo, nem muito passivo - o equilíbrio é a chave da vitória.'",
+                            emotion: 'joy',
+                            chapter: 1,
+                            progress: 35,
+                            choices: [{
+                                    text: "Seguir o caminho do meio",
+                                    emotion: 'joy'
+                                },
+                                {
+                                    text: "Buscar o conhecimento supremo",
+                                    emotion: 'surprise'
+                                },
+                                {
+                                    text: "Respeitar os ensinamentos antigos",
+                                    emotion: 'joy'
+                                }
+                            ]
+                        }]
+                    };
+
+                    const characterStories = stories[this.currentCharacter.id];
+                    if (characterStories && characterStories.length > 0) {
+                        this.currentStory = characterStories[0];
+                        this.addToHistory(this.currentStory.text, this.currentStory.emotion);
+                    }
+                },
+
+                makeChoice(choiceIndex) {
+                    const choice = this.currentStory.choices[choiceIndex];
+                    this.addToHistory(`Escolha: ${choice.text}`, choice.emotion);
+
+                    // Atualizar análise baseada na escolha
+                    this.analysis.engagement += Math.floor(Math.random() * 10) - 5;
+                    this.analysis.engagement = Math.max(0, Math.min(100, this.analysis.engagement));
+
+                    // Gerar nova parte da história
+                    this.generateNextStory();
+                },
+
+                generateNextStory() {
+                    this.currentStory.progress += Math.floor(Math.random() * 20) + 10;
+                    if (this.currentStory.progress >= 100) {
+                        this.currentStory.chapter++;
+                        this.currentStory.progress = 0;
+                    }
+
+                    // Simular geração de nova narrativa
+                    setTimeout(() => {
+                        const emotions = ['joy', 'anger', 'sadness', 'fear', 'surprise'];
+                        const emotion = emotions[Math.floor(Math.random() * emotions.length)];
+
+                        this.currentStory.text = this.generateNarrativeText(emotion);
+                        this.currentStory.emotion = emotion;
+                        this.currentStory.choices = this.generateChoices(emotion);
+
+                        this.addToHistory(this.currentStory.text, emotion);
+                    }, 1000);
+                },
+
+                generateNarrativeText(emotion) {
+                    const templates = {
+                        joy: [
+                            "A sabedoria flui como um rio sagrado, e cada movimento revela novos caminhos de conhecimento.",
+                            "O coração se enche de alegria ao descobrir os segredos ancestrais do tabuleiro.",
+                            "A harmonia entre mente e espírito se manifesta em cada jogada estratégica."
+                        ],
+                        anger: [
+                            "A batalha se intensifica, e a fúria dos antigos guerreiros ecoa através dos tempos.",
+                            "O conflito é inevitável, e apenas os mais fortes sobreviverão ao teste.",
+                            "A ira sagrada dos deuses se manifesta em cada movimento agressivo."
+                        ],
+                        sadness: [
+                            "A melancolia dos tempos perdidos paira sobre o tabuleiro como uma névoa sagrada.",
+                            "Os ecos de batalhas antigas trazem lembranças de glórias passadas.",
+                            "A sabedoria vem com o preço da solidão e da compreensão profunda."
+                        ],
+                        fear: [
+                            "Os mistérios do tabuleiro revelam verdades que poucos ousam enfrentar.",
+                            "O desconhecido se esconde em cada esquina, esperando o momento certo para se revelar.",
+                            "O medo é o primeiro passo para a verdadeira compreensão dos segredos antigos."
+                        ],
+                        surprise: [
+                            "Uma revelação inesperada muda completamente o curso da batalha sagrada.",
+                            "Os deuses surpreendem com sua sabedoria infinita e conhecimento profundo.",
+                            "O inesperado se torna a arma mais poderosa na busca pela verdade."
+                        ]
+                    };
+
+                    const texts = templates[emotion] || templates.joy;
+                    return texts[Math.floor(Math.random() * texts.length)];
+                },
+
+                generateChoices(emotion) {
+                    const choiceTemplates = {
+                        joy: [{
+                                text: "Aceitar a alegria da descoberta",
+                                emotion: 'joy'
+                            },
+                            {
+                                text: "Compartilhar o conhecimento",
+                                emotion: 'joy'
+                            },
+                            {
+                                text: "Celebrar a vitória da sabedoria",
+                                emotion: 'joy'
+                            }
+                        ],
+                        anger: [{
+                                text: "Canalizar a fúria em força",
+                                emotion: 'anger'
+                            },
+                            {
+                                text: "Controlar a ira através da disciplina",
+                                emotion: 'joy'
+                            },
+                            {
+                                text: "Transformar raiva em estratégia",
+                                emotion: 'surprise'
+                            }
+                        ],
+                        sadness: [{
+                                text: "Aceitar a melancolia como parte do crescimento",
+                                emotion: 'sadness'
+                            },
+                            {
+                                text: "Buscar consolo na sabedoria",
+                                emotion: 'joy'
+                            },
+                            {
+                                text: "Transformar tristeza em força",
+                                emotion: 'surprise'
+                            }
+                        ],
+                        fear: [{
+                                text: "Enfrentar o medo com coragem",
+                                emotion: 'joy'
+                            },
+                            {
+                                text: "Usar o medo como alerta",
+                                emotion: 'fear'
+                            },
+                            {
+                                text: "Transformar medo em cautela",
+                                emotion: 'surprise'
+                            }
+                        ],
+                        surprise: [{
+                                text: "Aceitar o inesperado com curiosidade",
+                                emotion: 'joy'
+                            },
+                            {
+                                text: "Investigar a surpresa",
+                                emotion: 'surprise'
+                            },
+                            {
+                                text: "Adaptar-se à mudança",
+                                emotion: 'joy'
+                            }
+                        ]
+                    };
+
+                    return choiceTemplates[emotion] || choiceTemplates.joy;
+                },
+
+                addToHistory(text, emotion) {
+                    this.storyHistory.unshift({
+                        character: this.currentCharacter,
+                        text: text,
+                        emotion: emotion,
+                        timestamp: new Date().toLocaleTimeString()
+                    });
+
+                    // Manter apenas os últimos 10 itens
+                    if (this.storyHistory.length > 10) {
+                        this.storyHistory = this.storyHistory.slice(0, 10);
+                    }
+                },
+
+                startStoryUpdate() {
+                    setInterval(() => {
+                        // Atualizar análise cultural
+                        this.analysis.authenticity += (Math.random() - 0.5) * 2;
+                        this.analysis.complexity += (Math.random() - 0.5) * 2;
+                        this.analysis.overall = Math.round((this.analysis.authenticity + this.analysis.complexity + this.analysis.engagement) / 3);
+
+                        // Manter valores entre 0 e 100
+                        this.analysis.authenticity = Math.max(0, Math.min(100, this.analysis.authenticity));
+                        this.analysis.complexity = Math.max(0, Math.min(100, this.analysis.complexity));
+                        this.analysis.overall = Math.max(0, Math.min(100, this.analysis.overall));
+                    }, 5000);
+                }
+            };
+        }
+    </script>
+</body>
+
+</html>

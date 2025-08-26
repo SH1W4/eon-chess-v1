@@ -176,3 +176,4 @@ data/postgres/
 ---
 
 **LEMBRE-SE**: A interface web é apenas a **representação visual** do sistema real. O verdadeiro valor está na **arquitetura robusta** dos motores internos que você construiu.
+

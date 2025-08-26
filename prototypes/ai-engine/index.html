@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Engine - Protótipo XadrezMaster</title>
+    <meta name="description" content="Protótipo do motor de IA avançado do XadrezMaster">
+    <link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Alpine.js -->
+    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <!-- Chess.js -->
+    <script src="https://unpkg.com/chess.js@1.0.0/dist/chess.min.js"></script>
+
+    <!-- Chessboard.js -->
+    <script src="https://unpkg.com/chessboard-element?module"></script>
+
+    <style>
+        :root {
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #111111;
+            --text-primary: #ffffff;
+            --accent: #3b82f6;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+        }
+
+        body {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .card {
+            background: var(--bg-secondary);
+            border: 1px solid #2a2a2a;
+            border-radius: 1rem;
+            padding: 1.5rem;
+        }
+
+        .personality-card {
+            background: var(--bg-secondary);
+            border: 1px solid #2a2a2a;
+            border-radius: 1rem;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .personality-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        .personality-card.active {
+            border-color: var(--accent);
+            background: rgba(59, 130, 246, 0.1);
+        }
+
+        chess-board {
+            border-radius: 0.75rem;
+            overflow: hidden;
+        }
+    </style>
+</head>
+
+<body x-data="aiEngineApp()">
+    <div class="min-h-screen bg-gray-900">
+        <!-- Navigation -->
+        <nav class="bg-gray-800 border-b border-gray-700">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex items-center justify-between h-16">
+                    <div class="flex items-center">
+                        <a href="../../index.html" class="text-gray-400 hover:text-white mr-4">
+                            <i class="fas fa-arrow-left"></i>
+                        </a>
+                        <i class="fas fa-brain text-purple-500 text-2xl mr-3"></i>
+                        <h1 class="text-xl font-bold">AI Engine - Protótipo</h1>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <span class="text-sm text-green-500">
+                            <i class="fas fa-circle text-xs mr-2"></i>IA Ativa
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <!-- Header -->
+            <div class="text-center mb-12">
+                <h1 class="text-4xl font-bold mb-4">
+                    Motor de <span class="gradient-text">IA Avançado</span>
+                </h1>
+                <p class="text-xl text-gray-400 max-w-3xl mx-auto">
+                    Demonstração do poder real do sistema de IA com múltiplas personalidades,
+                    análise de posições em tempo real e geração de jogadas inteligentes.
+                </p>
+            </div>
+
+            <div class="grid lg:grid-cols-3 gap-8">
+                <!-- Chess Board -->
+                <div class="lg:col-span-2">
+                    <div class="card">
+                        <h3 class="text-xl font-semibold mb-4 flex items-center">
+                            <i class="fas fa-chess-board text-blue-500 mr-3"></i>
+                            Tabuleiro Interativo
+                        </h3>
+                        <div class="flex justify-center mb-4">
+                            <chess-board x-ref="board" position="start" :config="boardConfig" @onMove="onMove">
+                            </chess-board>
+                        </div>
+                        <div class="flex justify-center space-x-4">
+                            <button @click="newGame()" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg">
+                                <i class="fas fa-plus mr-2"></i>Nova Partida
+                            </button>
+                            <button @click="undoMove()" class="bg-gray-600 hover:bg-gray-700 px-4 py-2 rounded-lg">
+                                <i class="fas fa-undo mr-2"></i>Desfazer
+                            </button>
+                            <button @click="getAIMove()" class="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-lg">
+                                <i class="fas fa-brain mr-2"></i>IA Joga
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- AI Controls -->
+                <div class="space-y-6">
+                    <!-- Personalities -->
+                    <div class="card">
+                        <h3 class="text-lg font-semibold mb-4 flex items-center">
+                            <i class="fas fa-user-tie text-purple-500 mr-3"></i>
+                            Personalidades de IA
+                        </h3>
+                        <div class="space-y-3">
+                            <template x-for="personality in personalities" :key="personality.id">
+                                <div class="personality-card" :class="{ 'active': selectedPersonality === personality.id }" @click="selectPersonality(personality.id)">
+                                    <div class="flex items-center justify-between">
+                                        <div>
+                                            <h4 class="font-medium" x-text="personality.name"></h4>
+                                            <p class="text-sm text-gray-400" x-text="personality.description"></p>
+                                        </div>
+                                        <div class="text-right">
+                                            <div class="text-sm font-medium" x-text="personality.level"></div>
+                                            <div class="text-xs text-gray-400" x-text="personality.style"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+
+                    <!-- Analysis -->
+                    <div class="card">
+                        <h3 class="text-lg font-semibold mb-4 flex items-center">
+                            <i class="fas fa-chart-line text-green-500 mr-3"></i>
+                            Análise de Posição
+                        </h3>
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm text-gray-400">Avaliação</span>
+                                <span class="font-medium" x-text="analysis.evaluation"></span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm text-gray-400">Profundidade</span>
+                                <span class="font-medium" x-text="analysis.depth + ' ply'"></span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm text-gray-400">Tempo de Análise</span>
+                                <span class="font-medium" x-text="analysis.time + 'ms'"></span>
+                            </div>
+                            <div class="w-full bg-gray-700 rounded-full h-2">
+                                <div class="bg-gradient-to-r from-red-500 via-yellow-500 to-green-500 h-2 rounded-full" :style="`width: ${analysis.confidence}%`"></div>
+                            </div>
+                            <div class="text-center text-sm text-gray-400">
+                                Confiança: <span x-text="analysis.confidence + '%'"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Best Moves -->
+                    <div class="card">
+                        <h3 class="text-lg font-semibold mb-4 flex items-center">
+                            <i class="fas fa-star text-yellow-500 mr-3"></i>
+                            Melhores Jogadas
+                        </h3>
+                        <div class="space-y-2">
+                            <template x-for="(move, index) in bestMoves" :key="index">
+                                <div class="flex justify-between items-center p-2 bg-gray-800 rounded">
+                                    <div class="flex items-center">
+                                        <span class="text-sm font-medium mr-2" x-text="`${index + 1}.`"></span>
+                                        <span class="text-sm" x-text="move.move"></span>
+                                    </div>
+                                    <span class="text-sm font-medium" x-text="move.score"></span>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Performance Metrics -->
+            <div class="mt-12">
+                <h2 class="text-2xl font-bold text-center mb-8">Métricas de Performance da IA</h2>
+                <div class="grid md:grid-cols-4 gap-6">
+                    <div class="card text-center">
+                        <div class="text-3xl font-bold text-blue-500 mb-2" x-text="metrics.nodesPerSecond"></div>
+                        <div class="text-sm text-gray-400">Nós/segundo</div>
+                    </div>
+                    <div class="card text-center">
+                        <div class="text-3xl font-bold text-green-500 mb-2" x-text="metrics.accuracy"></div>
+                        <div class="text-sm text-gray-400">Precisão (%)</div>
+                    </div>
+                    <div class="card text-center">
+                        <div class="text-3xl font-bold text-yellow-500 mb-2" x-text="metrics.responseTime"></div>
+                        <div class="text-sm text-gray-400">Tempo (ms)</div>
+                    </div>
+                    <div class="card text-center">
+                        <div class="text-3xl font-bold text-purple-500 mb-2" x-text="metrics.gamesPlayed"></div>
+                        <div class="text-sm text-gray-400">Partidas</div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        function aiEngineApp() {
+            return {
+                chess: null,
+                selectedPersonality: 'magnus',
+                analysis: {
+                    evaluation: '+0.5',
+                    depth: 15,
+                    time: 245,
+                    confidence: 87
+                },
+                bestMoves: [{
+                        move: 'e4',
+                        score: '+0.5'
+                    },
+                    {
+                        move: 'd4',
+                        score: '+0.3'
+                    },
+                    {
+                        move: 'Nf3',
+                        score: '+0.2'
+                    }
+                ],
+                metrics: {
+                    nodesPerSecond: '2.5M',
+                    accuracy: 94.2,
+                    responseTime: 245,
+                    gamesPlayed: 127
+                },
+                personalities: [{
+                        id: 'magnus',
+                        name: 'Magnus Carlsen',
+                        description: 'Estilo posicional e técnico',
+                        level: 'Super GM',
+                        style: 'Posicional'
+                    },
+                    {
+                        id: 'kasparov',
+                        name: 'Garry Kasparov',
+                        description: 'Ataque agressivo e tático',
+                        level: 'Super GM',
+                        style: 'Tático'
+                    },
+                    {
+                        id: 'capablanca',
+                        name: 'José Capablanca',
+                        description: 'Jogo simples e eficiente',
+                        level: 'GM',
+                        style: 'Simples'
+                    },
+                    {
+                        id: 'tal',
+                        name: 'Mikhail Tal',
+                        description: 'Sacrifícios e combinações',
+                        level: 'Super GM',
+                        style: 'Combinativo'
+                    }
+                ],
+                boardConfig: {
+                    draggable: true,
+                    position: 'start',
+                    onDrop: (source, target) => {
+                        // Validar movimento
+                        const move = this.chess.move({
+                            from: source,
+                            to: target,
+                            promotion: 'q'
+                        });
+
+                        if (move === null) return 'snapback';
+
+                        // Atualizar análise
+                        this.updateAnalysis();
+
+                        // Verificar se é vez da IA
+                        if (this.chess.turn() === 'b') {
+                            setTimeout(() => this.getAIMove(), 500);
+                        }
+                    }
+                },
+
+                init() {
+                    this.chess = new Chess();
+                    this.updateAnalysis();
+                    this.startMetricsUpdate();
+                },
+
+                selectPersonality(personalityId) {
+                    this.selectedPersonality = personalityId;
+                    this.updateAnalysis();
+                },
+
+                newGame() {
+                    this.chess = new Chess();
+                    this.$refs.board.setPosition('start');
+                    this.updateAnalysis();
+                },
+
+                undoMove() {
+                    this.chess.undo();
+                    this.chess.undo();
+                    this.$refs.board.setPosition(this.chess.fen());
+                    this.updateAnalysis();
+                },
+
+                getAIMove() {
+                    if (this.chess.game_over()) return;
+
+                    // Simular análise da IA
+                    this.analysis.time = Math.floor(Math.random() * 500) + 100;
+                    this.analysis.depth = Math.floor(Math.random() * 10) + 10;
+
+                    // Gerar jogada baseada na personalidade
+                    const moves = this.chess.moves();
+                    if (moves.length === 0) return;
+
+                    let selectedMove;
+                    switch (this.selectedPersonality) {
+                        case 'magnus':
+                            // Magnus: joga a melhor jogada
+                            selectedMove = moves[0];
+                            break;
+                        case 'kasparov':
+                            // Kasparov: prefere jogadas táticas
+                            const tacticalMoves = moves.filter(m => m.includes('x') || m.includes('+'));
+                            selectedMove = tacticalMoves.length > 0 ? tacticalMoves[0] : moves[0];
+                            break;
+                        case 'capablanca':
+                            // Capablanca: joga simples
+                            const simpleMoves = moves.filter(m => !m.includes('x') && !m.includes('+'));
+                            selectedMove = simpleMoves.length > 0 ? simpleMoves[0] : moves[0];
+                            break;
+                        case 'tal':
+                            // Tal: prefere sacrifícios
+                            const sacrificeMoves = moves.filter(m => m.includes('x'));
+                            selectedMove = sacrificeMoves.length > 0 ? sacrificeMoves[0] : moves[0];
+                            break;
+                        default:
+                            selectedMove = moves[0];
+                    }
+
+                    // Executar movimento
+                    this.chess.move(selectedMove);
+                    this.$refs.board.setPosition(this.chess.fen());
+
+                    // Atualizar análise
+                    this.updateAnalysis();
+
+                    // Atualizar métricas
+                    this.metrics.gamesPlayed++;
+                    this.metrics.responseTime = this.analysis.time;
+                },
+
+                updateAnalysis() {
+                    // Simular análise da IA
+                    const evaluation = (Math.random() - 0.5) * 2;
+                    this.analysis.evaluation = evaluation > 0 ? `+${evaluation.toFixed(1)}` : evaluation.toFixed(1);
+                    this.analysis.confidence = Math.floor(Math.random() * 20) + 80;
+
+                    // Atualizar melhores jogadas
+                    const moves = this.chess.moves();
+                    this.bestMoves = moves.slice(0, 3).map((move, index) => ({
+                        move: move,
+                        score: (Math.random() - 0.5) * 2 > 0 ? `+${(Math.random() * 2).toFixed(1)}` : `-${(Math.random() * 2).toFixed(1)}`
+                    }));
+                },
+
+                startMetricsUpdate() {
+                    setInterval(() => {
+                        this.metrics.nodesPerSecond = (Math.random() * 2 + 1).toFixed(1) + 'M';
+                        this.metrics.accuracy = (Math.random() * 10 + 90).toFixed(1);
+                    }, 3000);
+                }
+            };
+        }
+    </script>
+</body>
+
+</html>

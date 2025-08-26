@@ -1,0 +1,157 @@
+project:
+  name: "AEON Chess"
+  version: "1.0.1"
+  description: "Advanced chess platform with AI and cultural narrative"
+
+dependencies:
+  core:
+    - name: "core_engine"
+      path: "/src/core"
+      requires:
+        python:
+          - python-chess>=1.10.0
+          - numpy>=1.24.0
+          - scipy>=1.11.0
+        
+    - name: "ai_engine"
+      path: "/src/ai"
+      requires:
+        python:
+          - torch>=2.0.0
+          - torchvision>=0.15.0
+          - scikit-learn>=1.3.0
+        internal:
+          - core_engine
+          - quantum_system
+          
+    - name: "cultural_system"
+      path: "/src/cultural"
+      requires:
+        internal:
+          - ai_engine
+          - traditional_system
+          
+    - name: "quantum_system"
+      path: "/src/quantum"
+      requires:
+        python:
+          - qiskit>=0.45.0
+        internal:
+          - core_engine
+          
+    - name: "traditional_system"
+      path: "/src/traditional"
+      requires:
+        python:
+          - python-chess>=1.10.0
+
+  web:
+    - name: "frontend"
+      path: "/src/pages"
+      requires:
+        node:
+          - next>=13.0.0
+          - react>=18.0.0
+          - typescript>=5.0.0
+        internal:
+          - components
+          - styles
+          
+    - name: "components"
+      path: "/src/components"
+      requires:
+        node:
+          - tailwindcss>=3.0.0
+        internal:
+          - styles
+          
+    - name: "styles"
+      path: "/src/styles"
+      requires:
+        node:
+          - tailwindcss>=3.0.0
+          - postcss>=8.0.0
+
+  infrastructure:
+    - name: "api_layer"
+      path: "/src/api"
+      requires:
+        python:
+          - fastapi>=0.100.0
+          - uvicorn>=0.23.0
+          - pydantic>=2.0.0
+        internal:
+          - core_engine
+          - ai_engine
+          
+    - name: "monitoring"
+      path: "/src/monitoring"
+      requires:
+        python:
+          - prometheus-client>=0.19.0
+          - python-json-logger>=2.0.0
+          
+    - name: "integrations"
+      path: "/src/integrations"
+      requires:
+        python:
+          - aiohttp>=3.8.0
+        internal:
+          - api_layer
+
+validation:
+  rules:
+    - name: "version_compatibility"
+      enabled: true
+      action: "warn"
+      
+    - name: "circular_dependency"
+      enabled: true
+      action: "error"
+      
+    - name: "unused_dependency"
+      enabled: true
+      action: "warn"
+
+automation:
+  on_dependency_change:
+    - action: "update_requirements"
+      paths:
+        - "/python/requirements.txt"
+        - "/package.json"
+        
+    - action: "notify_arkitect"
+      config: "/.arkitect/arkitect.yaml"
+      
+    - action: "update_documentation"
+      paths:
+        - "/docs/dependencies.md"
+        - "/docs/architecture.md"
+
+monitoring:
+  metrics:
+    - name: "dependency_freshness"
+      type: "gauge"
+      description: "Age of dependencies in days"
+      
+    - name: "dependency_conflicts"
+      type: "counter"
+      description: "Number of version conflicts detected"
+      
+    - name: "dependency_updates"
+      type: "counter"
+      description: "Number of dependency updates performed"
+
+integrations:
+  tools:
+    - name: "arkitect"
+      enabled: true
+      config: "/.arkitect/arkitect.yaml"
+      
+    - name: "docsync"
+      enabled: true
+      config: "/.docsync/config.yaml"
+      
+    - name: "vireon"
+      enabled: true
+      config: "/.vireon/config.yaml"

@@ -1,0 +1,122 @@
+project:
+  name: "AEON Chess"
+  version: "1.0.1"
+  type: "chess_platform"
+
+architecture:
+  core:
+    components:
+      - name: "ai"
+        path: "/src/ai"
+        provides: ["evaluation", "caching", "learning"]
+        requires: ["core", "quantum"]
+        
+      - name: "core"
+        path: "/src/core"
+        provides: ["board", "evaluation", "orchestration"]
+        requires: []
+        
+      - name: "cultural"
+        path: "/src/cultural"
+        provides: ["narrative", "storytelling"]
+        requires: ["ai", "traditional"]
+        
+      - name: "quantum"
+        path: "/src/quantum"
+        provides: ["advanced_computation"]
+        requires: ["core"]
+        
+      - name: "traditional"
+        path: "/src/traditional"
+        provides: ["chess_rules", "basic_evaluation"]
+        requires: []
+
+  web:
+    components:
+      - name: "frontend"
+        path: "/src/pages"
+        provides: ["user_interface"]
+        requires: ["core", "components"]
+        
+      - name: "components"
+        path: "/src/components"
+        provides: ["reusable_ui"]
+        requires: ["styles"]
+        
+      - name: "styles"
+        path: "/src/styles"
+        provides: ["styling"]
+        requires: []
+
+  infrastructure:
+    components:
+      - name: "api"
+        path: "/src/api"
+        provides: ["rest_api"]
+        requires: ["core", "ai"]
+        
+      - name: "monitoring"
+        path: "/src/monitoring"
+        provides: ["metrics", "logging"]
+        requires: []
+        
+      - name: "integrations"
+        path: "/src/integrations"
+        provides: ["external_services"]
+        requires: ["api"]
+
+validation:
+  rules:
+    - name: "dependency_cycle"
+      description: "Detect dependency cycles between components"
+      severity: "error"
+      
+    - name: "unused_component"
+      description: "Detect components that are not used by any other component"
+      severity: "warning"
+      
+    - name: "missing_interface"
+      description: "Detect components that don't provide any interfaces"
+      severity: "warning"
+
+monitoring:
+  metrics:
+    - name: "dependency_count"
+      type: "counter"
+      description: "Number of dependencies between components"
+      
+    - name: "component_complexity"
+      type: "gauge"
+      description: "Complexity score of each component"
+      
+    - name: "dependency_health"
+      type: "health"
+      description: "Health status of component dependencies"
+
+documentation:
+  generators:
+    - name: "architecture_diagram"
+      type: "mermaid"
+      output: "/docs/architecture.md"
+      
+    - name: "dependency_matrix"
+      type: "markdown"
+      output: "/docs/dependencies.md"
+      
+    - name: "api_documentation"
+      type: "openapi"
+      output: "/docs/api.yaml"
+
+integrations:
+  tools:
+    - name: "taskmash"
+      enabled: true
+      config: "/.taskmash/config.yaml"
+      
+    - name: "docsync"
+      enabled: true
+      config: "/.docsync/config.yaml"
+      
+    - name: "vireon"
+      enabled: true
+      config: "/.vireon/config.yaml"

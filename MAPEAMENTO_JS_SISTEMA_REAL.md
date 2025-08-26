@@ -322,3 +322,5 @@ Este documento mapeia **exatamente** como cada arquivo JavaScript da interface s
 ---
 
 **LEMBRE-SE**: A interface é apenas a **ferramenta** para acessar o sistema real. O valor está na **arquitetura robusta** dos motores internos.
+
+

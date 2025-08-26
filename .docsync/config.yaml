@@ -1,0 +1,126 @@
+project:
+  name: "AEON Chess"
+  version: "1.0.1"
+  documentation_root: "/docs"
+
+sync:
+  structure:
+    - category: "technical"
+      path: "/docs/technical"
+      auto_organize: true
+      patterns:
+        - "ARQUITETURA_*.md"
+        - "*_ANALYSIS.md"
+        - "*_INTEGRATION.md"
+      index_file: "README.md"
+      
+    - category: "deployment"
+      path: "/docs/deployment"
+      auto_organize: true
+      patterns:
+        - "DEPLOY_*.md"
+        - "*_INSTALL.md"
+        - "*_SETUP.md"
+      index_file: "README.md"
+      
+    - category: "features"
+      path: "/docs/features"
+      auto_organize: true
+      patterns:
+        - "*_GUIDE.md"
+        - "*_MECHANICS.md"
+        - "*_SYSTEM.md"
+      index_file: "README.md"
+      
+    - category: "improvements"
+      path: "/docs/improvements"
+      auto_organize: true
+      patterns:
+        - "*_IMPROVEMENTS.md"
+        - "*_ENHANCEMENTS.md"
+      index_file: "README.md"
+      
+    - category: "releases"
+      path: "/docs/releases"
+      auto_organize: true
+      patterns:
+        - "RELEASE_*.md"
+        - "*_SUMMARY.md"
+      index_file: "README.md"
+
+automation:
+  enabled: true
+  features:
+    - table_of_contents:
+        enabled: true
+        depth: 3
+        update: "on_change"
+    - link_validation:
+        enabled: true
+        fix_broken: true
+    - formatting:
+        enabled: true
+        style: "markdownlint"
+    - metadata:
+        enabled: true
+        required:
+          - title
+          - date
+          - category
+          - status
+
+monitoring:
+  - doc_coverage
+  - link_health
+  - format_consistency
+
+integrations:
+  taskmash:
+    enabled: true
+    sync_on_task: true
+  arkitect:
+    enabled: true
+    validate_structure: true
+
+templates:
+  technical:
+    path: "/docs/templates/technical.md"
+    variables:
+      - title
+      - description
+      - category
+      - status
+  feature:
+    path: "/docs/templates/feature.md"
+    variables:
+      - title
+      - description
+      - category
+      - status
+  release:
+    path: "/docs/templates/release.md"
+    variables:
+      - version
+      - date
+      - changes
+      - status
+
+workflows:
+  - name: "new_feature_doc"
+    steps:
+      - use_template: "feature"
+      - add_to_category: "features"
+      - update_index: true
+      - validate_links: true
+  
+  - name: "new_release_doc"
+    steps:
+      - use_template: "release"
+      - add_to_category: "releases"
+      - update_changelog: true
+      - validate_links: true
+
+notifications:
+  - on_broken_link
+  - on_missing_metadata
+  - on_format_issue

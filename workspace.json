@@ -1,0 +1,111 @@
+{
+  "project": {
+    "name": "AEON Chess",
+    "version": "1.0.1",
+    "description": "Advanced chess platform with AI and cultural narrative capabilities",
+    "repository": "chess"
+  },
+
+  "workspace": {
+    "root": "/Users/jx/WORKSPACE/PROJECTS/CHESS",
+    "structure": {
+      "src": "./src",
+      "docs": "./docs",
+      "web": "./web",
+      "config": "./.config",
+      "tools": "./.tools"
+    }
+  },
+
+  "frameworks": {
+    "arquimax": {
+      "enabled": true,
+      "config_dir": "./.arquimax",
+      "config_file": "./.arquimax/config.yaml",
+      "features": [
+        "architecture_analysis",
+        "dependency_tracking",
+        "evolution_monitoring"
+      ]
+    },
+
+    "arkitect": {
+      "enabled": true,
+      "config_dir": "./.arkitect",
+      "config_file": "./.arkitect/arkitect.yaml",
+      "features": [
+        "dependency_validation",
+        "structure_validation",
+        "architectural_rules"
+      ]
+    },
+
+    "taskmash": {
+      "enabled": true,
+      "config_dir": "./.taskmash",
+      "config_file": "./.taskmash/dependencies.yaml",
+      "features": [
+        "dependency_management",
+        "task_organization",
+        "build_optimization"
+      ]
+    },
+
+    "docsync": {
+      "enabled": true,
+      "config_dir": "./.docsync",
+      "config_file": "./.docsync/sync.yaml",
+      "features": [
+        "documentation_sync",
+        "metadata_validation",
+        "content_organization"
+      ]
+    }
+  },
+
+  "tools": {
+    "monitoring": {
+      "enabled": true,
+      "config_dir": "./.monitoring",
+      "config_file": "./.monitoring/config.yaml",
+      "integrations": [
+        "prometheus",
+        "grafana",
+        "elasticsearch"
+      ]
+    }
+  },
+
+  "dependencies": {
+    "frameworks": {
+      "arquimax": "^2.0.0",
+      "arkitect": "^1.5.0",
+      "taskmash": "^3.1.0",
+      "docsync": "^1.2.0"
+    }
+  },
+
+  "paths": {
+    "config_files": {
+      "arquimax": "./.arquimax/config.yaml",
+      "arkitect": "./.arkitect/arkitect.yaml",
+      "taskmash": "./.taskmash/dependencies.yaml",
+      "docsync": "./.docsync/sync.yaml",
+      "monitoring": "./.monitoring/config.yaml"
+    },
+    
+    "source": {
+      "core": "./src/core",
+      "ai": "./src/ai",
+      "cultural": "./src/cultural",
+      "web": "./web"
+    },
+    
+    "documentation": {
+      "technical": "./docs/technical",
+      "features": "./docs/features",
+      "deployment": "./docs/deployment",
+      "releases": "./docs/releases"
+    }
+  }
+}

@@ -1,0 +1,107 @@
+project:
+  name: "AEON Chess"
+  type: "chess_platform"
+  version: "1.0.1"
+
+architecture:
+  core:
+    - name: "ai_engine"
+      path: "/src/ai"
+      components:
+        - evaluation
+        - caching
+        - lib
+    - name: "core_engine"
+      path: "/src/core"
+      components:
+        - board
+        - evaluation
+        - orchestration
+    - name: "cultural_system"
+      path: "/src/cultural"
+      components:
+        - narrative
+        - antagonists
+    - name: "quantum_system"
+      path: "/src/quantum"
+    - name: "traditional_system"
+      path: "/src/traditional"
+
+  web:
+    - name: "frontend"
+      path: "/web"
+      components:
+        - components
+        - pages
+        - styles
+        - utils
+    - name: "effects"
+      path: "/python"
+      components:
+        - chess_effects_api
+        - chess_visual_effects_engine
+
+  infrastructure:
+    - name: "database"
+      components:
+        - postgres
+        - redis
+    - name: "deployment"
+      components:
+        - production
+        - staging
+        - monitoring
+
+documentation:
+  structure:
+    - technical:
+        path: "/docs/technical"
+        files:
+          - ARQUITETURA_SISTEMA_VS_INTERFACE.md
+          - AEON_CHESS_ANALYSIS.md
+          - ARKITECT_INTEGRATION.md
+    - deployment:
+        path: "/docs/deployment"
+        files:
+          - DEPLOY_GUIDE.md
+          - README_INSTALL.md
+    - features:
+        path: "/docs/features"
+        files:
+          - AI_BOARD_GENERATION_GUIDE.md
+          - CHESS_COM_MECHANICS.md
+          - SISTEMA_MULTI_IA_PERSONALIDADES.md
+    - improvements:
+        path: "/docs/improvements"
+        files:
+          - AESTHETIC_IMPROVEMENTS.md
+          - LANDING_PAGE_ENHANCEMENTS.md
+    - releases:
+        path: "/docs/releases"
+        files:
+          - RELEASE_NOTES_v1.0.0-beta.md
+          - RELEASE_NOTES_v1.0.1.md
+
+monitoring:
+  metrics:
+    - response_time
+    - ai_accuracy
+    - system_efficiency
+    - move_quality
+  health_checks:
+    - database_connection
+    - api_status
+    - ai_system
+    - cultural_system
+
+integration:
+  tools:
+    - taskmash:
+        enabled: true
+        config_path: "/.taskmash/config.yaml"
+    - arkitect:
+        enabled: true
+        config_path: "/.arkitect/rules.yaml"
+    - docsync:
+        enabled: true
+        config_path: "/.docsync/config.yaml"

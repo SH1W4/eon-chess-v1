@@ -1,0 +1,384 @@
+{
+  "timestamp": "2025-08-21T01:49:44.190342",
+  "tempo_execucao": "0.69s",
+  "resumo": {
+    "total_testes": 30,
+    "sucessos": 24,
+    "avisos": 8,
+    "erros": 4
+  },
+  "resultados": [
+    {
+      "categoria": "estrutura",
+      "status": "success",
+      "mensagem": "Arquivo encontrado: index.html",
+      "timestamp": "2025-08-21T01:49:43.503878"
+    },
+    {
+      "categoria": "estrutura",
+      "status": "success",
+      "mensagem": "Arquivo encontrado: js/chess-board.js",
+      "timestamp": "2025-08-21T01:49:43.503960"
+    },
+    {
+      "categoria": "estrutura",
+      "status": "success",
+      "mensagem": "Arquivo encontrado: js/ai-integration-real.js",
+      "timestamp": "2025-08-21T01:49:43.503977"
+    },
+    {
+      "categoria": "estrutura",
+      "status": "success",
+      "mensagem": "Arquivo encontrado: js/aeon-brain-orchestrator.js",
+      "timestamp": "2025-08-21T01:49:43.503990"
+    },
+    {
+      "categoria": "estrutura",
+      "status": "success",
+      "mensagem": "Arquivo encontrado: python/chess_effects_api.py",
+      "timestamp": "2025-08-21T01:49:43.504001"
+    },
+    {
+      "categoria": "estrutura",
+      "status": "success",
+      "mensagem": "Arquivo encontrado: src/ai/evaluation/",
+      "timestamp": "2025-08-21T01:49:43.504017"
+    },
+    {
+      "categoria": "estrutura",
+      "status": "success",
+      "mensagem": "Arquivo encontrado: src/core/board/",
+      "timestamp": "2025-08-21T01:49:43.504031"
+    },
+    {
+      "categoria": "estrutura",
+      "status": "success",
+      "mensagem": "Arquivo encontrado: data/postgres/",
+      "timestamp": "2025-08-21T01:49:43.504042"
+    },
+    {
+      "categoria": "estrutura",
+      "status": "success",
+      "mensagem": "Arquivo encontrado: deploy/production/",
+      "timestamp": "2025-08-21T01:49:43.504054"
+    },
+    {
+      "categoria": "dependencias",
+      "status": "success",
+      "mensagem": "Node.js: v24.4.1",
+      "timestamp": "2025-08-21T01:49:43.667701"
+    },
+    {
+      "categoria": "dependencias",
+      "status": "success",
+      "mensagem": "Python: Python 3.9.6",
+      "timestamp": "2025-08-21T01:49:43.689695"
+    },
+    {
+      "categoria": "dependencias",
+      "status": "success",
+      "mensagem": "Docker: Docker version 28.3.2, build 578ccf6",
+      "timestamp": "2025-08-21T01:49:43.981365"
+    },
+    {
+      "categoria": "javascript",
+      "status": "success",
+      "mensagem": "Arquivo JS válido: js/chess-board.js",
+      "timestamp": "2025-08-21T01:49:43.982351"
+    },
+    {
+      "categoria": "javascript",
+      "status": "success",
+      "mensagem": "Arquivo JS válido: js/ai-integration-real.js",
+      "timestamp": "2025-08-21T01:49:43.982782"
+    },
+    {
+      "categoria": "javascript",
+      "status": "success",
+      "mensagem": "Arquivo JS válido: js/aeon-brain-orchestrator.js",
+      "timestamp": "2025-08-21T01:49:43.983207"
+    },
+    {
+      "categoria": "javascript",
+      "status": "success",
+      "mensagem": "Arquivo JS válido: js/gamification.js",
+      "timestamp": "2025-08-21T01:49:43.983607"
+    },
+    {
+      "categoria": "javascript",
+      "status": "success",
+      "mensagem": "Arquivo JS válido: js/chess-pro-database.js",
+      "timestamp": "2025-08-21T01:49:43.983945"
+    },
+    {
+      "categoria": "api_python",
+      "status": "error",
+      "mensagem": "API Python não está rodando",
+      "timestamp": "2025-08-21T01:49:43.994454"
+    },
+    {
+      "categoria": "api_python",
+      "status": "success",
+      "mensagem": "Arquivo Python válido: python/chess_effects_api.py",
+      "timestamp": "2025-08-21T01:49:44.036320"
+    },
+    {
+      "categoria": "api_python",
+      "status": "success",
+      "mensagem": "Arquivo Python válido: python/chess_visual_effects_engine.py",
+      "timestamp": "2025-08-21T01:49:44.071601"
+    },
+    {
+      "categoria": "banco_dados",
+      "status": "error",
+      "mensagem": "Docker não está rodando",
+      "timestamp": "2025-08-21T01:49:44.189248"
+    },
+    {
+      "categoria": "banco_dados",
+      "status": "success",
+      "mensagem": "Configuração encontrada: data/postgres/",
+      "timestamp": "2025-08-21T01:49:44.189403"
+    },
+    {
+      "categoria": "banco_dados",
+      "status": "success",
+      "mensagem": "Configuração encontrada: docker-compose.yml",
+      "timestamp": "2025-08-21T01:49:44.189427"
+    },
+    {
+      "categoria": "performance",
+      "status": "success",
+      "mensagem": "Arquivo pequeno: js/aeon-brain-cultural-narrative.js (47.7KB)",
+      "timestamp": "2025-08-21T01:49:44.189669"
+    },
+    {
+      "categoria": "performance",
+      "status": "success",
+      "mensagem": "Arquivo pequeno: js/narrative-analysis.js (63.8KB)",
+      "timestamp": "2025-08-21T01:49:44.189688"
+    },
+    {
+      "categoria": "performance",
+      "status": "success",
+      "mensagem": "Arquivo pequeno: js/ai-ui-controller.js (43.0KB)",
+      "timestamp": "2025-08-21T01:49:44.189704"
+    },
+    {
+      "categoria": "integracao",
+      "status": "warning",
+      "mensagem": "Integração limitada: IA → Python",
+      "timestamp": "2025-08-21T01:49:44.189980"
+    },
+    {
+      "categoria": "integracao",
+      "status": "warning",
+      "mensagem": "Integração limitada: JS → PostgreSQL",
+      "timestamp": "2025-08-21T01:49:44.190132"
+    },
+    {
+      "categoria": "integracao",
+      "status": "warning",
+      "mensagem": "Integração limitada: Gamificação → IA",
+      "timestamp": "2025-08-21T01:49:44.190228"
+    },
+    {
+      "categoria": "integracao",
+      "status": "warning",
+      "mensagem": "Integração limitada: Orquestrador → Avaliador",
+      "timestamp": "2025-08-21T01:49:44.190335"
+    }
+  ],
+  "erros_criticos": [
+    {
+      "categoria": "api_python",
+      "status": "error",
+      "mensagem": "API Python não está rodando",
+      "timestamp": "2025-08-21T01:49:43.994454"
+    },
+    "API Python não está rodando",
+    {
+      "categoria": "banco_dados",
+      "status": "error",
+      "mensagem": "Docker não está rodando",
+      "timestamp": "2025-08-21T01:49:44.189248"
+    },
+    "Docker não está rodando"
+  ],
+  "avisos": [
+    {
+      "categoria": "integracao",
+      "status": "warning",
+      "mensagem": "Integração limitada: IA → Python",
+      "timestamp": "2025-08-21T01:49:44.189980"
+    },
+    "Integração limitada detectada: IA → Python",
+    {
+      "categoria": "integracao",
+      "status": "warning",
+      "mensagem": "Integração limitada: JS → PostgreSQL",
+      "timestamp": "2025-08-21T01:49:44.190132"
+    },
+    "Integração limitada detectada: JS → PostgreSQL",
+    {
+      "categoria": "integracao",
+      "status": "warning",
+      "mensagem": "Integração limitada: Gamificação → IA",
+      "timestamp": "2025-08-21T01:49:44.190228"
+    },
+    "Integração limitada detectada: Gamificação → IA",
+    {
+      "categoria": "integracao",
+      "status": "warning",
+      "mensagem": "Integração limitada: Orquestrador → Avaliador",
+      "timestamp": "2025-08-21T01:49:44.190335"
+    },
+    "Integração limitada detectada: Orquestrador → Avaliador"
+  ],
+  "sucessos": [
+    {
+      "categoria": "estrutura",
+      "status": "success",
+      "mensagem": "Arquivo encontrado: index.html",
+      "timestamp": "2025-08-21T01:49:43.503878"
+    },
+    {
+      "categoria": "estrutura",
+      "status": "success",
+      "mensagem": "Arquivo encontrado: js/chess-board.js",
+      "timestamp": "2025-08-21T01:49:43.503960"
+    },
+    {
+      "categoria": "estrutura",
+      "status": "success",
+      "mensagem": "Arquivo encontrado: js/ai-integration-real.js",
+      "timestamp": "2025-08-21T01:49:43.503977"
+    },
+    {
+      "categoria": "estrutura",
+      "status": "success",
+      "mensagem": "Arquivo encontrado: js/aeon-brain-orchestrator.js",
+      "timestamp": "2025-08-21T01:49:43.503990"
+    },
+    {
+      "categoria": "estrutura",
+      "status": "success",
+      "mensagem": "Arquivo encontrado: python/chess_effects_api.py",
+      "timestamp": "2025-08-21T01:49:43.504001"
+    },
+    {
+      "categoria": "estrutura",
+      "status": "success",
+      "mensagem": "Arquivo encontrado: src/ai/evaluation/",
+      "timestamp": "2025-08-21T01:49:43.504017"
+    },
+    {
+      "categoria": "estrutura",
+      "status": "success",
+      "mensagem": "Arquivo encontrado: src/core/board/",
+      "timestamp": "2025-08-21T01:49:43.504031"
+    },
+    {
+      "categoria": "estrutura",
+      "status": "success",
+      "mensagem": "Arquivo encontrado: data/postgres/",
+      "timestamp": "2025-08-21T01:49:43.504042"
+    },
+    {
+      "categoria": "estrutura",
+      "status": "success",
+      "mensagem": "Arquivo encontrado: deploy/production/",
+      "timestamp": "2025-08-21T01:49:43.504054"
+    },
+    {
+      "categoria": "dependencias",
+      "status": "success",
+      "mensagem": "Node.js: v24.4.1",
+      "timestamp": "2025-08-21T01:49:43.667701"
+    },
+    {
+      "categoria": "dependencias",
+      "status": "success",
+      "mensagem": "Python: Python 3.9.6",
+      "timestamp": "2025-08-21T01:49:43.689695"
+    },
+    {
+      "categoria": "dependencias",
+      "status": "success",
+      "mensagem": "Docker: Docker version 28.3.2, build 578ccf6",
+      "timestamp": "2025-08-21T01:49:43.981365"
+    },
+    {
+      "categoria": "javascript",
+      "status": "success",
+      "mensagem": "Arquivo JS válido: js/chess-board.js",
+      "timestamp": "2025-08-21T01:49:43.982351"
+    },
+    {
+      "categoria": "javascript",
+      "status": "success",
+      "mensagem": "Arquivo JS válido: js/ai-integration-real.js",
+      "timestamp": "2025-08-21T01:49:43.982782"
+    },
+    {
+      "categoria": "javascript",
+      "status": "success",
+      "mensagem": "Arquivo JS válido: js/aeon-brain-orchestrator.js",
+      "timestamp": "2025-08-21T01:49:43.983207"
+    },
+    {
+      "categoria": "javascript",
+      "status": "success",
+      "mensagem": "Arquivo JS válido: js/gamification.js",
+      "timestamp": "2025-08-21T01:49:43.983607"
+    },
+    {
+      "categoria": "javascript",
+      "status": "success",
+      "mensagem": "Arquivo JS válido: js/chess-pro-database.js",
+      "timestamp": "2025-08-21T01:49:43.983945"
+    },
+    {
+      "categoria": "api_python",
+      "status": "success",
+      "mensagem": "Arquivo Python válido: python/chess_effects_api.py",
+      "timestamp": "2025-08-21T01:49:44.036320"
+    },
+    {
+      "categoria": "api_python",
+      "status": "success",
+      "mensagem": "Arquivo Python válido: python/chess_visual_effects_engine.py",
+      "timestamp": "2025-08-21T01:49:44.071601"
+    },
+    {
+      "categoria": "banco_dados",
+      "status": "success",
+      "mensagem": "Configuração encontrada: data/postgres/",
+      "timestamp": "2025-08-21T01:49:44.189403"
+    },
+    {
+      "categoria": "banco_dados",
+      "status": "success",
+      "mensagem": "Configuração encontrada: docker-compose.yml",
+      "timestamp": "2025-08-21T01:49:44.189427"
+    },
+    {
+      "categoria": "performance",
+      "status": "success",
+      "mensagem": "Arquivo pequeno: js/aeon-brain-cultural-narrative.js (47.7KB)",
+      "timestamp": "2025-08-21T01:49:44.189669"
+    },
+    {
+      "categoria": "performance",
+      "status": "success",
+      "mensagem": "Arquivo pequeno: js/narrative-analysis.js (63.8KB)",
+      "timestamp": "2025-08-21T01:49:44.189688"
+    },
+    {
+      "categoria": "performance",
+      "status": "success",
+      "mensagem": "Arquivo pequeno: js/ai-ui-controller.js (43.0KB)",
+      "timestamp": "2025-08-21T01:49:44.189704"
+    }
+  ]
+}

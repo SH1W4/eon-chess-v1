@@ -1,0 +1,128 @@
+project:
+  name: "AEON Chess"
+  version: "1.0.1"
+  description: "Plataforma avançada de xadrez com IA e narrativas culturais"
+
+tasks:
+  organization:
+    - name: "organize_documentation"
+      description: "Organizar documentação em categorias"
+      dependencies: []
+      steps:
+        - action: "create_directory"
+          path: "/docs"
+          subfolders:
+            - technical
+            - deployment
+            - features
+            - improvements
+            - releases
+        - action: "move_files"
+          source: "/*.md"
+          target: "/docs/{category}"
+          rules:
+            - pattern: "ARQUITETURA_*.md"
+              category: "technical"
+            - pattern: "DEPLOY_*.md"
+              category: "deployment"
+            - pattern: "*_GUIDE.md"
+              category: "features"
+            - pattern: "*_IMPROVEMENTS.md"
+              category: "improvements"
+            - pattern: "RELEASE_*.md"
+              category: "releases"
+
+    - name: "organize_source_code"
+      description: "Organizar código-fonte em módulos"
+      dependencies: ["organize_documentation"]
+      steps:
+        - action: "create_directory"
+          path: "/src"
+          subfolders:
+            - ai
+            - core
+            - cultural
+            - quantum
+            - traditional
+        - action: "move_files"
+          source: "/js/aeon-brain-*.js"
+          target: "/src/ai"
+        - action: "move_files"
+          source: "/js/chess-*.js"
+          target: "/src/core"
+        - action: "move_files"
+          source: "/js/cultural-*.js"
+          target: "/src/cultural"
+
+    - name: "organize_web_interface"
+      description: "Organizar interface web"
+      dependencies: ["organize_source_code"]
+      steps:
+        - action: "create_directory"
+          path: "/web"
+          subfolders:
+            - components
+            - pages
+            - styles
+            - utils
+        - action: "move_files"
+          source: "/js/*.js"
+          target: "/web/utils"
+        - action: "move_files"
+          source: "/css/*.css"
+          target: "/web/styles"
+        - action: "move_files"
+          source: "/*.html"
+          target: "/web/pages"
+
+dependencies:
+  core:
+    - module: "ai_engine"
+      requires:
+        - "core_engine"
+        - "quantum_system"
+    - module: "cultural_system"
+      requires:
+        - "ai_engine"
+        - "traditional_system"
+    - module: "quantum_system"
+      requires:
+        - "core_engine"
+
+  web:
+    - module: "components"
+      requires:
+        - "styles"
+        - "utils"
+    - module: "pages"
+      requires:
+        - "components"
+        - "styles"
+
+monitoring:
+  - task_completion
+  - dependency_validation
+  - file_organization
+
+automation:
+  enabled: true
+  rules:
+    - on_file_change:
+        paths: ["*.md", "*.js", "*.css", "*.html"]
+        action: "validate_organization"
+    - on_new_file:
+        action: "suggest_location"
+    - on_task_complete:
+        action: "verify_dependencies"
+
+integration:
+  arkitect:
+    enabled: true
+    validation_points:
+      - after_organization
+      - after_move
+  docsync:
+    enabled: true
+    sync_points:
+      - after_documentation_move
+      - on_new_document

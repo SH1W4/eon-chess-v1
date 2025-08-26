@@ -1,0 +1,173 @@
+project:
+  name: "AEON Chess"
+  version: "1.0.1"
+  description: "Advanced chess platform with AI and cultural narrative"
+
+documentation:
+  structure:
+    - category: "technical"
+      path: "/docs/technical"
+      patterns: 
+        - "ARQUITETURA_*.md"
+        - "*_ANALYSIS.md"
+        - "*_INTEGRATION.md"
+      templates:
+        - technical_doc
+        - analysis_doc
+      index: true
+      
+    - category: "deployment"
+      path: "/docs/deployment"
+      patterns:
+        - "DEPLOY_*.md"
+        - "*_INSTALL.md"
+        - "*_SETUP.md"
+      templates:
+        - deployment_doc
+      index: true
+      
+    - category: "features"
+      path: "/docs/features"
+      patterns:
+        - "*_GUIDE.md"
+        - "*_MECHANICS.md"
+        - "*_SYSTEM.md"
+      templates:
+        - feature_doc
+      index: true
+      
+    - category: "improvements"
+      path: "/docs/improvements"
+      patterns:
+        - "*_IMPROVEMENTS.md"
+        - "*_ENHANCEMENTS.md"
+      templates:
+        - improvement_doc
+      index: true
+      
+    - category: "releases"
+      path: "/docs/releases"
+      patterns:
+        - "RELEASE_*.md"
+        - "*_SUMMARY.md"
+      templates:
+        - release_doc
+      index: true
+
+templates:
+  - name: "technical_doc"
+    path: "/docs/templates/technical.md"
+    frontmatter:
+      - title
+      - description
+      - category
+      - status
+      - author
+      - date
+      - tags
+      
+  - name: "deployment_doc"
+    path: "/docs/templates/deployment.md"
+    frontmatter:
+      - title
+      - version
+      - date
+      - status
+      - prerequisites
+      - steps
+      
+  - name: "feature_doc"
+    path: "/docs/templates/feature.md"
+    frontmatter:
+      - title
+      - description
+      - category
+      - status
+      - components
+      - dependencies
+      
+  - name: "improvement_doc"
+    path: "/docs/templates/improvement.md"
+    frontmatter:
+      - title
+      - description
+      - category
+      - impact
+      - effort
+      - status
+      
+  - name: "release_doc"
+    path: "/docs/templates/release.md"
+    frontmatter:
+      - version
+      - date
+      - type
+      - changes
+      - breaking_changes
+      - status
+
+automation:
+  actions:
+    - name: "update_indexes"
+      trigger: "on_file_change"
+      paths:
+        - "/docs/*/README.md"
+        
+    - name: "validate_links"
+      trigger: "on_file_change"
+      paths:
+        - "/docs/**/*.md"
+        
+    - name: "generate_changelog"
+      trigger: "on_release"
+      output: "/docs/CHANGELOG.md"
+      
+    - name: "update_architecture"
+      trigger: "on_arkitect_change"
+      paths:
+        - "/docs/technical/ARCHITECTURE.md"
+
+monitoring:
+  metrics:
+    - name: "doc_coverage"
+      type: "gauge"
+      description: "Percentage of documented components"
+      
+    - name: "doc_freshness"
+      type: "gauge"
+      description: "Average age of documentation"
+      
+    - name: "broken_links"
+      type: "counter"
+      description: "Number of broken internal links"
+
+validation:
+  rules:
+    - name: "frontmatter_required"
+      enabled: true
+      description: "All docs must have required frontmatter"
+      severity: "error"
+      
+    - name: "valid_links"
+      enabled: true
+      description: "All internal links must be valid"
+      severity: "error"
+      
+    - name: "index_required"
+      enabled: true
+      description: "All categories must have an index"
+      severity: "warning"
+
+integrations:
+  tools:
+    - name: "arkitect"
+      enabled: true
+      config: "/.arkitect/arkitect.yaml"
+      
+    - name: "taskmash"
+      enabled: true
+      config: "/.taskmash/config.yaml"
+      
+    - name: "vireon"
+      enabled: true
+      config: "/.vireon/config.yaml"

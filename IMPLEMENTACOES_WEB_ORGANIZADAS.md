@@ -208,3 +208,5 @@ Database (data/*)
 ---
 
 **LEMBRE-SE**: As implementações web são **ferramentas** para acessar o sistema real. O verdadeiro valor está na **arquitetura robusta** que você construiu nos motores internos.
+
+
