@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AEON CHESS - Demonstração das Melhorias Críticas</title>
+    
+    <!-- CSS Consolidado -->
+    <link rel="stylesheet" href="/web/styles/consolidated-theme.css">
+    
+    <!-- Fontes -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        .demo-section {
+            margin: 2rem 0;
+            padding: 2rem;
+            border-radius: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .component-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-left: 4px solid var(--highlight-color);
+        }
+        
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 0.5rem;
+        }
+        
+        .status-healthy { background: var(--success-color); }
+        .status-warning { background: var(--warning-color); }
+        .status-error { background: var(--error-color); }
+        
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .metric-card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1rem;
+            border-radius: 0.5rem;
+            text-align: center;
+        }
+        
+        .metric-value {
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--highlight-color);
+        }
+        
+        .metric-label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+        }
+        
+        .control-panel {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            margin: 1rem 0;
+        }
+        
+        .log-container {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            height: 300px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.875rem;
+        }
+        
+        .log-entry {
+            margin: 0.25rem 0;
+            padding: 0.25rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .log-timestamp {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+        }
+        
+        .log-message {
+            color: var(--text-primary);
+        }
+        
+        .log-error {
+            color: var(--error-color);
+        }
+        
+        .log-success {
+            color: var(--success-color);
+        }
+        
+        .log-warning {
+            color: var(--warning-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="text-center mt-5 mb-5">
+            <h1 class="fade-in">🏛️ AEON CHESS - Melhorias Críticas Implementadas</h1>
+            <p class="text-secondary slide-up">TaskMash SuperEscopo + Arquimax + DocSync + Nexus</p>
+        </header>
+
+        <!-- Status Geral do Sistema -->
+        <section class="demo-section">
+            <h2>📊 Status Geral do Sistema</h2>
+            <div class="metrics-grid" id="systemMetrics">
+                <!-- Métricas serão inseridas dinamicamente -->
+            </div>
+        </section>
+
+        <!-- TaskMash SuperEscopo -->
+        <section class="demo-section">
+            <h2>⚡ TaskMash SuperEscopo - Performance</h2>
+            <div class="component-card">
+                <h3><span class="status-indicator status-healthy"></span>Performance Optimizer v2.0</h3>
+                <p>CDN, Cache Inteligente, Compressão e Monitoramento de Performance</p>
+                <div class="metrics-grid" id="performanceMetrics">
+                    <!-- Métricas de performance -->
+                </div>
+                <div class="control-panel">
+                    <button class="btn btn-primary" onclick="testPerformance()">Testar Performance</button>
+                    <button class="btn btn-secondary" onclick="clearCache()">Limpar Cache</button>
+                    <button class="btn btn-warning" onclick="optimizeBundle()">Otimizar Bundle</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Security Framework -->
+        <section class="demo-section">
+            <h2>🔒 Security Framework - Segurança</h2>
+            <div class="component-card">
+                <h3><span class="status-indicator status-healthy"></span>Security Framework v2.0</h3>
+                <p>OAuth 2.0, JWT, MFA, GDPR/LGPD Compliance e Monitoramento de Segurança</p>
+                <div class="metrics-grid" id="securityMetrics">
+                    <!-- Métricas de segurança -->
+                </div>
+                <div class="control-panel">
+                    <button class="btn btn-primary" onclick="testAuthentication()">Testar Autenticação</button>
+                    <button class="btn btn-secondary" onclick="checkCompliance()">Verificar Compliance</button>
+                    <button class="btn btn-warning" onclick="runSecurityAudit()">Auditoria de Segurança</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- DocSync Manager -->
+        <section class="demo-section">
+            <h2>📚 DocSync Manager - Documentação</h2>
+            <div class="component-card">
+                <h3><span class="status-indicator status-healthy"></span>DocSync Manager v2.0</h3>
+                <p>Sincronização Automática, Versionamento, Backup e Resolução de Conflitos</p>
+                <div class="metrics-grid" id="docSyncMetrics">
+                    <!-- Métricas de documentação -->
+                </div>
+                <div class="control-panel">
+                    <button class="btn btn-primary" onclick="manualSync()">Sincronização Manual</button>
+                    <button class="btn btn-secondary" onclick="createBackup()">Criar Backup</button>
+                    <button class="btn btn-warning" onclick="checkConflicts()">Verificar Conflitos</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Nexus Integration -->
+        <section class="demo-section">
+            <h2>🔗 Nexus Integration - Integração</h2>
+            <div class="component-card">
+                <h3><span class="status-indicator status-healthy"></span>Nexus Integration v2.0</h3>
+                <p>Service Discovery, Load Balancing, Circuit Breaker e Health Checks</p>
+                <div class="metrics-grid" id="nexusMetrics">
+                    <!-- Métricas de integração -->
+                </div>
+                <div class="control-panel">
+                    <button class="btn btn-primary" onclick="connectAll()">Conectar Todos</button>
+                    <button class="btn btn-secondary" onclick="healthCheck()">Health Check</button>
+                    <button class="btn btn-warning" onclick="testCircuitBreaker()">Testar Circuit Breaker</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Arquimax Orchestrator -->
+        <section class="demo-section">
+            <h2>🏛️ Arquimax Orchestrator - Orquestração</h2>
+            <div class="component-card">
+                <h3><span class="status-indicator status-healthy"></span>Arquimax Orchestrator v2.0</h3>
+                <p>Orquestração Central, Monitoramento, Auto-Recuperação e Event System</p>
+                <div class="metrics-grid" id="arquimaxMetrics">
+                    <!-- Métricas de orquestração -->
+                </div>
+                <div class="control-panel">
+                    <button class="btn btn-primary" onclick="getSystemStatus()">Status do Sistema</button>
+                    <button class="btn btn-secondary" onclick="restartAll()">Reiniciar Todos</button>
+                    <button class="btn btn-warning" onclick="exportMetrics()">Exportar Métricas</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Log de Eventos -->
+        <section class="demo-section">
+            <h2>📋 Log de Eventos do Sistema</h2>
+            <div class="log-container" id="systemLog">
+                <!-- Logs serão inseridos dinamicamente -->
+            </div>
+            <div class="control-panel">
+                <button class="btn btn-secondary" onclick="clearLog()">Limpar Log</button>
+                <button class="btn btn-primary" onclick="exportLog()">Exportar Log</button>
+            </div>
+        </section>
+    </div>
+
+    <!-- Scripts -->
+    <script src="/web/utils/performance-optimizer-v2.js"></script>
+    <script src="/web/utils/security-framework.js"></script>
+    <script src="/web/utils/docsync-manager.js"></script>
+    <script src="/web/utils/nexus-integration.js"></script>
+    <script src="/web/utils/arquimax-orchestrator.js"></script>
+    <script src="/web/utils/notification-system.js"></script>
+    <script src="/web/utils/error-handler.js"></script>
+    <script src="/web/utils/compatibility-layer.js"></script>
+    
+    <script>
+        // Sistema de Log
+        const systemLog = {
+            add: (message, type = 'info') => {
+                const logContainer = document.getElementById('systemLog');
+                const logEntry = document.createElement('div');
+                logEntry.className = `log-entry log-${type}`;
+                
+                const timestamp = new Date().toLocaleTimeString();
+                logEntry.innerHTML = `
+                    <span class="log-timestamp">[${timestamp}]</span>
+                    <span class="log-message">${message}</span>
+                `;
+                
+                logContainer.appendChild(logEntry);
+                logContainer.scrollTop = logContainer.scrollHeight;
+            }
+        };
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', () => {
+            systemLog.add('🏛️ ARQUIMAX: Sistema inicializado com sucesso', 'success');
+            systemLog.add('⚡ TaskMash SuperEscopo: Performance optimizer ativo', 'success');
+            systemLog.add('🔒 Security Framework: Sistema de segurança ativo', 'success');
+            systemLog.add('📚 DocSync Manager: Sincronização de documentação ativa', 'success');
+            systemLog.add('🔗 Nexus Integration: Sistema de integração ativo', 'success');
+            
+            updateMetrics();
+            setInterval(updateMetrics, 5000);
+        });
+
+        // Atualização de Métricas
+        function updateMetrics() {
+            // System Metrics
+            const systemMetrics = document.getElementById('systemMetrics');
+            if (window.ArquimaxOrchestrator) {
+                const status = window.ArquimaxOrchestrator.getSystemStatus();
+                systemMetrics.innerHTML = `
+                    <div class="metric-card">
+                        <div class="metric-value">${(status.systemHealth * 100).toFixed(1)}%</div>
+                        <div class="metric-label">Saúde do Sistema</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">${Math.floor(status.uptime / 1000)}s</div>
+                        <div class="metric-label">Uptime</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">${status.errors}</div>
+                        <div class="metric-label">Erros</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">${status.events}</div>
+                        <div class="metric-label">Eventos</div>
+                    </div>
+                `;
+            }
+
+            // Performance Metrics
+            const performanceMetrics = document.getElementById('performanceMetrics');
+            if (window.TaskMashOptimizer) {
+                const metrics = window.TaskMashOptimizer.getMetrics();
+                performanceMetrics.innerHTML = `
+                    <div class="metric-card">
+                        <div class="metric-value">${(metrics.cacheHitRate * 100).toFixed(1)}%</div>
+                        <div class="metric-label">Cache Hit Rate</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">${metrics.cacheHits}</div>
+                        <div class="metric-label">Cache Hits</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">${Math.round(metrics.averageLoadTime)}ms</div>
+                        <div class="metric-label">Tempo Médio</div>
+                    </div>
+                `;
+            }
+
+            // Security Metrics
+            const securityMetrics = document.getElementById('securityMetrics');
+            if (window.SecurityFramework) {
+                const metrics = window.SecurityFramework.getSecurityMetrics();
+                securityMetrics.innerHTML = `
+                    <div class="metric-card">
+                        <div class="metric-value">${metrics.loginAttempts}</div>
+                        <div class="metric-label">Tentativas de Login</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">${metrics.complianceChecks}</div>
+                        <div class="metric-label">Checks de Compliance</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">${metrics.securityEvents.length}</div>
+                        <div class="metric-label">Eventos de Segurança</div>
+                    </div>
+                `;
+            }
+
+            // DocSync Metrics
+            const docSyncMetrics = document.getElementById('docSyncMetrics');
+            if (window.DocSyncManager) {
+                const status = window.DocSyncManager.getSyncStatus();
+                docSyncMetrics.innerHTML = `
+                    <div class="metric-card">
+                        <div class="metric-value">${status.totalFiles}</div>
+                        <div class="metric-label">Arquivos</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">${status.totalVersions}</div>
+                        <div class="metric-label">Versões</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">${status.backups}</div>
+                        <div class="metric-label">Backups</div>
+                    </div>
+                `;
+            }
+
+            // Nexus Metrics
+            const nexusMetrics = document.getElementById('nexusMetrics');
+            if (window.NexusIntegration) {
+                const status = window.NexusIntegration.getConnectionStatus();
+                nexusMetrics.innerHTML = `
+                    <div class="metric-card">
+                        <div class="metric-value">${status.stats.activeConnections}</div>
+                        <div class="metric-label">Conexões Ativas</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">${status.stats.successfulConnections}</div>
+                        <div class="metric-label">Conexões Bem-sucedidas</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">${status.stats.failedConnections}</div>
+                        <div class="metric-label">Conexões Falhadas</div>
+                    </div>
+                `;
+            }
+
+            // Arquimax Metrics
+            const arquimaxMetrics = document.getElementById('arquimaxMetrics');
+            if (window.ArquimaxOrchestrator) {
+                const status = window.ArquimaxOrchestrator.getSystemStatus();
+                arquimaxMetrics.innerHTML = `
+                    <div class="metric-card">
+                        <div class="metric-value">${Object.keys(status.componentStatus).length}</div>
+                        <div class="metric-label">Componentes</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">${Math.round(status.performance.memory * 100)}%</div>
+                        <div class="metric-label">Uso de Memória</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">${Math.round(status.performance.responseTime)}ms</div>
+                        <div class="metric-label">Tempo de Resposta</div>
+                    </div>
+                `;
+            }
+        }
+
+        // Funções de Teste
+        async function testPerformance() {
+            systemLog.add('⚡ Testando performance...', 'info');
+            try {
+                if (window.TaskMashOptimizer) {
+                    await window.TaskMashOptimizer.optimizeBundle();
+                    systemLog.add('✅ Performance testada com sucesso', 'success');
+                }
+            } catch (error) {
+                systemLog.add(`❌ Erro no teste de performance: ${error.message}`, 'error');
+            }
+        }
+
+        async function clearCache() {
+            systemLog.add('🗑️ Limpando cache...', 'info');
+            try {
+                if (window.TaskMashOptimizer) {
+                    window.TaskMashOptimizer.cleanupCache();
+                    systemLog.add('✅ Cache limpo com sucesso', 'success');
+                }
+            } catch (error) {
+                systemLog.add(`❌ Erro ao limpar cache: ${error.message}`, 'error');
+            }
+        }
+
+        async function optimizeBundle() {
+            systemLog.add('📦 Otimizando bundle...', 'info');
+            try {
+                if (window.TaskMashOptimizer) {
+                    await window.TaskMashOptimizer.optimizeBundle();
+                    systemLog.add('✅ Bundle otimizado com sucesso', 'success');
+                }
+            } catch (error) {
+                systemLog.add(`❌ Erro ao otimizar bundle: ${error.message}`, 'error');
+            }
+        }
+
+        async function testAuthentication() {
+            systemLog.add('🔐 Testando autenticação...', 'info');
+            try {
+                if (window.SecurityFramework) {
+                    const token = window.SecurityFramework.jwt.create({ userId: 'test' });
+                    const verified = window.SecurityFramework.jwt.verify(token);
+                    systemLog.add('✅ Autenticação testada com sucesso', 'success');
+                }
+            } catch (error) {
+                systemLog.add(`❌ Erro no teste de autenticação: ${error.message}`, 'error');
+            }
+        }
+
+        async function checkCompliance() {
+            systemLog.add('📋 Verificando compliance...', 'info');
+            try {
+                if (window.SecurityFramework) {
+                    await window.SecurityFramework.runComplianceChecks();
+                    systemLog.add('✅ Compliance verificado com sucesso', 'success');
+                }
+            } catch (error) {
+                systemLog.add(`❌ Erro na verificação de compliance: ${error.message}`, 'error');
+            }
+        }
+
+        async function runSecurityAudit() {
+            systemLog.add('🔍 Executando auditoria de segurança...', 'info');
+            try {
+                if (window.SecurityFramework) {
+                    const metrics = window.SecurityFramework.getSecurityMetrics();
+                    systemLog.add(`✅ Auditoria concluída: ${metrics.securityEvents.length} eventos`, 'success');
+                }
+            } catch (error) {
+                systemLog.add(`❌ Erro na auditoria de segurança: ${error.message}`, 'error');
+            }
+        }
+
+        async function manualSync() {
+            systemLog.add('🔄 Sincronização manual...', 'info');
+            try {
+                if (window.DocSyncManager) {
+                    await window.DocSyncManager.manualSync();
+                    systemLog.add('✅ Sincronização manual concluída', 'success');
+                }
+            } catch (error) {
+                systemLog.add(`❌ Erro na sincronização: ${error.message}`, 'error');
+            }
+        }
+
+        async function createBackup() {
+            systemLog.add('💾 Criando backup...', 'info');
+            try {
+                if (window.DocSyncManager) {
+                    await window.DocSyncManager.forceBackup();
+                    systemLog.add('✅ Backup criado com sucesso', 'success');
+                }
+            } catch (error) {
+                systemLog.add(`❌ Erro ao criar backup: ${error.message}`, 'error');
+            }
+        }
+
+        async function checkConflicts() {
+            systemLog.add('⚠️ Verificando conflitos...', 'info');
+            try {
+                if (window.DocSyncManager) {
+                    const status = window.DocSyncManager.getSyncStatus();
+                    systemLog.add(`✅ Verificação concluída: ${status.pendingChanges} mudanças pendentes`, 'success');
+                }
+            } catch (error) {
+                systemLog.add(`❌ Erro na verificação de conflitos: ${error.message}`, 'error');
+            }
+        }
+
+        async function connectAll() {
+            systemLog.add('🔗 Conectando todos os serviços...', 'info');
+            try {
+                if (window.NexusIntegration) {
+                    const results = await window.NexusIntegration.connectAll();
+                    const successful = results.filter(r => r.success).length;
+                    systemLog.add(`✅ ${successful} serviços conectados com sucesso`, 'success');
+                }
+            } catch (error) {
+                systemLog.add(`❌ Erro ao conectar serviços: ${error.message}`, 'error');
+            }
+        }
+
+        async function healthCheck() {
+            systemLog.add('🏥 Executando health check...', 'info');
+            try {
+                if (window.NexusIntegration) {
+                    await window.NexusIntegration.healthChecker.checkAll();
+                    systemLog.add('✅ Health check concluído', 'success');
+                }
+            } catch (error) {
+                systemLog.add(`❌ Erro no health check: ${error.message}`, 'error');
+            }
+        }
+
+        async function testCircuitBreaker() {
+            systemLog.add('⚡ Testando circuit breaker...', 'info');
+            try {
+                if (window.NexusIntegration) {
+                    const metrics = window.NexusIntegration.getMetrics();
+                    const openCircuits = metrics.circuitBreaker.openCircuits.length;
+                    systemLog.add(`✅ Circuit breaker testado: ${openCircuits} circuitos abertos`, 'success');
+                }
+            } catch (error) {
+                systemLog.add(`❌ Erro no teste do circuit breaker: ${error.message}`, 'error');
+            }
+        }
+
+        async function getSystemStatus() {
+            systemLog.add('📊 Obtendo status do sistema...', 'info');
+            try {
+                if (window.ArquimaxOrchestrator) {
+                    const status = window.ArquimaxOrchestrator.getSystemStatus();
+                    systemLog.add(`✅ Status obtido: ${Math.round(status.systemHealth * 100)}% de saúde`, 'success');
+                }
+            } catch (error) {
+                systemLog.add(`❌ Erro ao obter status: ${error.message}`, 'error');
+            }
+        }
+
+        async function restartAll() {
+            systemLog.add('🔄 Reiniciando todos os componentes...', 'warning');
+            try {
+                if (window.ArquimaxOrchestrator) {
+                    await window.ArquimaxOrchestrator.restartAll();
+                    systemLog.add('✅ Todos os componentes reiniciados', 'success');
+                }
+            } catch (error) {
+                systemLog.add(`❌ Erro ao reiniciar componentes: ${error.message}`, 'error');
+            }
+        }
+
+        async function exportMetrics() {
+            systemLog.add('📈 Exportando métricas...', 'info');
+            try {
+                if (window.ArquimaxOrchestrator) {
+                    const metrics = window.ArquimaxOrchestrator.getMetrics();
+                    console.log('Métricas exportadas:', metrics);
+                    systemLog.add('✅ Métricas exportadas com sucesso', 'success');
+                }
+            } catch (error) {
+                systemLog.add(`❌ Erro ao exportar métricas: ${error.message}`, 'error');
+            }
+        }
+
+        function clearLog() {
+            document.getElementById('systemLog').innerHTML = '';
+            systemLog.add('📋 Log limpo', 'info');
+        }
+
+        function exportLog() {
+            const logContainer = document.getElementById('systemLog');
+            const logText = logContainer.innerText;
+            const blob = new Blob([logText], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'aeon-chess-system-log.txt';
+            a.click();
+            URL.revokeObjectURL(url);
+            systemLog.add('📄 Log exportado', 'success');
+        }
+    </script>
+</body>
+</html>

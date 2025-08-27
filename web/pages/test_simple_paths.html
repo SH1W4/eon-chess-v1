@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧪 Teste de Caminhos - AEON CHESS</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Teste de CSS local -->
+    <link rel="stylesheet" href="/web/styles/chess-theme.css">
+    
+    <style>
+        .test-result {
+            padding: 1rem;
+            margin: 0.5rem 0;
+            border-radius: 0.5rem;
+            border-left: 4px solid;
+        }
+        .success { background: rgba(16, 185, 129, 0.1); border-left-color: #10b981; }
+        .error { background: rgba(239, 68, 68, 0.1); border-left-color: #ef4444; }
+    </style>
+</head>
+<body class="bg-gray-900 text-white p-8">
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-3xl font-bold mb-8 text-center">🧪 Teste de Caminhos - AEON CHESS</h1>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Teste de CSS -->
+            <div class="bg-gray-800 p-6 rounded-lg">
+                <h2 class="text-xl font-semibold mb-4">🎨 Teste de CSS</h2>
+                <div id="css-test" class="test-result">
+                    <p>Testando carregamento de CSS...</p>
+                </div>
+                <button onclick="testCSS()" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded mt-2">
+                    Testar CSS
+                </button>
+            </div>
+            
+            <!-- Teste de JavaScript -->
+            <div class="bg-gray-800 p-6 rounded-lg">
+                <h2 class="text-xl font-semibold mb-4">⚡ Teste de JavaScript</h2>
+                <div id="js-test" class="test-result">
+                    <p>Testando carregamento de JS...</p>
+                </div>
+                <button onclick="testJS()" class="bg-green-600 hover:bg-green-700 px-4 py-2 rounded mt-2">
+                    Testar JavaScript
+                </button>
+            </div>
+        </div>
+        
+        <!-- Resultados -->
+        <div class="mt-8 bg-gray-800 p-6 rounded-lg">
+            <h2 class="text-xl font-semibold mb-4">📊 Resultados dos Testes</h2>
+            <div id="results"></div>
+        </div>
+    </div>
+
+    <script>
+        const results = [];
+        
+        function addResult(test, status, message) {
+            results.push({ test, status, message });
+            updateResults();
+        }
+        
+        function updateResults() {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = results.map(r => 
+                `<div class="test-result ${r.status === 'success' ? 'success' : 'error'}">
+                    <strong>${r.test}:</strong> ${r.message}
+                </div>`
+            ).join('');
+        }
+        
+        function testCSS() {
+            const cssTest = document.getElementById('css-test');
+            try {
+                // Verificar se o CSS foi carregado
+                const computedStyle = getComputedStyle(document.body);
+                const hasCustomCSS = computedStyle.getPropertyValue('--bg-primary') !== '';
+                
+                if (hasCustomCSS) {
+                    cssTest.innerHTML = '<p class="success">✅ CSS carregado com sucesso!</p>';
+                    addResult('CSS', 'success', 'Arquivo ../styles/chess-theme.css carregado');
+                } else {
+                    cssTest.innerHTML = '<p class="error">❌ CSS não foi carregado</p>';
+                    addResult('CSS', 'error', 'Arquivo ../styles/chess-theme.css não encontrado');
+                }
+            } catch (error) {
+                cssTest.innerHTML = '<p class="error">❌ Erro ao testar CSS</p>';
+                addResult('CSS', 'error', `Erro: ${error.message}`);
+            }
+        }
+        
+        function testJS() {
+            const jsTest = document.getElementById('js-test');
+            try {
+                // Tentar carregar um arquivo JS
+                const script = document.createElement('script');
+                script.src = '../utils/smart-chess-board.js';
+                script.onload = () => {
+                    jsTest.innerHTML = '<p class="success">✅ JavaScript carregado com sucesso!</p>';
+                    addResult('JavaScript', 'success', 'Arquivo ../utils/smart-chess-board.js carregado');
+                };
+                script.onerror = () => {
+                    jsTest.innerHTML = '<p class="error">❌ JavaScript não foi carregado</p>';
+                    addResult('JavaScript', 'error', 'Arquivo ../utils/smart-chess-board.js não encontrado');
+                };
+                document.head.appendChild(script);
+            } catch (error) {
+                jsTest.innerHTML = '<p class="error">❌ Erro ao testar JavaScript</p>';
+                addResult('JavaScript', 'error', `Erro: ${error.message}`);
+            }
+        }
+        
+        // Teste automático ao carregar
+        window.onload = () => {
+            setTimeout(() => {
+                testCSS();
+                testJS();
+            }, 1000);
+        };
+    </script>
+</body>
+</html>
