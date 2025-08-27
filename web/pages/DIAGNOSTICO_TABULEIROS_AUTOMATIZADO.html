@@ -265,56 +265,56 @@
                         id: 1,
                         nome: 'Tabuleiro Básico',
                         descricao: 'Testa inicialização e renderização básica',
-                        arquivo: 'js/chess-board.js',
+                        arquivo: '../utils/chess-board.js',
                         executar: () => this.testarTabuleiroBasico()
                     },
                     {
                         id: 2,
                         nome: 'Inicializador de Tabuleiro',
                         descricao: 'Testa sistema de inicialização',
-                        arquivo: 'js/board-initializer.js',
+                        arquivo: '../utils/board-initializer.js',
                         executar: () => this.testarInicializador()
                     },
                     {
                         id: 3,
                         nome: 'Engine de Xadrez',
                         descricao: 'Testa motor de xadrez',
-                        arquivo: 'js/chess-engine.js',
+                        arquivo: '../utils/chess-engine.js',
                         executar: () => this.testarEngine()
                     },
                     {
                         id: 4,
                         nome: 'Integração com IA',
                         descricao: 'Testa conexão com sistema de IA',
-                        arquivo: 'js/ai-integration-real.js',
+                        arquivo: '../utils/ai-integration-real.js',
                         executar: () => this.testarIntegracaoIA()
                     },
                     {
                         id: 5,
                         nome: 'Sistema de Gamificação',
                         descricao: 'Testa sistema de gamificação',
-                        arquivo: 'js/gamification.js',
+                        arquivo: '../utils/gamification.js',
                         executar: () => this.testarGamificacao()
                     },
                     {
                         id: 6,
                         nome: 'Banco de Dados',
                         descricao: 'Testa conexão com banco',
-                        arquivo: 'js/chess-pro-database.js',
+                        arquivo: '../utils/chess-pro-database.js',
                         executar: () => this.testarBancoDados()
                     },
                     {
                         id: 7,
                         nome: 'Efeitos Visuais',
                         descricao: 'Testa sistema de efeitos',
-                        arquivo: 'js/orb-effects-controller.js',
+                        arquivo: '../utils/orb-effects-controller.js',
                         executar: () => this.testarEfeitosVisuais()
                     },
                     {
                         id: 8,
                         nome: 'Sistema Cultural',
                         descricao: 'Testa sistema cultural',
-                        arquivo: 'js/aeon-brain-cultural-narrative.js',
+                        arquivo: '../src/ai/aeon-brain-cultural-narrative.js',
                         executar: () => this.testarSistemaCultural()
                     }
                 ],
@@ -415,7 +415,7 @@
                     if (typeof ChessBoard === 'undefined') {
                         return {
                             status: 'error',
-                            detalhes: 'Classe ChessBoard não encontrada. Arquivo js/chess-board.js não carregado corretamente.'
+                            detalhes: 'Classe ChessBoard não encontrada. Arquivo ../utils/chess-board.js não carregado corretamente.'
                         };
                     }
 
