@@ -20,6 +20,36 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
+        /* Dark mode overrides */
+        .ai-interface.dark {
+            --ai-theme-bg: #0b1220;
+            --ai-theme-text: #e2e8f0;
+            --ai-theme-accent: #334155;
+        }
+
+        .ai-interface.dark .ai-card,
+        .ai-interface.dark .ai-output,
+        .ai-interface.dark .personality-option,
+        .ai-interface.dark .lesson-item,
+        .ai-interface.dark .quote-text {
+            background: #0f172a;
+            color: var(--ai-theme-text);
+            border-color: #1f2937;
+        }
+
+        .ai-interface.dark .ai-header {
+            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+        }
+
+        .ai-interface.dark .ai-footer {
+            color: #94a3b8;
+            border-top-color: #1f2937;
+        }
+
+        .ai-interface.dark .output-close { color: #cbd5e1; }
+        .ai-interface.dark .recommendation-list li { border-bottom-color: #1f2937; }
+        .ai-interface.dark .board-preview { background: #0b1220; }
+
         .ai-header {
             text-align: center;
             margin-bottom: 30px;
@@ -29,6 +59,40 @@
             border-radius: 15px;
             box-shadow: 0 8px 32px rgba(0,0,0,0.1);
         }
+
+        .top-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 10px;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            padding: 8px 12px;
+            border-radius: 8px;
+            background: white;
+            color: #111827;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+
+        .ai-interface.dark .nav-link { background: #0f172a; color: #e5e7eb; }
+
+        .theme-toggle {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 8px;
+            background: #111827;
+            color: #e5e7eb;
+            cursor: pointer;
+        }
+
+        .ai-interface.dark .theme-toggle { background: #e5e7eb; color: #111827; }
 
         .ai-header h1 {
             font-size: 2.5em;
@@ -135,6 +199,8 @@
             background: white;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
+
+        .ai-interface.dark .status-indicator { background: #0f172a; }
 
         .status-dot {
             width: 12px;
@@ -474,7 +540,14 @@
     </style>
 </head>
 <body>
-    <div class="ai-interface">
+    <div class="ai-interface" id="ai-root">
+        <div class="top-nav">
+            <div class="nav-links">
+                <a class="nav-link" href="./ai-unified-interface.html">IA Unificada</a>
+                <a class="nav-link" href="./ai-antagonists-interface.html">Antagonistas</a>
+            </div>
+            <button class="theme-toggle" id="theme-toggle">🌙 Tema</button>
+        </div>
         <!-- Header -->
         <div class="ai-header">
             <h1>🧠 Sistema de IA Unificado</h1>
@@ -630,6 +703,7 @@
         class AIInterfaceController {
             constructor() {
                 this.initializeEventListeners();
+                this.restoreState();
                 this.updateUI();
             }
 
@@ -700,6 +774,31 @@
                 document.addEventListener('aiTeachingStarted', (e) => {
                     this.showTeachingSession(e.detail);
                 });
+
+                // Tema
+                const themeToggle = document.getElementById('theme-toggle');
+                themeToggle.addEventListener('click', () => {
+                    const root = document.getElementById('ai-root');
+                    root.classList.toggle('dark');
+                    const theme = root.classList.contains('dark') ? 'dark' : 'light';
+                    localStorage.setItem('ai_theme', theme);
+                });
+            }
+
+            restoreState() {
+                const root = document.getElementById('ai-root');
+                const savedTheme = localStorage.getItem('ai_theme');
+                if (savedTheme === 'dark') {
+                    root.classList.add('dark');
+                }
+
+                const savedPersonality = localStorage.getItem('ai_personality');
+                if (savedPersonality) {
+                    const option = document.querySelector(`[data-personality="${savedPersonality}"]`);
+                    if (option) {
+                        this.selectPersonality(savedPersonality);
+                    }
+                }
             }
 
             selectPersonality(personalityKey) {
@@ -709,7 +808,11 @@
                 });
 
                 // Adiciona seleção à opção clicada
-                document.querySelector(`[data-personality="${personalityKey}"]`).classList.add('active');
+                const current = document.querySelector(`[data-personality="${personalityKey}"]`);
+                if (current) current.classList.add('active');
+
+                // Persiste escolha
+                localStorage.setItem('ai_personality', personalityKey);
 
                 // Dispara evento de mudança
                 const event = new CustomEvent('personalityChanged', {
