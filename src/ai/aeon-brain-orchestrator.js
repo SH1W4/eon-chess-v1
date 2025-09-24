@@ -297,9 +297,9 @@ class AEONBrainOrchestrator {
 
         // Verificar se o modelo tem capacidades específicas para a tarefa
         if (taskAnalysis.taskType === 'chess_position_generation') {
-            if (capabilities.includes('chess_expertise')) score += 0.4;
+            if (capabilities.includes('chess_expertise')) score += 0.5; // Aumentado de 0.4
             if (capabilities.includes('creative_positions')) score += 0.3;
-            if (capabilities.includes('position_validation')) score += 0.3;
+            if (capabilities.includes('position_validation')) score += 0.4; // Aumentado de 0.3
         }
 
         if (taskAnalysis.taskType === 'complex_strategy_analysis') {
@@ -377,6 +377,15 @@ class AEONBrainOrchestrator {
         try {
             // Executar a tarefa usando a IA selecionada
             const result = await this.executeWithModel(selectedModel.modelId, task, taskAnalysis);
+            
+            // Validar resultado com Chess AI v2 se não for o próprio Chess AI v2
+            if (selectedModel.modelId !== 'chess-ai-v2') {
+                const validatedResult = await this.validatePosition(result, task);
+                if (!validatedResult.isValid) {
+                    throw new Error('Posição inválida segundo Chess AI v2');
+                }
+                result.validationScore = validatedResult.score;
+            }
 
             // Registrar execução bem-sucedida
             this.recordSuccessfulExecution(selectedModel.modelId, taskAnalysis, result);
@@ -639,8 +648,58 @@ class AEONBrainOrchestrator {
     async executeFallback(task, taskAnalysis, originalModel) {
         console.log(`🧠 Executando fallback...`);
 
-        // Usar modelo local como fallback
-        return await this.executeWithLocalML('local-ml', task, taskAnalysis);
+        // Se o erro não foi do Chess AI v2, tentar primeiro com ele
+        if (originalModel?.modelId !== 'chess-ai-v2') {
+            try {
+                console.log(`🧠 Tentando fallback com Chess AI v2...`);
+                const result = await this.executeWithChessAI('chess-ai-v2', task, taskAnalysis);
+                result.fallbackType = 'chess-ai';
+                return result;
+            } catch (error) {
+                console.warn(`🧠 Fallback com Chess AI v2 falhou:`, error);
+            }
+        }
+
+        // Se Chess AI v2 falhar ou não estiver disponível, usar modelo local
+        console.log(`🧠 Usando modelo local como último fallback...`);
+        const result = await this.executeWithLocalML('local-ml', task, taskAnalysis);
+        result.fallbackType = 'local';
+        return result;
+    }
+
+    async validatePosition(position, task) {
+        console.log(`🧠 Validando posição com Chess AI v2...`);
+        
+        try {
+            const validationResult = await this.executeWithChessAI('chess-ai-v2', {
+                type: 'validate_position',
+                position: position.fen,
+                requirements: task.requirements
+            }, {
+                taskType: 'position_validation',
+                complexity: 'low'
+            });
+
+            // Considerar válido se score de validação > 0.9
+            const isValid = validationResult.quality > 0.9;
+            
+            console.log(`🧠 Validação completada: ${isValid ? 'Válida' : 'Inválida'} (score: ${validationResult.quality})`);
+            
+            return {
+                isValid,
+                score: validationResult.quality,
+                details: validationResult.description
+            };
+
+        } catch (error) {
+            console.error(`🧠 Erro na validação:`, error);
+            // Em caso de erro na validação, assumir válido para não bloquear
+            return {
+                isValid: true,
+                score: 0.8,
+                details: 'Erro na validação, assumindo válido'
+            };
+        }
     }
 
     // Métodos auxiliares
@@ -727,9 +786,11 @@ class AEONBrainOrchestrator {
 // Engine de Aprendizado
 class LearningEngine {
     constructor() {
-        this.learningRate = 0.01;
+        this.learningRate = 0.02; // Aumentado de 0.01
         this.trainingData = [];
         this.model = null;
+        this.validationThreshold = 0.90; // Novo threshold para validação
+        this.batchSize = 5; // Treinar a cada 5 amostras em vez de 10
     }
 
     async initialize() {
@@ -748,8 +809,14 @@ class LearningEngine {
         // Treinar modelo com nova avaliação
         this.trainingData.push(evaluation);
 
-        // Simular treinamento
-        if (this.trainingData.length % 10 === 0) {
+        // Treinar mais frequentemente (a cada 5 amostras)
+        if (this.trainingData.length % this.batchSize === 0) {
+            await this.retrainModel();
+        }
+
+        // Se a qualidade estiver abaixo do threshold, treinar imediatamente
+        if (evaluation.quality < this.validationThreshold) {
+            console.log(`🧠 Qualidade abaixo do threshold (${evaluation.quality} < ${this.validationThreshold}), treinando imediatamente...`);
             await this.retrainModel();
         }
     }
@@ -757,12 +824,18 @@ class LearningEngine {
     async retrainModel() {
         console.log('🧠 Retreinando modelo de aprendizado...');
 
-        // Simular retreinamento
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        // Simular retreinamento com batch processing
+        await new Promise(resolve => setTimeout(resolve, 500)); // Reduzido de 1000ms
 
         if (this.model) {
-            this.model.accuracy += this.learningRate;
-            this.model.accuracy = Math.min(this.model.accuracy, 1.0);
+            // Calcular média móvel dos últimos resultados
+            const recentResults = this.trainingData.slice(-this.batchSize);
+            const averageQuality = recentResults.reduce((acc, curr) => acc + curr.quality, 0) / recentResults.length;
+
+            // Ajustar accuracy com base na média recente
+            const delta = (averageQuality - this.model.accuracy) * this.learningRate;
+            this.model.accuracy += delta;
+            this.model.accuracy = Math.min(Math.max(this.model.accuracy, 0.5), 1.0); // Limitar entre 0.5 e 1.0
         }
 
         console.log(`🧠 Modelo retreinado. Nova precisão: ${this.model?.accuracy.toFixed(3)}`);

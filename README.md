@@ -14,14 +14,43 @@ CHESS aims to create an innovative chess experience by integrating:
 - **Gamification System**: Comprehensive progression, achievements, and virtual economy
 - **Educational Elements**: Learn about world cultures through gameplay
 
-## 🛠️ Technology Stack
+### 🌟 Project Vision
 
+#### 🎯 Short-term (2026)
+Check out our [Vision 2026 document](docs/VISAO_2026.md) for immediate goals:
+- AI system optimization (95%+ accuracy)
+- Enhanced user experience (NPS > 85)
+- Cultural system expansion (20+ cultures)
+- Performance improvements (< 50ms latency)
+
+#### 🔮 Long-term (2035)
+Check out our [Vision 2035 document](docs/VISAO_2035.md) to understand where we're headed:
+- Advanced neural architectures
+- Quantum-classical hybrid processing
+- Neural interfaces and holographic visualization
+- Sustainable and ethical AI development
+- Global cultural preservation and evolution
+
+## 🔧 Technology Stack
+
+### Core Technologies
 - **Frontend**: Next.js, React, TypeScript
 - **Backend**: FastAPI (Python)
 - **AI/ML**: TensorFlow, Chess engine integration
 - **Narrative**: Ink narrative scripting language
 - **Database**: PostgreSQL (planned)
 - **Real-time**: WebSockets for multiplayer (planned)
+
+### Integration Layer
+- **MCP (Model Context Protocol)**:
+  - [Specification](docs/MCP_SPECIFICATION.md) - Especificação técnica detalhada
+  - [Implementation Superscope](docs/TASKMASH_MCP_SUPERSCOPE.md) - Plano de implementação
+  - [ARKITECT Workflow](.arkitect/workflows/mcp_superscope.yaml) - Integração com ARKITECT
+  - Features:
+    - Multi-model orchestration
+    - Context sharing and synchronization
+    - Symbiotic evolution
+    - Cultural integration
 
 ## 📁 Project Structure
 

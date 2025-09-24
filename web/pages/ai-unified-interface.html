@@ -1,0 +1,1204 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧠 Sistema de IA Unificado - Aeon Chess</title>
+    <link rel="stylesheet" href="../styles/consolidated-theme.css">
+    <style>
+        :root {
+            --ai-primary-color: #4169E1;
+            --ai-theme-bg: #f0f8ff;
+            --ai-theme-text: #4169E1;
+            --ai-theme-accent: #87CEEB;
+        }
+
+        .ai-interface {
+            background: var(--ai-theme-bg);
+            min-height: 100vh;
+            padding: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .ai-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, var(--ai-primary-color), var(--ai-theme-accent));
+            color: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+
+        .ai-header h1 {
+            font-size: 2.5em;
+            margin: 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .ai-header p {
+            font-size: 1.2em;
+            margin: 10px 0 0 0;
+            opacity: 0.9;
+        }
+
+        .ai-controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .ai-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            border-left: 5px solid var(--ai-primary-color);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .ai-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+        }
+
+        .ai-card h3 {
+            color: var(--ai-primary-color);
+            margin: 0 0 15px 0;
+            font-size: 1.4em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .personality-selector {
+            margin-bottom: 20px;
+        }
+
+        .personality-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .personality-option {
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            background: white;
+        }
+
+        .personality-option:hover {
+            border-color: var(--ai-theme-accent);
+            transform: scale(1.02);
+        }
+
+        .personality-option.active {
+            border-color: var(--ai-primary-color);
+            background: var(--ai-theme-bg);
+            box-shadow: 0 4px 15px rgba(65, 105, 225, 0.2);
+        }
+
+        .personality-option .name {
+            font-weight: bold;
+            color: var(--ai-primary-color);
+            margin-bottom: 5px;
+        }
+
+        .personality-option .description {
+            font-size: 0.9em;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        .ai-status {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: var(--ai-theme-bg);
+            border-radius: 10px;
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 15px;
+            border-radius: 20px;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #4CAF50;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .ai-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .ai-button {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            background: var(--ai-primary-color);
+            color: white;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .ai-button:hover {
+            background: var(--ai-theme-accent);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(65, 105, 225, 0.3);
+        }
+
+        .ai-button.secondary {
+            background: #6c757d;
+        }
+
+        .ai-button.secondary:hover {
+            background: #5a6268;
+        }
+
+        .ai-button.success {
+            background: #28a745;
+        }
+
+        .ai-button.success:hover {
+            background: #218838;
+        }
+
+        .ai-button.warning {
+            background: #ffc107;
+            color: #212529;
+        }
+
+        .ai-button.warning:hover {
+            background: #e0a800;
+        }
+
+        .ai-output {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            display: none;
+        }
+
+        .ai-output.show {
+            display: block;
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .output-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--ai-theme-bg);
+        }
+
+        .output-title {
+            color: var(--ai-primary-color);
+            font-size: 1.3em;
+            margin: 0;
+        }
+
+        .output-close {
+            background: none;
+            border: none;
+            font-size: 1.5em;
+            cursor: pointer;
+            color: #666;
+            padding: 5px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .output-close:hover {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .output-content {
+            line-height: 1.6;
+        }
+
+        .analysis-result {
+            background: var(--ai-theme-bg);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .analysis-section {
+            margin-bottom: 15px;
+        }
+
+        .analysis-section h4 {
+            color: var(--ai-primary-color);
+            margin: 0 0 10px 0;
+            font-size: 1.1em;
+        }
+
+        .move-list {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .move-tag {
+            background: var(--ai-primary-color);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.9em;
+            font-weight: bold;
+        }
+
+        .recommendation-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .recommendation-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .recommendation-list li:before {
+            content: "💡";
+            color: var(--ai-theme-accent);
+        }
+
+        .board-preview {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .chess-board {
+            display: inline-block;
+            border: 3px solid #333;
+            background: #f0d9b5;
+        }
+
+        .board-row {
+            display: flex;
+        }
+
+        .board-square {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .board-square.white {
+            background: #f0d9b5;
+        }
+
+        .board-square.black {
+            background: #b58863;
+        }
+
+        .lesson-plan {
+            background: var(--ai-theme-bg);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .lesson-item {
+            background: white;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border-left: 4px solid var(--ai-primary-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .lesson-info h5 {
+            margin: 0 0 5px 0;
+            color: var(--ai-primary-color);
+        }
+
+        .lesson-info p {
+            margin: 0;
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .lesson-duration {
+            background: var(--ai-theme-accent);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+
+        .ai-footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: #666;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .ai-footer p {
+            margin: 5px 0;
+        }
+
+        .personality-details {
+            background: var(--ai-theme-bg);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border: 2px solid var(--ai-primary-color);
+        }
+
+        .detail-section {
+            margin-bottom: 20px;
+        }
+
+        .detail-section h4 {
+            color: var(--ai-primary-color);
+            margin: 0 0 10px 0;
+            font-size: 1.1em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .strength-tags, .weakness-tags, .opening-tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .strength-tag, .weakness-tag, .opening-tag {
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            font-weight: bold;
+        }
+
+        .strength-tag {
+            background: #28a745;
+            color: white;
+        }
+
+        .weakness-tag {
+            background: #dc3545;
+            color: white;
+        }
+
+        .opening-tag {
+            background: var(--ai-theme-accent);
+            color: white;
+        }
+
+        .quote-text {
+            font-style: italic;
+            color: var(--ai-primary-color);
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid var(--ai-theme-accent);
+            margin: 0;
+            font-size: 1.1em;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 768px) {
+            .ai-controls {
+                grid-template-columns: 1fr;
+            }
+            
+            .personality-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .ai-actions {
+                grid-template-columns: 1fr;
+            }
+            
+            .ai-header h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="ai-interface">
+        <!-- Header -->
+        <div class="ai-header">
+            <h1>🧠 Sistema de IA Unificado</h1>
+            <p>Inteligência Artificial Avançada para Xadrez - Aeon Chess</p>
+        </div>
+
+        <!-- Controles Principais -->
+        <div class="ai-controls">
+            <!-- Seletor de Personalidade -->
+            <div class="ai-card">
+                <h3>🎭 Personalidade da IA</h3>
+                <div class="ai-status">
+                    <div class="status-indicator">
+                        <div class="status-dot"></div>
+                        <span id="ai-personality-indicator">Professor Paciente</span>
+                    </div>
+                </div>
+                <p id="ai-personality-description">Foca no aprendizado e explicações detalhadas</p>
+                
+                <!-- Informações detalhadas da personalidade -->
+                <div class="personality-details" id="personality-details" style="display: none;">
+                    <div class="detail-section">
+                        <h4>💪 Forças</h4>
+                        <div class="strength-tags" id="strength-tags"></div>
+                    </div>
+                    <div class="detail-section">
+                        <h4>⚠️ Fraquezas</h4>
+                        <div class="weakness-tags" id="weakness-tags"></div>
+                    </div>
+                    <div class="detail-section">
+                        <h4>🎯 Aberturas Preferidas</h4>
+                        <div class="opening-tags" id="opening-tags"></div>
+                    </div>
+                    <div class="detail-section">
+                        <h4>💬 Citação Motivacional</h4>
+                        <p id="motivational-quote" class="quote-text"></p>
+                    </div>
+                </div>
+                
+                <button class="ai-button secondary" id="toggle-details">
+                    📋 Mostrar Detalhes
+                </button>
+                
+                <div class="personality-selector">
+                    <div class="personality-grid">
+                        <div class="personality-option active" data-personality="teacher">
+                            <div class="name">Professor Paciente</div>
+                            <div class="description">Foca no aprendizado e explicações detalhadas</div>
+                        </div>
+                        <div class="personality-option" data-personality="strategic">
+                            <div class="name">Mestre Estratégico</div>
+                            <div class="description">Foca em planos de longo prazo e estruturas</div>
+                        </div>
+                        <div class="personality-option" data-personality="tactical">
+                            <div class="name">Tático Agressivo</div>
+                            <div class="description">Especialista em combinações e sacrifícios</div>
+                        </div>
+                        <div class="personality-option" data-personality="creative">
+                            <div class="name">Artista Criativo</div>
+                            <div class="description">Cria posições únicas e artisticamente interessantes</div>
+                        </div>
+                        <div class="personality-option" data-personality="competitive">
+                            <div class="name">Competidor Feroz</div>
+                            <div class="description">Joga para vencer, sem piedade</div>
+                        </div>
+                        <div class="personality-option" data-personality="zen">
+                            <div class="name">Sábio Zen</div>
+                            <div class="description">Equilibra estratégia e filosofia do xadrez</div>
+                        </div>
+                        <div class="personality-option" data-personality="innovator">
+                            <div class="name">Inovador Tecnológico</div>
+                            <div class="description">Combina IA moderna com análise tradicional</div>
+                        </div>
+                        <div class="personality-option" data-personality="mentor">
+                            <div class="name">Mentor Inspirador</div>
+                            <div class="description">Foca no desenvolvimento pessoal e crescimento</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Controles de Modo -->
+            <div class="ai-card">
+                <h3>⚙️ Configurações do Sistema</h3>
+                
+                <div class="ai-actions">
+                    <button class="ai-button" id="toggle-teacher-mode">
+                        🎓 Modo Professor
+                    </button>
+                    <button class="ai-button" id="toggle-generative-mode">
+                        🎨 Modo Generativo
+                    </button>
+                    <button class="ai-button" id="toggle-orchestration">
+                        🎼 Orquestração
+                    </button>
+                </div>
+
+                <div class="ai-status" style="margin-top: 20px;">
+                    <div class="status-indicator">
+                        <span>Status: Sistema Ativo</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ações da IA -->
+        <div class="ai-card">
+            <h3>🚀 Ações da IA</h3>
+            
+            <div class="ai-actions">
+                <button class="ai-button success" id="analyze-board">
+                    🔍 Analisar Tabuleiro
+                </button>
+                <button class="ai-button warning" id="generate-board">
+                    🎲 Gerar Tabuleiro
+                </button>
+                <button class="ai-button secondary" id="start-teaching">
+                    📚 Iniciar Ensino
+                </button>
+                <button class="ai-button" id="show-stats">
+                    📊 Estatísticas
+                </button>
+                <button class="ai-button secondary" id="show-orchestrator">
+                    🎼 Orquestrador
+                </button>
+            </div>
+        </div>
+
+        <!-- Saída da IA -->
+        <div class="ai-output" id="ai-output">
+            <div class="output-header">
+                <h3 class="output-title" id="output-title">Resultado da IA</h3>
+                <button class="output-close" id="output-close">&times;</button>
+            </div>
+            <div class="output-content" id="output-content">
+                <!-- Conteúdo será inserido dinamicamente -->
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="ai-footer">
+            <p><strong>Sistema de IA Unificado v2.0.0</strong></p>
+            <p>Desenvolvido com ❤️ pela equipe Aeon Chess</p>
+            <p>Inteligência Artificial Avançada para Xadrez</p>
+        </div>
+    </div>
+
+            <!-- Scripts -->
+        <script src="../js/ai-orchestrator.js"></script>
+        <script src="../js/ai-unified-system.js"></script>
+        <script>
+        // Interface Controller
+        class AIInterfaceController {
+            constructor() {
+                this.initializeEventListeners();
+                this.updateUI();
+            }
+
+            initializeEventListeners() {
+                // Seleção de personalidade
+                document.querySelectorAll('.personality-option').forEach(option => {
+                    option.addEventListener('click', () => {
+                        this.selectPersonality(option.dataset.personality);
+                    });
+                });
+
+                // Botões de ação
+                document.getElementById('analyze-board').addEventListener('click', () => {
+                    this.analyzeBoard();
+                });
+
+                document.getElementById('generate-board').addEventListener('click', () => {
+                    this.generateBoard();
+                });
+
+                document.getElementById('start-teaching').addEventListener('click', () => {
+                    this.startTeaching();
+                });
+
+                document.getElementById('show-stats').addEventListener('click', () => {
+                    this.showStats();
+                });
+
+                document.getElementById('show-orchestrator').addEventListener('click', () => {
+                    this.showOrchestrator();
+                });
+
+                document.getElementById('toggle-details').addEventListener('click', () => {
+                    this.togglePersonalityDetails();
+                });
+
+                // Botões de modo
+                document.getElementById('toggle-teacher-mode').addEventListener('click', () => {
+                    this.toggleTeacherMode();
+                });
+
+                document.getElementById('toggle-generative-mode').addEventListener('click', () => {
+                    this.toggleGenerativeMode();
+                });
+
+                document.getElementById('toggle-orchestration').addEventListener('click', () => {
+                    this.toggleOrchestration();
+                });
+
+                // Fechar saída
+                document.getElementById('output-close').addEventListener('click', () => {
+                    this.hideOutput();
+                });
+
+                // Eventos da IA
+                document.addEventListener('aiPersonalityChanged', (e) => {
+                    this.updateUI();
+                });
+
+                document.addEventListener('aiAnalysisComplete', (e) => {
+                    this.showAnalysisResult(e.detail);
+                });
+
+                document.addEventListener('aiBoardGenerated', (e) => {
+                    this.showBoardGenerated(e.detail);
+                });
+
+                document.addEventListener('aiTeachingStarted', (e) => {
+                    this.showTeachingSession(e.detail);
+                });
+            }
+
+            selectPersonality(personalityKey) {
+                // Remove seleção ativa
+                document.querySelectorAll('.personality-option').forEach(option => {
+                    option.classList.remove('active');
+                });
+
+                // Adiciona seleção à opção clicada
+                document.querySelector(`[data-personality="${personalityKey}"]`).classList.add('active');
+
+                // Dispara evento de mudança
+                const event = new CustomEvent('personalityChanged', {
+                    detail: { personality: personalityKey }
+                });
+                document.dispatchEvent(event);
+            }
+
+            updateUI() {
+                if (window.aiSystem) {
+                    const personality = window.aiSystem.activePersonality;
+                    
+                    // Atualiza indicador
+                    const indicator = document.getElementById('ai-personality-indicator');
+                    if (indicator) {
+                        indicator.textContent = personality.name;
+                        indicator.style.color = personality.color;
+                    }
+
+                    // Atualiza descrição
+                    const description = document.getElementById('ai-personality-description');
+                    if (description) {
+                        description.textContent = personality.description;
+                    }
+
+                    // Atualiza cores do tema
+                    document.documentElement.style.setProperty('--ai-primary-color', personality.color);
+                    
+                    // Atualiza detalhes da personalidade
+                    this.updatePersonalityDetails();
+                }
+            }
+
+            updatePersonalityDetails() {
+                if (window.aiSystem) {
+                    const personality = window.aiSystem.activePersonality;
+                    
+                    // Atualiza forças
+                    const strengthTags = document.getElementById('strength-tags');
+                    if (strengthTags) {
+                        strengthTags.innerHTML = personality.strengths.map(strength => 
+                            `<span class="strength-tag">${strength}</span>`
+                        ).join('');
+                    }
+                    
+                    // Atualiza fraquezas
+                    const weaknessTags = document.getElementById('weakness-tags');
+                    if (weaknessTags) {
+                        weaknessTags.innerHTML = personality.weaknesses.map(weakness => 
+                            `<span class="weakness-tag">${weakness}</span>`
+                        ).join('');
+                    }
+                    
+                    // Atualiza aberturas
+                    const openingTags = document.getElementById('opening-tags');
+                    if (openingTags) {
+                        openingTags.innerHTML = personality.preferredOpenings.map(opening => 
+                            `<span class="opening-tag">${opening}</span>`
+                        ).join('');
+                    }
+                    
+                    // Atualiza citação motivacional
+                    const motivationalQuote = document.getElementById('motivational-quote');
+                    if (motivationalQuote && personality.motivationalQuotes) {
+                        const randomQuote = personality.motivationalQuotes[Math.floor(Math.random() * personality.motivationalQuotes.length)];
+                        motivationalQuote.textContent = `"${randomQuote}"`;
+                    }
+                }
+            }
+
+            togglePersonalityDetails() {
+                const details = document.getElementById('personality-details');
+                const button = document.getElementById('toggle-details');
+                
+                if (details.style.display === 'none') {
+                    details.style.display = 'block';
+                    button.textContent = '📋 Ocultar Detalhes';
+                    button.className = 'ai-button warning';
+                } else {
+                    details.style.display = 'none';
+                    button.textContent = '📋 Mostrar Detalhes';
+                    button.className = 'ai-button secondary';
+                }
+            }
+
+            analyzeBoard() {
+                if (window.aiSystem) {
+                    // Simula análise de um tabuleiro
+                    const fen = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
+                    window.aiSystem.analyzeBoard(fen);
+                }
+            }
+
+            generateBoard() {
+                if (window.aiSystem) {
+                    // Simula geração de tabuleiro
+                    const theme = 'creative';
+                    const complexity = 'medium';
+                    window.aiSystem.generateBoard(theme, complexity);
+                }
+            }
+
+            startTeaching() {
+                if (window.aiSystem) {
+                    // Simula início de sessão de ensino
+                    const topic = 'Estratégia Básica';
+                    const level = 'beginner';
+                    window.aiSystem.startTeaching(topic, level);
+                }
+            }
+
+            showStats() {
+                if (window.aiSystem) {
+                    const stats = window.aiSystem.getStats();
+                    this.showOutput('Estatísticas do Sistema', this.formatStats(stats));
+                }
+            }
+
+            showOrchestrator() {
+                if (window.aiSystem) {
+                    const recommendations = window.aiSystem.getOptimizationRecommendations();
+                    this.showOutput('Orquestrador de IA', this.formatOrchestrator(recommendations));
+                }
+            }
+
+            toggleTeacherMode() {
+                if (window.aiSystem) {
+                    window.aiSystem.toggleTeacherMode();
+                    this.updateModeButtons();
+                }
+            }
+
+            toggleGenerativeMode() {
+                if (window.aiSystem) {
+                    window.aiSystem.toggleGenerativeMode();
+                    this.updateModeButtons();
+                }
+            }
+
+            toggleOrchestration() {
+                if (window.aiSystem) {
+                    window.aiSystem.toggleOrchestration();
+                    this.updateModeButtons();
+                }
+            }
+
+            updateModeButtons() {
+                if (window.aiSystem) {
+                    const stats = window.aiSystem.getStats();
+                    
+                    // Atualiza botão do modo professor
+                    const teacherBtn = document.getElementById('toggle-teacher-mode');
+                    teacherBtn.textContent = stats.teacherMode ? '🎓 Modo Professor (ATIVO)' : '🎓 Modo Professor';
+                    teacherBtn.className = stats.teacherMode ? 'ai-button success' : 'ai-button';
+
+                    // Atualiza botão do modo generativo
+                    const generativeBtn = document.getElementById('toggle-generative-mode');
+                    generativeBtn.textContent = stats.generativeMode ? '🎨 Modo Generativo (ATIVO)' : '🎨 Modo Generativo';
+                    generativeBtn.className = stats.generativeMode ? 'ai-button success' : 'ai-button';
+
+                    // Atualiza botão da orquestração
+                    const orchestrationBtn = document.getElementById('toggle-orchestration');
+                    orchestrationBtn.textContent = stats.orchestrationEnabled ? '🎼 Orquestração (ATIVA)' : '🎼 Orquestração';
+                    orchestrationBtn.className = stats.orchestrationEnabled ? 'ai-button success' : 'ai-button';
+                }
+            }
+
+            showOutput(title, content) {
+                document.getElementById('output-title').textContent = title;
+                document.getElementById('output-content').innerHTML = content;
+                document.getElementById('ai-output').classList.add('show');
+            }
+
+            hideOutput() {
+                document.getElementById('ai-output').classList.remove('show');
+            }
+
+            showAnalysisResult(analysis) {
+                const content = `
+                    <div class="analysis-result">
+                        <h4>Análise com ${analysis.personality}</h4>
+                        <p><strong>Foco:</strong> ${analysis.focus}</p>
+                        
+                        <div class="analysis-section">
+                            <h4>📊 Avaliação</h4>
+                            <p>${analysis.evaluation > 0 ? '+' : ''}${analysis.evaluation.toFixed(2)}</p>
+                        </div>
+
+                        <div class="analysis-section">
+                            <h4>🎯 Melhores Movimentos</h4>
+                            <div class="move-list">
+                                ${analysis.bestMoves.map(move => `<span class="move-tag">${move}</span>`).join('')}
+                            </div>
+                        </div>
+
+                        <div class="analysis-section">
+                            <h4>📋 Plano</h4>
+                            <p>${analysis.plan}</p>
+                        </div>
+
+                        <div class="analysis-section">
+                            <h4>⚠️ Ameaças</h4>
+                            <ul class="recommendation-list">
+                                ${analysis.threats.map(threat => `<li>${threat}</li>`).join('')}
+                            </ul>
+                        </div>
+
+                        <div class="analysis-section">
+                            <h4>💡 Oportunidades</h4>
+                            <ul class="recommendation-list">
+                                ${analysis.opportunities.map(opp => `<li>${opp}</li>`).join('')}
+                            </ul>
+                        </div>
+
+                        <div class="analysis-section">
+                            <h4>🎯 Recomendações</h4>
+                            <ul class="recommendation-list">
+                                ${analysis.recommendations.map(rec => `<li>${rec}</li>`).join('')}
+                            </ul>
+                        </div>
+                    </div>
+                `;
+
+                this.showOutput('Análise do Tabuleiro', content);
+            }
+
+            showBoardGenerated(board) {
+                const content = `
+                    <div class="analysis-result">
+                        <h4>Tabuleiro Gerado por ${board.personality}</h4>
+                        
+                        <div class="board-preview">
+                            <h5>Visualização do Tabuleiro</h5>
+                            <div class="chess-board">
+                                <div class="board-row">
+                                    <div class="board-square black">♜</div>
+                                    <div class="board-square white">♞</div>
+                                    <div class="board-square black">♝</div>
+                                    <div class="board-square white">♛</div>
+                                    <div class="board-square black">♚</div>
+                                    <div class="board-square white">♝</div>
+                                    <div class="board-square black">♞</div>
+                                    <div class="board-square white">♜</div>
+                                </div>
+                                <div class="board-row">
+                                    <div class="board-square white">♟</div>
+                                    <div class="board-square black">♟</div>
+                                    <div class="board-square white">♟</div>
+                                    <div class="board-square black">♟</div>
+                                    <div class="board-square white">♟</div>
+                                    <div class="board-square black">♟</div>
+                                    <div class="board-square white">♟</div>
+                                    <div class="board-square black">♟</div>
+                                </div>
+                                <div class="board-row">
+                                    <div class="board-square black"></div>
+                                    <div class="board-square white"></div>
+                                    <div class="board-square black"></div>
+                                    <div class="board-square white"></div>
+                                    <div class="board-square black"></div>
+                                    <div class="board-square white"></div>
+                                    <div class="board-square black"></div>
+                                    <div class="board-square white"></div>
+                                </div>
+                                <div class="board-row">
+                                    <div class="board-square white"></div>
+                                    <div class="board-square black"></div>
+                                    <div class="board-square white"></div>
+                                    <div class="board-square black"></div>
+                                    <div class="board-square white"></div>
+                                    <div class="board-square black"></div>
+                                    <div class="board-square white"></div>
+                                    <div class="board-square black"></div>
+                                </div>
+                                <div class="board-row">
+                                    <div class="board-square black"></div>
+                                    <div class="board-square white"></div>
+                                    <div class="board-square black"></div>
+                                    <div class="board-square white"></div>
+                                    <div class="board-square black"></div>
+                                    <div class="board-square white"></div>
+                                    <div class="board-square black"></div>
+                                    <div class="board-square white"></div>
+                                </div>
+                                <div class="board-row">
+                                    <div class="board-square white"></div>
+                                    <div class="board-square black"></div>
+                                    <div class="board-square white"></div>
+                                    <div class="board-square black"></div>
+                                    <div class="board-square white"></div>
+                                    <div class="board-square black"></div>
+                                    <div class="board-square white"></div>
+                                    <div class="board-square black"></div>
+                                </div>
+                                <div class="board-row">
+                                    <div class="board-square black">♙</div>
+                                    <div class="board-square white">♙</div>
+                                    <div class="board-square black">♙</div>
+                                    <div class="board-square white">♙</div>
+                                    <div class="board-square black">♙</div>
+                                    <div class="board-square white">♙</div>
+                                    <div class="board-square black">♙</div>
+                                    <div class="board-square white">♙</div>
+                                </div>
+                                <div class="board-row">
+                                    <div class="board-square white">♖</div>
+                                    <div class="board-square black">♘</div>
+                                    <div class="board-square white">♗</div>
+                                    <div class="board-square black">♕</div>
+                                    <div class="board-square white">♔</div>
+                                    <div class="board-square black">♗</div>
+                                    <div class="board-square white">♘</div>
+                                    <div class="board-square black">♖</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="analysis-section">
+                            <h4>📋 Informações do Tabuleiro</h4>
+                            <p><strong>Tema:</strong> ${board.theme}</p>
+                            <p><strong>Complexidade:</strong> ${board.complexity}</p>
+                            <p><strong>Dificuldade:</strong> ${board.difficulty}/10</p>
+                            <p><strong>Descrição:</strong> ${board.description}</p>
+                        </div>
+
+                        <div class="analysis-section">
+                            <h4>🎭 Características da Personalidade</h4>
+                            <div class="move-list">
+                                ${board.characteristics.map(char => `<span class="move-tag">${char}</span>`).join('')}
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                this.showOutput('Tabuleiro Gerado', content);
+            }
+
+            showTeachingSession(session) {
+                const content = `
+                    <div class="analysis-result">
+                        <h4>Sessão de Ensino com ${session.personality}</h4>
+                        
+                        <div class="lesson-plan">
+                            <h5>📚 Plano de Aula</h5>
+                            <p><strong>Tópico:</strong> ${session.topic}</p>
+                            <p><strong>Nível:</strong> ${session.level}</p>
+                            <p><strong>Estilo:</strong> ${session.style}</p>
+                            <p><strong>Duração Estimada:</strong> ${session.estimatedDuration} minutos</p>
+                            
+                            <h5>📖 Lições</h5>
+                            ${session.lessons.map((lesson, index) => `
+                                <div class="lesson-item">
+                                    <div class="lesson-info">
+                                        <h5>Lição ${index + 1}</h5>
+                                        <p>${lesson}</p>
+                                    </div>
+                                    <span class="lesson-duration">15 min</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+
+                this.showOutput('Sessão de Ensino Iniciada', content);
+            }
+
+            formatStats(stats) {
+                let content = `
+                    <div class="analysis-result">
+                        <h4>📊 Estatísticas do Sistema de IA</h4>
+                        
+                        <div class="analysis-section">
+                            <h4>🎭 Personalidade Ativa</h4>
+                            <p><strong>Nome:</strong> ${stats.activePersonality}</p>
+                            <p><strong>Total de Personalidades:</strong> ${stats.activePersonalities}</p>
+                        </div>
+
+                        <div class="analysis-section">
+                            <h4>⚙️ Modos do Sistema</h4>
+                            <p><strong>Modo Professor:</strong> ${stats.teacherMode ? '✅ ATIVO' : '❌ INATIVO'}</p>
+                            <p><strong>Modo Generativo:</strong> ${stats.generativeMode ? '✅ ATIVO' : '❌ INATIVO'}</p>
+                            <p><strong>Orquestração:</strong> ${stats.orchestrationEnabled ? '✅ ATIVA' : '❌ INATIVA'}</p>
+                        </div>
+
+                        <div class="analysis-section">
+                            <h4>🕒 Informações do Sistema</h4>
+                            <p><strong>Timestamp:</strong> ${new Date(stats.timestamp).toLocaleString()}</p>
+                        </div>
+                    </div>
+                `;
+
+                // Adiciona estatísticas do orquestrador se disponível
+                if (stats.orchestrator) {
+                    content += `
+                        <div class="analysis-result">
+                            <h4>🎼 Estatísticas do Orquestrador</h4>
+                            
+                            <div class="analysis-section">
+                                <h4>📋 Tarefas</h4>
+                                <p><strong>Total:</strong> ${stats.orchestrator.totalTasks}</p>
+                                <p><strong>Completadas:</strong> ${stats.orchestrator.completedTasks}</p>
+                                <p><strong>Falharam:</strong> ${stats.orchestrator.failedTasks}</p>
+                                <p><strong>Executando:</strong> ${stats.orchestrator.runningTasks}</p>
+                                <p><strong>Taxa de Sucesso:</strong> ${stats.orchestrator.successRate}%</p>
+                            </div>
+
+                            <div class="analysis-section">
+                                <h4>⚡ Performance</h4>
+                                <p><strong>Tempo Médio de Resposta:</strong> ${stats.orchestrator.avgResponseTime}ms</p>
+                                <p><strong>Eficiência de Recursos:</strong> ${stats.orchestrator.resourceEfficiency}%</p>
+                                <p><strong>Dados de Aprendizado:</strong> ${stats.orchestrator.learningDataSize} entradas</p>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                return content;
+            }
+
+            formatOrchestrator(recommendations) {
+                let content = `
+                    <div class="analysis-result">
+                        <h4>🎼 Orquestrador de IA</h4>
+                        <p>O orquestrador monitora e otimiza automaticamente o sistema de IA.</p>
+                    </div>
+                `;
+
+                if (recommendations.length > 0) {
+                    content += `
+                        <div class="analysis-result">
+                            <h4>🔧 Recomendações de Otimização</h4>
+                            ${recommendations.map(rec => `
+                                <div class="lesson-item">
+                                    <div class="lesson-info">
+                                        <h5>${rec.type.toUpperCase()}</h5>
+                                        <p>${rec.message}</p>
+                                        <p><strong>Prioridade:</strong> ${rec.priority}</p>
+                                    </div>
+                                    <button class="ai-button" onclick="window.aiInterface.applyRecommendation('${rec.action}')">
+                                        Aplicar
+                                    </button>
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+                } else {
+                    content += `
+                        <div class="analysis-result">
+                            <h4>✅ Sistema Otimizado</h4>
+                            <p>Nenhuma recomendação de otimização necessária no momento.</p>
+                        </div>
+                    `;
+                }
+
+                return content;
+            }
+
+            applyRecommendation(action) {
+                if (window.aiSystem) {
+                    // Cria recomendação simulada
+                    const recommendation = {
+                        action: action,
+                        type: 'optimization',
+                        priority: 'medium',
+                        message: 'Recomendação aplicada pelo usuário'
+                    };
+
+                    const success = window.aiSystem.applyOptimizationRecommendation(recommendation);
+                    if (success) {
+                        alert('✅ Recomendação aplicada com sucesso!');
+                        this.showOrchestrator(); // Atualiza a visualização
+                    } else {
+                        alert('❌ Erro ao aplicar recomendação');
+                    }
+                }
+            }
+        }
+
+        // Inicializa a interface quando o DOM estiver pronto
+        document.addEventListener('DOMContentLoaded', () => {
+            // Aguarda o sistema de IA estar pronto
+            const checkAI = setInterval(() => {
+                if (window.aiSystem) {
+                    clearInterval(checkAI);
+                    window.aiInterface = new AIInterfaceController();
+                    console.log('🎨 Interface de IA inicializada');
+                }
+            }, 100);
+        });
+    </script>
+</body>
+</html>
