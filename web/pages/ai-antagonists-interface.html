@@ -20,6 +20,52 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
+        /* Dark mode overrides */
+        .antagonist-interface.dark {
+            --antagonist-theme-bg: #120b0b;
+            --antagonist-theme-text: #f1f5f9;
+            --antagonist-theme-accent: #3f1d1d;
+        }
+
+        .antagonist-interface.dark .antagonist-card,
+        .antagonist-interface.dark .antagonist-output,
+        .antagonist-interface.dark .antagonist-option,
+        .antagonist-interface.dark .analysis-result,
+        .antagonist-interface.dark .quote-text,
+        .antagonist-interface.dark .behavior-section {
+            background: #1b0f0f;
+            color: var(--antagonist-theme-text);
+            border-color: #3f1d1d;
+        }
+
+        .top-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .nav-links { display: flex; gap: 10px; }
+        .nav-link {
+            text-decoration: none;
+            padding: 8px 12px;
+            border-radius: 8px;
+            background: white;
+            color: #111827;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+        .antagonist-interface.dark .nav-link { background: #1b0f0f; color: #f1f5f9; }
+
+        .theme-toggle {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 8px;
+            background: #111827;
+            color: #e5e7eb;
+            cursor: pointer;
+        }
+        .antagonist-interface.dark .theme-toggle { background: #e5e7eb; color: #111827; }
+
         .antagonist-header {
             text-align: center;
             margin-bottom: 30px;
@@ -72,9 +118,7 @@
             gap: 10px;
         }
 
-        .antagonist-selector {
-            margin-bottom: 20px;
-        }
+        .antagonist-selector { margin-bottom: 20px; }
 
         .antagonist-grid {
             display: grid;
@@ -95,10 +139,7 @@
             overflow: hidden;
         }
 
-        .antagonist-option:hover {
-            border-color: var(--antagonist-theme-accent);
-            transform: scale(1.02);
-        }
+        .antagonist-option:hover { border-color: var(--antagonist-theme-accent); transform: scale(1.02); }
 
         .antagonist-option.active {
             border-color: var(--antagonist-primary-color);
@@ -106,414 +147,109 @@
             box-shadow: 0 4px 15px rgba(139, 0, 0, 0.3);
         }
 
-        .antagonist-option .name {
-            font-weight: bold;
-            color: var(--antagonist-primary-color);
-            margin-bottom: 5px;
-            font-size: 1.1em;
-        }
-
-        .antagonist-option .description {
-            font-size: 0.9em;
-            color: #666;
-            line-height: 1.4;
-        }
+        .antagonist-option .name { font-weight: bold; color: var(--antagonist-primary-color); margin-bottom: 5px; font-size: 1.1em; }
+        .antagonist-option .description { font-size: 0.9em; color: #666; line-height: 1.4; }
 
         .antagonist-option .difficulty {
-            position: absolute;
-            top: 5px;
-            right: 5px;
-            background: var(--antagonist-theme-accent);
-            color: white;
-            padding: 2px 8px;
-            border-radius: 10px;
-            font-size: 0.7em;
-            font-weight: bold;
+            position: absolute; top: 5px; right: 5px; background: var(--antagonist-theme-accent); color: white; padding: 2px 8px; border-radius: 10px; font-size: 0.7em; font-weight: bold;
         }
 
-        .antagonist-status {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 20px;
-            padding: 15px;
-            background: var(--antagonist-theme-bg);
-            border-radius: 10px;
-        }
+        .antagonist-status { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; padding: 15px; background: var(--antagonist-theme-bg); border-radius: 10px; }
 
-        .status-indicator {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 15px;
-            border-radius: 20px;
-            background: white;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
+        .status-indicator { display: flex; align-items: center; gap: 8px; padding: 8px 15px; border-radius: 20px; background: white; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .antagonist-interface.dark .status-indicator { background: #1b0f0f; }
 
-        .status-dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: #DC143C;
-            animation: pulse 2s infinite;
-        }
+        .status-dot { width: 12px; height: 12px; border-radius: 50%; background: #DC143C; animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
 
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.5; }
-            100% { opacity: 1; }
-        }
+        .antagonist-actions { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin-top: 20px; }
 
-        .antagonist-actions {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 15px;
-            margin-top: 20px;
-        }
+        .antagonist-button { padding: 12px 20px; border: none; border-radius: 8px; background: var(--antagonist-primary-color); color: white; font-size: 1em; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .antagonist-button:hover { background: var(--antagonist-theme-accent); transform: translateY(-2px); box-shadow: 0 4px 15px rgba(139, 0, 0, 0.3); }
+        .antagonist-button.secondary { background: #6c757d; }
+        .antagonist-button.secondary:hover { background: #5a6268; }
+        .antagonist-button.success { background: #28a745; }
+        .antagonist-button.success:hover { background: #218838; }
+        .antagonist-button.warning { background: #ffc107; color: #212529; }
+        .antagonist-button.warning:hover { background: #e0a800; }
+        .antagonist-button.danger { background: #dc3545; }
+        .antagonist-button.danger:hover { background: #c82333; }
 
-        .antagonist-button {
-            padding: 12px 20px;
-            border: none;
-            border-radius: 8px;
-            background: var(--antagonist-primary-color);
-            color: white;
-            font-size: 1em;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
+        .antagonist-output { background: white; border-radius: 15px; padding: 25px; margin-top: 30px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); display: none; }
+        .antagonist-output.show { display: block; animation: slideIn 0.5s ease; }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-        .antagonist-button:hover {
-            background: var(--antagonist-theme-accent);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(139, 0, 0, 0.3);
-        }
+        .output-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid var(--antagonist-theme-bg); }
+        .output-title { color: var(--antagonist-primary-color); font-size: 1.3em; margin: 0; }
+        .output-close { background: none; border: none; font-size: 1.5em; cursor: pointer; color: #666; padding: 5px; border-radius: 5px; transition: all 0.3s ease; }
+        .output-close:hover { background: #f0f0f0; color: #333; }
 
-        .antagonist-button.secondary {
-            background: #6c757d;
-        }
+        .output-content { line-height: 1.6; }
 
-        .antagonist-button.secondary:hover {
-            background: #5a6268;
-        }
+        .analysis-result { background: var(--antagonist-theme-bg); padding: 20px; border-radius: 10px; margin-bottom: 20px; }
+        .analysis-section { margin-bottom: 15px; }
+        .analysis-section h4 { color: var(--antagonist-primary-color); margin: 0 0 10px 0; font-size: 1.1em; }
 
-        .antagonist-button.success {
-            background: #28a745;
-        }
+        .move-list { display: flex; gap: 10px; flex-wrap: wrap; }
+        .move-tag { background: var(--antagonist-primary-color); color: white; padding: 5px 12px; border-radius: 15px; font-size: 0.9em; font-weight: bold; }
 
-        .antagonist-button.success:hover {
-            background: #218838;
-        }
+        .recommendation-list { list-style: none; padding: 0; }
+        .recommendation-list li { padding: 8px 0; border-bottom: 1px solid #e0e0e0; display: flex; align-items: center; gap: 10px; }
+        .recommendation-list li:before { content: "💀"; color: var(--antagonist-theme-accent); }
 
-        .antagonist-button.warning {
-            background: #ffc107;
-            color: #212529;
-        }
+        .psychological-factors { background: #2F4F4F; color: white; padding: 15px; border-radius: 8px; margin: 15px 0; }
+        .factor-bar { background: rgba(255,255,255,0.2); height: 20px; border-radius: 10px; margin: 5px 0; overflow: hidden; }
+        .factor-fill { height: 100%; background: var(--antagonist-theme-accent); transition: width 0.5s ease; }
 
-        .antagonist-button.warning:hover {
-            background: #e0a800;
-        }
+        .difficulty-selector { display: flex; gap: 10px; margin: 15px 0; }
+        .difficulty-option { padding: 8px 15px; border: 2px solid #e0e0e0; border-radius: 20px; cursor: pointer; transition: all 0.3s ease; font-size: 0.9em; font-weight: bold; }
+        .difficulty-option:hover { border-color: var(--antagonist-theme-accent); }
+        .difficulty-option.active { background: var(--antagonist-primary-color); color: white; border-color: var(--antagonist-primary-color); }
 
-        .antagonist-button.danger {
-            background: #dc3545;
-        }
+        .antagonist-details { background: var(--antagonist-theme-bg); padding: 20px; border-radius: 10px; margin: 20px 0; border: 2px solid var(--antagonist-primary-color); }
+        .detail-section { margin-bottom: 20px; }
+        .detail-section h4 { color: var(--antagonist-primary-color); margin: 0 0 10px 0; font-size: 1.1em; display: flex; align-items: center; gap: 8px; }
 
-        .antagonist-button.danger:hover {
-            background: #c82333;
-        }
+        .strength-tags, .weakness-tags, .opening-tags { display: flex; gap: 8px; flex-wrap: wrap; }
+        .strength-tag, .weakness-tag, .opening-tag { padding: 6px 12px; border-radius: 15px; font-size: 0.85em; font-weight: bold; }
+        .strength-tag { background: #28a745; color: white; }
+        .weakness-tag { background: #dc3545; color: white; }
+        .opening-tag { background: var(--antagonist-theme-accent); color: white; }
 
-        .antagonist-output {
-            background: white;
-            border-radius: 15px;
-            padding: 25px;
-            margin-top: 30px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-            display: none;
-        }
+        .quote-text { font-style: italic; color: var(--antagonist-primary-color); background: white; padding: 15px; border-radius: 8px; border-left: 4px solid var(--antagonist-theme-accent); margin: 0; font-size: 1.1em; line-height: 1.5; }
 
-        .antagonist-output.show {
-            display: block;
-            animation: slideIn 0.5s ease;
-        }
+        .behavior-section { background: #f8f9fa; padding: 15px; border-radius: 8px; margin: 15px 0; }
+        .behavior-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #e0e0e0; }
+        .behavior-item:last-child { border-bottom: none; }
+        .behavior-label { font-weight: bold; color: var(--antagonist-primary-color); }
+        .behavior-value { background: var(--antagonist-theme-accent); color: white; padding: 4px 12px; border-radius: 15px; font-size: 0.8em; font-weight: bold; }
 
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .output-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid var(--antagonist-theme-bg);
-        }
-
-        .output-title {
-            color: var(--antagonist-primary-color);
-            font-size: 1.3em;
-            margin: 0;
-        }
-
-        .output-close {
-            background: none;
-            border: none;
-            font-size: 1.5em;
-            cursor: pointer;
-            color: #666;
-            padding: 5px;
-            border-radius: 5px;
-            transition: all 0.3s ease;
-        }
-
-        .output-close:hover {
-            background: #f0f0f0;
-            color: #333;
-        }
-
-        .output-content {
-            line-height: 1.6;
-        }
-
-        .analysis-result {
-            background: var(--antagonist-theme-bg);
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-        }
-
-        .analysis-section {
-            margin-bottom: 15px;
-        }
-
-        .analysis-section h4 {
-            color: var(--antagonist-primary-color);
-            margin: 0 0 10px 0;
-            font-size: 1.1em;
-        }
-
-        .move-list {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .move-tag {
-            background: var(--antagonist-primary-color);
-            color: white;
-            padding: 5px 12px;
-            border-radius: 15px;
-            font-size: 0.9em;
-            font-weight: bold;
-        }
-
-        .recommendation-list {
-            list-style: none;
-            padding: 0;
-        }
-
-        .recommendation-list li {
-            padding: 8px 0;
-            border-bottom: 1px solid #e0e0e0;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .recommendation-list li:before {
-            content: "💀";
-            color: var(--antagonist-theme-accent);
-        }
-
-        .psychological-factors {
-            background: #2F4F4F;
-            color: white;
-            padding: 15px;
-            border-radius: 8px;
-            margin: 15px 0;
-        }
-
-        .factor-bar {
-            background: rgba(255,255,255,0.2);
-            height: 20px;
-            border-radius: 10px;
-            margin: 5px 0;
-            overflow: hidden;
-        }
-
-        .factor-fill {
-            height: 100%;
-            background: var(--antagonist-theme-accent);
-            transition: width 0.5s ease;
-        }
-
-        .difficulty-selector {
-            display: flex;
-            gap: 10px;
-            margin: 15px 0;
-        }
-
-        .difficulty-option {
-            padding: 8px 15px;
-            border: 2px solid #e0e0e0;
-            border-radius: 20px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 0.9em;
-            font-weight: bold;
-        }
-
-        .difficulty-option:hover {
-            border-color: var(--antagonist-theme-accent);
-        }
-
-        .difficulty-option.active {
-            background: var(--antagonist-primary-color);
-            color: white;
-            border-color: var(--antagonist-primary-color);
-        }
-
-        .antagonist-details {
-            background: var(--antagonist-theme-bg);
-            padding: 20px;
-            border-radius: 10px;
-            margin: 20px 0;
-            border: 2px solid var(--antagonist-primary-color);
-        }
-
-        .detail-section {
-            margin-bottom: 20px;
-        }
-
-        .detail-section h4 {
-            color: var(--antagonist-primary-color);
-            margin: 0 0 10px 0;
-            font-size: 1.1em;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .strength-tags, .weakness-tags, .opening-tags {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-
-        .strength-tag, .weakness-tag, .opening-tag {
-            padding: 6px 12px;
-            border-radius: 15px;
-            font-size: 0.85em;
-            font-weight: bold;
-        }
-
-        .strength-tag {
-            background: #28a745;
-            color: white;
-        }
-
-        .weakness-tag {
-            background: #dc3545;
-            color: white;
-        }
-
-        .opening-tag {
-            background: var(--antagonist-theme-accent);
-            color: white;
-        }
-
-        .quote-text {
-            font-style: italic;
-            color: var(--antagonist-primary-color);
-            background: white;
-            padding: 15px;
-            border-radius: 8px;
-            border-left: 4px solid var(--antagonist-theme-accent);
-            margin: 0;
-            font-size: 1.1em;
-            line-height: 1.5;
-        }
-
-        .behavior-section {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 8px;
-            margin: 15px 0;
-        }
-
-        .behavior-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 8px 0;
-            border-bottom: 1px solid #e0e0e0;
-        }
-
-        .behavior-item:last-child {
-            border-bottom: none;
-        }
-
-        .behavior-label {
-            font-weight: bold;
-            color: var(--antagonist-primary-color);
-        }
-
-        .behavior-value {
-            background: var(--antagonist-theme-accent);
-            color: white;
-            padding: 4px 12px;
-            border-radius: 15px;
-            font-size: 0.8em;
-            font-weight: bold;
-        }
-
-        .antagonist-footer {
-            text-align: center;
-            margin-top: 40px;
-            padding: 20px;
-            color: #666;
-            border-top: 1px solid #e0e0e0;
-        }
-
-        .antagonist-footer p {
-            margin: 5px 0;
-        }
+        .antagonist-footer { text-align: center; margin-top: 40px; padding: 20px; color: #666; border-top: 1px solid #e0e0e0; }
+        .antagonist-footer p { margin: 5px 0; }
 
         @media (max-width: 768px) {
-            .antagonist-controls {
-                grid-template-columns: 1fr;
-            }
-            
-            .antagonist-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .antagonist-actions {
-                grid-template-columns: 1fr;
-            }
-            
-            .antagonist-header h1 {
-                font-size: 2em;
-            }
+            .antagonist-controls { grid-template-columns: 1fr; }
+            .antagonist-grid { grid-template-columns: 1fr; }
+            .antagonist-actions { grid-template-columns: 1fr; }
+            .antagonist-header h1 { font-size: 2em; }
         }
     </style>
 </head>
 <body>
-    <div class="antagonist-interface">
-        <!-- Header -->
+    <div class="antagonist-interface" id="antagonist-root">
+        <div class="top-nav">
+            <div class="nav-links">
+                <a class="nav-link" href="./ai-unified-interface.html">IA Unificada</a>
+                <a class="nav-link" href="./ai-antagonists-interface.html">Antagonistas</a>
+            </div>
+            <button class="theme-toggle" id="theme-toggle">🌙 Tema</button>
+        </div>
         <div class="antagonist-header">
             <h1>👹 Sistema de Antagonistas</h1>
             <p>Desafie-se contra os oponentes mais temíveis do xadrez - Aeon Chess</p>
         </div>
 
-        <!-- Controles Principais -->
         <div class="antagonist-controls">
-            <!-- Seletor de Antagonista -->
             <div class="antagonist-card">
                 <h3>👹 Antagonista Ativo</h3>
                 <div class="antagonist-status">
@@ -524,7 +260,6 @@
                 </div>
                 <p id="antagonist-description">Um jogador que nunca perdoa erros e explora cada fraqueza</p>
                 
-                <!-- Informações detalhadas do antagonista -->
                 <div class="antagonist-details" id="antagonist-details" style="display: none;">
                     <div class="detail-section">
                         <h4>💪 Forças</h4>
@@ -598,7 +333,6 @@
                 </div>
             </div>
 
-            <!-- Controles de Dificuldade -->
             <div class="antagonist-card">
                 <h3>⚙️ Configurações de Dificuldade</h3>
                 
@@ -627,7 +361,6 @@
             </div>
         </div>
 
-        <!-- Ações do Antagonista -->
         <div class="antagonist-card">
             <h3>⚔️ Ações do Antagonista</h3>
             
@@ -647,18 +380,15 @@
             </div>
         </div>
 
-        <!-- Saída do Antagonista -->
         <div class="antagonist-output" id="antagonist-output">
             <div class="output-header">
                 <h3 class="output-title" id="output-title">Análise do Antagonista</h3>
                 <button class="output-close" id="output-close">&times;</button>
             </div>
             <div class="output-content" id="output-content">
-                <!-- Conteúdo será inserido dinamicamente -->
             </div>
         </div>
 
-        <!-- Footer -->
         <div class="antagonist-footer">
             <p><strong>Sistema de Antagonistas v1.0.0</strong></p>
             <p>Desenvolvido com 💀 pela equipe Aeon Chess</p>
@@ -666,32 +396,28 @@
         </div>
     </div>
 
-    <!-- Scripts -->
     <script src="../js/ai-antagonists-system.js"></script>
     <script>
-        // Interface Controller para Antagonistas
         class AntagonistInterfaceController {
             constructor() {
                 this.initializeEventListeners();
+                this.restoreState();
                 this.updateUI();
             }
 
             initializeEventListeners() {
-                // Seleção de antagonista
                 document.querySelectorAll('.antagonist-option').forEach(option => {
                     option.addEventListener('click', () => {
                         this.selectAntagonist(option.dataset.antagonist);
                     });
                 });
 
-                // Seleção de dificuldade
                 document.querySelectorAll('.difficulty-option').forEach(option => {
                     option.addEventListener('click', () => {
                         this.selectDifficulty(option.dataset.difficulty);
                     });
                 });
 
-                // Botões de ação
                 document.getElementById('analyze-position').addEventListener('click', () => {
                     this.analyzePosition();
                 });
@@ -708,7 +434,6 @@
                     this.showBehavior();
                 });
 
-                // Botões de configuração
                 document.getElementById('toggle-adaptation').addEventListener('click', () => {
                     this.toggleAdaptation();
                 });
@@ -717,79 +442,84 @@
                     this.toggleLearning();
                 });
 
-                // Fechar saída
                 document.getElementById('output-close').addEventListener('click', () => {
                     this.hideOutput();
                 });
 
-                // Toggle detalhes
                 document.getElementById('toggle-details').addEventListener('click', () => {
                     this.toggleAntagonistDetails();
                 });
 
-                // Eventos do sistema
-                document.addEventListener('antagonistChanged', (e) => {
-                    this.updateUI();
+                // Tema
+                const themeToggle = document.getElementById('theme-toggle');
+                themeToggle.addEventListener('click', () => {
+                    const root = document.getElementById('antagonist-root');
+                    root.classList.toggle('dark');
+                    const theme = root.classList.contains('dark') ? 'dark' : 'light';
+                    localStorage.setItem('antagonist_theme', theme);
                 });
 
-                document.addEventListener('antagonistAnalysisComplete', (e) => {
-                    this.showAnalysisResult(e.detail);
-                });
+                document.addEventListener('antagonistChanged', (e) => { this.updateUI(); });
+                document.addEventListener('antagonistAnalysisComplete', (e) => { this.showAnalysisResult(e.detail); });
+            }
+
+            restoreState() {
+                const root = document.getElementById('antagonist-root');
+                const savedTheme = localStorage.getItem('antagonist_theme');
+                if (savedTheme === 'dark') { root.classList.add('dark'); }
+
+                const savedAntagonist = localStorage.getItem('antagonist_key');
+                if (savedAntagonist) {
+                    const option = document.querySelector(`[data-antagonist="${savedAntagonist}"]`);
+                    if (option) { this.selectAntagonist(savedAntagonist); }
+                }
+
+                const savedDifficulty = localStorage.getItem('antagonist_difficulty');
+                if (savedDifficulty) {
+                    const d = document.querySelector(`[data-difficulty="${savedDifficulty}"]`);
+                    if (d) { this.selectDifficulty(savedDifficulty); }
+                }
+
+                const savedAdapt = localStorage.getItem('antagonist_adaptation');
+                const savedLearn = localStorage.getItem('antagonist_learning');
+                if (window.antagonistSystem) {
+                    if (savedAdapt !== null) {
+                        window.antagonistSystem.toggleAdaptation(savedAdapt === 'true');
+                        this.updateAdaptationButton();
+                    }
+                    if (savedLearn !== null) {
+                        window.antagonistSystem.learningEnabled = (savedLearn === 'true');
+                        this.updateLearningButton();
+                    }
+                }
             }
 
             selectAntagonist(antagonistKey) {
-                // Remove seleção ativa
-                document.querySelectorAll('.antagonist-option').forEach(option => {
-                    option.classList.remove('active');
-                });
-
-                // Adiciona seleção à opção clicada
-                document.querySelector(`[data-antagonist="${antagonistKey}"]`).classList.add('active');
-
-                // Dispara evento de mudança
-                const event = new CustomEvent('antagonistChanged', {
-                    detail: { antagonist: antagonistKey }
-                });
+                document.querySelectorAll('.antagonist-option').forEach(option => { option.classList.remove('active'); });
+                const current = document.querySelector(`[data-antagonist="${antagonistKey}"]`);
+                if (current) current.classList.add('active');
+                localStorage.setItem('antagonist_key', antagonistKey);
+                const event = new CustomEvent('antagonistChanged', { detail: { antagonist: antagonistKey } });
                 document.dispatchEvent(event);
             }
 
             selectDifficulty(difficulty) {
-                // Remove seleção ativa
-                document.querySelectorAll('.difficulty-option').forEach(option => {
-                    option.classList.remove('active');
-                });
-
-                // Adiciona seleção à opção clicada
-                document.querySelector(`[data-difficulty="${difficulty}"]`).classList.add('active');
-
-                // Dispara evento de mudança
-                const event = new CustomEvent('difficultyChanged', {
-                    detail: { difficulty: difficulty }
-                });
+                document.querySelectorAll('.difficulty-option').forEach(option => { option.classList.remove('active'); });
+                const current = document.querySelector(`[data-difficulty="${difficulty}"]`);
+                if (current) current.classList.add('active');
+                localStorage.setItem('antagonist_difficulty', difficulty);
+                const event = new CustomEvent('difficultyChanged', { detail: { difficulty: difficulty } });
                 document.dispatchEvent(event);
             }
 
             updateUI() {
                 if (window.antagonistSystem) {
                     const antagonist = window.antagonistSystem.activeAntagonist;
-                    
-                    // Atualiza indicador
                     const indicator = document.getElementById('antagonist-indicator');
-                    if (indicator) {
-                        indicator.textContent = antagonist.name;
-                        indicator.style.color = antagonist.color;
-                    }
-
-                    // Atualiza descrição
+                    if (indicator) { indicator.textContent = antagonist.name; indicator.style.color = antagonist.color; }
                     const description = document.getElementById('antagonist-description');
-                    if (description) {
-                        description.textContent = antagonist.description;
-                    }
-
-                    // Atualiza cores do tema
+                    if (description) { description.textContent = antagonist.description; }
                     document.documentElement.style.setProperty('--antagonist-primary-color', antagonist.color);
-                    
-                    // Atualiza detalhes do antagonista
                     this.updateAntagonistDetails();
                 }
             }
@@ -797,39 +527,14 @@
             updateAntagonistDetails() {
                 if (window.antagonistSystem) {
                     const antagonist = window.antagonistSystem.activeAntagonist;
-                    
-                    // Atualiza forças
                     const strengthTags = document.getElementById('strength-tags');
-                    if (strengthTags) {
-                        strengthTags.innerHTML = antagonist.strengths.map(strength => 
-                            `<span class="strength-tag">${strength}</span>`
-                        ).join('');
-                    }
-                    
-                    // Atualiza fraquezas
+                    if (strengthTags) { strengthTags.innerHTML = antagonist.strengths.map(strength => `<span class="strength-tag">${strength}</span>`).join(''); }
                     const weaknessTags = document.getElementById('weakness-tags');
-                    if (weaknessTags) {
-                        weaknessTags.innerHTML = antagonist.weaknesses.map(weakness => 
-                            `<span class="weakness-tag">${weakness}</span>`
-                        ).join('');
-                    }
-                    
-                    // Atualiza aberturas
+                    if (weaknessTags) { weaknessTags.innerHTML = antagonist.weaknesses.map(weakness => `<span class="weakness-tag">${weakness}</span>`).join(''); }
                     const openingTags = document.getElementById('opening-tags');
-                    if (openingTags) {
-                        openingTags.innerHTML = antagonist.preferredOpenings.map(opening => 
-                            `<span class="opening-tag">${opening}</span>`
-                        ).join('');
-                    }
-                    
-                    // Atualiza citação sinistra
+                    if (openingTags) { openingTags.innerHTML = antagonist.preferredOpenings.map(opening => `<span class="opening-tag">${opening}</span>`).join(''); }
                     const sinisterQuote = document.getElementById('sinister-quote');
-                    if (sinisterQuote && antagonist.motivationalQuotes) {
-                        const randomQuote = antagonist.motivationalQuotes[Math.floor(Math.random() * antagonist.motivationalQuotes.length)];
-                        sinisterQuote.textContent = `"${randomQuote}"`;
-                    }
-
-                    // Atualiza comportamento
+                    if (sinisterQuote && antagonist.motivationalQuotes) { const q = antagonist.motivationalQuotes[Math.floor(Math.random() * antagonist.motivationalQuotes.length)]; sinisterQuote.textContent = `"${q}"`; }
                     const behaviorSection = document.getElementById('behavior-section');
                     if (behaviorSection && antagonist.behavior) {
                         behaviorSection.innerHTML = Object.entries(antagonist.behavior).map(([key, value]) => `
@@ -843,129 +548,60 @@
             }
 
             formatBehaviorKey(key) {
-                const labels = {
-                    responseToMistakes: 'Resposta a Erros',
-                    responseToGoodMoves: 'Resposta a Boas Jogadas',
-                    adaptationSpeed: 'Velocidade de Adaptação',
-                    psychologicalWarfare: 'Guerra Psicológica',
-                    mercyLevel: 'Nível de Misericórdia'
-                };
+                const labels = { responseToMistakes: 'Resposta a Erros', responseToGoodMoves: 'Resposta a Boas Jogadas', adaptationSpeed: 'Velocidade de Adaptação', psychologicalWarfare: 'Guerra Psicológica', mercyLevel: 'Nível de Misericórdia' };
                 return labels[key] || key;
             }
 
             formatBehaviorValue(value) {
-                const labels = {
-                    immediate_punishment: 'Punição Imediata',
-                    increased_pressure: 'Pressão Aumentada',
-                    psychological_pressure: 'Pressão Psicológica',
-                    mind_games: 'Jogos Mentais',
-                    creative_destruction: 'Destruição Criativa',
-                    increased_chaos: 'Caos Aumentado',
-                    mathematical_exploitation: 'Exploração Matemática',
-                    increased_calculation: 'Cálculo Aumentado',
-                    lethal_strike: 'Golpe Mortal',
-                    increased_patience: 'Paciência Aumentada',
-                    imperial_punishment: 'Punição Imperial',
-                    increased_domination: 'Dominação Aumentada',
-                    deceptive_trap: 'Armadilha Enganosa',
-                    increased_illusion: 'Ilusão Aumentada',
-                    berserk_rage: 'Fúria Berserk',
-                    increased_fury: 'Fúria Aumentada',
-                    slow: 'Lento',
-                    medium: 'Médio',
-                    fast: 'Rápido',
-                    very_fast: 'Muito Rápido',
-                    none: 'Nenhum',
-                    low: 'Baixo',
-                    high: 'Alto',
-                    maximum: 'Máximo'
-                };
+                const labels = { immediate_punishment: 'Punição Imediata', increased_pressure: 'Pressão Aumentada', psychological_pressure: 'Pressão Psicológica', mind_games: 'Jogos Mentais', creative_destruction: 'Destruição Criativa', increased_chaos: 'Caos Aumentado', mathematical_exploitation: 'Exploração Matemática', increased_calculation: 'Cálculo Aumentado', lethal_strike: 'Golpe Mortal', increased_patience: 'Paciência Aumentada', imperial_punishment: 'Punição Imperial', increased_domination: 'Dominação Aumentada', deceptive_trap: 'Armadilha Enganosa', increased_illusion: 'Ilusão Aumentada', berserk_rage: 'Fúria Berserk', increased_fury: 'Fúria Aumentada', slow: 'Lento', medium: 'Médio', fast: 'Rápido', very_fast: 'Muito Rápido', none: 'Nenhum', low: 'Baixo', high: 'Alto', maximum: 'Máximo' };
                 return labels[value] || value;
             }
 
             toggleAntagonistDetails() {
                 const details = document.getElementById('antagonist-details');
                 const button = document.getElementById('toggle-details');
-                
-                if (details.style.display === 'none') {
-                    details.style.display = 'block';
-                    button.textContent = '📋 Ocultar Detalhes';
-                    button.className = 'antagonist-button warning';
-                } else {
-                    details.style.display = 'none';
-                    button.textContent = '📋 Mostrar Detalhes';
-                    button.className = 'antagonist-button secondary';
-                }
+                if (details.style.display === 'none') { details.style.display = 'block'; button.textContent = '📋 Ocultar Detalhes'; button.className = 'antagonist-button warning'; } else { details.style.display = 'none'; button.textContent = '📋 Mostrar Detalhes'; button.className = 'antagonist-button secondary'; }
             }
 
             analyzePosition() {
-                if (window.antagonistSystem) {
-                    // Simula análise de posição
-                    const fen = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
-                    window.antagonistSystem.analyzePosition(fen);
-                }
+                if (window.antagonistSystem) { const fen = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'; window.antagonistSystem.analyzePosition(fen); }
             }
 
-            generateThreat() {
-                if (window.antagonistSystem) {
-                    // Simula geração de ameaça
-                    this.showOutput('Ameaça Gerada', this.formatThreat());
-                }
-            }
+            generateThreat() { if (window.antagonistSystem) { this.showOutput('Ameaça Gerada', this.formatThreat()); } }
 
-            showStats() {
-                if (window.antagonistSystem) {
-                    const stats = window.antagonistSystem.getAntagonistStats();
-                    this.showOutput('Estatísticas do Antagonista', this.formatStats(stats));
-                }
-            }
-
-            showBehavior() {
-                if (window.antagonistSystem) {
-                    const behavior = window.antagonistSystem.getAntagonistBehavior();
-                    this.showOutput('Comportamento do Antagonista', this.formatBehavior(behavior));
-                }
-            }
+            showStats() { if (window.antagonistSystem) { const stats = window.antagonistSystem.getAntagonistStats(); this.showOutput('Estatísticas do Antagonista', this.formatStats(stats)); } }
+            showBehavior() { if (window.antagonistSystem) { const behavior = window.antagonistSystem.getAntagonistBehavior(); this.showOutput('Comportamento do Antagonista', this.formatBehavior(behavior)); } }
 
             toggleAdaptation() {
                 if (window.antagonistSystem) {
-                    window.antagonistSystem.toggleAdaptation(!window.antagonistSystem.adaptationEnabled);
+                    const next = !window.antagonistSystem.adaptationEnabled;
+                    window.antagonistSystem.toggleAdaptation(next);
+                    localStorage.setItem('antagonist_adaptation', String(next));
                     this.updateAdaptationButton();
                 }
             }
 
             toggleLearning() {
                 if (window.antagonistSystem) {
-                    window.antagonistSystem.learningEnabled = !window.antagonistSystem.learningEnabled;
+                    const next = !window.antagonistSystem.learningEnabled;
+                    window.antagonistSystem.learningEnabled = next;
+                    localStorage.setItem('antagonist_learning', String(next));
                     this.updateLearningButton();
                 }
             }
 
             updateAdaptationButton() {
                 const button = document.getElementById('toggle-adaptation');
-                if (window.antagonistSystem) {
-                    button.textContent = window.antagonistSystem.adaptationEnabled ? '🔄 Adaptação (ATIVA)' : '🔄 Adaptação';
-                    button.className = window.antagonistSystem.adaptationEnabled ? 'antagonist-button success' : 'antagonist-button';
-                }
+                if (window.antagonistSystem) { button.textContent = window.antagonistSystem.adaptationEnabled ? '🔄 Adaptação (ATIVA)' : '🔄 Adaptação'; button.className = window.antagonistSystem.adaptationEnabled ? 'antagonist-button success' : 'antagonist-button'; }
             }
 
             updateLearningButton() {
                 const button = document.getElementById('toggle-learning');
-                if (window.antagonistSystem) {
-                    button.textContent = window.antagonistSystem.learningEnabled ? '🧠 Aprendizado (ATIVO)' : '🧠 Aprendizado';
-                    button.className = window.antagonistSystem.learningEnabled ? 'antagonist-button success' : 'antagonist-button';
-                }
+                if (window.antagonistSystem) { button.textContent = window.antagonistSystem.learningEnabled ? '🧠 Aprendizado (ATIVO)' : '🧠 Aprendizado'; button.className = window.antagonistSystem.learningEnabled ? 'antagonist-button success' : 'antagonist-button'; }
             }
 
-            showOutput(title, content) {
-                document.getElementById('output-title').textContent = title;
-                document.getElementById('output-content').innerHTML = content;
-                document.getElementById('antagonist-output').classList.add('show');
-            }
-
-            hideOutput() {
-                document.getElementById('antagonist-output').classList.remove('show');
-            }
+            showOutput(title, content) { document.getElementById('output-title').textContent = title; document.getElementById('output-content').innerHTML = content; document.getElementById('antagonist-output').classList.add('show'); }
+            hideOutput() { document.getElementById('antagonist-output').classList.remove('show'); }
 
             showAnalysisResult(analysis) {
                 const content = `
@@ -1014,29 +650,17 @@
 
                         <div class="psychological-factors">
                             <h4>🧠 Fatores Psicológicos</h4>
-                            <div class="factor-bar">
-                                <div class="factor-fill" style="width: ${analysis.psychologicalFactors.pressure}%"></div>
-                            </div>
+                            <div class="factor-bar"><div class="factor-fill" style="width: ${analysis.psychologicalFactors.pressure}%"></div></div>
                             <p>Pressão: ${analysis.psychologicalFactors.pressure.toFixed(0)}%</p>
-                            
-                            <div class="factor-bar">
-                                <div class="factor-fill" style="width: ${analysis.psychologicalFactors.intimidation}%"></div>
-                            </div>
+                            <div class="factor-bar"><div class="factor-fill" style="width: ${analysis.psychologicalFactors.intimidation}%"></div></div>
                             <p>Intimidação: ${analysis.psychologicalFactors.intimidation.toFixed(0)}%</p>
-                            
-                            <div class="factor-bar">
-                                <div class="factor-fill" style="width: ${analysis.psychologicalFactors.confusion}%"></div>
-                            </div>
+                            <div class="factor-bar"><div class="factor-fill" style="width: ${analysis.psychologicalFactors.confusion}%"></div></div>
                             <p>Confusão: ${analysis.psychologicalFactors.confusion.toFixed(0)}%</p>
-                            
-                            <div class="factor-bar">
-                                <div class="factor-fill" style="width: ${analysis.psychologicalFactors.fear}%"></div>
-                            </div>
+                            <div class="factor-bar"><div class="factor-fill" style="width: ${analysis.psychologicalFactors.fear}%"></div></div>
                             <p>Medo: ${analysis.psychologicalFactors.fear.toFixed(0)}%</p>
                         </div>
                     </div>
                 `;
-
                 this.showOutput('Análise do Antagonista', content);
             }
 
@@ -1123,9 +747,7 @@
             }
         }
 
-        // Inicializa a interface quando o DOM estiver pronto
         document.addEventListener('DOMContentLoaded', () => {
-            // Aguarda o sistema de antagonistas estar pronto
             const checkAntagonist = setInterval(() => {
                 if (window.antagonistSystem) {
                     clearInterval(checkAntagonist);
