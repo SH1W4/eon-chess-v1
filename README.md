@@ -77,8 +77,8 @@ CHESS/
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/NEO-SH1W4/aeon-chess.git
-cd aeon-chess
+git clone https://github.com/NEO-SH1W4/eon-chess-v1.git
+cd eon-chess-v1
 ```
 
 2. Install frontend dependencies:

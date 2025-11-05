@@ -46,14 +46,14 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/NEO-SH1W4/aeon-chess.git"
+        "url": "git+https://github.com/NEO-SH1W4/eon-chess-v1.git"
     },
     "keywords": [],
     "author": "",
     "license": "ISC",
     "type": "commonjs",
     "bugs": {
-        "url": "https://github.com/NEO-SH1W4/aeon-chess/issues"
+        "url": "https://github.com/NEO-SH1W4/eon-chess-v1/issues"
     },
-    "homepage": "https://github.com/NEO-SH1W4/aeon-chess#readme"
+    "homepage": "https://github.com/NEO-SH1W4/eon-chess-v1#readme"
 }
