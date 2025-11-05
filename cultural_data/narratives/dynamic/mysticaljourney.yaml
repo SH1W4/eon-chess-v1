@@ -1,0 +1,82 @@
+adaptation_rules:
+  context_sensitivity: 0.9
+  evolution_enabled: true
+  narrative_flexibility: 0.7
+dramatic_elements:
+  arcs:
+  - adaptation:
+      context_aware: true
+      intensity: 0.8
+      pacing: dynamic
+    phases:
+    - setup
+    - development
+    - climax
+    - resolution
+    theme: spiritual_growth
+  - adaptation:
+      context_aware: true
+      intensity: 0.8
+      pacing: dynamic
+    phases:
+    - setup
+    - development
+    - climax
+    - resolution
+    theme: inner_conflict
+  - adaptation:
+      context_aware: true
+      intensity: 0.8
+      pacing: dynamic
+    phases:
+    - setup
+    - development
+    - climax
+    - resolution
+    theme: enlightenment
+  climax_points:
+  - adaptation: true
+    intensity: 0.9
+    triggers: &id002
+    - spiritual_awakening
+    - existential_crisis
+    - divine_intervention
+    type: major
+  - adaptation: true
+    intensity: 0.6
+    triggers: &id003
+    - personal_challenges
+    - moral_choices
+    - spiritual_tests
+    type: minor
+  resolution_paths:
+  - conditions: &id005
+    - spiritual_mastery
+    - inner_peace
+    - enlightened_leadership
+    impact: major
+    type: victory
+  - conditions: &id004
+    - balanced_growth
+    - mindful_decisions
+    - harmonious_existence
+    impact: moderate
+    type: strategic
+  - conditions: &id001
+    - cultural_transcendence
+    - spiritual_harmony
+    - collective_growth
+    impact: significant
+    type: cultural
+elements:
+  cultural_conditions: *id001
+  major_triggers: *id002
+  minor_triggers: *id003
+  strategic_conditions: *id004
+  themes:
+  - spiritual_growth
+  - inner_conflict
+  - enlightenment
+  victory_conditions: *id005
+name: MysticalJourney
+type: dynamic

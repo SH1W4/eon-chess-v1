@@ -1,0 +1,33 @@
+attributes:
+  cultural_values: &id001
+  - astronomy
+  - mathematics
+  - cyclical_time
+  diplomatic_approaches: &id004
+  - alliance_networks
+  - cultural_exchange
+  economic_patterns: &id005
+  - agriculture
+  - trade_networks
+  - tribute_system
+  historical_events: &id002
+  - classical_period
+  - city_state_era
+  - calendar_system
+  key_stories: &id003
+  - popol_vuh
+  - creation_myths
+  - hero_twins
+  military_focus: &id006
+  - jungle_warfare
+  - city_defense
+  - ritualistic_combat
+name: Mayan
+narrative_elements:
+  cultural_values: *id001
+  historical_events: *id002
+  key_stories: *id003
+strategic_elements:
+  diplomatic_approaches: *id004
+  economic_patterns: *id005
+  military_focus: *id006

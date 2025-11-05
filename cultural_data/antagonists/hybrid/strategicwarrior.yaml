@@ -1,0 +1,77 @@
+adaptation_rules:
+  context_sensitivity: 0.8
+  evolution_enabled: true
+  learning_rate: 0.6
+behavior_patterns:
+  emergent:
+  - adaptation_rate: 0.7
+    base_patterns:
+    - aggressive_tactics
+    - long_term_planning
+    evolution_enabled: true
+    name: emergent_aggressive_tactics_long_term_planning
+  - adaptation_rate: 0.7
+    base_patterns:
+    - aggressive_tactics
+    - diplomatic_manipulation
+    evolution_enabled: true
+    name: emergent_aggressive_tactics_diplomatic_manipulation
+  - adaptation_rate: 0.7
+    base_patterns:
+    - aggressive_tactics
+    - resource_optimization
+    evolution_enabled: true
+    name: emergent_aggressive_tactics_resource_optimization
+  - adaptation_rate: 0.7
+    base_patterns:
+    - resource_control
+    - long_term_planning
+    evolution_enabled: true
+    name: emergent_resource_control_long_term_planning
+  - adaptation_rate: 0.7
+    base_patterns:
+    - resource_control
+    - diplomatic_manipulation
+    evolution_enabled: true
+    name: emergent_resource_control_diplomatic_manipulation
+  - adaptation_rate: 0.7
+    base_patterns:
+    - resource_control
+    - resource_optimization
+    evolution_enabled: true
+    name: emergent_resource_control_resource_optimization
+  - adaptation_rate: 0.7
+    base_patterns:
+    - territorial_expansion
+    - long_term_planning
+    evolution_enabled: true
+    name: emergent_territorial_expansion_long_term_planning
+  - adaptation_rate: 0.7
+    base_patterns:
+    - territorial_expansion
+    - diplomatic_manipulation
+    evolution_enabled: true
+    name: emergent_territorial_expansion_diplomatic_manipulation
+  - adaptation_rate: 0.7
+    base_patterns:
+    - territorial_expansion
+    - resource_optimization
+    evolution_enabled: true
+    name: emergent_territorial_expansion_resource_optimization
+  primary: &id001
+  - aggressive_tactics
+  - resource_control
+  - territorial_expansion
+  secondary: &id002
+  - long_term_planning
+  - diplomatic_manipulation
+  - resource_optimization
+name: StrategicWarrior
+profiles:
+  primary_profile:
+    name: warrior
+    patterns: *id001
+  secondary_profile:
+    name: strategist
+    patterns: *id002
+type: hybrid

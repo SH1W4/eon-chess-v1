@@ -1,0 +1,193 @@
+{
+  "timestamp": "2025-08-06T10:01:22.775674",
+  "integration_map": {
+    "conflito_territorial": {
+      "cultural_connections": {
+        "viking": {
+          "value_overlap": 0.0,
+          "practice_alignment": 0.0,
+          "story_resonance": 0.0
+        }
+      },
+      "thematic_alignments": {
+        "viking": {
+          "theme_harmony": {
+            "direct_match": 0.0,
+            "semantic_alignment": 0.0,
+            "value_reinforcement": 0.0
+          },
+          "arc_compatibility": {
+            "structural_alignment": 0.0,
+            "narrative_flow": 0.0,
+            "story_integration": 0.0
+          },
+          "element_synergy": {
+            "character_alignment": 0.0,
+            "setting_resonance": 0.0,
+            "conflict_harmony": 0.0
+          }
+        }
+      },
+      "values": {
+        "viking": {
+          "direct_matches": 0.0,
+          "thematic_alignment": 0.0,
+          "character_values": 0.0
+        }
+      }
+    }
+  },
+  "cultural_bridges": {
+    "conflito_territorial": {
+      "cultural_adaptations": {
+        "viking": {
+          "narrative_elements": {
+            "theme_adaptation": {
+              "original_theme": "territ\u00f3rio",
+              "cultural_interpretation": "territ\u00f3rio",
+              "adaptation_level": 0.0
+            },
+            "arc_adaptation": {
+              "original_arc": "confronto",
+              "cultural_interpretation": "confronto",
+              "adaptation_level": 0.0
+            },
+            "resolution_adaptation": null
+          },
+          "character_modifications": [
+            {
+              "original_character": {
+                "archetype": "guerreiro",
+                "traits": [
+                  "corajoso",
+                  "leal"
+                ]
+              },
+              "cultural_traits": [
+                {
+                  "original_trait": "corajoso",
+                  "cultural_equivalent": "corajoso"
+                },
+                {
+                  "original_trait": "leal",
+                  "cultural_equivalent": "leal"
+                }
+              ],
+              "cultural_role": "guerreiro"
+            }
+          ],
+          "setting_adjustments": [
+            {
+              "original_setting": {
+                "type": "fronteira",
+                "description": "Local de disputa territorial"
+              },
+              "cultural_context": [
+                {
+                  "practice": "raid",
+                  "relevance": 0.0
+                },
+                {
+                  "practice": "navega\u00e7\u00e3o",
+                  "relevance": 0.0
+                }
+              ],
+              "cultural_significance": "fronteira"
+            }
+          ]
+        }
+      },
+      "value_translations": {
+        "viking": {
+          "value_mappings": [
+            {
+              "narrative_value": "corajoso",
+              "cultural_value": "corajoso",
+              "context": "character_trait"
+            },
+            {
+              "narrative_value": "leal",
+              "cultural_value": "leal",
+              "context": "character_trait"
+            },
+            {
+              "narrative_value": "territ\u00f3rio",
+              "cultural_value": "territ\u00f3rio",
+              "context": "theme"
+            }
+          ],
+          "concept_bridges": [
+            {
+              "narrative_concept": "guerreiro",
+              "cultural_concept": "guerreiro",
+              "context": "character_archetype"
+            },
+            {
+              "narrative_concept": "fronteira",
+              "cultural_concept": "fronteira",
+              "context": "setting_type"
+            }
+          ],
+          "meaning_adaptations": [
+            {
+              "original_meaning": "character_archetype_guerreiro",
+              "cultural_meaning": "cultural_meaning_of_guerreiro",
+              "context": "character"
+            },
+            {
+              "original_meaning": "setting_type_fronteira",
+              "cultural_meaning": "cultural_meaning_of_fronteira",
+              "context": "setting"
+            }
+          ]
+        }
+      },
+      "practice_integrations": {
+        "viking": {
+          "ritual_adaptations": [],
+          "custom_incorporations": [],
+          "tradition_bridges": []
+        }
+      }
+    }
+  },
+  "narrative_adaptations": {
+    "conflito_territorial": {
+      "structural_adaptations": {},
+      "thematic_modifications": {
+        "viking": [
+          {
+            "original_theme": "territ\u00f3rio",
+            "cultural_interpretation": "territ\u00f3rio",
+            "resonance": 0.0
+          }
+        ]
+      },
+      "character_evolutions": {
+        "viking": [
+          {
+            "original_character": {
+              "archetype": "guerreiro",
+              "traits": [
+                "corajoso",
+                "leal"
+              ]
+            },
+            "cultural_evolution": {
+              "archetype": "guerreiro",
+              "traits": [
+                "corajoso",
+                "leal"
+              ]
+            },
+            "evolution_metrics": {
+              "archetype_resonance": 0.0,
+              "trait_alignment": 0.0,
+              "motivation_harmony": 0.0
+            }
+          }
+        ]
+      }
+    }
+  }
+}

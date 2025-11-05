@@ -1,0 +1,77 @@
+adaptation_rules:
+  context_sensitivity: 0.8
+  evolution_enabled: true
+  learning_rate: 0.6
+behavior_patterns:
+  emergent:
+  - adaptation_rate: 0.7
+    base_patterns:
+    - tactical_command
+    - psychological_warfare
+    evolution_enabled: true
+    name: emergent_tactical_command_psychological_warfare
+  - adaptation_rate: 0.7
+    base_patterns:
+    - tactical_command
+    - cultural_manipulation
+    evolution_enabled: true
+    name: emergent_tactical_command_cultural_manipulation
+  - adaptation_rate: 0.7
+    base_patterns:
+    - tactical_command
+    - symbolic_power
+    evolution_enabled: true
+    name: emergent_tactical_command_symbolic_power
+  - adaptation_rate: 0.7
+    base_patterns:
+    - unit_coordination
+    - psychological_warfare
+    evolution_enabled: true
+    name: emergent_unit_coordination_psychological_warfare
+  - adaptation_rate: 0.7
+    base_patterns:
+    - unit_coordination
+    - cultural_manipulation
+    evolution_enabled: true
+    name: emergent_unit_coordination_cultural_manipulation
+  - adaptation_rate: 0.7
+    base_patterns:
+    - unit_coordination
+    - symbolic_power
+    evolution_enabled: true
+    name: emergent_unit_coordination_symbolic_power
+  - adaptation_rate: 0.7
+    base_patterns:
+    - battlefield_control
+    - psychological_warfare
+    evolution_enabled: true
+    name: emergent_battlefield_control_psychological_warfare
+  - adaptation_rate: 0.7
+    base_patterns:
+    - battlefield_control
+    - cultural_manipulation
+    evolution_enabled: true
+    name: emergent_battlefield_control_cultural_manipulation
+  - adaptation_rate: 0.7
+    base_patterns:
+    - battlefield_control
+    - symbolic_power
+    evolution_enabled: true
+    name: emergent_battlefield_control_symbolic_power
+  primary: &id001
+  - tactical_command
+  - unit_coordination
+  - battlefield_control
+  secondary: &id002
+  - psychological_warfare
+  - cultural_manipulation
+  - symbolic_power
+name: MysticCommander
+profiles:
+  primary_profile:
+    name: commander
+    patterns: *id001
+  secondary_profile:
+    name: mystic
+    patterns: *id002
+type: hybrid

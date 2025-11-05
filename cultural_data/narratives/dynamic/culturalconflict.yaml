@@ -1,0 +1,82 @@
+adaptation_rules:
+  context_sensitivity: 0.9
+  evolution_enabled: true
+  narrative_flexibility: 0.7
+dramatic_elements:
+  arcs:
+  - adaptation:
+      context_aware: true
+      intensity: 0.8
+      pacing: dynamic
+    phases:
+    - setup
+    - development
+    - climax
+    - resolution
+    theme: cultural_clash
+  - adaptation:
+      context_aware: true
+      intensity: 0.8
+      pacing: dynamic
+    phases:
+    - setup
+    - development
+    - climax
+    - resolution
+    theme: power_struggle
+  - adaptation:
+      context_aware: true
+      intensity: 0.8
+      pacing: dynamic
+    phases:
+    - setup
+    - development
+    - climax
+    - resolution
+    theme: adaptation
+  climax_points:
+  - adaptation: true
+    intensity: 0.9
+    triggers: &id002
+    - territory_control
+    - resource_dominance
+    - cultural_supremacy
+    type: major
+  - adaptation: true
+    intensity: 0.6
+    triggers: &id003
+    - local_disputes
+    - resource_competition
+    - cultural_exchange
+    type: minor
+  resolution_paths:
+  - conditions: &id005
+    - complete_dominance
+    - cultural_assimilation
+    - peaceful_coexistence
+    impact: major
+    type: victory
+  - conditions: &id004
+    - resource_balance
+    - territorial_agreement
+    - cultural_respect
+    impact: moderate
+    type: strategic
+  - conditions: &id001
+    - shared_values
+    - cultural_understanding
+    - mutual_growth
+    impact: significant
+    type: cultural
+elements:
+  cultural_conditions: *id001
+  major_triggers: *id002
+  minor_triggers: *id003
+  strategic_conditions: *id004
+  themes:
+  - cultural_clash
+  - power_struggle
+  - adaptation
+  victory_conditions: *id005
+name: CulturalConflict
+type: dynamic

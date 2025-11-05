@@ -1,0 +1,57 @@
+
+=== Relatório do Sistema Cultural ===
+Timestamp: 2025-08-05T21:13:40.091684
+
+1. Métricas Culturais
+   - Culturas Ativas: 3
+   - Diversidade Cultural:
+     * Militar: 85.00%
+     * Econômica: 75.00%
+     * Diplomática: 90.00%
+   - Influência Cultural:
+     * Viking: 80.00%
+     * Maia: 75.00%
+     * Samurai: 85.00%
+
+2. Métricas de Antagonistas
+   - Antagonistas Ativos: 3
+   - Complexidade Comportamental:
+     * Strategic Warrior: 85.00%
+     * Mystic Commander: 90.00%
+     * Economic Warlord: 80.00%
+   - Taxa de Adaptação:
+     * Strategic Warrior: 75.00%
+     * Mystic Commander: 85.00%
+     * Economic Warlord: 70.00%
+
+3. Métricas Narrativas
+   - Narrativas Ativas: 3
+   - Profundidade Narrativa:
+     * Cultural Conflict: 90.00%
+     * Mystical Journey: 85.00%
+     * Empire Evolution: 80.00%
+   - Coerência Narrativa:
+     * Cultural Conflict: 85.00%
+     * Mystical Journey: 90.00%
+     * Empire Evolution: 85.00%
+
+=== Análise de Tendências ===
+1. Sistema Cultural
+   - Diversidade cultural mantém-se alta
+   - Influência balanceada entre culturas
+   - Potencial para expansão cultural
+
+2. Sistema de Antagonistas
+   - Comportamentos emergentes funcionando bem
+   - Boa taxa de adaptação geral
+   - Complexidade adequada
+
+3. Sistema Narrativo
+   - Narrativas mantêm alta coerência
+   - Profundidade satisfatória
+   - Integração cultural efetiva
+
+=== Recomendações ===
+1. Considerar adição de novas culturas
+2. Monitorar comportamentos emergentes
+3. Avaliar expansão narrativa

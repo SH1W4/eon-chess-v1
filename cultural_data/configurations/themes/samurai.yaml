@@ -1,0 +1,33 @@
+attributes:
+  cultural_values: &id001
+  - loyalty
+  - honor
+  - discipline
+  diplomatic_approaches: &id004
+  - honor_based
+  - hierarchical_respect
+  economic_patterns: &id005
+  - feudal_system
+  - rice_economy
+  - artisan_crafts
+  historical_events: &id002
+  - sengoku_period
+  - tokugawa_shogunate
+  - meiji_restoration
+  key_stories: &id003
+  - samurai_legends
+  - zen_philosophy
+  - warrior_codes
+  military_focus: &id006
+  - bushido
+  - martial_arts
+  - castle_warfare
+name: Samurai
+narrative_elements:
+  cultural_values: *id001
+  historical_events: *id002
+  key_stories: *id003
+strategic_elements:
+  diplomatic_approaches: *id004
+  economic_patterns: *id005
+  military_focus: *id006

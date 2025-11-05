@@ -1,0 +1,33 @@
+attributes:
+  cultural_values: &id001
+  - honor
+  - bravery
+  - family_loyalty
+  diplomatic_approaches: &id004
+  - strength_negotiation
+  - alliance_building
+  economic_patterns: &id005
+  - trade_routes
+  - craftsmanship
+  - exploration
+  historical_events: &id002
+  - viking_age
+  - nordic_exploration
+  - settlements
+  key_stories: &id003
+  - norse_mythology
+  - sagas
+  - conquest_tales
+  military_focus: &id006
+  - naval_warfare
+  - raid_tactics
+  - shield_wall
+name: Viking
+narrative_elements:
+  cultural_values: *id001
+  historical_events: *id002
+  key_stories: *id003
+strategic_elements:
+  diplomatic_approaches: *id004
+  economic_patterns: *id005
+  military_focus: *id006

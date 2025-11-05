@@ -1,0 +1,82 @@
+adaptation_rules:
+  context_sensitivity: 0.9
+  evolution_enabled: true
+  narrative_flexibility: 0.7
+dramatic_elements:
+  arcs:
+  - adaptation:
+      context_aware: true
+      intensity: 0.8
+      pacing: dynamic
+    phases:
+    - setup
+    - development
+    - climax
+    - resolution
+    theme: empire_building
+  - adaptation:
+      context_aware: true
+      intensity: 0.8
+      pacing: dynamic
+    phases:
+    - setup
+    - development
+    - climax
+    - resolution
+    theme: civilization_growth
+  - adaptation:
+      context_aware: true
+      intensity: 0.8
+      pacing: dynamic
+    phases:
+    - setup
+    - development
+    - climax
+    - resolution
+    theme: legacy_creation
+  climax_points:
+  - adaptation: true
+    intensity: 0.9
+    triggers: &id002
+    - empire_formation
+    - golden_age
+    - civilization_crisis
+    type: major
+  - adaptation: true
+    intensity: 0.6
+    triggers: &id003
+    - cultural_developments
+    - technological_advances
+    - social_changes
+    type: minor
+  resolution_paths:
+  - conditions: &id005
+    - empire_dominance
+    - cultural_achievement
+    - lasting_legacy
+    impact: major
+    type: victory
+  - conditions: &id004
+    - sustainable_growth
+    - balanced_expansion
+    - cultural_preservation
+    impact: moderate
+    type: strategic
+  - conditions: &id001
+    - cultural_excellence
+    - societal_harmony
+    - historical_impact
+    impact: significant
+    type: cultural
+elements:
+  cultural_conditions: *id001
+  major_triggers: *id002
+  minor_triggers: *id003
+  strategic_conditions: *id004
+  themes:
+  - empire_building
+  - civilization_growth
+  - legacy_creation
+  victory_conditions: *id005
+name: EmpireEvolution
+type: dynamic

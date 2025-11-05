@@ -1,0 +1,77 @@
+adaptation_rules:
+  context_sensitivity: 0.8
+  evolution_enabled: true
+  learning_rate: 0.6
+behavior_patterns:
+  emergent:
+  - adaptation_rate: 0.7
+    base_patterns:
+    - military_dominance
+    - resource_management
+    evolution_enabled: true
+    name: emergent_military_dominance_resource_management
+  - adaptation_rate: 0.7
+    base_patterns:
+    - military_dominance
+    - trade_control
+    evolution_enabled: true
+    name: emergent_military_dominance_trade_control
+  - adaptation_rate: 0.7
+    base_patterns:
+    - military_dominance
+    - economic_warfare
+    evolution_enabled: true
+    name: emergent_military_dominance_economic_warfare
+  - adaptation_rate: 0.7
+    base_patterns:
+    - territory_control
+    - resource_management
+    evolution_enabled: true
+    name: emergent_territory_control_resource_management
+  - adaptation_rate: 0.7
+    base_patterns:
+    - territory_control
+    - trade_control
+    evolution_enabled: true
+    name: emergent_territory_control_trade_control
+  - adaptation_rate: 0.7
+    base_patterns:
+    - territory_control
+    - economic_warfare
+    evolution_enabled: true
+    name: emergent_territory_control_economic_warfare
+  - adaptation_rate: 0.7
+    base_patterns:
+    - force_projection
+    - resource_management
+    evolution_enabled: true
+    name: emergent_force_projection_resource_management
+  - adaptation_rate: 0.7
+    base_patterns:
+    - force_projection
+    - trade_control
+    evolution_enabled: true
+    name: emergent_force_projection_trade_control
+  - adaptation_rate: 0.7
+    base_patterns:
+    - force_projection
+    - economic_warfare
+    evolution_enabled: true
+    name: emergent_force_projection_economic_warfare
+  primary: &id001
+  - military_dominance
+  - territory_control
+  - force_projection
+  secondary: &id002
+  - resource_management
+  - trade_control
+  - economic_warfare
+name: EconomicWarlord
+profiles:
+  primary_profile:
+    name: warlord
+    patterns: *id001
+  secondary_profile:
+    name: economist
+    patterns: *id002
+type: hybrid

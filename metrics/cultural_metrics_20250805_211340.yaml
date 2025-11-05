@@ -1,0 +1,31 @@
+antagonist_metrics:
+  active_antagonists: 3
+  adaptation_rate:
+    economic_warlord: 0.7
+    mystic_commander: 0.85
+    strategic_warrior: 0.75
+  behavior_complexity:
+    economic_warlord: 0.8
+    mystic_commander: 0.9
+    strategic_warrior: 0.85
+cultural_metrics:
+  active_cultures: 3
+  cultural_diversity:
+    diplomatic_diversity: 0.9
+    economic_diversity: 0.75
+    military_diversity: 0.85
+  cultural_influence:
+    mayan_influence: 0.75
+    samurai_influence: 0.85
+    viking_influence: 0.8
+narrative_metrics:
+  active_narratives: 3
+  narrative_depth:
+    cultural_conflict: 0.9
+    empire_evolution: 0.8
+    mystical_journey: 0.85
+  story_coherence:
+    cultural_conflict: 0.85
+    empire_evolution: 0.85
+    mystical_journey: 0.9
+timestamp: '2025-08-05T21:13:40.091684'
