@@ -45,12 +45,20 @@ class StoryGenerator:
         
     def _initialize_piece_personalities(self, board: Board):
         """Atribui personalidades às peças principais."""
-        for row in range(8):
-            for col in range(8):
-                piece = board.get_piece(row, col)
+        # Adaptação para o novo sistema de Board (baseado em dicionário/python-chess)
+        if hasattr(board, 'pieces') and isinstance(board.pieces, dict):
+            for pos, piece in board.pieces.items():
                 if piece is not None and piece.type in [PieceType.KING, PieceType.QUEEN]:
                     personality = self._generate_personality(piece)
                     self.piece_personalities[piece] = personality
+        else:
+            # Fallback para sistema antigo (matriz)
+            for row in range(8):
+                for col in range(8):
+                    piece = board.get_piece(row, col)
+                    if piece is not None and piece.type in [PieceType.KING, PieceType.QUEEN]:
+                        personality = self._generate_personality(piece)
+                        self.piece_personalities[piece] = personality
                     
     def _generate_personality(self, piece: Piece) -> Dict[str, str]:
         """Gera uma personalidade para uma peça."""

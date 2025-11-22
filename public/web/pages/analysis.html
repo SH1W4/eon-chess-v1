@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análise Detalhada - AEON CHESS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/web/styles/chess-theme.css">
+    <link rel="stylesheet" href="/web/styles/modern-design-system.css">
+    <link rel="stylesheet" href="/web/styles/force-dark-theme.css">
+    <script src="https://unpkg.com/chess.js@1.0.0/chess.min.js"></script>
+</head>
+
+<body class="bg-gray-900 text-white min-h-screen">
+    <!-- Header -->
+    <header class="bg-black/20 backdrop-blur-sm border-b border-white/10">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="text-2xl">♔</div>
+                    <div>
+                        <h1 class="text-xl font-bold">AEON CHESS</h1>
+                        <div class="text-xs bg-yellow-500 text-black px-2 py-1 rounded font-bold">PRO</div>
+                    </div>
+                </div>
+                <nav class="flex items-center space-x-6">
+                    <a href="index.html" class="text-gray-300 hover:text-white transition-colors">🏠 Início</a>
+                    <a href="training.html" class="text-gray-300 hover:text-white transition-colors">🎯 Treinamento</a>
+                    <a href="profile.html" class="text-gray-300 hover:text-white transition-colors">👤 Perfil</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-6 py-8">
+        <div class="mb-8">
+            <h1 class="text-4xl font-bold mb-4">📊 Análise Detalhada</h1>
+            <p class="text-gray-300">Análise profunda de suas partidas e performance</p>
+        </div>
+
+        <!-- Analysis Dashboard -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+            <!-- Performance Overview -->
+            <div class="lg:col-span-2">
+                <div class="bg-gray-800/50 rounded-lg p-6 mb-6">
+                    <h2 class="text-2xl font-bold mb-4">📈 Visão Geral da Performance</h2>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <div class="text-center p-4 bg-blue-600/20 rounded-lg">
+                            <div class="text-3xl font-bold text-blue-400" id="currentElo">1500</div>
+                            <div class="text-sm text-gray-300">ELO Atual</div>
+                        </div>
+                        <div class="text-center p-4 bg-green-600/20 rounded-lg">
+                            <div class="text-3xl font-bold text-green-400" id="accuracy">85%</div>
+                            <div class="text-sm text-gray-300">Precisão</div>
+                        </div>
+                        <div class="text-center p-4 bg-purple-600/20 rounded-lg">
+                            <div class="text-3xl font-bold text-purple-400" id="gamesPlayed">24</div>
+                            <div class="text-sm text-gray-300">Partidas</div>
+                        </div>
+                        <div class="text-center p-4 bg-yellow-600/20 rounded-lg">
+                            <div class="text-3xl font-bold text-yellow-400" id="winRate">68%</div>
+                            <div class="text-sm text-gray-300">Vitórias</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Game History -->
+                <div class="bg-gray-800/50 rounded-lg p-6">
+                    <h2 class="text-2xl font-bold mb-4">🎮 Histórico de Partidas</h2>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm">
+                            <thead>
+                                <tr class="border-b border-gray-600">
+                                    <th class="text-left py-2">Data</th>
+                                    <th class="text-left py-2">Resultado</th>
+                                    <th class="text-left py-2">ELO</th>
+                                    <th class="text-left py-2">Precisão</th>
+                                    <th class="text-left py-2">Duração</th>
+                                </tr>
+                            </thead>
+                            <tbody id="gameHistory">
+                                <!-- Game history will be populated by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analysis Tools -->
+            <div class="space-y-6">
+                <!-- Quick Analysis -->
+                <div class="bg-gray-800/50 rounded-lg p-6">
+                    <h3 class="text-xl font-bold mb-4">🔍 Análise Rápida</h3>
+                    <div class="space-y-4">
+                        <button id="analyzeCurrent" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-medium transition-colors">
+                            Analisar Posição Atual
+                        </button>
+                        <button id="analyzeLastGame" class="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-lg font-medium transition-colors">
+                            Analisar Última Partida
+                        </button>
+                        <button id="generateReport" class="w-full bg-purple-600 hover:bg-purple-700 text-white py-3 rounded-lg font-medium transition-colors">
+                            Gerar Relatório
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Strengths & Weaknesses -->
+                <div class="bg-gray-800/50 rounded-lg p-6">
+                    <h3 class="text-xl font-bold mb-4">💪 Pontos Fortes</h3>
+                    <div class="space-y-2" id="strengths">
+                        <div class="flex items-center space-x-2">
+                            <span class="text-green-400">✓</span>
+                            <span class="text-sm">Táticas agressivas</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <span class="text-green-400">✓</span>
+                            <span class="text-sm">Controle de tempo</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-gray-800/50 rounded-lg p-6">
+                    <h3 class="text-xl font-bold mb-4">🎯 Áreas de Melhoria</h3>
+                    <div class="space-y-2" id="weaknesses">
+                        <div class="flex items-center space-x-2">
+                            <span class="text-red-400">⚠</span>
+                            <span class="text-sm">Finais de jogo</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <span class="text-red-400">⚠</span>
+                            <span class="text-sm">Aberturas</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recommendations -->
+                <div class="bg-gray-800/50 rounded-lg p-6">
+                    <h3 class="text-xl font-bold mb-4">📚 Recomendações</h3>
+                    <div class="space-y-3" id="recommendations">
+                        <div class="p-3 bg-blue-600/20 rounded-lg">
+                            <div class="font-medium text-blue-300">Pratique Finais</div>
+                            <div class="text-sm text-gray-300">Foque em finais de torre e peão</div>
+                        </div>
+                        <div class="p-3 bg-green-600/20 rounded-lg">
+                            <div class="font-medium text-green-300">Estude Aberturas</div>
+                            <div class="text-sm text-gray-300">Aprenda a Defesa Siciliana</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Detailed Analysis Modal -->
+        <div id="analysisModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+            <div class="bg-gray-800 rounded-lg p-8 max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold">📊 Análise Detalhada</h2>
+                    <button onclick="closeAnalysisModal()" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+                </div>
+                <div id="analysisContent">
+                    <!-- Analysis content will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script src="/web/utils/chess-engine.js"></script>
+    <script src="/web/utils/app.js"></script>
+    <script>
+        // Analysis page specific functionality
+        class AnalysisPage {
+            constructor() {
+                this.init();
+            }
+
+            init() {
+                this.loadUserData();
+                this.setupEventListeners();
+                this.populateGameHistory();
+                this.updateAnalysis();
+            }
+
+            loadUserData() {
+                const userData = localStorage.getItem('aeon_chess_user');
+                const analyses = JSON.parse(localStorage.getItem('aeon_analyses') || '[]');
+
+                if (userData) {
+                    this.user = JSON.parse(userData);
+                    this.analyses = analyses;
+                }
+            }
+
+            setupEventListeners() {
+                document.getElementById('analyzeCurrent').addEventListener('click', () => {
+                    this.analyzeCurrentPosition();
+                });
+
+                document.getElementById('analyzeLastGame').addEventListener('click', () => {
+                    this.analyzeLastGame();
+                });
+
+                document.getElementById('generateReport').addEventListener('click', () => {
+                    this.generateDetailedReport();
+                });
+            }
+
+            populateGameHistory() {
+                const historyContainer = document.getElementById('gameHistory');
+                const recentAnalyses = this.analyses.slice(-10).reverse();
+
+                historyContainer.innerHTML = recentAnalyses.map(analysis => {
+                    const date = new Date(analysis.timestamp).toLocaleDateString();
+                    const elo = analysis.analysis.estimatedElo;
+                    const accuracy = Math.round((analysis.analysis.accurateMovesCount / analysis.analysis.totalMoves) * 100);
+                    const duration = Math.round(analysis.analysis.averageThinkingTime / 1000);
+
+                    return `
+                        <tr class="border-b border-gray-700 hover:bg-gray-700/50">
+                            <td class="py-2">${date}</td>
+                            <td class="py-2">
+                                <span class="px-2 py-1 rounded text-xs ${accuracy > 70 ? 'bg-green-600' : accuracy > 50 ? 'bg-yellow-600' : 'bg-red-600'}">
+                                    ${accuracy > 70 ? 'Excelente' : accuracy > 50 ? 'Bom' : 'Precisa Melhorar'}
+                                </span>
+                            </td>
+                            <td class="py-2">${elo}</td>
+                            <td class="py-2">${accuracy}%</td>
+                            <td class="py-2">${duration}s</td>
+                        </tr>
+                    `;
+                }).join('');
+            }
+
+            updateAnalysis() {
+                if (this.analyses.length > 0) {
+                    const latestAnalysis = this.analyses[this.analyses.length - 1];
+                    const analysis = latestAnalysis.analysis;
+
+                    // Update performance metrics
+                    document.getElementById('currentElo').textContent = analysis.estimatedElo;
+                    document.getElementById('accuracy').textContent =
+                        Math.round((analysis.accurateMovesCount / analysis.totalMoves) * 100) + '%';
+                    document.getElementById('gamesPlayed').textContent = this.analyses.length;
+
+                    // Calculate win rate (simplified)
+                    const winRate = Math.round((analysis.accurateMovesCount / analysis.totalMoves) * 100);
+                    document.getElementById('winRate').textContent = winRate + '%';
+
+                    // Update strengths and weaknesses
+                    this.updateStrengthsAndWeaknesses(analysis);
+                    this.updateRecommendations(analysis);
+                }
+            }
+
+            updateStrengthsAndWeaknesses(analysis) {
+                const strengths = [];
+                const weaknesses = [];
+
+                if (analysis.accurateMovesCount / analysis.totalMoves > 0.8) {
+                    strengths.push('Alta precisão nos movimentos');
+                }
+                if (analysis.tacticalMovesCount > analysis.totalMoves * 0.3) {
+                    strengths.push('Boa visão tática');
+                }
+                if (analysis.averageThinkingTime > 10000) {
+                    strengths.push('Análise cuidadosa');
+                }
+
+                if (analysis.openingKnowledge < 0.5) {
+                    weaknesses.push('Conhecimento de aberturas');
+                }
+                if (analysis.blundersCount > analysis.totalMoves * 0.1) {
+                    weaknesses.push('Reduzir erros críticos');
+                }
+                if (analysis.averageThinkingTime < 5000) {
+                    weaknesses.push('Dedicar mais tempo à análise');
+                }
+
+                // Update DOM
+                document.getElementById('strengths').innerHTML = strengths.map(s =>
+                    `<div class="flex items-center space-x-2">
+                        <span class="text-green-400">✓</span>
+                        <span class="text-sm">${s}</span>
+                    </div>`
+                ).join('');
+
+                document.getElementById('weaknesses').innerHTML = weaknesses.map(w =>
+                    `<div class="flex items-center space-x-2">
+                        <span class="text-red-400">⚠</span>
+                        <span class="text-sm">${w}</span>
+                    </div>`
+                ).join('');
+            }
+
+            updateRecommendations(analysis) {
+                const recommendations = [];
+
+                if (analysis.openingKnowledge < 0.5) {
+                    recommendations.push({
+                        title: 'Estude Aberturas',
+                        description: 'Foque em aberturas fundamentais como a Espanhola e Siciliana',
+                        color: 'blue'
+                    });
+                }
+
+                if (analysis.blundersCount > analysis.totalMoves * 0.1) {
+                    recommendations.push({
+                        title: 'Pratique Táticas',
+                        description: 'Resolva puzzles táticos para reduzir erros',
+                        color: 'red'
+                    });
+                }
+
+                if (analysis.averageThinkingTime < 5000) {
+                    recommendations.push({
+                        title: 'Analise Mais',
+                        description: 'Dedique mais tempo para analisar posições',
+                        color: 'yellow'
+                    });
+                }
+
+                document.getElementById('recommendations').innerHTML = recommendations.map(rec =>
+                    `<div class="p-3 bg-${rec.color}-600/20 rounded-lg">
+                        <div class="font-medium text-${rec.color}-300">${rec.title}</div>
+                        <div class="text-sm text-gray-300">${rec.description}</div>
+                    </div>`
+                ).join('');
+            }
+
+            analyzeCurrentPosition() {
+                if (window.aeonApp && window.aeonApp.game) {
+                    const engine = new AeonChessEngine();
+                    engine.setGame(window.aeonApp.game);
+                    const analysis = engine.analyzePosition();
+
+                    this.showAnalysisModal(analysis);
+                } else {
+                    alert('Nenhuma partida ativa encontrada. Inicie uma partida primeiro.');
+                }
+            }
+
+            analyzeLastGame() {
+                if (this.analyses.length > 0) {
+                    const lastAnalysis = this.analyses[this.analyses.length - 1];
+                    this.showAnalysisModal(lastAnalysis);
+                } else {
+                    alert('Nenhuma partida analisada encontrada.');
+                }
+            }
+
+            generateDetailedReport() {
+                const report = this.generateReport();
+                this.showAnalysisModal(report, 'report');
+            }
+
+            showAnalysisModal(data, type = 'analysis') {
+                const modal = document.getElementById('analysisModal');
+                const content = document.getElementById('analysisContent');
+
+                if (type === 'analysis') {
+                    content.innerHTML = this.formatAnalysisData(data);
+                } else if (type === 'report') {
+                    content.innerHTML = this.formatReportData(data);
+                }
+
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            }
+
+            formatAnalysisData(analysis) {
+                return `
+                    <div class="space-y-6">
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            <div class="text-center p-4 bg-blue-600/20 rounded-lg">
+                                <div class="text-2xl font-bold text-blue-400">${analysis.evaluation || 0}</div>
+                                <div class="text-sm text-gray-300">Avaliação</div>
+                            </div>
+                            <div class="text-center p-4 bg-green-600/20 rounded-lg">
+                                <div class="text-2xl font-bold text-green-400">${analysis.moveCount || 0}</div>
+                                <div class="text-sm text-gray-300">Movimentos</div>
+                            </div>
+                            <div class="text-center p-4 bg-purple-600/20 rounded-lg">
+                                <div class="text-2xl font-bold text-purple-400">${analysis.tacticalThreats?.length || 0}</div>
+                                <div class="text-sm text-gray-300">Ameaças</div>
+                            </div>
+                            <div class="text-center p-4 bg-yellow-600/20 rounded-lg">
+                                <div class="text-2xl font-bold text-yellow-400">${analysis.centerControl || 0}</div>
+                                <div class="text-sm text-gray-300">Controle Central</div>
+                            </div>
+                        </div>
+
+                        <div class="bg-gray-700/50 rounded-lg p-4">
+                            <h3 class="text-lg font-bold mb-3">🎯 Recomendações</h3>
+                            <ul class="space-y-2">
+                                ${(analysis.recommendations || []).map(rec => 
+                                    `<li class="flex items-center space-x-2">
+                                        <span class="text-blue-400">•</span>
+                                        <span>${rec}</span>
+                                    </li>`
+                                ).join('')}
+                            </ul>
+                        </div>
+
+                        ${analysis.tacticalThreats && analysis.tacticalThreats.length > 0 ? `
+                            <div class="bg-gray-700/50 rounded-lg p-4">
+                                <h3 class="text-lg font-bold mb-3">⚡ Ameaças Táticas</h3>
+                                <ul class="space-y-2">
+                                    ${analysis.tacticalThreats.map(threat => 
+                                        `<li class="flex items-center space-x-2">
+                                            <span class="text-red-400">•</span>
+                                            <span>${threat.move} (${threat.type})</span>
+                                        </li>`
+                                    ).join('')}
+                                </ul>
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            }
+
+            formatReportData(report) {
+                return `
+                    <div class="space-y-6">
+                        <div class="bg-gray-700/50 rounded-lg p-4">
+                            <h3 class="text-lg font-bold mb-3">📊 Resumo Executivo</h3>
+                            <p class="text-gray-300">${report.summary || 'Análise completa da performance do jogador.'}</p>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="bg-gray-700/50 rounded-lg p-4">
+                                <h3 class="text-lg font-bold mb-3">📈 Progresso</h3>
+                                <div class="space-y-2">
+                                    <div class="flex justify-between">
+                                        <span>ELO Inicial:</span>
+                                        <span class="font-bold">1200</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span>ELO Atual:</span>
+                                        <span class="font-bold text-green-400">${report.currentElo || 1500}</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span>Melhoria:</span>
+                                        <span class="font-bold text-blue-400">+${(report.currentElo || 1500) - 1200}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-gray-700/50 rounded-lg p-4">
+                                <h3 class="text-lg font-bold mb-3">🎯 Metas</h3>
+                                <div class="space-y-2">
+                                    <div class="flex justify-between">
+                                        <span>Próximo ELO:</span>
+                                        <span class="font-bold text-yellow-400">${(report.currentElo || 1500) + 100}</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span>Tempo Estimado:</span>
+                                        <span class="font-bold">2-3 semanas</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            generateReport() {
+                const latestAnalysis = this.analyses[this.analyses.length - 1];
+                const analysis = latestAnalysis ? .analysis;
+
+                return {
+                    currentElo: analysis ? .estimatedElo || 1500,
+                    summary: 'Relatório detalhado baseado na análise de todas as partidas.',
+                    recommendations: this.getDetailedRecommendations(analysis)
+                };
+            }
+
+            getDetailedRecommendations(analysis) {
+                const recommendations = [];
+
+                if (analysis) {
+                    if (analysis.openingKnowledge < 0.5) {
+                        recommendations.push('Dedicar 30 minutos diários ao estudo de aberturas');
+                    }
+                    if (analysis.blundersCount > analysis.totalMoves * 0.1) {
+                        recommendations.push('Resolver 10 puzzles táticos por dia');
+                    }
+                    if (analysis.averageThinkingTime < 5000) {
+                        recommendations.push('Pratique partidas com tempo mais longo');
+                    }
+                }
+
+                return recommendations;
+            }
+        }
+
+        function closeAnalysisModal() {
+            const modal = document.getElementById('analysisModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        // Initialize analysis page
+        document.addEventListener('DOMContentLoaded', function() {
+            new AnalysisPage();
+        });
+    </script>
+</body>
+
+</html>

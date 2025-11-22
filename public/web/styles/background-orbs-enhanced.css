@@ -1,0 +1,331 @@
+/**
+ * ✨ Enhanced Background Orbs - Efeito de Bolas Brancas Avançado
+ * Versões diferentes de intensidade para o efeito de fundo
+ * 
+ * @author AEON CHESS Team
+ * @version 1.0.0
+ * @date Janeiro 2025
+ */
+
+/* ===============================
+   ✨ VERSÃO SUTIL (Padrão)
+   =============================== */
+
+.orb-effect-subtle body::before {
+    content: '';
+    position: fixed;
+    top: 20%;
+    right: 15%;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 40%, transparent 70%);
+    border-radius: 50%;
+    filter: blur(60px);
+    z-index: -1;
+    pointer-events: none;
+    animation: orbFloat 20s ease-in-out infinite;
+}
+
+.orb-effect-subtle body::after {
+    content: '';
+    position: fixed;
+    bottom: 30%;
+    left: 10%;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.015) 50%, transparent 80%);
+    border-radius: 50%;
+    filter: blur(80px);
+    z-index: -1;
+    pointer-events: none;
+    animation: orbFloat 25s ease-in-out infinite reverse;
+}
+
+/* ===============================
+   ✨ VERSÃO DRAMÁTICA
+   =============================== */
+
+.orb-effect-dramatic body::before {
+    content: '';
+    position: fixed;
+    top: 15%;
+    right: 20%;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.05) 35%, rgba(255, 255, 255, 0.01) 60%, transparent 80%);
+    border-radius: 50%;
+    filter: blur(80px);
+    z-index: -1;
+    pointer-events: none;
+    animation: orbFloat 18s ease-in-out infinite;
+}
+
+.orb-effect-dramatic body::after {
+    content: '';
+    position: fixed;
+    bottom: 20%;
+    left: 15%;
+    width: 350px;
+    height: 350px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.04) 40%, rgba(255, 255, 255, 0.008) 70%, transparent 90%);
+    border-radius: 50%;
+    filter: blur(70px);
+    z-index: -1;
+    pointer-events: none;
+    animation: orbFloat 22s ease-in-out infinite reverse;
+}
+
+/* ===============================
+   ✨ VERSÃO MÚLTIPLAS BOLAS
+   =============================== */
+
+.orb-effect-multiple {
+    position: relative;
+}
+
+.orb-effect-multiple::before {
+    content: '';
+    position: fixed;
+    top: 10%;
+    right: 25%;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.03) 50%, transparent 80%);
+    border-radius: 50%;
+    filter: blur(50px);
+    z-index: -1;
+    pointer-events: none;
+    animation: orbFloat 15s ease-in-out infinite;
+}
+
+.orb-effect-multiple::after {
+    content: '';
+    position: fixed;
+    bottom: 15%;
+    left: 20%;
+    width: 250px;
+    height: 250px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 60%, transparent 90%);
+    border-radius: 50%;
+    filter: blur(60px);
+    z-index: -1;
+    pointer-events: none;
+    animation: orbFloat 20s ease-in-out infinite reverse;
+}
+
+/* Bolas adicionais usando divs */
+.orb-extra-1 {
+    position: fixed;
+    top: 60%;
+    right: 5%;
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.015) 70%, transparent 100%);
+    border-radius: 50%;
+    filter: blur(40px);
+    z-index: -1;
+    pointer-events: none;
+    animation: orbFloat 25s ease-in-out infinite;
+}
+
+.orb-extra-2 {
+    position: fixed;
+    top: 40%;
+    left: 5%;
+    width: 180px;
+    height: 180px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 80%, transparent 100%);
+    border-radius: 50%;
+    filter: blur(45px);
+    z-index: -1;
+    pointer-events: none;
+    animation: orbFloat 30s ease-in-out infinite reverse;
+}
+
+/* ===============================
+   ✨ ANIMAÇÕES AVANÇADAS
+   =============================== */
+
+/* Flutuação principal */
+@keyframes orbFloat {
+
+    0%,
+    100% {
+        transform: translate(0, 0) scale(1);
+        opacity: 0.8;
+    }
+
+    25% {
+        transform: translate(20px, -30px) scale(1.1);
+        opacity: 0.6;
+    }
+
+    50% {
+        transform: translate(-15px, -20px) scale(0.9);
+        opacity: 0.9;
+    }
+
+    75% {
+        transform: translate(25px, 15px) scale(1.05);
+        opacity: 0.7;
+    }
+}
+
+/* Animação mais dramática */
+@keyframes orbFloatDramatic {
+
+    0%,
+    100% {
+        transform: translate(0, 0) scale(1) rotate(0deg);
+        opacity: 0.9;
+    }
+
+    20% {
+        transform: translate(30px, -40px) scale(1.15) rotate(72deg);
+        opacity: 0.5;
+    }
+
+    40% {
+        transform: translate(-25px, -30px) scale(0.85) rotate(144deg);
+        opacity: 1;
+    }
+
+    60% {
+        transform: translate(35px, 20px) scale(1.1) rotate(216deg);
+        opacity: 0.6;
+    }
+
+    80% {
+        transform: translate(-20px, 30px) scale(0.95) rotate(288deg);
+        opacity: 0.8;
+    }
+}
+
+/* Pulsação sutil */
+@keyframes orbPulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+        opacity: 0.8;
+    }
+
+    50% {
+        transform: scale(1.2);
+        opacity: 0.4;
+    }
+}
+
+/* ===============================
+   📱 RESPONSIVIDADE
+   =============================== */
+
+@media (max-width: 1024px) {
+    .orb-effect-dramatic body::before {
+        width: 400px;
+        height: 400px;
+        filter: blur(60px);
+    }
+
+    .orb-effect-dramatic body::after {
+        width: 280px;
+        height: 280px;
+        filter: blur(50px);
+    }
+}
+
+@media (max-width: 768px) {
+
+    .orb-effect-subtle body::before,
+    .orb-effect-dramatic body::before {
+        width: 250px;
+        height: 250px;
+        top: 15%;
+        right: 10%;
+        filter: blur(40px);
+    }
+
+    .orb-effect-subtle body::after,
+    .orb-effect-dramatic body::after {
+        width: 200px;
+        height: 200px;
+        bottom: 25%;
+        left: 5%;
+        filter: blur(50px);
+    }
+
+    .orb-extra-1,
+    .orb-extra-2 {
+        display: none;
+    }
+}
+
+@media (max-width: 480px) {
+
+    .orb-effect-subtle body::before,
+    .orb-effect-dramatic body::before {
+        width: 180px;
+        height: 180px;
+        filter: blur(30px);
+    }
+
+    .orb-effect-subtle body::after,
+    .orb-effect-dramatic body::after {
+        width: 150px;
+        height: 150px;
+        filter: blur(35px);
+    }
+}
+
+/* ===============================
+   🎛️ CONTROLES DE INTENSIDADE
+   =============================== */
+
+/* Muito sutil */
+.orb-intensity-minimal body::before,
+.orb-intensity-minimal body::after {
+    opacity: 0.3;
+    filter: blur(100px);
+}
+
+/* Sutil (padrão) */
+.orb-intensity-subtle body::before,
+.orb-intensity-subtle body::after {
+    opacity: 0.8;
+}
+
+/* Médio */
+.orb-intensity-medium body::before,
+.orb-intensity-medium body::after {
+    opacity: 1;
+    filter: blur(50px);
+}
+
+/* Intenso */
+.orb-intensity-strong body::before,
+.orb-intensity-strong body::after {
+    opacity: 1.2;
+    filter: blur(40px);
+}
+
+/* ===============================
+   🎨 VARIAÇÕES DE COR
+   =============================== */
+
+/* Bola azulada */
+.orb-color-blue body::before {
+    background: radial-gradient(circle, rgba(59, 130, 246, 0.08) 0%, rgba(59, 130, 246, 0.02) 40%, transparent 70%);
+}
+
+.orb-color-blue body::after {
+    background: radial-gradient(circle, rgba(59, 130, 246, 0.06) 0%, rgba(59, 130, 246, 0.015) 50%, transparent 80%);
+}
+
+/* Bola dourada */
+.orb-color-gold body::before {
+    background: radial-gradient(circle, rgba(234, 179, 8, 0.1) 0%, rgba(234, 179, 8, 0.03) 40%, transparent 70%);
+}
+
+.orb-color-gold body::after {
+    background: radial-gradient(circle, rgba(234, 179, 8, 0.08) 0%, rgba(234, 179, 8, 0.02) 50%, transparent 80%);
+}

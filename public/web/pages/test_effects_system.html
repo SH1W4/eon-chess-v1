@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧪 Teste do Sistema de Efeitos Visuais</title>
+    <style>
+        body {
+            background: #171717;
+            color: white;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .test-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #1a1a1a;
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #333;
+        }
+
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            background: #222;
+            border-radius: 8px;
+            border-left: 4px solid #00ff00;
+        }
+
+        .test-button {
+            background: linear-gradient(45deg, #00ff00, #00ffff);
+            color: black;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            font-weight: bold;
+        }
+
+        .test-button:hover {
+            transform: scale(1.05);
+        }
+
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            font-family: monospace;
+        }
+
+        .status.success {
+            background: #004400;
+            border: 1px solid #00ff00;
+        }
+
+        .status.error {
+            background: #440000;
+            border: 1px solid #ff0000;
+        }
+
+        .status.info {
+            background: #004444;
+            border: 1px solid #00ffff;
+        }
+
+        .chess-board-container {
+            width: 400px;
+            height: 400px;
+            margin: 20px auto;
+            background: #333;
+            border: 2px solid #666;
+            border-radius: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .chess-board {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, #8B4513, #DEB887);
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            grid-template-rows: repeat(8, 1fr);
+        }
+
+        .chess-square {
+            border: 1px solid #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .chess-square.white {
+            background: #DEB887;
+        }
+
+        .chess-square.black {
+            background: #8B4513;
+        }
+
+        .effects-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1000;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="test-container">
+        <h1>🧪 Teste do Sistema de Efeitos Visuais</h1>
+
+        <div class="test-section">
+            <h3>📋 Status do Sistema</h3>
+            <div id="system-status" class="status info">
+                Inicializando sistema...
+            </div>
+            <button class="test-button" onclick="checkSystemStatus()">🔄 Verificar Status</button>
+        </div>
+
+        <div class="test-section">
+            <h3>🎯 Tabuleiro de Teste</h3>
+            <div class="chess-board-container">
+                <div class="chess-board" id="test-board">
+                    <!-- Tabuleiro será gerado dinamicamente -->
+                </div>
+                <div id="effects-overlay" class="effects-overlay"></div>
+            </div>
+            <button class="test-button" onclick="generateTestBoard()">♟️ Gerar Tabuleiro</button>
+        </div>
+
+        <div class="test-section">
+            <h3>🎨 Teste de Efeitos</h3>
+            <button class="test-button" onclick="testScanEffect()">📡 Efeito Escaneamento</button>
+            <button class="test-button" onclick="testPulseEffect()">💓 Efeito Pulso</button>
+            <button class="test-button" onclick="testHighlightEffect()">✨ Efeito Destaque</button>
+            <button class="test-button" onclick="testAnalysisEffect()">🧠 Efeito Análise</button>
+            <button class="test-button" onclick="testAllEffects()">🎭 Todos os Efeitos</button>
+            <button class="test-button" onclick="clearEffects()">🗑️ Limpar Efeitos</button>
+        </div>
+
+        <div class="test-section">
+            <h3>🔍 Logs do Sistema</h3>
+            <div id="system-logs" class="status info" style="max-height: 200px; overflow-y: auto;">
+                Aguardando logs...
+            </div>
+            <button class="test-button" onclick="clearLogs()">🧹 Limpar Logs</button>
+        </div>
+
+        <div class="test-section">
+            <h3>🐍 Teste Python</h3>
+            <button class="test-button" onclick="testPythonAPI()">🌐 Testar API Python</button>
+            <div id="python-status" class="status info">
+                Status da API Python: Não testado
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sistema de logs
+        function log(message, type = 'info') {
+            const logsDiv = document.getElementById('system-logs');
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = document.createElement('div');
+            logEntry.innerHTML = `[${timestamp}] ${message}`;
+            logEntry.className = `status ${type}`;
+            logsDiv.appendChild(logEntry);
+            logsDiv.scrollTop = logsDiv.scrollHeight;
+            console.log(`[${type.toUpperCase()}] ${message}`);
+        }
+
+        function clearLogs() {
+            document.getElementById('system-logs').innerHTML = 'Logs limpos...';
+        }
+
+        // Gerar tabuleiro de teste
+        function generateTestBoard() {
+            const board = document.getElementById('test-board');
+            board.innerHTML = '';
+
+            for (let row = 0; row < 8; row++) {
+                for (let col = 0; col < 8; col++) {
+                    const square = document.createElement('div');
+                    square.className = `chess-square ${(row + col) % 2 === 0 ? 'white' : 'black'}`;
+
+                    // Adicionar peças de exemplo
+                    if (row === 0) {
+                        const pieces = ['♜', '♞', '♝', '♛', '♚', '♝', '♞', '♜'];
+                        square.textContent = pieces[col];
+                    } else if (row === 1) {
+                        square.textContent = '♟';
+                    } else if (row === 6) {
+                        square.textContent = '♙';
+                    } else if (row === 7) {
+                        const pieces = ['♖', '♘', '♗', '♕', '♔', '♗', '♘', '♖'];
+                        square.textContent = pieces[col];
+                    }
+
+                    board.appendChild(square);
+                }
+            }
+
+            log('✅ Tabuleiro de teste gerado', 'success');
+        }
+
+        // Efeitos visuais
+        function createEffect(type, color, text = '') {
+            const overlay = document.getElementById('effects-overlay');
+            const effect = document.createElement('div');
+
+            effect.style.cssText = `
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: ${color};
+                color: white;
+                padding: 10px 15px;
+                border-radius: 8px;
+                font-weight: bold;
+                font-size: 14px;
+                z-index: 1001;
+                animation: effectFade 2s ease-in-out;
+            `;
+
+            effect.textContent = text || type;
+            overlay.appendChild(effect);
+
+            // Remover após animação
+            setTimeout(() => {
+                if (effect.parentNode) {
+                    effect.parentNode.removeChild(effect);
+                }
+            }, 2000);
+
+            log(`🎨 Efeito ${type} aplicado`, 'success');
+        }
+
+        function testScanEffect() {
+            const overlay = document.getElementById('effects-overlay');
+            const scanLine = document.createElement('div');
+
+            scanLine.style.cssText = `
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 3px;
+                background: linear-gradient(90deg, transparent, #00ff00, transparent);
+                animation: scan 2s linear infinite;
+                z-index: 1001;
+            `;
+
+            overlay.appendChild(scanLine);
+            log('📡 Efeito de escaneamento ativado', 'success');
+
+            // Parar após 4 segundos
+            setTimeout(() => {
+                if (scanLine.parentNode) {
+                    scanLine.parentNode.removeChild(scanLine);
+                }
+            }, 4000);
+        }
+
+        function testPulseEffect() {
+            const overlay = document.getElementById('effects-overlay');
+            const pulse = document.createElement('div');
+
+            pulse.style.cssText = `
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                width: 40px;
+                height: 40px;
+                background: #ff0000;
+                border-radius: 50%;
+                transform: translate(-50%, -50%);
+                animation: pulse 1s ease-in-out infinite;
+                z-index: 1001;
+            `;
+
+            overlay.appendChild(pulse);
+            log('💓 Efeito de pulso ativado', 'success');
+
+            // Parar após 3 segundos
+            setTimeout(() => {
+                if (pulse.parentNode) {
+                    pulse.parentNode.removeChild(pulse);
+                }
+            }, 3000);
+        }
+
+        function testHighlightEffect() {
+            const overlay = document.getElementById('effects-overlay');
+            const highlight = document.createElement('div');
+
+            highlight.style.cssText = `
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                border: 4px solid #ffff00;
+                box-sizing: border-box;
+                animation: highlight 1.5s ease-in-out infinite;
+                z-index: 1001;
+            `;
+
+            overlay.appendChild(highlight);
+            log('✨ Efeito de destaque ativado', 'success');
+
+            // Parar após 4 segundos
+            setTimeout(() => {
+                if (highlight.parentNode) {
+                    highlight.parentNode.removeChild(highlight);
+                }
+            }, 4000);
+        }
+
+        function testAnalysisEffect() {
+            createEffect('Análise', 'rgba(0, 255, 0, 0.9)', '♟️ Análise Ativa');
+        }
+
+        function testAllEffects() {
+            log('🎭 Iniciando sequência de todos os efeitos', 'info');
+
+            testScanEffect();
+            setTimeout(() => testPulseEffect(), 1000);
+            setTimeout(() => testHighlightEffect(), 2000);
+            setTimeout(() => testAnalysisEffect(), 3000);
+        }
+
+        function clearEffects() {
+            document.getElementById('effects-overlay').innerHTML = '';
+            log('🗑️ Todos os efeitos removidos', 'success');
+        }
+
+        // Verificar status do sistema
+        function checkSystemStatus() {
+            const statusDiv = document.getElementById('system-status');
+
+            // Verificar se o sistema Python está disponível
+            if (window.pythonEffects) {
+                const status = window.pythonEffects.getStatus();
+                statusDiv.innerHTML = `
+                    <strong>✅ Sistema Ativo</strong><br>
+                    Python: ${status.pythonAvailable ? '🟢 Disponível' : '🔴 Não disponível'}<br>
+                    Tabuleiro: ${status.chessBoard}<br>
+                    Efeitos: ${status.effectsActive ? '🟢 Ativos' : '🔴 Inativos'}<br>
+                    Cache: ${status.effectsCache} efeitos
+                `;
+                statusDiv.className = 'status success';
+                log('✅ Status do sistema verificado', 'success');
+            } else {
+                statusDiv.innerHTML = '<strong>❌ Sistema não inicializado</strong>';
+                statusDiv.className = 'status error';
+                log('❌ Sistema não inicializado', 'error');
+            }
+        }
+
+        // Testar API Python
+        async function testPythonAPI() {
+            const statusDiv = document.getElementById('python-status');
+            statusDiv.innerHTML = 'Testando API Python...';
+            statusDiv.className = 'status info';
+
+            try {
+                const response = await fetch('http://localhost:5000/health', {
+                    method: 'GET',
+                    timeout: 3000
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    statusDiv.innerHTML = `
+                        <strong>✅ API Python Funcionando</strong><br>
+                        Status: ${data.status}<br>
+                        Versão: ${data.version}<br>
+                        Timestamp: ${new Date(data.timestamp * 1000).toLocaleString()}
+                    `;
+                    statusDiv.className = 'status success';
+                    log('✅ API Python funcionando', 'success');
+                } else {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+            } catch (error) {
+                statusDiv.innerHTML = `
+                    <strong>❌ API Python Não Disponível</strong><br>
+                    Erro: ${error.message}<br>
+                    <small>Isso é normal se a API não estiver rodando</small>
+                `;
+                statusDiv.className = 'status error';
+                log(`❌ API Python não disponível: ${error.message}`, 'error');
+            }
+        }
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', function() {
+            log('🚀 Página de teste carregada', 'success');
+            generateTestBoard();
+
+            // Verificar sistema após um delay
+            setTimeout(() => {
+                checkSystemStatus();
+                testPythonAPI();
+            }, 2000);
+        });
+
+        // Adicionar CSS para animações
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes scan {
+                0% { transform: translateY(0); }
+                100% { transform: translateY(100%); }
+            }
+            
+            @keyframes pulse {
+                0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+                50% { transform: translate(-50%, -50%) scale(1.5); opacity: 0.5; }
+            }
+            
+            @keyframes highlight {
+                0%, 100% { opacity: 1; }
+                50% { opacity: 0.3; }
+            }
+            
+            @keyframes effectFade {
+                0% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+                50% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
+                100% { opacity: 0; transform: translate(-50%, -50%) scale(1); }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+
+</html>

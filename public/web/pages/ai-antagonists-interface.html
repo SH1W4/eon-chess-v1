@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>👹 Sistema de Antagonistas - Aeon Chess</title>
+    <link rel="stylesheet" href="../styles/consolidated-theme.css">
+    <style>
+        :root {
+            --antagonist-primary-color: #8B0000;
+            --antagonist-theme-bg: #fff0f0;
+            --antagonist-theme-text: #8B0000;
+            --antagonist-theme-accent: #CD5C5C;
+        }
+
+        .antagonist-interface {
+            background: var(--antagonist-theme-bg);
+            min-height: 100vh;
+            padding: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        /* Dark mode overrides */
+        .antagonist-interface.dark {
+            --antagonist-theme-bg: #120b0b;
+            --antagonist-theme-text: #f1f5f9;
+            --antagonist-theme-accent: #3f1d1d;
+        }
+
+        .antagonist-interface.dark .antagonist-card,
+        .antagonist-interface.dark .antagonist-output,
+        .antagonist-interface.dark .antagonist-option,
+        .antagonist-interface.dark .analysis-result,
+        .antagonist-interface.dark .quote-text,
+        .antagonist-interface.dark .behavior-section {
+            background: #1b0f0f;
+            color: var(--antagonist-theme-text);
+            border-color: #3f1d1d;
+        }
+
+        .top-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .nav-links { display: flex; gap: 10px; }
+        .nav-link {
+            text-decoration: none;
+            padding: 8px 12px;
+            border-radius: 8px;
+            background: white;
+            color: #111827;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+        .antagonist-interface.dark .nav-link { background: #1b0f0f; color: #f1f5f9; }
+
+        .theme-toggle {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 8px;
+            background: #111827;
+            color: #e5e7eb;
+            cursor: pointer;
+        }
+        .antagonist-interface.dark .theme-toggle { background: #e5e7eb; color: #111827; }
+
+        .antagonist-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, var(--antagonist-primary-color), var(--antagonist-theme-accent));
+            color: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+        }
+
+        .antagonist-header h1 {
+            font-size: 2.5em;
+            margin: 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .antagonist-header p {
+            font-size: 1.2em;
+            margin: 10px 0 0 0;
+            opacity: 0.9;
+        }
+
+        .antagonist-controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .antagonist-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            border-left: 5px solid var(--antagonist-primary-color);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .antagonist-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+        }
+
+        .antagonist-card h3 {
+            color: var(--antagonist-primary-color);
+            margin: 0 0 15px 0;
+            font-size: 1.4em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .antagonist-selector { margin-bottom: 20px; }
+
+        .antagonist-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .antagonist-option {
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            background: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .antagonist-option:hover { border-color: var(--antagonist-theme-accent); transform: scale(1.02); }
+
+        .antagonist-option.active {
+            border-color: var(--antagonist-primary-color);
+            background: var(--antagonist-theme-bg);
+            box-shadow: 0 4px 15px rgba(139, 0, 0, 0.3);
+        }
+
+        .antagonist-option .name { font-weight: bold; color: var(--antagonist-primary-color); margin-bottom: 5px; font-size: 1.1em; }
+        .antagonist-option .description { font-size: 0.9em; color: #666; line-height: 1.4; }
+
+        .antagonist-option .difficulty {
+            position: absolute; top: 5px; right: 5px; background: var(--antagonist-theme-accent); color: white; padding: 2px 8px; border-radius: 10px; font-size: 0.7em; font-weight: bold;
+        }
+
+        .antagonist-status { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; padding: 15px; background: var(--antagonist-theme-bg); border-radius: 10px; }
+
+        .status-indicator { display: flex; align-items: center; gap: 8px; padding: 8px 15px; border-radius: 20px; background: white; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .antagonist-interface.dark .status-indicator { background: #1b0f0f; }
+
+        .status-dot { width: 12px; height: 12px; border-radius: 50%; background: #DC143C; animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+
+        .antagonist-actions { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin-top: 20px; }
+
+        .antagonist-button { padding: 12px 20px; border: none; border-radius: 8px; background: var(--antagonist-primary-color); color: white; font-size: 1em; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .antagonist-button:hover { background: var(--antagonist-theme-accent); transform: translateY(-2px); box-shadow: 0 4px 15px rgba(139, 0, 0, 0.3); }
+        .antagonist-button.secondary { background: #6c757d; }
+        .antagonist-button.secondary:hover { background: #5a6268; }
+        .antagonist-button.success { background: #28a745; }
+        .antagonist-button.success:hover { background: #218838; }
+        .antagonist-button.warning { background: #ffc107; color: #212529; }
+        .antagonist-button.warning:hover { background: #e0a800; }
+        .antagonist-button.danger { background: #dc3545; }
+        .antagonist-button.danger:hover { background: #c82333; }
+
+        .antagonist-output { background: white; border-radius: 15px; padding: 25px; margin-top: 30px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); display: none; }
+        .antagonist-output.show { display: block; animation: slideIn 0.5s ease; }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        .output-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid var(--antagonist-theme-bg); }
+        .output-title { color: var(--antagonist-primary-color); font-size: 1.3em; margin: 0; }
+        .output-close { background: none; border: none; font-size: 1.5em; cursor: pointer; color: #666; padding: 5px; border-radius: 5px; transition: all 0.3s ease; }
+        .output-close:hover { background: #f0f0f0; color: #333; }
+
+        .output-content { line-height: 1.6; }
+
+        .analysis-result { background: var(--antagonist-theme-bg); padding: 20px; border-radius: 10px; margin-bottom: 20px; }
+        .analysis-section { margin-bottom: 15px; }
+        .analysis-section h4 { color: var(--antagonist-primary-color); margin: 0 0 10px 0; font-size: 1.1em; }
+
+        .move-list { display: flex; gap: 10px; flex-wrap: wrap; }
+        .move-tag { background: var(--antagonist-primary-color); color: white; padding: 5px 12px; border-radius: 15px; font-size: 0.9em; font-weight: bold; }
+
+        .recommendation-list { list-style: none; padding: 0; }
+        .recommendation-list li { padding: 8px 0; border-bottom: 1px solid #e0e0e0; display: flex; align-items: center; gap: 10px; }
+        .recommendation-list li:before { content: "💀"; color: var(--antagonist-theme-accent); }
+
+        .psychological-factors { background: #2F4F4F; color: white; padding: 15px; border-radius: 8px; margin: 15px 0; }
+        .factor-bar { background: rgba(255,255,255,0.2); height: 20px; border-radius: 10px; margin: 5px 0; overflow: hidden; }
+        .factor-fill { height: 100%; background: var(--antagonist-theme-accent); transition: width 0.5s ease; }
+
+        .difficulty-selector { display: flex; gap: 10px; margin: 15px 0; }
+        .difficulty-option { padding: 8px 15px; border: 2px solid #e0e0e0; border-radius: 20px; cursor: pointer; transition: all 0.3s ease; font-size: 0.9em; font-weight: bold; }
+        .difficulty-option:hover { border-color: var(--antagonist-theme-accent); }
+        .difficulty-option.active { background: var(--antagonist-primary-color); color: white; border-color: var(--antagonist-primary-color); }
+
+        .antagonist-details { background: var(--antagonist-theme-bg); padding: 20px; border-radius: 10px; margin: 20px 0; border: 2px solid var(--antagonist-primary-color); }
+        .detail-section { margin-bottom: 20px; }
+        .detail-section h4 { color: var(--antagonist-primary-color); margin: 0 0 10px 0; font-size: 1.1em; display: flex; align-items: center; gap: 8px; }
+
+        .strength-tags, .weakness-tags, .opening-tags { display: flex; gap: 8px; flex-wrap: wrap; }
+        .strength-tag, .weakness-tag, .opening-tag { padding: 6px 12px; border-radius: 15px; font-size: 0.85em; font-weight: bold; }
+        .strength-tag { background: #28a745; color: white; }
+        .weakness-tag { background: #dc3545; color: white; }
+        .opening-tag { background: var(--antagonist-theme-accent); color: white; }
+
+        .quote-text { font-style: italic; color: var(--antagonist-primary-color); background: white; padding: 15px; border-radius: 8px; border-left: 4px solid var(--antagonist-theme-accent); margin: 0; font-size: 1.1em; line-height: 1.5; }
+
+        .behavior-section { background: #f8f9fa; padding: 15px; border-radius: 8px; margin: 15px 0; }
+        .behavior-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #e0e0e0; }
+        .behavior-item:last-child { border-bottom: none; }
+        .behavior-label { font-weight: bold; color: var(--antagonist-primary-color); }
+        .behavior-value { background: var(--antagonist-theme-accent); color: white; padding: 4px 12px; border-radius: 15px; font-size: 0.8em; font-weight: bold; }
+
+        .antagonist-footer { text-align: center; margin-top: 40px; padding: 20px; color: #666; border-top: 1px solid #e0e0e0; }
+        .antagonist-footer p { margin: 5px 0; }
+
+        @media (max-width: 768px) {
+            .antagonist-controls { grid-template-columns: 1fr; }
+            .antagonist-grid { grid-template-columns: 1fr; }
+            .antagonist-actions { grid-template-columns: 1fr; }
+            .antagonist-header h1 { font-size: 2em; }
+        }
+    </style>
+</head>
+<body>
+    <div class="antagonist-interface" id="antagonist-root">
+        <div class="top-nav">
+            <div class="nav-links">
+                <a class="nav-link" href="./ai-unified-interface.html">IA Unificada</a>
+                <a class="nav-link" href="./ai-antagonists-interface.html">Antagonistas</a>
+            </div>
+            <button class="theme-toggle" id="theme-toggle">🌙 Tema</button>
+        </div>
+        <div class="antagonist-header">
+            <h1>👹 Sistema de Antagonistas</h1>
+            <p>Desafie-se contra os oponentes mais temíveis do xadrez - Aeon Chess</p>
+        </div>
+
+        <div class="antagonist-controls">
+            <div class="antagonist-card">
+                <h3>👹 Antagonista Ativo</h3>
+                <div class="antagonist-status">
+                    <div class="status-indicator">
+                        <div class="status-dot"></div>
+                        <span id="antagonist-indicator">O Mestre Implacável</span>
+                    </div>
+                </div>
+                <p id="antagonist-description">Um jogador que nunca perdoa erros e explora cada fraqueza</p>
+                
+                <div class="antagonist-details" id="antagonist-details" style="display: none;">
+                    <div class="detail-section">
+                        <h4>💪 Forças</h4>
+                        <div class="strength-tags" id="strength-tags"></div>
+                    </div>
+                    <div class="detail-section">
+                        <h4>⚠️ Fraquezas</h4>
+                        <div class="weakness-tags" id="weakness-tags"></div>
+                    </div>
+                    <div class="detail-section">
+                        <h4>🎯 Aberturas Preferidas</h4>
+                        <div class="opening-tags" id="opening-tags"></div>
+                    </div>
+                    <div class="detail-section">
+                        <h4>💬 Citação Sinistra</h4>
+                        <p id="sinister-quote" class="quote-text"></p>
+                    </div>
+                    <div class="detail-section">
+                        <h4>🧠 Comportamento</h4>
+                        <div class="behavior-section" id="behavior-section"></div>
+                    </div>
+                </div>
+                
+                <button class="antagonist-button secondary" id="toggle-details">
+                    📋 Mostrar Detalhes
+                </button>
+                
+                <div class="antagonist-selector">
+                    <div class="antagonist-grid" id="antagonist-grid">
+                        <div class="antagonist-option active" data-antagonist="implacable_master">
+                            <div class="difficulty">EXPERT</div>
+                            <div class="name">O Mestre Implacável</div>
+                            <div class="description">Nunca perdoa erros e explora cada fraqueza</div>
+                        </div>
+                        <div class="antagonist-option" data-antagonist="dark_psychologist">
+                            <div class="difficulty">ADVANCED</div>
+                            <div class="name">O Psicólogo Sombrio</div>
+                            <div class="description">Especialista em guerra psicológica</div>
+                        </div>
+                        <div class="antagonist-option" data-antagonist="destructive_artist">
+                            <div class="difficulty">INTERMEDIATE</div>
+                            <div class="name">O Artista Destrutivo</div>
+                            <div class="description">Cria posições caóticas e destrói harmonia</div>
+                        </div>
+                        <div class="antagonist-option" data-antagonist="machine_calculator">
+                            <div class="difficulty">EXPERT</div>
+                            <div class="name">O Calculador Máquina</div>
+                            <div class="description">Análise fria e calculada sem emoções</div>
+                        </div>
+                        <div class="antagonist-option" data-antagonist="night_predator">
+                            <div class="difficulty">ADVANCED</div>
+                            <div class="name">O Predador Noturno</div>
+                            <div class="description">Caça com paciência e precisão mortal</div>
+                        </div>
+                        <div class="antagonist-option" data-antagonist="tyrant_emperor">
+                            <div class="difficulty">EXPERT</div>
+                            <div class="name">O Imperador Tirano</div>
+                            <div class="description">Domina com autoridade absoluta</div>
+                        </div>
+                        <div class="antagonist-option" data-antagonist="master_illusionist">
+                            <div class="difficulty">ADVANCED</div>
+                            <div class="name">O Ilusionista Mestre</div>
+                            <div class="description">Cria ilusões e armadilhas enganosas</div>
+                        </div>
+                        <div class="antagonist-option" data-antagonist="furious_berserker">
+                            <div class="difficulty">INTERMEDIATE</div>
+                            <div class="name">O Berserker Furioso</div>
+                            <div class="description">Ataque frenético e agressão descontrolada</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="antagonist-card">
+                <h3>⚙️ Configurações de Dificuldade</h3>
+                
+                <div class="difficulty-selector" id="difficulty-selector">
+                    <div class="difficulty-option active" data-difficulty="easy">FÁCIL</div>
+                    <div class="difficulty-option" data-difficulty="medium">MÉDIO</div>
+                    <div class="difficulty-option" data-difficulty="hard">DIFÍCIL</div>
+                    <div class="difficulty-option" data-difficulty="expert">EXPERT</div>
+                    <div class="difficulty-option" data-difficulty="nightmare">PESADELO</div>
+                </div>
+
+                <div class="antagonist-actions">
+                    <button class="antagonist-button" id="toggle-adaptation">
+                        🔄 Adaptação
+                    </button>
+                    <button class="antagonist-button" id="toggle-learning">
+                        🧠 Aprendizado
+                    </button>
+                </div>
+
+                <div class="antagonist-status" style="margin-top: 20px;">
+                    <div class="status-indicator">
+                        <span>Status: Antagonista Ativo</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="antagonist-card">
+            <h3>⚔️ Ações do Antagonista</h3>
+            
+            <div class="antagonist-actions">
+                <button class="antagonist-button danger" id="analyze-position">
+                    🔍 Analisar Posição
+                </button>
+                <button class="antagonist-button warning" id="generate-threat">
+                    ⚡ Gerar Ameaça
+                </button>
+                <button class="antagonist-button" id="show-stats">
+                    📊 Estatísticas
+                </button>
+                <button class="antagonist-button secondary" id="show-behavior">
+                    🧠 Comportamento
+                </button>
+            </div>
+        </div>
+
+        <div class="antagonist-output" id="antagonist-output">
+            <div class="output-header">
+                <h3 class="output-title" id="output-title">Análise do Antagonista</h3>
+                <button class="output-close" id="output-close">&times;</button>
+            </div>
+            <div class="output-content" id="output-content">
+            </div>
+        </div>
+
+        <div class="antagonist-footer">
+            <p><strong>Sistema de Antagonistas v1.0.0</strong></p>
+            <p>Desenvolvido com 💀 pela equipe Aeon Chess</p>
+            <p>Desafie-se contra os oponentes mais temíveis</p>
+        </div>
+    </div>
+
+    <script src="../js/ai-antagonists-system.js"></script>
+    <script>
+        class AntagonistInterfaceController {
+            constructor() {
+                this.initializeEventListeners();
+                this.restoreState();
+                this.updateUI();
+            }
+
+            initializeEventListeners() {
+                document.querySelectorAll('.antagonist-option').forEach(option => {
+                    option.addEventListener('click', () => {
+                        this.selectAntagonist(option.dataset.antagonist);
+                    });
+                });
+
+                document.querySelectorAll('.difficulty-option').forEach(option => {
+                    option.addEventListener('click', () => {
+                        this.selectDifficulty(option.dataset.difficulty);
+                    });
+                });
+
+                document.getElementById('analyze-position').addEventListener('click', () => {
+                    this.analyzePosition();
+                });
+
+                document.getElementById('generate-threat').addEventListener('click', () => {
+                    this.generateThreat();
+                });
+
+                document.getElementById('show-stats').addEventListener('click', () => {
+                    this.showStats();
+                });
+
+                document.getElementById('show-behavior').addEventListener('click', () => {
+                    this.showBehavior();
+                });
+
+                document.getElementById('toggle-adaptation').addEventListener('click', () => {
+                    this.toggleAdaptation();
+                });
+
+                document.getElementById('toggle-learning').addEventListener('click', () => {
+                    this.toggleLearning();
+                });
+
+                document.getElementById('output-close').addEventListener('click', () => {
+                    this.hideOutput();
+                });
+
+                document.getElementById('toggle-details').addEventListener('click', () => {
+                    this.toggleAntagonistDetails();
+                });
+
+                // Tema
+                const themeToggle = document.getElementById('theme-toggle');
+                themeToggle.addEventListener('click', () => {
+                    const root = document.getElementById('antagonist-root');
+                    root.classList.toggle('dark');
+                    const theme = root.classList.contains('dark') ? 'dark' : 'light';
+                    localStorage.setItem('antagonist_theme', theme);
+                });
+
+                document.addEventListener('antagonistChanged', (e) => { this.updateUI(); });
+                document.addEventListener('antagonistAnalysisComplete', (e) => { this.showAnalysisResult(e.detail); });
+            }
+
+            restoreState() {
+                const root = document.getElementById('antagonist-root');
+                const savedTheme = localStorage.getItem('antagonist_theme');
+                if (savedTheme === 'dark') { root.classList.add('dark'); }
+
+                const savedAntagonist = localStorage.getItem('antagonist_key');
+                if (savedAntagonist) {
+                    const option = document.querySelector(`[data-antagonist="${savedAntagonist}"]`);
+                    if (option) { this.selectAntagonist(savedAntagonist); }
+                }
+
+                const savedDifficulty = localStorage.getItem('antagonist_difficulty');
+                if (savedDifficulty) {
+                    const d = document.querySelector(`[data-difficulty="${savedDifficulty}"]`);
+                    if (d) { this.selectDifficulty(savedDifficulty); }
+                }
+
+                const savedAdapt = localStorage.getItem('antagonist_adaptation');
+                const savedLearn = localStorage.getItem('antagonist_learning');
+                if (window.antagonistSystem) {
+                    if (savedAdapt !== null) {
+                        window.antagonistSystem.toggleAdaptation(savedAdapt === 'true');
+                        this.updateAdaptationButton();
+                    }
+                    if (savedLearn !== null) {
+                        window.antagonistSystem.learningEnabled = (savedLearn === 'true');
+                        this.updateLearningButton();
+                    }
+                }
+            }
+
+            selectAntagonist(antagonistKey) {
+                document.querySelectorAll('.antagonist-option').forEach(option => { option.classList.remove('active'); });
+                const current = document.querySelector(`[data-antagonist="${antagonistKey}"]`);
+                if (current) current.classList.add('active');
+                localStorage.setItem('antagonist_key', antagonistKey);
+                const event = new CustomEvent('antagonistChanged', { detail: { antagonist: antagonistKey } });
+                document.dispatchEvent(event);
+            }
+
+            selectDifficulty(difficulty) {
+                document.querySelectorAll('.difficulty-option').forEach(option => { option.classList.remove('active'); });
+                const current = document.querySelector(`[data-difficulty="${difficulty}"]`);
+                if (current) current.classList.add('active');
+                localStorage.setItem('antagonist_difficulty', difficulty);
+                const event = new CustomEvent('difficultyChanged', { detail: { difficulty: difficulty } });
+                document.dispatchEvent(event);
+            }
+
+            updateUI() {
+                if (window.antagonistSystem) {
+                    const antagonist = window.antagonistSystem.activeAntagonist;
+                    const indicator = document.getElementById('antagonist-indicator');
+                    if (indicator) { indicator.textContent = antagonist.name; indicator.style.color = antagonist.color; }
+                    const description = document.getElementById('antagonist-description');
+                    if (description) { description.textContent = antagonist.description; }
+                    document.documentElement.style.setProperty('--antagonist-primary-color', antagonist.color);
+                    this.updateAntagonistDetails();
+                }
+            }
+
+            updateAntagonistDetails() {
+                if (window.antagonistSystem) {
+                    const antagonist = window.antagonistSystem.activeAntagonist;
+                    const strengthTags = document.getElementById('strength-tags');
+                    if (strengthTags) { strengthTags.innerHTML = antagonist.strengths.map(strength => `<span class="strength-tag">${strength}</span>`).join(''); }
+                    const weaknessTags = document.getElementById('weakness-tags');
+                    if (weaknessTags) { weaknessTags.innerHTML = antagonist.weaknesses.map(weakness => `<span class="weakness-tag">${weakness}</span>`).join(''); }
+                    const openingTags = document.getElementById('opening-tags');
+                    if (openingTags) { openingTags.innerHTML = antagonist.preferredOpenings.map(opening => `<span class="opening-tag">${opening}</span>`).join(''); }
+                    const sinisterQuote = document.getElementById('sinister-quote');
+                    if (sinisterQuote && antagonist.motivationalQuotes) { const q = antagonist.motivationalQuotes[Math.floor(Math.random() * antagonist.motivationalQuotes.length)]; sinisterQuote.textContent = `"${q}"`; }
+                    const behaviorSection = document.getElementById('behavior-section');
+                    if (behaviorSection && antagonist.behavior) {
+                        behaviorSection.innerHTML = Object.entries(antagonist.behavior).map(([key, value]) => `
+                            <div class="behavior-item">
+                                <span class="behavior-label">${this.formatBehaviorKey(key)}</span>
+                                <span class="behavior-value">${this.formatBehaviorValue(value)}</span>
+                            </div>
+                        `).join('');
+                    }
+                }
+            }
+
+            formatBehaviorKey(key) {
+                const labels = { responseToMistakes: 'Resposta a Erros', responseToGoodMoves: 'Resposta a Boas Jogadas', adaptationSpeed: 'Velocidade de Adaptação', psychologicalWarfare: 'Guerra Psicológica', mercyLevel: 'Nível de Misericórdia' };
+                return labels[key] || key;
+            }
+
+            formatBehaviorValue(value) {
+                const labels = { immediate_punishment: 'Punição Imediata', increased_pressure: 'Pressão Aumentada', psychological_pressure: 'Pressão Psicológica', mind_games: 'Jogos Mentais', creative_destruction: 'Destruição Criativa', increased_chaos: 'Caos Aumentado', mathematical_exploitation: 'Exploração Matemática', increased_calculation: 'Cálculo Aumentado', lethal_strike: 'Golpe Mortal', increased_patience: 'Paciência Aumentada', imperial_punishment: 'Punição Imperial', increased_domination: 'Dominação Aumentada', deceptive_trap: 'Armadilha Enganosa', increased_illusion: 'Ilusão Aumentada', berserk_rage: 'Fúria Berserk', increased_fury: 'Fúria Aumentada', slow: 'Lento', medium: 'Médio', fast: 'Rápido', very_fast: 'Muito Rápido', none: 'Nenhum', low: 'Baixo', high: 'Alto', maximum: 'Máximo' };
+                return labels[value] || value;
+            }
+
+            toggleAntagonistDetails() {
+                const details = document.getElementById('antagonist-details');
+                const button = document.getElementById('toggle-details');
+                if (details.style.display === 'none') { details.style.display = 'block'; button.textContent = '📋 Ocultar Detalhes'; button.className = 'antagonist-button warning'; } else { details.style.display = 'none'; button.textContent = '📋 Mostrar Detalhes'; button.className = 'antagonist-button secondary'; }
+            }
+
+            analyzePosition() {
+                if (window.antagonistSystem) { const fen = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'; window.antagonistSystem.analyzePosition(fen); }
+            }
+
+            generateThreat() { if (window.antagonistSystem) { this.showOutput('Ameaça Gerada', this.formatThreat()); } }
+
+            showStats() { if (window.antagonistSystem) { const stats = window.antagonistSystem.getAntagonistStats(); this.showOutput('Estatísticas do Antagonista', this.formatStats(stats)); } }
+            showBehavior() { if (window.antagonistSystem) { const behavior = window.antagonistSystem.getAntagonistBehavior(); this.showOutput('Comportamento do Antagonista', this.formatBehavior(behavior)); } }
+
+            toggleAdaptation() {
+                if (window.antagonistSystem) {
+                    const next = !window.antagonistSystem.adaptationEnabled;
+                    window.antagonistSystem.toggleAdaptation(next);
+                    localStorage.setItem('antagonist_adaptation', String(next));
+                    this.updateAdaptationButton();
+                }
+            }
+
+            toggleLearning() {
+                if (window.antagonistSystem) {
+                    const next = !window.antagonistSystem.learningEnabled;
+                    window.antagonistSystem.learningEnabled = next;
+                    localStorage.setItem('antagonist_learning', String(next));
+                    this.updateLearningButton();
+                }
+            }
+
+            updateAdaptationButton() {
+                const button = document.getElementById('toggle-adaptation');
+                if (window.antagonistSystem) { button.textContent = window.antagonistSystem.adaptationEnabled ? '🔄 Adaptação (ATIVA)' : '🔄 Adaptação'; button.className = window.antagonistSystem.adaptationEnabled ? 'antagonist-button success' : 'antagonist-button'; }
+            }
+
+            updateLearningButton() {
+                const button = document.getElementById('toggle-learning');
+                if (window.antagonistSystem) { button.textContent = window.antagonistSystem.learningEnabled ? '🧠 Aprendizado (ATIVO)' : '🧠 Aprendizado'; button.className = window.antagonistSystem.learningEnabled ? 'antagonist-button success' : 'antagonist-button'; }
+            }
+
+            showOutput(title, content) { document.getElementById('output-title').textContent = title; document.getElementById('output-content').innerHTML = content; document.getElementById('antagonist-output').classList.add('show'); }
+            hideOutput() { document.getElementById('antagonist-output').classList.remove('show'); }
+
+            showAnalysisResult(analysis) {
+                const content = `
+                    <div class="analysis-result">
+                        <h4>Análise com ${analysis.antagonist}</h4>
+                        <p><strong>Foco:</strong> ${analysis.focus}</p>
+                        <p><strong>Dificuldade:</strong> ${analysis.difficulty.toUpperCase()}</p>
+                        
+                        <div class="analysis-section">
+                            <h4>📊 Avaliação</h4>
+                            <p>${analysis.evaluation > 0 ? '+' : ''}${analysis.evaluation.toFixed(2)}</p>
+                        </div>
+
+                        <div class="analysis-section">
+                            <h4>🎯 Melhores Movimentos</h4>
+                            <div class="move-list">
+                                ${analysis.bestMoves.map(move => `<span class="move-tag">${move}</span>`).join('')}
+                            </div>
+                        </div>
+
+                        <div class="analysis-section">
+                            <h4>📋 Plano</h4>
+                            <p>${analysis.plan}</p>
+                        </div>
+
+                        <div class="analysis-section">
+                            <h4>⚠️ Ameaças</h4>
+                            <ul class="recommendation-list">
+                                ${analysis.threats.map(threat => `<li>${threat}</li>`).join('')}
+                            </ul>
+                        </div>
+
+                        <div class="analysis-section">
+                            <h4>💡 Oportunidades</h4>
+                            <ul class="recommendation-list">
+                                ${analysis.opportunities.map(opp => `<li>${opp}</li>`).join('')}
+                            </ul>
+                        </div>
+
+                        <div class="analysis-section">
+                            <h4>🎯 Recomendações</h4>
+                            <ul class="recommendation-list">
+                                ${analysis.recommendations.map(rec => `<li>${rec}</li>`).join('')}
+                            </ul>
+                        </div>
+
+                        <div class="psychological-factors">
+                            <h4>🧠 Fatores Psicológicos</h4>
+                            <div class="factor-bar"><div class="factor-fill" style="width: ${analysis.psychologicalFactors.pressure}%"></div></div>
+                            <p>Pressão: ${analysis.psychologicalFactors.pressure.toFixed(0)}%</p>
+                            <div class="factor-bar"><div class="factor-fill" style="width: ${analysis.psychologicalFactors.intimidation}%"></div></div>
+                            <p>Intimidação: ${analysis.psychologicalFactors.intimidation.toFixed(0)}%</p>
+                            <div class="factor-bar"><div class="factor-fill" style="width: ${analysis.psychologicalFactors.confusion}%"></div></div>
+                            <p>Confusão: ${analysis.psychologicalFactors.confusion.toFixed(0)}%</p>
+                            <div class="factor-bar"><div class="factor-fill" style="width: ${analysis.psychologicalFactors.fear}%"></div></div>
+                            <p>Medo: ${analysis.psychologicalFactors.fear.toFixed(0)}%</p>
+                        </div>
+                    </div>
+                `;
+                this.showOutput('Análise do Antagonista', content);
+            }
+
+            formatThreat() {
+                return `
+                    <div class="analysis-result">
+                        <h4>⚡ Ameaça Gerada</h4>
+                        <p>O antagonista preparou uma armadilha mortal para você!</p>
+                        
+                        <div class="analysis-section">
+                            <h4>💀 Ameaça Imediata</h4>
+                            <p>Xeque em 2 movimentos com sacrifício devastador</p>
+                        </div>
+
+                        <div class="analysis-section">
+                            <h4>🎯 Movimento Crítico</h4>
+                            <div class="move-list">
+                                <span class="move-tag">Qh5+</span>
+                                <span class="move-tag">g6</span>
+                                <span class="move-tag">Qxg6+</span>
+                            </div>
+                        </div>
+
+                        <div class="analysis-section">
+                            <h4>⚠️ Consequências</h4>
+                            <ul class="recommendation-list">
+                                <li>Perda de peão</li>
+                                <li>Rei exposto</li>
+                                <li>Posição desesperada</li>
+                            </ul>
+                        </div>
+                    </div>
+                `;
+            }
+
+            formatStats(stats) {
+                return `
+                    <div class="analysis-result">
+                        <h4>📊 Estatísticas do Sistema de Antagonistas</h4>
+                        
+                        <div class="analysis-section">
+                            <h4>👹 Antagonista Ativo</h4>
+                            <p><strong>Nome:</strong> ${stats.activeAntagonist}</p>
+                            <p><strong>Total de Antagonistas:</strong> ${stats.totalAntagonists}</p>
+                        </div>
+
+                        <div class="analysis-section">
+                            <h4>⚙️ Configurações</h4>
+                            <p><strong>Nível de Dificuldade:</strong> ${stats.difficultyLevel.toUpperCase()}</p>
+                            <p><strong>Adaptação:</strong> ${stats.adaptationEnabled ? '✅ ATIVADA' : '❌ DESATIVADA'}</p>
+                            <p><strong>Aprendizado:</strong> ${stats.learningEnabled ? '✅ ATIVADO' : '❌ DESATIVADO'}</p>
+                        </div>
+
+                        <div class="analysis-section">
+                            <h4>🕒 Informações do Sistema</h4>
+                            <p><strong>Timestamp:</strong> ${new Date(stats.timestamp).toLocaleString()}</p>
+                        </div>
+                    </div>
+                `;
+            }
+
+            formatBehavior(behavior) {
+                return `
+                    <div class="analysis-result">
+                        <h4>🧠 Comportamento do Antagonista</h4>
+                        
+                        <div class="behavior-section">
+                            ${Object.entries(behavior).map(([key, value]) => `
+                                <div class="behavior-item">
+                                    <span class="behavior-label">${this.formatBehaviorKey(key)}</span>
+                                    <span class="behavior-value">${this.formatBehaviorValue(value)}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+
+                        <div class="analysis-section">
+                            <h4>💡 Interpretação</h4>
+                            <p>Este antagonista é especializado em ${behavior.psychologicalWarfare === 'maximum' ? 'guerra psicológica total' : 'técnica pura'}.</p>
+                            <p>Ele responde a erros com ${this.formatBehaviorValue(behavior.responseToMistakes).toLowerCase()}.</p>
+                            <p>Sua velocidade de adaptação é ${this.formatBehaviorValue(behavior.adaptationSpeed).toLowerCase()}.</p>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const checkAntagonist = setInterval(() => {
+                if (window.antagonistSystem) {
+                    clearInterval(checkAntagonist);
+                    window.antagonistInterface = new AntagonistInterfaceController();
+                    console.log('👹 Interface de Antagonistas inicializada');
+                }
+            }, 100);
+        });
+    </script>
+</body>
+</html>

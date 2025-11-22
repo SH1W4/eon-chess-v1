@@ -4,7 +4,7 @@
     "description": "AEON CHESS - Sistema de Xadrez Inteligente com ARKITECT",
     "private": true,
     "scripts": {
-        "dev": "vite",
+        "dev": "next dev",
         "build": "vite build",
         "preview": "vite preview",
         "start": "vite --host",

@@ -21,7 +21,7 @@ class PieceType(Enum):
     KING = chess.KING
 
 
-@dataclass
+@dataclass(frozen=True)
 class Piece:
     type: PieceType
     color: Color

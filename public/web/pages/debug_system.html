@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🐛 Debug do Sistema</title>
+    <style>
+        body {
+            background: #171717;
+            color: white;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .debug-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: #1a1a1a;
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #333;
+        }
+
+        .debug-section {
+            margin: 20px 0;
+            padding: 15px;
+            background: #222;
+            border-radius: 8px;
+            border-left: 4px solid #00ff00;
+        }
+
+        .debug-button {
+            background: linear-gradient(45deg, #00ff00, #00ffff);
+            color: black;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            font-weight: bold;
+        }
+
+        .debug-button:hover {
+            transform: scale(1.05);
+        }
+
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            font-family: monospace;
+        }
+
+        .status.success {
+            background: #004400;
+            border: 1px solid #00ff00;
+        }
+
+        .status.error {
+            background: #440000;
+            border: 1px solid #ff0000;
+        }
+
+        .status.info {
+            background: #004444;
+            border: 1px solid #00ffff;
+        }
+
+        .chess-board-container {
+            width: 400px;
+            height: 400px;
+            margin: 20px auto;
+            background: #333;
+            border: 2px solid #666;
+            border-radius: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .chess-board {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, #8B4513, #DEB887);
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            grid-template-rows: repeat(8, 1fr);
+        }
+
+        .chess-square {
+            border: 1px solid #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .chess-square.white {
+            background: #DEB887;
+        }
+
+        .chess-square.black {
+            background: #8B4513;
+        }
+
+        .effects-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        .log-container {
+            max-height: 300px;
+            overflow-y: auto;
+            background: #000;
+            padding: 10px;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 12px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="debug-container">
+        <h1>🐛 Debug do Sistema de Análise Visual</h1>
+
+        <div class="debug-section">
+            <h3>📋 Status do Sistema</h3>
+            <div id="system-status" class="status info">
+                Inicializando sistema...
+            </div>
+            <button class="debug-button" onclick="checkSystemStatus()">🔄 Verificar Status</button>
+            <button class="debug-button" onclick="forceInit()">🚀 Forçar Inicialização</button>
+        </div>
+
+        <div class="debug-section">
+            <h3>🎯 Tabuleiro de Teste</h3>
+            <div class="chess-board-container">
+                <div class="chess-board" id="test-board">
+                    <!-- Tabuleiro será gerado dinamicamente -->
+                </div>
+                <div id="effects-overlay" class="effects-overlay"></div>
+            </div>
+            <button class="debug-button" onclick="generateTestBoard()">♟️ Gerar Tabuleiro</button>
+        </div>
+
+        <div class="debug-section">
+            <h3>🧠 Teste de Funcionalidades</h3>
+            <button class="debug-button" onclick="testProDatabase()">📚 Testar Base Pro</button>
+            <button class="debug-button" onclick="testAnalysis()">🔍 Testar Análise</button>
+            <button class="debug-button" onclick="testEffects()">🎨 Testar Efeitos</button>
+            <button class="debug-button" onclick="clearEffects()">🗑️ Limpar Efeitos</button>
+        </div>
+
+        <div class="debug-section">
+            <h3>🔍 Logs do Sistema</h3>
+            <div id="system-logs" class="log-container">
+                Aguardando logs...
+            </div>
+            <button class="debug-button" onclick="clearLogs()">🧹 Limpar Logs</button>
+        </div>
+
+        <div class="debug-section">
+            <h3>📊 Informações de Debug</h3>
+            <div id="debug-info" class="status info">
+                Informações de debug aparecerão aqui...
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sistema de logs
+        function log(message, type = 'info') {
+            const logsDiv = document.getElementById('system-logs');
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = document.createElement('div');
+            logEntry.innerHTML = `[${timestamp}] ${message}`;
+            logEntry.className = `status ${type}`;
+            logsDiv.appendChild(logEntry);
+            logsDiv.scrollTop = logsDiv.scrollHeight;
+            console.log(`[${type.toUpperCase()}] ${message}`);
+        }
+
+        function clearLogs() {
+            document.getElementById('system-logs').innerHTML = 'Logs limpos...';
+        }
+
+        // Gerar tabuleiro de teste
+        function generateTestBoard() {
+            const board = document.getElementById('test-board');
+            board.innerHTML = '';
+
+            for (let row = 0; row < 8; row++) {
+                for (let col = 0; col < 8; col++) {
+                    const square = document.createElement('div');
+                    square.className = `chess-square ${(row + col) % 2 === 0 ? 'white' : 'black'}`;
+
+                    // Adicionar peças de exemplo
+                    if (row === 0) {
+                        const pieces = ['♜', '♞', '♝', '♛', '♚', '♝', '♞', '♜'];
+                        square.textContent = pieces[col];
+                    } else if (row === 1) {
+                        square.textContent = '♟';
+                    } else if (row === 6) {
+                        square.textContent = '♙';
+                    } else if (row === 7) {
+                        const pieces = ['♖', '♘', '♗', '♕', '♔', '♗', '♘', '♖'];
+                        square.textContent = pieces[col];
+                    }
+
+                    board.appendChild(square);
+                }
+            }
+
+            log('✅ Tabuleiro de teste gerado', 'success');
+        }
+
+        // Verificar status do sistema
+        function checkSystemStatus() {
+            const statusDiv = document.getElementById('system-status');
+
+            // Verificar se o sistema Python está disponível
+            if (window.pythonEffects) {
+                const status = window.pythonEffects.getStatus();
+                statusDiv.innerHTML = `
+                    <strong>✅ Sistema Ativo</strong><br>
+                    Python: ${status.pythonAvailable ? '🟢 Disponível' : '🔴 Não disponível'}<br>
+                    Tabuleiro: ${status.chessBoard}<br>
+                    Efeitos: ${status.effectsActive ? '🟢 Ativos' : '🔴 Inativos'}<br>
+                    Análise: ${status.analysisMode}<br>
+                    Base Pro: ${status.proDatabase}<br>
+                    Padrões: ${status.patternsDetected}<br>
+                    Movimentos: ${status.movesPredicted}<br>
+                    Avaliação: ${status.currentEvaluation}
+                `;
+                statusDiv.className = 'status success';
+                log('✅ Status do sistema verificado', 'success');
+            } else {
+                statusDiv.innerHTML = '<strong>❌ Sistema não inicializado</strong>';
+                statusDiv.className = 'status error';
+                log('❌ Sistema não inicializado', 'error');
+            }
+
+            // Verificar base de dados Pro
+            if (window.chessProDB) {
+                log('✅ Base de dados Pro encontrada', 'success');
+                const stats = window.chessProDB.getStatistics();
+                log(`📊 Estatísticas da base: ${JSON.stringify(stats)}`, 'info');
+            } else {
+                log('❌ Base de dados Pro não encontrada', 'error');
+            }
+        }
+
+        // Forçar inicialização
+        function forceInit() {
+            log('🚀 Forçando inicialização do sistema...', 'info');
+
+            if (window.pythonEffects) {
+                window.pythonEffects.init();
+                log('✅ Sistema reinicializado', 'success');
+            } else {
+                log('❌ Sistema não disponível para reinicialização', 'error');
+            }
+        }
+
+        // Testar base de dados Pro
+        function testProDatabase() {
+            log('📚 Testando base de dados Pro...', 'info');
+
+            if (window.chessProDB) {
+                const stats = window.chessProDB.getStatistics();
+                log(`✅ Base Pro ativa: ${stats.totalPositions} posições`, 'success');
+
+                // Testar acesso a categorias
+                const categories = ['openings', 'tacticalPatterns', 'classicEndgames'];
+                categories.forEach(cat => {
+                    if (window.chessProDB[cat]) {
+                        log(`✅ Categoria ${cat}: ${window.chessProDB[cat].total} posições`, 'success');
+                    } else {
+                        log(`❌ Categoria ${cat} não encontrada`, 'error');
+                    }
+                });
+            } else {
+                log('❌ Base de dados Pro não disponível', 'error');
+            }
+        }
+
+        // Testar análise
+        function testAnalysis() {
+            log('🔍 Testando sistema de análise...', 'info');
+
+            if (window.pythonEffects) {
+                if (window.pythonEffects.proDatabase) {
+                    log('✅ Base Pro conectada ao sistema de análise', 'success');
+                    window.pythonEffects.analyzeProDatabasePosition();
+                    log('✅ Análise da base Pro executada', 'success');
+                } else {
+                    log('❌ Base Pro não conectada ao sistema de análise', 'error');
+                }
+            } else {
+                log('❌ Sistema de análise não disponível', 'error');
+            }
+        }
+
+        // Testar efeitos
+        function testEffects() {
+            log('🎨 Testando efeitos visuais...', 'info');
+
+            if (window.pythonEffects) {
+                window.pythonEffects.testEffects();
+                log('✅ Efeitos testados', 'success');
+            } else {
+                log('❌ Sistema de efeitos não disponível', 'error');
+            }
+        }
+
+        // Limpar efeitos
+        function clearEffects() {
+            log('🗑️ Limpando efeitos...', 'info');
+
+            if (window.pythonEffects) {
+                window.pythonEffects.clearProfessionalEffects();
+                log('✅ Efeitos limpos', 'success');
+            } else {
+                log('❌ Sistema de efeitos não disponível', 'error');
+            }
+        }
+
+        // Verificar inicialização
+        function checkInitialization() {
+            log('🔍 Verificando inicialização...', 'info');
+
+            // Verificar se os scripts foram carregados
+            const scripts = [
+                'chess-pro-database.js',
+                'chess-pro-integration.js',
+                'python-effects-integration.js'
+            ];
+
+            scripts.forEach(script => {
+                const scriptElement = document.querySelector(`script[src*="${script}"]`);
+                if (scriptElement) {
+                    log(`✅ Script ${script} carregado`, 'success');
+                } else {
+                    log(`❌ Script ${script} não encontrado`, 'error');
+                }
+            });
+
+            // Verificar variáveis globais
+            setTimeout(() => {
+                if (window.chessProDB) {
+                    log('✅ window.chessProDB disponível', 'success');
+                } else {
+                    log('❌ window.chessProDB não disponível', 'error');
+                }
+
+                if (window.pythonEffects) {
+                    log('✅ window.pythonEffects disponível', 'success');
+                } else {
+                    log('❌ window.pythonEffects não disponível', 'error');
+                }
+            }, 2000);
+        }
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', function() {
+            log('🚀 Página de debug carregada', 'success');
+            generateTestBoard();
+
+            // Verificar inicialização após um delay
+            setTimeout(() => {
+                checkInitialization();
+                checkSystemStatus();
+            }, 3000);
+        });
+
+        // Monitorar mudanças
+        setInterval(() => {
+            if (window.pythonEffects && window.pythonEffects.getStatus) {
+                const status = window.pythonEffects.getStatus();
+                if (status.effectsActive) {
+                    document.getElementById('debug-info').innerHTML = `
+                        <strong>🟢 Sistema Ativo</strong><br>
+                        Análise: ${status.analysisMode}<br>
+                        Base Pro: ${status.proDatabase}<br>
+                        Padrões: ${status.patternsDetected}
+                    `;
+                }
+            }
+        }, 5000);
+    </script>
+</body>
+
+</html>
