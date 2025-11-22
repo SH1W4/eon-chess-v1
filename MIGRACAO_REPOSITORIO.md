@@ -2,13 +2,13 @@
 
 **Data:** 05/11/2025  
 **Situação:** Repositório atual sinalizado  
-**Repositório Atual:** `git@github.com:NEO-SH1W4/aeon-chess.git`
+**Repositório Atual:** `https://github.com/SH1W4/eon-chess-v1.git`
 
 ---
 
 ## ⚠️ Situação Atual
 
-O repositório GitHub `NEO-SH1W4/aeon-chess` foi sinalizado e você precisa migrar o projeto para um novo repositório.
+O repositório GitHub `SH1W4/eon-chess-v1` foi sinalizado e você precisa migrar o projeto para um novo repositório.
 
 ### Estado do Projeto:
 - ✅ Branch: `main`
@@ -322,4 +322,5 @@ git push -u origin main
 **Criado por:** WARP Symbiotic Agent  
 **Data:** 05/11/2025  
 **Status:** Pronto para execução
+
 
