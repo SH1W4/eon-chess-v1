@@ -61,15 +61,6 @@ O **AEON CHESS** possui um sistema de design adaptativo que transforma a interfa
 
 <div align="center">
   <img src="public/assets/branding/color-palettes.png" alt="Sistema de Cores Culturais" width="100%" />
-</div>
-
-> [!TIP]
-> Confira o [Showcase de Identidade Visual](http://localhost:3000/brand-showcase.html) para ver o sistema completo em ação.
-
----
-
-## 🚀 Quick Start
-
 ### Pré-requisitos
 
 - **Node.js** 16+ ([Download](https://nodejs.org/))

@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AEON CHESS - Cultural Palette System</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #0a0a0a;
+            color: #ffffff;
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 40px;
+        }
+
+        .container {
+            width: 1200px;
+            background: #0f0f10;
+            border: 1px solid #2a2a2a;
+            border-radius: 24px;
+            padding: 60px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 60px;
+            border-bottom: 1px solid #2a2a2a;
+            padding-bottom: 40px;
+        }
+
+        h1 {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            letter-spacing: -1px;
+        }
+
+        .brand-gold {
+            color: #D4AF37;
+        }
+
+        .brand-blue {
+            color: #3b82f6;
+        }
+
+        p.subtitle {
+            color: #a3a3a3;
+            font-size: 20px;
+            font-weight: 300;
+            letter-spacing: 0.5px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 40px;
+        }
+
+        .palette-card {
+            background: #161617;
+            border: 1px solid #2a2a2a;
+            border-radius: 16px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .palette-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .palette-name {
+            font-size: 20px;
+            font-weight: 600;
+            color: #e5e5e5;
+        }
+
+        .palette-id {
+            font-size: 14px;
+            color: #525252;
+            font-family: monospace;
+            text-transform: uppercase;
+        }
+
+        .swatches {
+            display: flex;
+            height: 80px;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .swatch {
+            flex: 1;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            padding-bottom: 12px;
+            font-family: monospace;
+            font-size: 12px;
+            font-weight: 600;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+            transition: flex 0.3s ease;
+        }
+
+        .color-codes {
+            display: flex;
+            justify-content: space-between;
+            font-family: monospace;
+            font-size: 12px;
+            color: #737373;
+            margin-top: 4px;
+        }
+
+        /* Cultural Themes */
+
+        /* Aztec */
+        .aztec .c1 {
+            background: #D4AF37;
+            color: #000;
+        }
+
+        .aztec .c2 {
+            background: #40E0D0;
+            color: #000;
+        }
+
+        .aztec .c3 {
+            background: #CD5C5C;
+            color: #fff;
+        }
+
+        .aztec .c4 {
+            background: #1C1C1C;
+            color: #fff;
+        }
+
+        /* Nordic */
+        .nordic .c1 {
+            background: #B0E0E6;
+            color: #000;
+        }
+
+        .nordic .c2 {
+            background: #C0C0C0;
+            color: #000;
+        }
+
+        .nordic .c3 {
+            background: #4682B4;
+            color: #fff;
+        }
+
+        .nordic .c4 {
+            background: #2F4F4F;
+            color: #fff;
+        }
+
+        /* Egyptian */
+        .egyptian .c1 {
+            background: #D4AF37;
+            color: #000;
+        }
+
+        .egyptian .c2 {
+            background: #4169E1;
+            color: #fff;
+        }
+
+        .egyptian .c3 {
+            background: #F4A460;
+            color: #000;
+        }
+
+        .egyptian .c4 {
+            background: #000000;
+            color: #fff;
+        }
+
+        /* Japanese */
+        .japanese .c1 {
+            background: #DC143C;
+            color: #fff;
+        }
+
+        .japanese .c2 {
+            background: #000000;
+            color: #fff;
+        }
+
+        .japanese .c3 {
+            background: #FFB7C5;
+            color: #000;
+        }
+
+        .japanese .c4 {
+            background: #FFFFFF;
+            color: #000;
+        }
+
+        /* Celtic */
+        .celtic .c1 {
+            background: #228B22;
+            color: #fff;
+        }
+
+        .celtic .c2 {
+            background: #8B7355;
+            color: #fff;
+        }
+
+        .celtic .c3 {
+            background: #8B4513;
+            color: #fff;
+        }
+
+        .celtic .c4 {
+            background: #696969;
+            color: #fff;
+        }
+
+        /* Neo Tokyo */
+        .neotokyo .c1 {
+            background: #FF1493;
+            color: #fff;
+        }
+
+        .neotokyo .c2 {
+            background: #00FFFF;
+            color: #000;
+        }
+
+        .neotokyo .c3 {
+            background: #9370DB;
+            color: #fff;
+        }
+
+        .neotokyo .c4 {
+            background: #0A0A0A;
+            color: #fff;
+        }
+
+        /* Mars */
+        .mars .c1 {
+            background: #CD5C5C;
+            color: #fff;
+        }
+
+        .mars .c2 {
+            background: #FF8C00;
+            color: #000;
+        }
+
+        .mars .c3 {
+            background: #708090;
+            color: #fff;
+        }
+
+        .mars .c4 {
+            background: #1C1C1C;
+            color: #fff;
+        }
+
+        /* Quantum */
+        .quantum .c1 {
+            background: #9370DB;
+            color: #fff;
+        }
+
+        .quantum .c2 {
+            background: #4169E1;
+            color: #fff;
+        }
+
+        .quantum .c3 {
+            background: #FFFFFF;
+            color: #000;
+        }
+
+        .quantum .c4 {
+            background: rgba(147, 112, 219, 0.3);
+            color: #fff;
+            border: 1px dashed #9370DB;
+        }
+
+        /* Steampunk */
+        .steampunk .c1 {
+            background: #B87333;
+            color: #fff;
+        }
+
+        .steampunk .c2 {
+            background: #CD7F32;
+            color: #fff;
+        }
+
+        .steampunk .c3 {
+            background: #8B4513;
+            color: #fff;
+        }
+
+        .steampunk .c4 {
+            background: #F5F5DC;
+            color: #000;
+        }
+
+        /* Digital Nomad */
+        .nomad .c1 {
+            background: #808080;
+            color: #fff;
+        }
+
+        .nomad .c2 {
+            background: #FFFFFF;
+            color: #000;
+        }
+
+        .nomad .c3 {
+            background: #87CEEB;
+            color: #000;
+        }
+
+        .nomad .c4 {
+            background: #000000;
+            color: #fff;
+        }
+
+        footer {
+            margin-top: 60px;
+            text-align: center;
+            color: #525252;
+            font-size: 14px;
+            border-top: 1px solid #2a2a2a;
+            padding-top: 40px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1><span class="brand-gold">AEON</span> <span class="brand-blue">CHESS</span></h1>
+            <p class="subtitle">Adaptive Cultural Color System</p>
+        </header>
+
+        <div class="grid">
+            <!-- Aztec -->
+            <div class="palette-card aztec">
+                <div class="palette-header">
+                    <span class="palette-name">🏛️ Aztec Empire</span>
+                    <span class="palette-id">CTX-01</span>
+                </div>
+                <div class="swatches">
+                    <div class="swatch c1"></div>
+                    <div class="swatch c2"></div>
+                    <div class="swatch c3"></div>
+                    <div class="swatch c4"></div>
+                </div>
+                <div class="color-codes">
+                    <span>#D4AF37</span>
+                    <span>#40E0D0</span>
+                    <span>#CD5C5C</span>
+                    <span>#1C1C1C</span>
+                </div>
+            </div>
+
+            <!-- Nordic -->
+            <div class="palette-card nordic">
+                <div class="palette-header">
+                    <span class="palette-name">⚔️ Nordic Realms</span>
+                    <span class="palette-id">CTX-02</span>
+                </div>
+                <div class="swatches">
+                    <div class="swatch c1"></div>
+                    <div class="swatch c2"></div>
+                    <div class="swatch c3"></div>
+                    <div class="swatch c4"></div>
+                </div>
+                <div class="color-codes">
+                    <span>#B0E0E6</span>
+                    <span>#C0C0C0</span>
+                    <span>#4682B4</span>
+                    <span>#2F4F4F</span>
+                </div>
+            </div>
+
+            <!-- Egyptian -->
+            <div class="palette-card egyptian">
+                <div class="palette-header">
+                    <span class="palette-name">𓂀 Ancient Egypt</span>
+                    <span class="palette-id">CTX-03</span>
+                </div>
+                <div class="swatches">
+                    <div class="swatch c1"></div>
+                    <div class="swatch c2"></div>
+                    <div class="swatch c3"></div>
+                    <div class="swatch c4"></div>
+                </div>
+                <div class="color-codes">
+                    <span>#D4AF37</span>
+                    <span>#4169E1</span>
+                    <span>#F4A460</span>
+                    <span>#000000</span>
+                </div>
+            </div>
+
+            <!-- Japanese -->
+            <div class="palette-card japanese">
+                <div class="palette-header">
+                    <span class="palette-name">🌸 Feudal Japan</span>
+                    <span class="palette-id">CTX-04</span>
+                </div>
+                <div class="swatches">
+                    <div class="swatch c1"></div>
+                    <div class="swatch c2"></div>
+                    <div class="swatch c3"></div>
+                    <div class="swatch c4"></div>
+                </div>
+                <div class="color-codes">
+                    <span>#DC143C</span>
+                    <span>#000000</span>
+                    <span>#FFB7C5</span>
+                    <span>#FFFFFF</span>
+                </div>
+            </div>
+
+            <!-- Celtic -->
+            <div class="palette-card celtic">
+                <div class="palette-header">
+                    <span class="palette-name">🌿 Celtic Lands</span>
+                    <span class="palette-id">CTX-05</span>
+                </div>
+                <div class="swatches">
+                    <div class="swatch c1"></div>
+                    <div class="swatch c2"></div>
+                    <div class="swatch c3"></div>
+                    <div class="swatch c4"></div>
+                </div>
+                <div class="color-codes">
+                    <span>#228B22</span>
+                    <span>#8B7355</span>
+                    <span>#8B4513</span>
+                    <span>#696969</span>
+                </div>
+            </div>
+
+            <!-- Neo Tokyo -->
+            <div class="palette-card neotokyo">
+                <div class="palette-header">
+                    <span class="palette-name">🌃 Neo Tokyo 2050</span>
+                    <span class="palette-id">CTX-06</span>
+                </div>
+                <div class="swatches">
+                    <div class="swatch c1"></div>
+                    <div class="swatch c2"></div>
+                    <div class="swatch c3"></div>
+                    <div class="swatch c4"></div>
+                </div>
+                <div class="color-codes">
+                    <span>#FF1493</span>
+                    <span>#00FFFF</span>
+                    <span>#9370DB</span>
+                    <span>#0A0A0A</span>
+                </div>
+            </div>
+
+            <!-- Mars -->
+            <div class="palette-card mars">
+                <div class="palette-header">
+                    <span class="palette-name">🔴 Mars Colony</span>
+                    <span class="palette-id">CTX-07</span>
+                </div>
+                <div class="swatches">
+                    <div class="swatch c1"></div>
+                    <div class="swatch c2"></div>
+                    <div class="swatch c3"></div>
+                    <div class="swatch c4"></div>
+                </div>
+                <div class="color-codes">
+                    <span>#CD5C5C</span>
+                    <span>#FF8C00</span>
+                    <span>#708090</span>
+                    <span>#1C1C1C</span>
+                </div>
+            </div>
+
+            <!-- Quantum -->
+            <div class="palette-card quantum">
+                <div class="palette-header">
+                    <span class="palette-name">⚛️ Quantum Realm</span>
+                    <span class="palette-id">CTX-08</span>
+                </div>
+                <div class="swatches">
+                    <div class="swatch c1"></div>
+                    <div class="swatch c2"></div>
+                    <div class="swatch c3"></div>
+                    <div class="swatch c4"></div>
+                </div>
+                <div class="color-codes">
+                    <span>#9370DB</span>
+                    <span>#4169E1</span>
+                    <span>#FFFFFF</span>
+                    <span>#TRANSP</span>
+                </div>
+            </div>
+
+            <!-- Steampunk -->
+            <div class="palette-card steampunk">
+                <div class="palette-header">
+                    <span class="palette-name">⚙️ Steampunk</span>
+                    <span class="palette-id">CTX-09</span>
+                </div>
+                <div class="swatches">
+                    <div class="swatch c1"></div>
+                    <div class="swatch c2"></div>
+                    <div class="swatch c3"></div>
+                    <div class="swatch c4"></div>
+                </div>
+                <div class="color-codes">
+                    <span>#B87333</span>
+                    <span>#CD7F32</span>
+                    <span>#8B4513</span>
+                    <span>#F5F5DC</span>
+                </div>
+            </div>
+
+            <!-- Digital Nomad -->
+            <div class="palette-card nomad">
+                <div class="palette-header">
+                    <span class="palette-name">🌐 Digital Nomad</span>
+                    <span class="palette-id">CTX-10</span>
+                </div>
+                <div class="swatches">
+                    <div class="swatch c1"></div>
+                    <div class="swatch c2"></div>
+                    <div class="swatch c3"></div>
+                    <div class="swatch c4"></div>
+                </div>
+                <div class="color-codes">
+                    <span>#808080</span>
+                    <span>#FFFFFF</span>
+                    <span>#87CEEB</span>
+                    <span>#000000</span>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            AEON CHESS • Brand Identity System v1.0 • Designed by SH1W4
+        </footer>
+    </div>
+</body>
+
+</html>
