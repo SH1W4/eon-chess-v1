@@ -1,5 +1,7 @@
 <div align="center">
 
+<img src="public/assets/branding/logo-symbol.png" alt="AEON CHESS Logo" width="150" />
+
 # 🏰 AEON CHESS
 
 ### *Cultural Heritage Enhanced Strategic System*
