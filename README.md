@@ -271,16 +271,19 @@ Contribuições são bem-vindas! Siga estes passos:
 
 ## 🎯 Roadmap
 
-### 2024 Q4
+### 2025 (Fundação & Identidade)
 - [x] ✅ Sistema de narrativas culturais
 - [x] ✅ API REST com documentação
 - [x] ✅ Landing page moderna
+- [x] ✅ Identidade Visual & Branding System
+
+### 2026 (Expansão & Multiplayer)
+> ⏸️ *Pausa estratégica planejada para o restante de 2025*
+
 - [ ] 🔄 Integração Stockfish
 - [ ] 🔄 Sistema de conquistas
-
-### 2025 Q1
-- [ ] 📋 Modo multiplayer
-- [ ] 📋 Aplicativo mobile
+- [ ] 📋 Modo multiplayer em tempo real
+- [ ] 📋 Aplicativo mobile (React Native)
 - [ ] 📋 Sistema de torneios
 - [ ] 📋 Analytics avançado
 
