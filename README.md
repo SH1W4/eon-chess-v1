@@ -53,26 +53,6 @@ API RESTful completa com Swagger UI, permitindo fácil integração e extensão 
 </tr>
 </table>
 
----
-
-## 🎨 Identidade Visual
-
-O **AEON CHESS** possui um sistema de design adaptativo que transforma a interface com base no contexto cultural escolhido.
-
-<div align="center">
-  <img src="public/assets/branding/color-palettes.png" alt="Sistema de Cores Culturais" width="100%" />
-### Pré-requisitos
-
-- **Node.js** 16+ ([Download](https://nodejs.org/))
-- **Python** 3.9+ ([Download](https://www.python.org/))
-- **Git** ([Download](https://git-scm.com/))
-
-### Instalação Rápida
-
-```bash
-# 1. Clone o repositório
-git clone https://github.com/SH1W4/eon-chess-v1.git
-cd eon-chess-v1
 
 # 2. Instale as dependências
 npm install
