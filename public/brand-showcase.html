@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AEON CHESS - Brand Identity Showcase</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+        
+        h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #D4AF37 0%, #3b82f6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .subtitle {
+            font-size: 1.25rem;
+            color: #a3a3a3;
+            font-weight: 300;
+        }
+        
+        .section {
+            margin-bottom: 5rem;
+        }
+        
+        h2 {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            color: #D4AF37;
+        }
+        
+        .logo-showcase {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .logo-card {
+            background: #111111;
+            border: 1px solid #2a2a2a;
+            border-radius: 1rem;
+            padding: 2rem;
+            text-align: center;
+        }
+        
+        .logo-card img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 1rem;
+        }
+        
+        .logo-card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+            color: #ffffff;
+        }
+        
+        .logo-card p {
+            color: #a3a3a3;
+            font-size: 0.875rem;
+        }
+        
+        .palette-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .palette-card {
+            background: #111111;
+            border: 1px solid #2a2a2a;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+        }
+        
+        .palette-name {
+            font-weight: 600;
+            margin-bottom: 1rem;
+            font-size: 1.125rem;
+        }
+        
+        .color-swatch {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .swatch {
+            width: 40px;
+            height: 40px;
+            border-radius: 0.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .color-info {
+            font-size: 0.75rem;
+            color: #6b7280;
+            margin-top: 0.5rem;
+        }
+        
+        .principles {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .principle-card {
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(59, 130, 246, 0.1) 100%);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 1rem;
+            padding: 2rem;
+        }
+        
+        .principle-card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+            color: #D4AF37;
+        }
+        
+        .principle-card p {
+            color: #a3a3a3;
+            line-height: 1.8;
+        }
+        
+        .cta {
+            text-align: center;
+            margin-top: 5rem;
+            padding: 3rem;
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(59, 130, 246, 0.1) 100%);
+            border-radius: 1rem;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+        }
+        
+        .cta h2 {
+            margin-bottom: 1rem;
+        }
+        
+        .cta p {
+            color: #a3a3a3;
+            margin-bottom: 2rem;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, #D4AF37 0%, #3b82f6 100%);
+            color: #000;
+            text-decoration: none;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(212, 175, 55, 0.3);
+        }
+        
+        .full-width-image {
+            width: 100%;
+            border-radius: 1rem;
+            border: 1px solid #2a2a2a;
+            margin-bottom: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>AEON CHESS</h1>
+            <p class="subtitle">Brand Identity System - Cultural Storytelling Platform</p>
+        </header>
+        
+        <section class="section">
+            <h2>🎯 Logo System</h2>
+            <div class="logo-showcase">
+                <div class="logo-card">
+                    <img src="assets/branding/logo-symbol.png" alt="AEON CHESS Temporal Ring Logo">
+                    <h3>Temporal Ring Symbol</h3>
+                    <p>The eternal circle containing 10 cultural symbols representing our journey through civilizations</p>
+                </div>
+                <div class="logo-card">
+                    <img src="assets/branding/logo-full.png" alt="AEON CHESS Full Logo">
+                    <h3>Full Wordmark Logo</h3>
+                    <p>Complete brand identity with typography for headers and marketing materials</p>
+                </div>
+            </div>
+        </section>
+        
+        <section class="section">
+            <h2>🎨 Cultural Color Palettes</h2>
+            <img src="assets/branding/color-palettes.png" alt="Cultural Color Palettes" class="full-width-image">
+            <p style="color: #a3a3a3; margin-bottom: 2rem;">
+                Our adaptive color system transforms the entire interface based on the selected cultural context. 
+                Each of the 10 civilizations has its own authentic palette derived from historical and cultural research.
+            </p>
+            
+            <div class="palette-grid">
+                <div class="palette-card">
+                    <div class="palette-name">🏛️ Aztec - Sacred Gold</div>
+                    <div class="color-swatch">
+                        <div class="swatch" style="background: #D4AF37;"></div>
+                        <div class="swatch" style="background: #40E0D0;"></div>
+                        <div class="swatch" style="background: #CD5C5C;"></div>
+                        <div class="swatch" style="background: #1C1C1C;"></div>
+                    </div>
+                    <div class="color-info">Gold • Turquoise • Terracotta • Obsidian</div>
+                </div>
+                
+                <div class="palette-card">
+                    <div class="palette-name">⚔️ Nordic - Ice & Steel</div>
+                    <div class="color-swatch">
+                        <div class="swatch" style="background: #B0E0E6;"></div>
+                        <div class="swatch" style="background: #C0C0C0;"></div>
+                        <div class="swatch" style="background: #4682B4;"></div>
+                        <div class="swatch" style="background: #2F4F4F;"></div>
+                    </div>
+                    <div class="color-info">Ice Blue • Silver • Deep Blue • Dark Slate</div>
+                </div>
+                
+                <div class="palette-card">
+                    <div class="palette-name">𓂀 Egyptian - Lapis & Gold</div>
+                    <div class="color-swatch">
+                        <div class="swatch" style="background: #D4AF37;"></div>
+                        <div class="swatch" style="background: #4169E1;"></div>
+                        <div class="swatch" style="background: #F4A460;"></div>
+                        <div class="swatch" style="background: #000000;"></div>
+                    </div>
+                    <div class="color-info">Gold • Lapis Blue • Sand • Black</div>
+                </div>
+                
+                <div class="palette-card">
+                    <div class="palette-name">🌸 Japanese - Crimson & Zen</div>
+                    <div class="color-swatch">
+                        <div class="swatch" style="background: #DC143C;"></div>
+                        <div class="swatch" style="background: #000000;"></div>
+                        <div class="swatch" style="background: #FFB7C5;"></div>
+                        <div class="swatch" style="background: #FFFFFF;"></div>
+                    </div>
+                    <div class="color-info">Crimson • Black • Cherry Blossom • White</div>
+                </div>
+                
+                <div class="palette-card">
+                    <div class="palette-name">🌿 Celtic - Forest & Stone</div>
+                    <div class="color-swatch">
+                        <div class="swatch" style="background: #228B22;"></div>
+                        <div class="swatch" style="background: #8B7355;"></div>
+                        <div class="swatch" style="background: #8B4513;"></div>
+                        <div class="swatch" style="background: #696969;"></div>
+                    </div>
+                    <div class="color-info">Forest Green • Moss • Earth Brown • Stone Gray</div>
+                </div>
+                
+                <div class="palette-card">
+                    <div class="palette-name">🌃 Neo Tokyo - Neon Cyber</div>
+                    <div class="color-swatch">
+                        <div class="swatch" style="background: #FF1493;"></div>
+                        <div class="swatch" style="background: #00FFFF;"></div>
+                        <div class="swatch" style="background: #9370DB;"></div>
+                        <div class="swatch" style="background: #0A0A0A;"></div>
+                    </div>
+                    <div class="color-info">Neon Pink • Cyan • Purple • Black</div>
+                </div>
+                
+                <div class="palette-card">
+                    <div class="palette-name">🔴 Mars Colony - Red Planet</div>
+                    <div class="color-swatch">
+                        <div class="swatch" style="background: #CD5C5C;"></div>
+                        <div class="swatch" style="background: #FF8C00;"></div>
+                        <div class="swatch" style="background: #708090;"></div>
+                        <div class="swatch" style="background: #1C1C1C;"></div>
+                    </div>
+                    <div class="color-info">Mars Red • Orange • Steel Gray • Black</div>
+                </div>
+                
+                <div class="palette-card">
+                    <div class="palette-name">⚛️ Quantum - Ethereal</div>
+                    <div class="color-swatch">
+                        <div class="swatch" style="background: #9370DB;"></div>
+                        <div class="swatch" style="background: #4169E1;"></div>
+                        <div class="swatch" style="background: #FFFFFF;"></div>
+                        <div class="swatch" style="background: rgba(147, 112, 219, 0.3); border: 1px solid #9370DB;"></div>
+                    </div>
+                    <div class="color-info">Purple • Electric Blue • White • Transparent</div>
+                </div>
+                
+                <div class="palette-card">
+                    <div class="palette-name">⚙️ Steampunk - Brass & Steam</div>
+                    <div class="color-swatch">
+                        <div class="swatch" style="background: #B87333;"></div>
+                        <div class="swatch" style="background: #CD7F32;"></div>
+                        <div class="swatch" style="background: #8B4513;"></div>
+                        <div class="swatch" style="background: #F5F5DC;"></div>
+                    </div>
+                    <div class="color-info">Brass • Copper • Brown Leather • Steam White</div>
+                </div>
+                
+                <div class="palette-card">
+                    <div class="palette-name">🌐 Digital Nomad - Minimal</div>
+                    <div class="color-swatch">
+                        <div class="swatch" style="background: #808080;"></div>
+                        <div class="swatch" style="background: #FFFFFF;"></div>
+                        <div class="swatch" style="background: #87CEEB;"></div>
+                        <div class="swatch" style="background: #000000;"></div>
+                    </div>
+                    <div class="color-info">Gray • White • Soft Blue • Black</div>
+                </div>
+            </div>
+        </section>
+        
+        <section class="section">
+            <h2>🎭 Design Principles</h2>
+            <div class="principles">
+                <div class="principle-card">
+                    <h3>Cultural Authenticity</h3>
+                    <p>Every cultural symbol and color is researched and used with respect. We never use cultures as mere decoration.</p>
+                </div>
+                <div class="principle-card">
+                    <h3>Narrative-First Design</h3>
+                    <p>Every visual element supports storytelling. We ask: "What story does this tell?"</p>
+                </div>
+                <div class="principle-card">
+                    <h3>Temporal Transcendence</h3>
+                    <p>Designs feel timeless—equally at home in ancient civilizations and future worlds.</p>
+                </div>
+                <div class="principle-card">
+                    <h3>Minimalism with Depth</h3>
+                    <p>Clean, uncluttered interfaces that reveal complexity through interaction.</p>
+                </div>
+                <div class="principle-card">
+                    <h3>Adaptive Contexts</h3>
+                    <p>The interface transforms based on cultural context—complete thematic shifts, not just color swaps.</p>
+                </div>
+                <div class="principle-card">
+                    <h3>Museum Quality</h3>
+                    <p>We think "museum exhibit" not "mobile game". Sophistication and elegance are paramount.</p>
+                </div>
+            </div>
+        </section>
+        
+        <div class="cta">
+            <h2>Ready to Explore?</h2>
+            <p>Experience 10 civilizations, infinite stories, one timeless game.</p>
+            <a href="../landing.html" class="btn">Enter AEON CHESS</a>
+        </div>
+    </div>
+</body>
+</html>

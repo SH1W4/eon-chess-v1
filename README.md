@@ -12,7 +12,7 @@
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.100+-green)](https://fastapi.tiangolo.com/)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
-[🎮 Demo](http://localhost:3000) • [📚 Documentação](http://localhost:8000/docs) • [🚀 Começar](#-quick-start)
+[🎮 Demo](http://localhost:3000) • [📚 Documentação](http://localhost:8000/docs) • [🚀 Começar](#-quick-start) • [🎨 Brand Identity](http://localhost:3000/brand-showcase.html)
 
 </div>
 
